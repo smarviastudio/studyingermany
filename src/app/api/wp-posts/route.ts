@@ -6,7 +6,11 @@ export async function GET(request: Request) {
   const category = searchParams.get('category') || '';
   const search = searchParams.get('search') || '';
 
-  const wpUrl = process.env.WP_URL || 'http://localhost:8000';
+  const wpUrl =
+    process.env.WP_URL ||
+    (process.env.NODE_ENV === 'production'
+      ? 'https://germanpath.com'
+      : 'http://localhost:8000');
 
   try {
     let url = `${wpUrl}/wp-json/wp/v2/posts?per_page=${perPage}&_embed=1&status=publish`;
