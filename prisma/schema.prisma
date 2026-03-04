@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String           @id @default(cuid())
+  email            String           @unique
+  password         String
+  name             String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  profile          UserProfile?
+  shortlists       Shortlist[]
+  favorites        Favorite[]
+  applicationPlans ApplicationPlan[]
+  cvDocuments      CvDocument[] @relation("UserCvDocuments")
+}
+
+model UserProfile {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  targetDegreeLevel    String?
+  targetSubjects       String?  // JSON array
+  preferredLanguage    String?
+  germanLevel          String?
+  englishLevel         String?
+  ieltsScore           Float?
+  toeflScore           Float?
+  hasScholarship       Boolean?
+  academicBackground   String?
+  backgroundSummary    String?
+  experienceHighlights String?
+  skills               String?
+  careerGoals          String?
+  preferredCities      String?  // JSON array
+  maxTuitionEur        Float?
+  desiredIntake        String?
+  desiredStartYear     Int?
+  constraints          String?
+  budgetNotes          String?
+  linkedinUrl          String?
+  portfolioUrl         String?
+
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model Shortlist {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  programId   String
+  programName String
+  university  String
+  addedAt     DateTime @default(now())
+  notes       String?
+  
+  @@unique([userId, programId])
+}
+
+model Favorite {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  programId   String
+  programName String
+  university  String
+  addedAt     DateTime @default(now())
+  notes       String?
+
+  @@unique([userId, programId])
+}
+
+model ApplicationPlan {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  programId       String
+  programName     String
+  university      String
+  planData        String   // JSON: {overview, steps, blockers, timeline}
+  checklistState  String?  // JSON: step completion status
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@unique([userId, programId])
+}
+
+model CvDocument {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation("UserCvDocuments", fields: [userId], references: [id], onDelete: Cascade)
+  name        String   // CV name/title
+  templateId  String   // Selected template
+  accent      String   // Accent color
+  fontFamily  String   // Selected font family
+  fontSize    String   // Font size: small, normal, large
+  data        String   // JSON: all CV content
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}

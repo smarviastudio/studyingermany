@@ -1,0 +1,2266 @@
+id,program_name,university,city,detail_url,image_url,degree_level,degree_level_normalized,degree_type_raw,subject_area,tags_array,tuition_fee_number,tuition_fee_currency,tuition_eur_min,tuition_eur_max,is_free,price_on_request,beginning_normalized,intake_terms,intake_months,application_deadline,duration_months,duration_semesters,ects_credits,languages_array,language_requirements,requirements,documents_required,language_certificates,academic_requirements,minimum_gpa,work_experience_required,description,programme_duration,is_elearning,is_complete_online_possible,financial_support,support_international_students,tab_overview,tab_course_details,tab_costs_funding,tab_requirements_registration,tab_services,scraped_at,api_source,last_updated,quality_warnings,completeness_score,language_proficiency_required,ielts_min_score,toefl_min_score,other_language_tests,german_min_level,english_min_level,language_notes
+4920,30th International Summer Academy,Martin Luther University Halle-Wittenberg,Lutherstadt Wittenberg,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4920/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/66140a6d7ca68975086405.jpeg,language_course,language_course,Language course,arts,"['literature', 'german language course (including literature and culture studies)']",0,EUR,,,True,False,,['summer'],"[8, 5, 7]",2026-04-30,,,,['german'],"{'german': 'A1, A2, B1, B2, C1, C2'}","Teaching language
+German
+Language level of course
+German:
+All levels
+Language requirements
+A placement test will be taken on the first day of the programme.
+Submit application to
+Institut für deutsche Sprache und Kultur an der Martin-Luther-Universität Halle-Wittenberg
+Collegienstraße 62
+06886 Lutherstadt Wittenberg
+Germany",[],[],,,False,Course location Lutherstadt Wittenberg In cooperation with Institute for German Language and Culture (Institut für deutsche Sprache und Kultur e. V.) at the Martin Luther University of Halle-Wittenberg Teaching language German Language level of course German: All levels Date(s) 31 May - 25 June 2026 (Registration deadline of course provider: 30 April 2026) 5 July - 30 July 2026 (Registration deadline of course provider: 29 May 2026) 2 August - 27 August 2026 (Registration deadline of course prov...,,False,False,,,"Course location
+Lutherstadt Wittenberg
+In cooperation with
+Institute for German Language and Culture (Institut für deutsche Sprache und Kultur e. V.) at the Martin Luther University of Halle-Wittenberg
+Teaching language
+German
+Language level of course
+German: All levels
+Date(s)
+31 May - 25 June 2026 (Registration deadline of course provider: 30 April 2026)
+5 July - 30 July 2026 (Registration deadline of course provider: 29 May 2026)
+2 August - 27 August 2026 (Registration deadline of course provider: 25 June 2026)
+30 August - 24 September 2026 (Registration deadline of course provider: 17 July 2026)
+Information on dates, prices and mode of study
+Language courses, free time activities in Wittenberg and two day trips are included in the course fee.
+Target group
+This course is open for everyone interested in the German language.
+Description/content
+The goal of the Summer Academy is to impart knowledge combining both the culture of Germany and the German language. Through selected regional topics, the many facets of modern German life will be discovered in activities such as conversations with experts, presentations, excursions, and a final course project. With participants from around the world, knowledge exchange and intercultural learning will be significant aspects of this summer course. All courses have lessons on pronunciation.
+After a full day of learning and gathering new impressions, a variety of free time activities and intercultural get-togethers will help you to enjoy this wonderful summer course.",,"Dates and costs
+31 May - 25 June 2026 (Registration deadline of course provider: 30 April 2026),
+costs: EUR 790
+5 July - 30 July 2026 (Registration deadline of course provider: 29 May 2026),
+costs: EUR 790
+2 August - 27 August 2026 (Registration deadline of course provider: 25 June 2026),
+costs: EUR 790
+30 August - 24 September 2026 (Registration deadline of course provider: 17 July 2026),
+costs: EUR 790
+This price includes
+Course fees
+Accompanying programme
+Information on dates, prices and mode of study
+Language courses, free time activities in Wittenberg and two day trips are included in the course fee.","Teaching language
+German
+Language level of course
+German:
+All levels
+Language requirements
+A placement test will be taken on the first day of the programme.
+Submit application to
+Institut für deutsche Sprache und Kultur an der Martin-Luther-Universität Halle-Wittenberg
+Collegienstraße 62
+06886 Lutherstadt Wittenberg
+Germany","Is accommodation organised?
+Accommodation is arranged by the organiser.
+Type of accommodation
+Accommodation can be arranged by the organiser for an extra cost.
+Accommodation with host families, includes breakfast and dinner (675 EUR)
+Double rooms with Wi-Fi, no meals (500 EUR)
+Single rooms with Wi-Fi, no meals (620 EUR)
+Meals
+With host families: a breakfast and a typical German dinner are included.
+Grocery stores are located close to the accommodations.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+Wittenberg
+is a beautiful little German town filled with
+UNESCO World Heritage
+Sites
+, parks, cafés and recreation areas along the Elbe River.
+During our language courses,
+two international volunteers
+(ESC) will be organising a wide range of
+free-time
+and
+leisure activities
+.
+In
+Wittenberg:
+Guided tour, conversations with local people
+Workshops (music, theatre, etc.)
+Intercultural get-together
+Bike tours along the Elbe River
+Sports and leisure activities
+Museum visits (Martin Luther's house, Asisi's Panorama Luther 1517)
+Farewell evening with instructors and guests
+Outside of Wittenberg:
+Two day trips to
+Berlin
+and
+Leipzig
+(or other cities), including guided city tours, free-time suggestions
+Afternoon visit to UNESCO World Heritage Site
+Dessau/Wörlitz
+and
+Halle (Saale)
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+Yes",2026-02-01T13:15:06.818816+00:00,daad_api,2026-02-01T17:42:20.508074,"['Limited course details available', 'Program duration not specified']",0.7000000000000001,True,,,"[{""exam"": ""Placement Test"", ""language"": ""german"", ""minScore"": ""To be determined""}]",,,A placement test will be taken on the first day of the programme to determine appropriate German language level. Course accommodates all German proficiency levels from A1 to C2. Teaching language is German.
+10476,52nd Trier International Summer School: Germany and its Neighbouring Countries 2025,Trier University,Trier,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/10476/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/6813b64cd845f.jpeg,short_course,short_course,Short course and language course,languages,"['german as a foreign language', 'language', 'german']",0,EUR,,,True,False,,['summer'],[8],2026-07-15,,,,['german'],"{'german': 'A1, A2, B1, B2, C1'}","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+If you are an absolute beginner in German, then you need to have at least a B1 level of English, so that basic communication is possible for administrative matters.
+Submit application to
+http://www.iss.uni-trier.de",[],[],,,False,"Course location Trier Teaching language German Language level of course German: A1, A2, B1, B2, C1 Date(s) 3 August - 28 August 2026 (Registration deadline of course provider: 15 July 2026) Target group Students and graduates of all subjects Description/content 1. Language courses The language courses cover elementary, intermediate, and advanced levels (A1, A2, B1, B2, C1). There are a total of 75 hours (at 45 min.) of lessons. The main goal is to expand practical language skills in the areas of...",,False,False,,,"Course location
+Trier
+Teaching language
+German
+Language level of course
+German: A1, A2, B1, B2, C1
+Date(s)
+3 August - 28 August 2026 (Registration deadline of course provider: 15 July 2026)
+Target group
+Students and graduates of all subjects
+Description/content
+1. Language courses
+The language courses cover elementary, intermediate, and advanced levels (A1, A2, B1, B2, C1). There are a total of 75 hours (at 45 min.) of lessons. The main goal is to expand practical language skills in the areas of reading and listening comprehension as well as speaking and writing. The courses also focus on improving grammatical, lexical, and idiomatic skills. Authentic real-world texts are used from literature, science, and media, including TV and radio news. This course helps students learn German so that they can study in Germany.
+All students will take a placement test on the first day of class. The course concludes with a final test, after which a certificate (worth five ECTS points) will be awarded.
+2. Didactics and methodology of teaching and learning German as a foreign language (DaF)
+Special classes are offered for teachers of German and students of German studies with an interest in intercultural subjects. In these classes, current didactic methods and pedagogical concepts in the field of German as a foreign language will be discussed. Among other topics, the focus will be on media didactics, e-learning, intercultural didactics, and new teaching materials (approx. 28 hours).
+If participants additionally attend the language course for advanced learners of German (C1) as well as the academic seminars and lectures, they will be awarded a certificate (""Zertifikat Didaktik und Methodik Deutsch als Fremdsprache"") upon successful completion of the course.
+3. Academic lecture and seminar programme
+An interdisciplinary lecture and seminar programme is provided by the Departments of Language and Literature, Politics and History, Social Science and Economics (approx. 12 hours in total, 45 minutes each).
+(For students at an elementary level (A1, A2, B1), conversation classes are offered instead.)
+4. Cultural programme
+Cultural events and excursions to the Moselle region, Luxembourg, and France complement the language courses and lectures.",,"Dates and costs
+3 August - 28 August 2026 (Registration deadline of course provider: 15 July 2026),
+costs: EUR 790
+This price includes
+Course fees
+Accompanying programme","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+If you are an absolute beginner in German, then you need to have at least a B1 level of English, so that basic communication is possible for administrative matters.
+Submit application to
+http://www.iss.uni-trier.de","Is accommodation organised?
+Accommodation is arranged by the organiser.
+Type of accommodation
+Upon request, accommodation can be provided in one of the university's student accommodation halls.
+Price: 490 EUR for the duration of the summer course
+Meals
+Not included, but available in the university canteens/cafeterias and in the shops nearby
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+Our leisure programme:
+Three full-day excursions
+to the
+Moselle
+(distance from Trier: 50 km), to
+Luxembourg
+(distance approx. 45 km) and
+France
+(e.g. Metz or Nancy)
+Guided tours
+to the sights of Trier (UNESCO World Heritage Site, buildings of the Roman Emperor Constantine), museum visits, city tours
+Walking tours
+/ hikes (e.g. to Cochem Castle on the Moselle), concert visits (e.g. organ music in the Roman Palastaula ""Constantine Basilica""), etc.
+In addition, the tutors of the International Summer Course (IFK) offer
+numerous activities in the evenings
+(sports, pub crawl, barbecue, dance class, beach volleyball, karaoke, game nights, international dinner and many more).
+The excursions, the guided tours and the visit of the organ concert are already included in the course fee. For individual further offers, small additional costs may be incurred under certain circumstances. This will be communicated in time during the course.
+All participants are supervised by our IFK tutors.
+(subject to change)
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818859+00:00,daad_api,2026-02-01T17:42:20.508206,"['Limited course details available', 'Program duration not specified']",0.7000000000000001,True,,,[],C1,B1,"Course is taught in German at levels A1-C1. If you are an absolute beginner in German, you must have at least B1 level English for basic administrative communication."
+4889,75th International Summer Course,Kiel University,Kiel,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4889/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/6458c768e4f25441646882.jpeg,language_course,language_course,Language course,arts,"['literature', 'german language course (including literature and culture studies)']",1.3,EUR,1.3,1.3,False,False,,['summer'],[7],2026-05-15,,,,['german'],"{'german': 'B1, B2, C1'}","Teaching language
+German
+Language level of course
+German:
+B1, B2, C1
+Language requirements
+Participants should have good basic German language skills (level A 2.2 should already be completed).
+Submit application to
+Andreas Ritter
+International Center
+Kiel University
+Westring 400
+24118 Kiel
+Germany",[],[],,,False,"Course location Kiel Teaching language German Language level of course German: B1, B2, C1 Date(s) 20 July - 14 August 2026 (Registration deadline of course provider: 15 May 2026) Target group Students and graduates from foreign higher education institutions and universities who want to improve their German language skills and learn more about the city of Kiel and Northern Germany Description/content German language course (approx. 20 – 25 hours per week): intermediate and advanced courses at fou...",,False,False,,,"Course location
+Kiel
+Teaching language
+German
+Language level of course
+German: B1, B2, C1
+Date(s)
+20 July - 14 August 2026 (Registration deadline of course provider: 15 May 2026)
+Target group
+Students and graduates from foreign higher education institutions and universities who want to improve their German language skills and learn more about the city of Kiel and Northern Germany
+Description/content
+German language course (approx. 20 – 25 hours per week): intermediate and advanced courses at four different levels conducted in German
+Several city tours in Kiel on selected topics of the city's history
+Regional excursions: excursions led by regional experts, offered to give participants an impression of Northern Germany, its landscape, art, and culture; day trips to the cities of Hamburg and Lübeck as well as a trip to the North Sea coast",,"Dates and costs
+20 July - 14 August 2026 (Registration deadline of course provider: 15 May 2026),
+costs: EUR 1,300
+This price includes
+Course fees
+Accommodation
+Accompanying programme","Teaching language
+German
+Language level of course
+German:
+B1, B2, C1
+Language requirements
+Participants should have good basic German language skills (level A 2.2 should already be completed).
+Submit application to
+Andreas Ritter
+International Center
+Kiel University
+Westring 400
+24118 Kiel
+Germany","Is accommodation organised?
+Accommodation is arranged by the organiser.
+Type of accommodation
+Accommodation is provided in a student dormitory. All rooms are single rooms with their own shower and toilet.
+Meals
+No meals are included. For lunch, students can buy inexpensive food at the university cafeteria.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+The course programme is complemented by welcome and farewell receptions and some cultural events in Kiel (included in the course fee).
+Free internet access
+Yes
+Support in visa matters
+No
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818877+00:00,daad_api,2026-02-01T17:42:20.508349,"['Limited course details available', 'Program duration not specified']",0.7000000000000001,True,,,[],C1,,"Participants should have good basic German language skills (level A2.2 should already be completed). Course is taught in German at levels B1, B2, and C1."
+6324,8th International Winter Academy,Martin Luther University Halle-Wittenberg,Lutherstadt Wittenberg,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/6324/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/68af0e1b99536.jpeg,language_course,language_course,Language course,arts,"['literature', 'german language course (including literature and culture studies)']",790.0,EUR,790.0,790.0,False,False,,['winter'],[2],2026-01-02,,,,['german'],"{'german': 'A1, A2, B1, B2'}","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2
+Language requirements
+Placement test on the first day of the course
+Submit application to
+Martin-Luther-Universität Halle-Wittenberg
+c/o Institut für deutsche Sprache und Kultur
+Collegienstraße 62
+06886 Lutherstadt Wittenberg
+Germany",[],[],,,False,"Course location Lutherstadt Wittenberg In cooperation with Institute for German Language and Culture Teaching language German Language level of course German: A1, A2, B1, B2 Date(s) 1 February - 26 February 2026 (Registration deadline of course provider: 2 January 2026) Target group This course is open to all German language learners. Description/content Come and explore Wittenberg and its UNESCO world heritage sites during the winter months. In this language course, you will not only discover t...",,False,False,,,"Course location
+Lutherstadt Wittenberg
+In cooperation with
+Institute for German Language and Culture
+Teaching language
+German
+Language level of course
+German: A1, A2, B1, B2
+Date(s)
+1 February - 26 February 2026 (Registration deadline of course provider: 2 January 2026)
+Target group
+This course is open to all German language learners.
+Description/content
+Come and explore Wittenberg and its UNESCO world heritage sites during the winter months. In this language course, you will not only discover the history of Luther’s town and learn about the city’s famous inhabitants but also learn a lot about Germany today.
+Here’s what you can expect:
+Class time
+Placement test
+9:00 am – 12:15 pm / 1:00 pm – 2:30 pm, communicative language classes at different levels
+Training of all four language skills — reading, listening, writing, and speaking
+Lessons in pronunciation by trained specialists
+Learn about current cultural and socio-political topics as well as the history and current reality of the area around Wittenberg
+Work on projects and final exam
+Field trips and free time
+Two days of field trips and lots of free time activities
+Farewell party with everyone involved
+Support and help from international volunteers and student assistants",,"Dates and costs
+1 February - 26 February 2026 (Registration deadline of course provider: 2 January 2026),
+costs: EUR 790
+This price includes
+Course fees
+Accompanying programme","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2
+Language requirements
+Placement test on the first day of the course
+Submit application to
+Martin-Luther-Universität Halle-Wittenberg
+c/o Institut für deutsche Sprache und Kultur
+Collegienstraße 62
+06886 Lutherstadt Wittenberg
+Germany","Is accommodation organised?
+Accommodation is arranged by the organiser.
+Type of accommodation
+Accommodation can be arranged by the organiser for an extra cost.
+Accommodation with host families, includes breakfast and dinner (675 EUR)
+Double rooms with Wi-Fi, no meals (500 EUR)
+Single rooms with Wi-Fi, no meals (620 EUR)
+Meals
+Breakfast and dinner are included with the host family.
+No meals with other types of accommodation
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+Wittenberg
+is a beautiful little German town filled with
+UNESCO World Heritage
+Sites
+, parks, cafés, and recreation areas along the Elbe River.
+During our language courses,
+two international volunteers
+(ESC/FSJ) will be organising a wide range of
+free-time
+and
+leisure activities
+.
+In
+Wittenberg:
+Guided tour, conversations with local people
+Workshops (music, theatre, etc.)
+Intercultural get-together
+Bike tours along the Elbe River
+Sports and leisure activities
+Museum visits (Martin Luther's house, Asisi's Panorama Luther 1517)
+Farewell evening with instructors and guests
+Outside of Wittenberg:
+Two day trips to
+Berlin
+and
+Leipzig
+(or other cities), including guided city tours, free-time suggestions
+Afternoon visit to UNESCO World Heritage Site
+Dessau/Wörlitz
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+Yes",2026-02-01T13:15:06.818889+00:00,daad_api,2026-02-01T17:42:20.508645,"['Limited course details available', 'Program duration not specified']",0.7000000000000001,True,,,"[{""exam"": ""Placement test"", ""language"": ""german"", ""minScore"": ""determined on first day""}]",B2,,"Course is taught in German and covers levels A1, A2, B1, B2. A placement test will be administered on the first day of the course to determine appropriate level. No specific minimum level required for admission - placement determines starting point."
+4100,a.r.t.e.s. Graduate School for the Humanities Cologne,University of Cologne,Köln,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4100/,,phd,phd,PhD / Doctorate,other,['history'],0,EUR,,,True,False,summer,['summer'],[],,36,6,,"['german', 'english']",{},"Academic admission requirements
+Applicants must hold an above-average university degree (MA or equivalent) in a discipline that is available as doctoral subject at the University of Cologne's Faculty of Arts and Humanities.
+Language requirements
+International doctoral students who wish to write their dissertations in German can join the programme immediately and improve their German during their studies.
+International doctoral students will have to provide proof of German at the level C1 (Common European Framework of Reference for Languages) by the time they submit their doctoral dissertations in the event that they write the dissertation in German.
+International doctoral students who wish to write the dissertation in English or in another language will have to provide proof of German at the level B2 by the time they submit their doctoral dissertations.
+A full remission of the German language proficiency is possible upon special request.
+Application deadline
+All applicants for the stru",[],[],,,False,"Degree Dr phil Course location Köln Teaching language German English Languages Courses are held in German and English. Participants can choose to write the doctoral dissertation in German, English, French, Italian, Spanish or Latin. Other languages are also possible (upon individual request). Full-time / part-time full-time Programme duration 6 semesters Beginning Summer semester Additional information on beginning, duration and mode of study Integrated Track (structured doctoral programme) resi... | Course organisation The integrated track of the a.r.t.e.s. Graduate School provides a structured doctoral model with an interdisciplinary approach. The individual doctoral studies are combined with a set of guided courses. Supervision is provided through a mentoring programme during a period of three academic years. The first year of the integrated track focuses on the elaboration of the dissertation topic, which has to be presented in the a.r.t.e.s. colloquium. In the second year, students focu...",6 semesters,False,False,,['Buddy programme | Cultural and linguistic preparation | Support with registration procedures'],"Degree
+Dr phil
+Course location
+Köln
+Teaching language
+German
+English
+Languages
+Courses are held in German and English. Participants can choose to write the doctoral dissertation in German, English, French, Italian, Spanish or Latin. Other languages are also possible (upon individual request).
+Full-time / part-time
+full-time
+Programme duration
+6 semesters
+Beginning
+Summer semester
+Additional information on beginning, duration and mode of study
+Integrated Track (structured doctoral programme)
+residence in Cologne required
+application deadline: approx. end of October
+programme beginning: April
+programme duration: three years
+Regular Track (individual doctorate)
+residence in Cologne is not required but recommended
+application: at any time (admission procedure four times a year)
+programme beginning: any time after admission
+programme duration: max. 12 semesters/six years (extension on application)
+Application deadline
+All applicants for the structured doctoral programme must apply by the end of October for the following summer semester. The exact date is announced on our website.
+For further information on our application procedure, please see
+http://www.artes.uni-koeln.de
+.
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+No
+Joint degree / double degree programme
+Yes
+Description/content
+The a.r.t.e.s. Graduate School for the Humanities Cologne is the graduate school of the University of Cologne’s Faculty of Arts and Humanities. The Faculty of Arts and Humanities – one of the largest of its kind in Europe – creates ideal conditions for an intensive, lively, and open-minded exchange of ideas and offers a unique range of subjects in the humanities and cultural studies, including, for example, philosophy, language and literature studies, linguistics, history and art history, ethnology and regional studies, media and theatre studies, musicology, archaeology, and digital humanities.
+Since October 2012, the a.r.t.e.s Graduate School is responsible for every doctoral project at the Faculty of Arts and Humanities. Doctoral students can choose between a regular track and an integrated track. The regular track is the standard model of the individual doctorate, whereas the integrated track is the structured doctoral model that, with regard to the interdisciplinary scope, is designed to allow completion of the doctoral project within a time frame of three years. The integrated track also includes a funding option for the pre-doc phase (six months) and a full scholarship for three years.
+The a.r.t.e.s. Graduate School serves as a platform for the internationalisation of graduate programmes that can build on a formidable existing network of cooperation agreements in the faculty and draw from the experience of a great number of teaching and research centres. The concept of the a.r.t.e.s. Graduate School is completed by a special focus on equality standards.
+The a.r.t.e.s. integrated track addresses graduates who have completed their studies with outstanding academic results in the humanities and who are interested in beginning their doctoral studies shortly after their final examination. The participants are supervised by two graduate class mentors and three academic supervisors, one of whom is from another discipline. In the graduate class colloquia during the semester period, the doctoral candidates periodically discuss the progress of their research with their classmates and the class mentors. The yearly and comprehensive colloquia of the entire graduate school offer the opportunity to discuss topics and advances in research.","Course organisation
+The integrated track of the a.r.t.e.s. Graduate School provides a structured doctoral model with an interdisciplinary approach. The individual doctoral studies are combined with a set of guided courses. Supervision is provided through a mentoring programme during a period of three academic years. The first year of the integrated track focuses on the elaboration of the dissertation topic, which has to be presented in the a.r.t.e.s. colloquium. In the second year, students focus on their own research and can attend additional workshops on transferable skills (e.g. seminars in academic presentation and writing, third party-funding, etc.), while the third year is dedicated to the presentation of results, writing, and the completion of the doctoral dissertation.
+The a.r.t.e.s. collegiate programme offers the opportunity to take part in the integrated track programme without a scholarship from the Graduate School, including the opportunity to attend the graduate classes.
+A Diploma supplement will be issued
+No
+International elements
+International guest lecturers
+Language training provided
+Projects with partners in Germany and abroad
+Content-related regional focus
+Specialist literature in other languages
+Description of other international elements
+The a.r.t.e.s. Graduate School emphasises research, teaching, and networking on an international level. This is apparent not only in the many transcultural and regionally-diverse research projects pursued at the school. It is also evident in the bilateral research and international doctoral models allowed for at a.r.t.e.s. Two examples of these are the binational joint supervision (cotutelle de thèse) and the supplementary qualification “Doctor Europaeus”, both of which contribute to the internationalisation of academic research.
+The refinement of the international profile of a.r.t.e.s. and that of the entire Faculty of Arts and Humanities is contributed to by its Summer Schools and Graduate Seminars, which are hosted regularly. It cooperates closely with its partner institutions and continually expands its international network.
+Teaching/work obligations or opportunities
+The programme does not include additional teaching or work obligations.
+Course-specific, integrated German language courses
+No
+Course-specific, integrated English language courses
+No","Tuition fees per semester in EUR
+None
+Semester contribution
+The semester contribution amounts to approx. 320 EUR per semester. The fee includes a ""Deutschlandsemesterticket"" that covers public transport in Germany.
+Funding opportunities within the university
+Yes
+Description of the above-mentioned funding opportunities within the university
+Each year, the a.r.t.e.s. Graduate School funds up to eight full scholarships for the integrated track amounting to 1,600 EUR per month for a maximum of six semesters. Students also receive financial aid for travels that benefit the research project.
+In addition and to ensure a quick transition from Master’s or similar degrees to doctoral studies, the a.r.t.e.s. Graduate School offers each year up to eight “Predoc” scholarships for six months (1,200 EUR per month) to help candidates to elaborate a doctoral project.","Academic admission requirements
+Applicants must hold an above-average university degree (MA or equivalent) in a discipline that is available as doctoral subject at the University of Cologne's Faculty of Arts and Humanities.
+Language requirements
+International doctoral students who wish to write their dissertations in German can join the programme immediately and improve their German during their studies.
+International doctoral students will have to provide proof of German at the level C1 (Common European Framework of Reference for Languages) by the time they submit their doctoral dissertations in the event that they write the dissertation in German.
+International doctoral students who wish to write the dissertation in English or in another language will have to provide proof of German at the level B2 by the time they submit their doctoral dissertations.
+A full remission of the German language proficiency is possible upon special request.
+Application deadline
+All applicants for the structured doctoral programme must apply by the end of October for the following summer semester. The exact date is announced on our website.
+For further information on our application procedure, please see
+http://www.artes.uni-koeln.de
+.
+Submit application to
+http://artes.phil-fak.uni-koeln.de/artesaccess.html?&L=1","Accommodation
+Finding accommodation in Cologne is tough and demanding for students, as in other large German cities. The need of housing is high especially in the beginning of the semester, therefore we recommend to begin to search for an accommodation as early as possible from your home country. The International Office has compiled useful information on its
+website
+.
+Structured research and supervision
+Yes
+Research training / discussion
+Yes
+Support for international students and doctoral candidates
+Buddy programme
+Cultural and linguistic preparation
+Support with registration procedures
+General services and support for international students and doctoral candidates
+General services and support for international doctoral candidates is offered via the University of Cologne's International Office.",2026-02-01T13:15:06.818897+00:00,daad_api,2026-02-01T17:42:20.509223,['No program image available'],0.9,True,,,[],C1,,German language requirements are flexible and deadline-based: C1 level required by dissertation submission if writing in German; B2 level required by dissertation submission if writing in English or another language. International students can join immediately and improve German during studies. Full remission of German proficiency possible upon special request.
+4341,Abbe School of Photonics – PhD/Doctoral Programme,Friedrich Schiller University Jena,Jena,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4341/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/5ea99b7be46db119381251.jpeg,phd,phd,PhD / Doctorate,other,['photonics'],0,EUR,,,True,False,any,[],[],,48,8,,"['english', 'german']",{},"Academic admission requirements
+Applicants must have obtained or be about to obtain a Master's degree or equivalent qualification in physics, optics, engineering, or a related field.
+Language requirements
+We request a decent level of English language capabilities, as English is common in the international science community. Test certificates like Cambridge, IELTS or TOEFL are appreciated.
+Knowledge of the German language is NOT a necessary prerequisite to be enrolled in our programme.
+Application deadline
+Check for current openings on our website
+www.asp.uni-jena.de/open_positions
+and apply within the stated deadlines. We also accept unsolicited applications at any time.
+Submit application to
+Applications can be submitted at any time at:
+https://apply2.uni-jena.de/utumg
+.",[],"['IELTS', 'TOEFL', 'CAMBRIDGE']",,,False,"Degree Dr rer nat or Dr Ing Course location Jena In cooperation with University of Berkeley, Australian National University, University of Toronto, Technical University Delft, National Taiwan University, Politecnico di Milano, University of Bordeaux, Université Paris-Saclay and many more Teaching language English German Languages Supervision is available in both German and English. Participants can choose to write the doctoral thesis in either language. Programme duration 8 semesters Beginning O... | Course organisation In addition to the regular courses which are part of the ASP programme, a variety of special lectures and workshops is given by world-renowned guest professors . Our open photonics makerspace at the Lichtwerkstatt Jena is always open for young people with creativity and some ideas. Moreover, doctoral candidates benefit from the close collaboration between ASP and some of the world's leading companies in the field of optics and photonics, such as ZEISS, ASML, TRUMPF, SCHOTT or...",8 semesters,False,False,,['Tutors | Visa matters | Specialist counselling | Cultural and linguistic preparation | Buddy programme | Accompanying programme'],"Degree
+Dr rer nat or Dr Ing
+Course location
+Jena
+In cooperation with
+University of Berkeley, Australian National University, University of Toronto, Technical University Delft, National Taiwan University, Politecnico di Milano, University of Bordeaux, Université Paris-Saclay and many more
+Teaching language
+English
+German
+Languages
+Supervision is available in both German and English. Participants can choose to write the doctoral thesis in either language.
+Programme duration
+8 semesters
+Beginning
+Only for doctoral programmes: any time
+Application deadline
+Check for current openings on our website
+www.asp.uni-jena.de/open_positions
+and apply within the stated deadlines. We also accept unsolicited applications at any time.
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+Yes
+Joint degree / double degree programme
+No
+Description/content
+Photonics is one of the main research fields at the Friedrich Schiller University Jena, and about 300 doctoral candidates are currently enrolled in our research-oriented PhD/doctoral programme.
+In our optics / photonics and quantum technology programme, we offer:
+high-end research and education in a world-class scientific environment with intensive mentoring
+PhD topics at the frontiers of science, giving way to the opportunity to publish in the world's most renowned journals like Nature and Science
+some of the best-equipped optics and photonics labs in the world
+an international programme with modules focusing on scientific and technical skills and equipping you with transferable skills
+access to an elite network of experts in optics and photonics
+One important cornerstone of our philosophy is to regard and value our doctoral candidates as scientists in all respects. The ASP offers an individually adjusted programme to meet each candidate's scientific background and interests. This guarantees an optimal level of preparation for a high-profile career in research or industry.","Course organisation
+In addition to the regular courses which are part of the ASP programme, a variety of special lectures and workshops is given by
+world-renowned guest professors
+. Our open photonics makerspace at the
+Lichtwerkstatt Jena
+is always open for young people with creativity and some ideas. Moreover, doctoral candidates benefit from the close collaboration between ASP and some of the world's leading companies in the field of optics and photonics, such as ZEISS, ASML, TRUMPF, SCHOTT or JENOPTIK, to name just a few.
+Interdisciplinarity is an inherent part of our philosophy. ASP provides a variety of courses that help students acquire additional knowledge in complementary sciences as well as essential transferable skills, e.g., in project management, leadership and developing a scientific career. Furthermore, workshops and courses on the German language, intercultural competences, job application training and good scientific practice are specifically designed to accommodate our international students quickly to their new scientific and private environment in Jena.
+A Diploma supplement will be issued
+Yes
+International elements
+International guest lecturers
+Language training provided
+Projects with partners in Germany and abroad
+Training in intercultural skills
+Courses are led with foreign partners
+Content-related regional focus
+International comparisons and thematic reference to the international context
+Integrated internships
+We are permanently offering the possibility of individual internships with our regional industry partners (e.g., ZEISS, ASML, TRUMPF, SCHOTT, JENOPTIK) as well as research stays abroad with our large network of international partners.
+Teaching/work obligations or opportunities
+Beside top-notch research, teaching undergraduate students is part of the professional experience that each of our doctoral students will gain.
+Special promotion / funding of the programme
+ERASMUS+
+DFG (e.g. Research Training Groups)
+Other (e.g. state level)
+Helmholtz Graduate Schools
+Course-specific, integrated German language courses
+Yes
+Course-specific, integrated English language courses
+Yes","Tuition fees per semester in EUR
+None
+Semester contribution
+Doctoral candidates in Jena have the possibility to enrol at the Friedrich Schiller University. Enrolment is not compulsory but it offers a whole range of advantages like access to student dorms, a ""mensa"" (student dining hall) discount, free public transport, a campus card, and more. The semester fee is approximately 250 EUR.
+https://www.uni-jena.de/en/semesterbeitrag
+Costs of living
+The living costs in Jena are still low compared to other places in Germany or elsewhere. We recommend that you plan for a budget of at least 700 to 770 EUR per month for living expenses. However, if you are accepted to our doctoral programme, you will be contracted and earn an even higher salary. In general, the costs of living are usually not an issue for any of our PhD/doctoral students.
+https://www.uni-jena.de/en/jena-living-international
+Funding opportunities within the university
+Yes
+Description of the above-mentioned funding opportunities within the university
+Once accepted into our programme, our specialised administration will intensively assist you in finding the right funding opportunity.","Academic admission requirements
+Applicants must have obtained or be about to obtain a Master's degree or equivalent qualification in physics, optics, engineering, or a related field.
+Language requirements
+We request a decent level of English language capabilities, as English is common in the international science community. Test certificates like Cambridge, IELTS or TOEFL are appreciated.
+Knowledge of the German language is NOT a necessary prerequisite to be enrolled in our programme.
+Application deadline
+Check for current openings on our website
+www.asp.uni-jena.de/open_positions
+and apply within the stated deadlines. We also accept unsolicited applications at any time.
+Submit application to
+Applications can be submitted at any time at:
+https://apply2.uni-jena.de/utumg
+.","Accommodation
+Once accepted by our programme, support in finding accommodation is available through our local ASP office. For a quick start, the rent for a single room in a university guest house is between 300 and 500 EUR.
+Structured research and supervision
+Yes
+Research training / discussion
+Yes
+Career advisory services and programmes for future professionals
+ASP offers intensive support to any individual PhD/doctoral candidate, including job application trainings, academic career counselling, start-up support, and access to a vast network of industry partners and exclusive academic institutions all over the world.
+Support for international students and doctoral candidates
+Tutors
+Visa matters
+Specialist counselling
+Cultural and linguistic preparation
+Buddy programme
+Accompanying programme
+General services and support for international students and doctoral candidates
+ASP strongly and actively pursues gender mainstreaming and family-friendly working conditions. In particular, the competitive support instruments that aim to maximally link doctoral student and postdoctoral career stages are considered to be optimally designed for promoting gender equality and for balancing disadvantages for female candidates. The support of young female scientists is a cross-sectional task for both the ASP and the Friedrich Schiller University, and it is taken seriously by both. It creates and secures conditions of equal opportunity for all its members, regardless of gender and background.",2026-02-01T13:15:06.818905+00:00,daad_api,2026-02-01T17:42:20.509439,[],1.0,True,,,"[{""exam"": ""Cambridge"", ""language"": ""english"", ""minScore"": ""not specified""}, {""exam"": ""IELTS"", ""language"": ""english"", ""minScore"": ""not specified""}, {""exam"": ""TOEFL"", ""language"": ""english"", ""minScore"": ""not specified""}]",,,"A decent level of English language capabilities is requested as English is common in the international science community. Test certificates like Cambridge, IELTS or TOEFL are appreciated but no specific minimum scores are stated. Knowledge of German language is explicitly NOT a necessary prerequisite for enrollment in the programme."
+10522,Academic German Preparation Course Munich: Intensive Courses,Internationale Hochschule SDI München/International University SDI München,München,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/10522/,,preparatory,preparatory,Preparatory course,other,[],0,EUR,,,True,False,,[],[],,,,,['german'],{},"Costs
+2,250 EUR: 24-week course (six months)
+3,750 EUR: 40-week course (one year)
+This price includes
+Course fees
+Course fees for language course
+Language requirements
+Level A2 is required for the language course and lectures in German economics, literature, geography, and politics.
+Level B2 is required for scientific language training and TestDaF preparation courses.
+Technical equipment and programmes
+Headset, internet access, Zoom
+Do applicants require a higher education entrance qualification recognised in Germany?
+No
+Do applicants have to have already been admitted to a study programme at your university?
+No
+Submit application to
+daf@sdi-muenchen.de",[],['TESTDAF'],,,False,"Course location München Teaching language German Course duration 6 months - 1 year Mode of study Fully on-site with voluntary online elements Phase(s) of attendance in Germany (applies to the entire programme) Yes, compulsory Pace of course Mixed (e.g. fixed exam dates and duration, study content can be studied at any time) Description/content In addition to language instruction for scientific purposes, lectures are offered in German social studies, literature, and geography (""Landeskunde"") (min... | Course duration 6 months - 1 year Course components General preparation for studies Intercultural training Language course Recognised language exams offered (e.g. DSH, TestDaF, TOEFL) Yes Average number of hours per week 24 Do course participants have student status? No Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination? Yes Preparation for degree programmes Bachelor's degree Master's degree State examination ...",,False,False,,,"Course location
+München
+Teaching language
+German
+Course duration
+6 months - 1 year
+Mode of study
+Fully on-site with voluntary online elements
+Phase(s) of attendance in Germany (applies to the entire programme)
+Yes, compulsory
+Pace of course
+Mixed (e.g. fixed exam dates and duration, study content can be studied at any time)
+Description/content
+In addition to language instruction for scientific purposes, lectures are offered in German social studies, literature, and geography (""Landeskunde"") (minimum number of participants: 15).
+We offer additional preparation courses for TestDaF.
+The courses include 24 classroom hours (45 minutes per classroom hour) per week on levels B1-C1. The programme prepares participants for language and study requirements at German universities. Participants will also obtain an invitation letter in order to apply for a visa.","Course duration
+6 months - 1 year
+Course components
+General preparation for studies
+Intercultural training
+Language course
+Recognised language exams offered (e.g. DSH, TestDaF, TOEFL)
+Yes
+Average number of hours per week
+24
+Do course participants have student status?
+No
+Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination?
+Yes
+Preparation for degree programmes
+Bachelor's degree
+Master's degree
+State examination
+Preparation for subject groups
+Language and Cultural Studies
+Further information on subsequent admission to degree programmes/guaranteed admission
+Students can apply for BA and MA programmes at the International University Munich / SDI München.
+Average number of participants per group/course
+15",,"Costs
+2,250 EUR: 24-week course (six months)
+3,750 EUR: 40-week course (one year)
+This price includes
+Course fees
+Course fees for language course
+Language requirements
+Level A2 is required for the language course and lectures in German economics, literature, geography, and politics.
+Level B2 is required for scientific language training and TestDaF preparation courses.
+Technical equipment and programmes
+Headset, internet access, Zoom
+Do applicants require a higher education entrance qualification recognised in Germany?
+No
+Do applicants have to have already been admitted to a study programme at your university?
+No
+Submit application to
+daf@sdi-muenchen.de","Is accommodation organised?
+The organiser helps participants look for accommodation.
+Accommodation
+https://www.sdi-muenchen.de/en/wohnen/campus-sdi
+Meals
+Meals (5 to 7 EUR) are offered in the cafeteria.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+July and August:
+excursions to the city, museums, restaurants (with the course)
+international leisure and cultural programmes on the SDI campus
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818911+00:00,daad_api,2026-02-01T17:42:20.509543,"['No program image available', 'Program duration not specified']",0.8,True,,,"[{""exam"": ""TestDaF"", ""language"": ""german"", ""minScore"": ""preparation course offered""}]",B2,,"Level A2 required for language course and lectures in German economics, literature, geography, and politics. Level B2 required for scientific language training and TestDaF preparation courses. Different levels required depending on course type."
+5160,Academic German Preparation Course Munich: Intensive Courses at the International University Munich,Internationale Hochschule SDI München/International University SDI München,München,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/5160/,,preparatory,preparatory,Preparatory course,other,[],,EUR,,,False,True,,[],[],,,,,['german'],{},"Costs
+2,250 EUR: 24-week course (six months)
+4,000 EUR: 40-week course (one year)
+This price includes
+Course fees for language course
+Course fees
+Further information regarding the price
+A four-week summer course can be integrated into the regular language courses.
+Academic admission requirements
+Minimum age: 17 years
+Language requirements
+Level A2 is required for the language course and lectures in German economics, literature, geography, and politics.
+Level B2 is required for scientific language training and TestDaF preparation courses.
+Do applicants require a higher education entrance qualification recognised in Germany?
+No
+Do applicants have to have already been admitted to a study programme at your university?
+No
+Submit application to
+SDI München / Internationale Hochschule SDI München
+Bereich Deutsch als Fremdsprache
+Baierbrunner Straße 28
+81379 München
+Germany",[],['TESTDAF'],,,False,"Course location München Teaching language German Course duration 6 months - 1 year Mode of study Less than 50% online Phase(s) of attendance in Germany (applies to the entire programme) Yes, compulsory Pace of course Mixed (e.g. fixed exam dates and duration, study content can be studied at any time) Description/content In addition to language instruction for scientific purposes, lectures are offered in German social studies, literature, and geography ""Landeskunde"" (minimum number of participant... | Course duration 6 months - 1 year Course components General preparation for studies Intercultural training Language course Recognised language exams offered (e.g. DSH, TestDaF, TOEFL) Yes Average number of hours per week 24 Do course participants have student status? No Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination? Yes Preparation for degree programmes Bachelor's degree Master's degree State examination ...",,False,True,,,"Course location
+München
+Teaching language
+German
+Course duration
+6 months - 1 year
+Mode of study
+Less than 50% online
+Phase(s) of attendance in Germany (applies to the entire programme)
+Yes, compulsory
+Pace of course
+Mixed (e.g. fixed exam dates and duration, study content can be studied at any time)
+Description/content
+In addition to language instruction for scientific purposes, lectures are offered in German social studies, literature, and geography ""Landeskunde"" (minimum number of participants: 15).
+We offer additional test preparation courses for B2.
+The courses include 24 classroom hours (45 minutes per classroom hour) per week on levels B1-C1. The programme prepares participants for language and study requirements at German universities. Participants will also obtain an invitation letter in order to apply for a visa.","Course duration
+6 months - 1 year
+Course components
+General preparation for studies
+Intercultural training
+Language course
+Recognised language exams offered (e.g. DSH, TestDaF, TOEFL)
+Yes
+Average number of hours per week
+24
+Do course participants have student status?
+No
+Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination?
+Yes
+Preparation for degree programmes
+Bachelor's degree
+Master's degree
+State examination
+Preparation for subject groups
+Language and Cultural Studies
+Further information on subsequent admission to degree programmes/guaranteed admission
+Students can apply for BA and MA programmes at the International University Munich / SDI München.
+Average number of participants per group/course
+15",,"Costs
+2,250 EUR: 24-week course (six months)
+4,000 EUR: 40-week course (one year)
+This price includes
+Course fees for language course
+Course fees
+Further information regarding the price
+A four-week summer course can be integrated into the regular language courses.
+Academic admission requirements
+Minimum age: 17 years
+Language requirements
+Level A2 is required for the language course and lectures in German economics, literature, geography, and politics.
+Level B2 is required for scientific language training and TestDaF preparation courses.
+Do applicants require a higher education entrance qualification recognised in Germany?
+No
+Do applicants have to have already been admitted to a study programme at your university?
+No
+Submit application to
+SDI München / Internationale Hochschule SDI München
+Bereich Deutsch als Fremdsprache
+Baierbrunner Straße 28
+81379 München
+Germany","Is accommodation organised?
+The organiser helps participants look for accommodation.
+Accommodation
+We offer rooms to rent on campus.
+Meals
+Meals (4-5 EUR) are offered in the cafeteria.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+July and August:
+excursions to the city, museums, restaurants (with the course)
+international leisure and cultural programmes on the SDI campus
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818916+00:00,daad_api,2026-02-01T17:42:20.509670,"['Tuition fees not specified - contact university', 'No program image available', 'Program duration not specified']",0.65,True,,,"[{""exam"": ""TestDaF"", ""language"": ""german"", ""minScore"": ""preparation course available""}]",B2,,"Level A2 required for language course and lectures in German economics, literature, geography, and politics. Level B2 required for scientific language training and TestDaF preparation courses. TestDaF preparation courses are offered as part of the program."
+10493,Academic German Year 2026/2027,University of Passau,Passau,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/10493/,,language_course,language_course,Language course,languages,"['german as an academic language', 'language', 'german']",0,EUR,,,True,False,,['winter'],[10],2026-06-30,,,,['german'],"{'german': 'A1, A2, B1, B2, C1'}","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+No previous knowledge of the German language is necessary.
+Submit application to
+https://www.gcp.uni-passau.de/en/academic-german-year/applications-and-admissions",[],[],,,False,"Course location Passau Teaching language German Language level of course German: A1, A2, B1, B2, C1 Date(s) October 2026 - September 2027 (Registration deadline of course provider: 30 June 2026) Information on dates, prices and mode of study No scholarships available Course participants can voluntarily decide to apply for the ""CampusCard"". This costs 118.50 EUR per semester and includes various functions, such as paying for meals in the refectory (""Unikantine""), a bus pass for the Passau city ar...",,False,False,,,"Course location
+Passau
+Teaching language
+German
+Language level of course
+German: A1, A2, B1, B2, C1
+Date(s)
+October 2026 - September 2027 (Registration deadline of course provider: 30 June 2026)
+Information on dates, prices and mode of study
+No scholarships available
+Course participants can voluntarily decide to apply for the ""CampusCard"". This costs 118.50 EUR per semester and includes various functions, such as paying for meals in the refectory (""Unikantine""), a bus pass for the Passau city area and other benefits.
+Target group
+International students who only have very little or no knowledge of the German language and who are aiming for a degree programme at the University of Passau
+Description/content
+This intensive German course is a joint project between the Language Centre and the International Office of the University of Passau, and it is one of the building blocks of the university’s strong international and multicultural orientation.
+The Academic German Year (AGY) starts with level A1 of the Common European Framework of Reference for Languages. Those completing the course will be given ample preparation to pass an official German language proficiency test.
+Study German together with highly motivated international students! The course participants will take intensive German classes five days a week (24 units each 45 minutes) and will be taught by experienced lecturers.
+Applicants should provide the following documents:
+A cover letter (letter of motivation) in German or English, one page
+Curriculum vitae in German or English
+A photocopy or scan of your
+secondary school leaving certificate
+Examples of leaving certificates are as follows: A Levels, Apolytirio, Baccalauréat, Gaokao, high school diploma, Lise Diploması, Matura, Maturita, Scottish Highers, Te'udat bagrut, Título de Bachillerato + Pruebas de Aptitud. (This list is not exhaustive.)
+Please also include certificates for all academic achievements gained after secondary school, such as university transcripts and certificates.
+Applicants need to fill out an application form:
+https://www.gcp.uni-passau.de/en/academic-german-year/applications-and-admissions
+.",,"Dates and costs
+October 2026 - September 2027 (Registration deadline of course provider: 30 June 2026),
+costs: EUR 3,990
+This price includes
+Course fees
+Information on dates, prices and mode of study
+No scholarships available
+Course participants can voluntarily decide to apply for the ""CampusCard"". This costs 118.50 EUR per semester and includes various functions, such as paying for meals in the refectory (""Unikantine""), a bus pass for the Passau city area and other benefits.","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+No previous knowledge of the German language is necessary.
+Submit application to
+https://www.gcp.uni-passau.de/en/academic-german-year/applications-and-admissions","Is accommodation organised?
+The organiser helps participants look for accommodation.
+Meals
+In the award-winning refectory in Passau, each student can put together his or her own menu, choosing from four different dishes every day during the lecture period. These meals include vegetarian dishes, meat dishes, soups, salads and desserts. Payment is done electronically with your ""CampusCard"".
+Thanks to state subsidies, prices are kept low.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+The extracurricular activities offer you many opportunities to get to know Germany's culture, landscape and people.
+In addition to the German courses, we offer exciting trips – for example, to the Bavarian Forest National Park and to Munich, Regensburg and Linz. Additionally, we organise parties, picnics, and barbecues on the popular ""Innwiese"" directly by the river, and we also offer seminars and much more.
+Free internet access
+Yes
+Support in visa matters
+No
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818921+00:00,daad_api,2026-02-01T17:42:20.509764,"['No program image available', 'Limited course details available', 'Program duration not specified']",0.6,False,,,[],,,"No previous knowledge of the German language is necessary. The course teaches German at levels A1, A2, B1, B2, and C1, but no minimum proficiency is required for admission. Teaching language is German."
+4960,"Academic Life in Leipzig – Autumn Language Course for International Researchers, Doctoral Candidates, and Students",Leipzig University,Leipzig,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4960/,,language_course,language_course,Language course,arts,"['literature', 'german language course (including literature and culture studies)']",,EUR,,,False,True,,['winter'],[9],,,,,['german'],"{'german': 'A1, A2, B1, B2, C1'}","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+Participation in the course is already possible at beginner level. Language classes are offered at levels A1 to C1.
+Technical equipment and programmes
+As part of our autumn language course ""Academic Life in Leipzig"", additional material and exercises are provided on a learning platform. Participants will therefore need a notebook or tablet in order to learn successfully.
+It is important that participants can work independently or collaboratively on the online learning platform in addition to face-to-face teaching.
+Submit application to
+If you would like to participate in the language programme at Leipzig University, please send the registration form to interDaF by mail or as an e-mail attachment:
+interDaF am Herder-Institut
+Lumumbastraße 4
+04105 Leipzig
+E-mail:
+interdaf@uni-leipzig.de",[],[],,,False,"Course location Leipzig Teaching language German Language level of course German: A1, A2, B1, B2, C1 Date(s) 1 September - 26 September 2026 Mode of study Fully on-site with voluntary online elements Phase(s) of attendance in Germany (applies to the entire course) Yes, compulsory Pace of course Instructor-led (Specific due dates for lectures/assignments/exams) Information on dates, prices and mode of study Our courses in Leipzig combine face-to-face learning with modern digital methods. In addit...",,False,False,,,"Course location
+Leipzig
+Teaching language
+German
+Language level of course
+German: A1, A2, B1, B2, C1
+Date(s)
+1 September - 26 September 2026
+Mode of study
+Fully on-site with voluntary online elements
+Phase(s) of attendance in Germany (applies to the entire course)
+Yes, compulsory
+Pace of course
+Instructor-led (Specific due dates for lectures/assignments/exams)
+Information on dates, prices and mode of study
+Our courses in Leipzig combine face-to-face learning with modern digital methods. In addition to varied on-site activities, we supplement the lessons with an intuitive learning platform that serves as a central location for materials and exchange.
+If necessary, learning can take place entirely online: You can take part in live video conferences and deepen your knowledge during independent learning phases.
+Our learning service is there to support you throughout the course.
+Target group
+Our fall course is aimed at international researchers, doctoral candidates, and students who are about to start their academic work or studies in Germany and would like to improve their German language skills in a targeted and practical way.
+Description/content
+Language skills for your studies – discover and experience Leipzig
+The Academic Life in Leipzig autumn course combines intensive German lessons with exciting insights into Leipzig as a centre of science and higher education. This course is ideal for anyone looking to improve their language skills while gaining first-hand experience of academic life in Germany.
+Learn German – intensively and individually
+Online placement test before the start of the course and personal oral assessment at the start
+Learn in small groups (approx. 14 participants) – from level A1 to C1
+Approx. 25 lessons per week, including phonetics training in individual or small group sessions
+Modern textbook (included in the course fee), up-to-date materials, and access to the Moodle learning platform
+Modules on academic speaking and writing
+Practical explorations on the topic of ""Studying and researching in Leipzig"" – in cooperation with Leipzig universities and research institutions
+Written and oral final exam
+Acquisition of five ECTS points possible (can be credited at the home university)
+Certificate of participation with documented test results
+Experience Germany – culture and everyday life up close
+Interactive cultural events with a focus on real-life regional studies – e.g. research and interviews on site
+City walks and exploratory tours in and around Leipzig
+Visits to research institutions in Leipzig
+One full-day excursion
+Personal support from the course team
+Further optional offers (e.g. weekend excursions to Dresden or Weimar)",,"Dates and costs
+1 September - 26 September 2026
+Price only on request
+Yes
+Information on dates, prices and mode of study
+Our courses in Leipzig combine face-to-face learning with modern digital methods. In addition to varied on-site activities, we supplement the lessons with an intuitive learning platform that serves as a central location for materials and exchange.
+If necessary, learning can take place entirely online: You can take part in live video conferences and deepen your knowledge during independent learning phases.
+Our learning service is there to support you throughout the course.","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+Participation in the course is already possible at beginner level. Language classes are offered at levels A1 to C1.
+Technical equipment and programmes
+As part of our autumn language course ""Academic Life in Leipzig"", additional material and exercises are provided on a learning platform. Participants will therefore need a notebook or tablet in order to learn successfully.
+It is important that participants can work independently or collaboratively on the online learning platform in addition to face-to-face teaching.
+Submit application to
+If you would like to participate in the language programme at Leipzig University, please send the registration form to interDaF by mail or as an e-mail attachment:
+interDaF am Herder-Institut
+Lumumbastraße 4
+04105 Leipzig
+E-mail:
+interdaf@uni-leipzig.de","Is accommodation organised?
+The organiser helps participants look for accommodation.
+Meals
+Our course participants can eat at the student cafeteria ""Mensa am Park"", which is part of the campus of Leipzig University in the city centre.
+Close to our institute as well as in the nearby city centre, you will also find a wide variety of cafés, restaurants, and pubs.
+Moreover, there are small kitchens in the accommodation, where you can prepare meals on your own.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+The course price includes a varied accompanying programme that combines learning with shared experiences:
+one full-day excursion, e.g. to Erfurt – exciting impressions and new perspectives outside of the seminar room
+shared opening and closing dinners – a great way to arrive and bring the course to a close together
+selected cultural events, e.g. a concert – for special evenings full of music and encounters
+visits to museums and places of interest, e.g. a guided tour of the Forum of Contemporary History – bringing history to life
+We also offer other interesting excursions, such as an excursion to Dresden. This is bookable for a small surcharge.
+We are happy to give personal tips for your own activities so that you can discover Leipzig and the surrounding area in your own way.
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818929+00:00,daad_api,2026-02-01T17:42:20.509914,"['Tuition fees not specified - contact university', 'No program image available', 'Limited course details available', 'Program duration not specified']",0.45000000000000007,False,,,[],,,"No minimum language proficiency required for participation. This is a German language course offered at multiple levels (A1, A2, B1, B2, C1). Beginners can participate. The course teaches German at various CEFR levels from A1 to C1, but does not require a specific entry level. Participants need technical equipment (notebook or tablet) for online learning platform access."
+6214,ACCESS² Preparation Year,Heilbronn University of Applied Sciences,Heilbronn,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/6214/,,preparatory,preparatory,Preparatory course,other,[],,EUR,,,False,True,,['winter'],[9],,,,,"['german', 'english']",{},"Costs
+155 EUR semester contribution (no other fees apply)
+This price includes
+Course fees
+Course fees for language course
+Academic admission requirements
+The academic aptitude can be proven by submitting a higher education entrance qualification recognised in Germany (applicable to all profiles).
+Alternatively, applicants with an indirect university access in Germany can prove their academic aptitude for the profiles ""Engineering"" and ""IT"" by submitting either a SAT score report, a TestAS certificate or by participating in the ITB Technology Test.
+Language requirements
+German
+:
+Upon application, participants will be required to provide proof of German language proficiency at completed level A2 of the Common European Framework of Reference for Languages.
+English
+:
+While the language course is in German, the technical courses are offered in English. In order to ensure a sufficient level of English in the ACCESS² preparation course, applicants are required to prove that they possess profi",[],"['IELTS', 'TOEFL', 'CAMBRIDGE']",,6.0,False,"Course location Heilbronn Teaching language German English Date(s) September 2025 - August 2026 September 2026 - August 2027 Description/content Starting your studies abroad means that changes lie ahead – whether it's the new language, making new friends or achieving success in your academic courses. The ACCESS² programme offers a comprehensive preparation package for prospective engineering or business students. Programme components include: an intensive German language course that includes the... | Course components Subject-specific preparation Preparation for academic working methods Excursions Language course Intercultural training Recognised language exams offered (e.g. DSH, TestDaF, TOEFL) Yes Do course participants have student status? Yes Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination? No Preparation for degree programmes Bachelor's degree Preparation for subject groups Mathematics, Natural Sci...",,False,False,,,"Course location
+Heilbronn
+Teaching language
+German
+English
+Date(s)
+September 2025 - August 2026
+September 2026 - August 2027
+Description/content
+Starting your studies abroad means that changes lie ahead – whether it's the new language, making new friends or achieving success in your academic courses. The ACCESS² programme offers a comprehensive preparation package for prospective engineering or business students.
+Programme components include:
+an intensive German language course that includes the levels B1 and B2
+specialised subjects in engineering (e.g. programming, maths, electrical engineering), business (e.g. marketing, accounting, economics) or informatics in the English language
+preparation for academic working methods (e.g. presentation skills, academic writing)
+excursions to companies in the region
+Additional support:
+intercultural buddy programme
+contact to student assistants regarding questions about campus life
+weekly consultation hours","Course components
+Subject-specific preparation
+Preparation for academic working methods
+Excursions
+Language course
+Intercultural training
+Recognised language exams offered (e.g. DSH, TestDaF, TOEFL)
+Yes
+Do course participants have student status?
+Yes
+Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination?
+No
+Preparation for degree programmes
+Bachelor's degree
+Preparation for subject groups
+Mathematics, Natural Sciences
+Engineering Sciences
+Economic Sciences, Law
+Further information on subsequent admission to degree programmes/guaranteed admission
+Upon successful completion of the ACCESS² programme, the participants fulfil the language requirements for several Bachelor's programmes at Heilbronn University of Applied Sciences.
+Also, the programme provides an introduction to the following Bachelor's programmes:
+Engineering Profile:
+Electrical Systems Engineering (BEng)
+Automotive Systems Engineering (BEng)
+Mechatronics and Robotics (BEng)
+Mechanical Engineering
+Business Profile:
+International Business – Intercultural Studies
+Informatics Profile:
+Software Engineering
+Successful participants can apply directly for the Bachelor's programmes of their choice. Course achievements from the preparation programme can be recognised in the above-mentioned Bachelor's programmes upon request.",,"Costs
+155 EUR semester contribution (no other fees apply)
+This price includes
+Course fees
+Course fees for language course
+Academic admission requirements
+The academic aptitude can be proven by submitting a higher education entrance qualification recognised in Germany (applicable to all profiles).
+Alternatively, applicants with an indirect university access in Germany can prove their academic aptitude for the profiles ""Engineering"" and ""IT"" by submitting either a SAT score report, a TestAS certificate or by participating in the ITB Technology Test.
+Language requirements
+German
+:
+Upon application, participants will be required to provide proof of German language proficiency at completed level A2 of the Common European Framework of Reference for Languages.
+English
+:
+While the language course is in German, the technical courses are offered in English. In order to ensure a sufficient level of English in the ACCESS² preparation course, applicants are required to prove that they possess proficient skills in English by means of one of the following certifications:
+IELTS
+, minimum
+6.0
+overall band score
+TOEFL
+Internet-based test, minimum
+79
+points
+TOEFL
+paper-based test, minimum
+550
+points
+Cambridge CAE
+(Certificate in Advanced English), minimum
+C
+Oxford Test of English
+(at least 120 points and B2 in all modules)
+To ensure a high level of language proficiency, only native speakers of English are exempt from this requirement. Applicants whose school education or first degree were taught in English can be exempted as well. The TOEFL code of Heilbronn University is 2751.
+Do applicants require a higher education entrance qualification recognised in Germany?
+No
+Do applicants have to have already been admitted to a study programme at your university?
+No
+Submit application to
+https://www.hs-heilbronn.de/en/access2","Is accommodation organised?
+The organiser helps participants look for accommodation.
+Is a social and leisure programme offered?
+No
+Free internet access
+Yes
+Support in visa matters
+No
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818937+00:00,daad_api,2026-02-01T17:42:20.510091,"['Tuition fees not specified - contact university', 'No program image available', 'Program duration not specified']",0.65,True,,,[],A2,,"German A2 required upon application. English proficiency required for technical courses (language course is in German, but technical courses are in English). The text appears to be cut off regarding specific English proficiency requirements."
+4722,Actuarial and Financial Mathematics,RPTU University of Kaiserslautern-Landau,Kaiserslautern,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4722/,,master,master,Master's degree,natural sciences,"['applied mathematics', 'mathematics']",0,EUR,,,True,False,winter,['winter'],[],,24,4,,['english'],{},"Academic admission requirements
+Applicants have to hold a qualified BSc degree in Mathematics or Economathematics (equivalent to the correspondent study programmes in Kaiserslautern). Profound knowledge in probability theory and stochastic is required.
+Language requirements
+Profound knowledge of the English language (e.g., TOEFL 550 paper-based/ 213 computer-based /80 Internet-based)
+Application deadline
+Winter semester: 30 April
+(Early bird admission: 15 November)
+Summer semester: 31 October
+Submit application to
+Graduate School ""Mathematics as a Key Technology""
+Department of Mathematics
+RPTU University of Kaiserslautern-Landau
+Gottlieb-Daimler-Str. 47
+67663 Kaiserslautern
+Germany
+https://math.rptu.de/en/studies/study-programmes/msc/application-master",[],['TOEFL'],graduate,,False,Degree MSc Course location Kaiserslautern Teaching language English Languages The programme is completely in English. Additional courses taught in German are available. Interested students can practice their German language skills. Programme duration 4 semesters Beginning Winter and summer semester Application deadline Winter semester: 30 April (Early bird admission: 15 November) Summer semester: 31 October Tuition fees per semester in EUR None Combined Master's degree / PhD programme Yes Joint ... | Course organisation The research-oriented study programme contains practical training in real-world problems. The last semester is reserved for the Master's thesis. A Diploma supplement will be issued Yes International elements International guest lecturers Specialist literature in other languages Language training provided Training in intercultural skills Projects with partners in Germany and abroad International comparisons and thematic reference to the international context Integrated interns...,4 semesters,False,False,,['Welcome event | Buddy programme | Accompanying programme | Specialist counselling | Cultural and linguistic preparation | Visa matters | Pick-up service | Help with finding accommodation | Support with registration procedures'],"Degree
+MSc
+Course location
+Kaiserslautern
+Teaching language
+English
+Languages
+The programme is completely in English. Additional courses taught in German are available. Interested students can practice their German language skills.
+Programme duration
+4 semesters
+Beginning
+Winter and summer semester
+Application deadline
+Winter semester: 30 April
+(Early bird admission: 15 November)
+Summer semester: 31 October
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+Yes
+Joint degree / double degree programme
+No
+Description/content
+Within the field of mathematics, the study programme focuses on financial mathematics, actuarial sciences, statistics, and computational methods. Lectures in the mentioned fields are accompanied by seminars, reading courses, and project seminars. In addition, the participants take modules like Insurance Economics, Economics of Banking, Dynamics of Financial Markets.","Course organisation
+The research-oriented study programme contains practical training in real-world problems. The last semester is reserved for the Master's thesis.
+A Diploma supplement will be issued
+Yes
+International elements
+International guest lecturers
+Specialist literature in other languages
+Language training provided
+Training in intercultural skills
+Projects with partners in Germany and abroad
+International comparisons and thematic reference to the international context
+Integrated internships
+Yes
+Course-specific, integrated German language courses
+Yes
+Course-specific, integrated English language courses
+No","Tuition fees per semester in EUR
+None
+Semester contribution
+Social fee: 314 EUR per semester (including public transport [""Deutschland-Semesterticket""], free university sports courses, free printouts, reductions in RPTU canteen, etc.)
+Assessment fee: 60 EUR (RPTU Kaiserslautern), 75 EUR (RPTU Landau) (single payment for verification of foreign certificates)
+Recommended: German Language & Orientation Course for International Students: 800 EUR
+Costs of living
+Monthly cost of living: approx. 850 EUR (RPTU Kaiserslautern), approx. 950 EUR (RPTU Landau)
+(including accommodation, health insurance, food, internet, phone, etc.)
+For more information:
+https://rptu.de/international/master/prospective-students/why-kaiserslautern/fees-living-expenses
+Funding opportunities within the university
+No","Academic admission requirements
+Applicants have to hold a qualified BSc degree in Mathematics or Economathematics (equivalent to the correspondent study programmes in Kaiserslautern). Profound knowledge in probability theory and stochastic is required.
+Language requirements
+Profound knowledge of the English language (e.g., TOEFL 550 paper-based/ 213 computer-based /80 Internet-based)
+Application deadline
+Winter semester: 30 April
+(Early bird admission: 15 November)
+Summer semester: 31 October
+Submit application to
+Graduate School ""Mathematics as a Key Technology""
+Department of Mathematics
+RPTU University of Kaiserslautern-Landau
+Gottlieb-Daimler-Str. 47
+67663 Kaiserslautern
+Germany
+https://math.rptu.de/en/studies/study-programmes/msc/application-master","Possibility of finding part-time employment
+Student assistant jobs are available on a competitive basis at the university & its departments, at the affiliated research institutes of the Science & Innovation Alliance Kaiserslautern (including DFKI, Max Planck, Fraunhofer, etc.), or at nearby companies (John Deere, Daimler, BASF, etc.).
+Excellent students have good chances of finding jobs in research projects, but these are not usually granted in advance.
+International Affairs RPTU supports international students in finding student jobs and in strengthening their professional network, e.g. by organising networking dialogues with executives from science and industry.
+Accommodation
+RPTU Kaiserslautern
+The majority of our students live in residence halls located on or close to campus. The ""Studierendenwerk"" operates several large halls of residence in Kaiserslautern. Students submit housing applications directly to the Studierendenwerk. For international Master's or PhD students, International Affairs RPTU aims to arrange accommodation in these residence halls or in private accommodation as part of the pre-arrival service. The halls of residence have modern single, double or shared apartments with kitchenette, bathroom/WC, and modern facilities as well as internet access.
+Fully-furnished: kitchenette (no plates & pots, etc.), bed & mattress (no blankets & pillows), wardrobe, shelf, table, chair (no computer) – rent: approx. 250 to 350 EUR
+Since accommodation is not automatically guaranteed with admission, a request for accommodation to ISGS is advisable.
+Optional: To help international students get started in Kaiserslautern, the Studierendenwerk offers a starter package. This package can be purchased for 95 EUR:
+https://www.studierendenwerk-kaiserslautern.de/en/housing/international
+.
+More information:
+https://rptu.de/international/master/prospective-students/travel-accommodation/accommodation
+RPTU Landau
+Accommodation is available in student residences or on the private housing market. A certain number of rooms in student residences are reserved for incoming international Master's students who enrol at RPTU Landau. Students can contact the Welcome Center for further information with regard to the application process or a search for private housing. E-mail:
+international@uni-landau.de
+More information:
+https://rptu.de/international/master/prospective-students-landau/travel-accommodation/accommodation
+Career advisory services and programmes for future professionals
+International Affairs RPTU sets up interdisciplinary workshops, seminars and info sessions focusing on skills & competences needed to establish a career in the German (business) culture.
+More information:
+https://rptu.de/international/master/current-students/enhance-your-degree
+Support for international students and doctoral candidates
+Welcome event
+Buddy programme
+Accompanying programme
+Specialist counselling
+Cultural and linguistic preparation
+Visa matters
+Pick-up service
+Help with finding accommodation
+Support with registration procedures
+General services and support for international students and doctoral candidates
+International Affairs RPTU supports international students during every phase of their stay!
+Before your arrival: Effective pre-arrival communication helps you handle application, visa, residence permit, and housing affairs.
+Once you are here: As a warm-up to your studies, we offer an orientation course which combines German language training with administrative support (finding accommodation, registration process, visa, health insurance, rental contracts, etc.) & a cultural & social component including individual guidance in the first days, a campus & city tour, excursions, info sessions, social events, a welcome party, etc.
+During your stay: We provide you with continuing support and accompany you on your way until graduation and entry into the German job market.
+More information:
+https://rptu.de/en/international/home",2026-02-01T13:15:06.818944+00:00,daad_api,2026-02-01T17:42:20.510210,['No program image available'],0.9,True,,80,[],,,"Profound knowledge of English required. TOEFL scores accepted: 550 paper-based, 213 computer-based, or 80 Internet-based. The 'e.g.' suggests other equivalent English proficiency proofs may be accepted."
+10396,Additive Manufacturing,Paderborn University,Paderborn,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/10396/,,master,master,Master's degree,engineering,"['mechanical engineering', 'engineering', 'mechanical']",0,EUR,,,True,False,winter,['winter'],[],,24,4,,['english'],{},"Academic admission requirements
+University studies equivalent to a three-year German Bachelor's degree, final grade 2.5 minimum
+Further requirements only for applicants from non-EU/EEA countries:
+GRE Revised General Test with at least 157 points in the ""Quantitative Reasoning"" section and at least 4.0 points in the ""Analytical Writing"" section
+Applicants with a CGPA in their Bachelor‘s degree better than 1.3 according to the German grading scale do not need to submit the GRE.
+Language requirements
+English B2 or TOEFL 87 iBT or IELTS 6.5 or CFE Note B minimum
+Application deadline
+Winter semester (starting in October): 31 May for international applicants (21 September for applications from Germany/EU)
+Summer semester (starting in April): 30 November for international applicants (21 March for applications from Germany/EU)
+Submit application to
+Non-EU citizens: Please apply via the
+uni-assist portal
+.
+EU citizens: Please apply via the
+online application portal
+of Paderborn University.
+The ",[],"['IELTS', 'TOEFL']",,2.5,False,"Degree Master of Science Course location Paderborn Teaching language English Languages Courses are held in English (100%). Full-time / part-time full-time Programme duration 4 semesters Beginning Winter and summer semester Application deadline Winter semester (starting in October): 31 May for international applicants (21 September for applications from Germany/EU) Summer semester (starting in April): 30 November for international applicants (21 March for applications from Germany/EU) Tuition fee... | Course organisation More information on website: https://mb.uni-paderborn.de/studium/modulhandbuecher A Diploma supplement will be issued Yes Integrated internships 12 weeks industrial internship Course-specific, integrated German language courses No Course-specific, integrated English language courses No",4 semesters,False,False,,['Buddy programme | Tutors | Specialist counselling | Support with registration procedures'],"Degree
+Master of Science
+Course location
+Paderborn
+Teaching language
+English
+Languages
+Courses are held in English (100%).
+Full-time / part-time
+full-time
+Programme duration
+4 semesters
+Beginning
+Winter and summer semester
+Application deadline
+Winter semester (starting in October): 31 May for international applicants (21 September for applications from Germany/EU)
+Summer semester (starting in April): 30 November for international applicants (21 March for applications from Germany/EU)
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+No
+Joint degree / double degree programme
+No
+Description/content
+Main contents:
+Plastics Technologies in Additive Manufacturing
+Materials Science of Metals
+3D Metal Printing
+Introduction to Additive Manufacturing & Manufacturing Technology
+Materials Science of Plastics
+Powder Technology
+Structure Optimisation
+Design Rules for Additive Manufacturing
+Product Creation
+Standard Software Application Development","Course organisation
+More information on website:
+https://mb.uni-paderborn.de/studium/modulhandbuecher
+A Diploma supplement will be issued
+Yes
+Integrated internships
+12 weeks industrial internship
+Course-specific, integrated German language courses
+No
+Course-specific, integrated English language courses
+No","Tuition fees per semester in EUR
+None
+Semester contribution
+280 EUR per semester (subject to change)
+https://stupa.uni-paderborn.de/en/semester-fee/
+Costs of living
+Estimate of monthly expenses (subject to change):
+Rent: 400 EUR
+Health Insurance: about 140 EUR
+Food: 350 EUR
+Semester fee: 50 EUR
+Miscellaneous: about 120 EUR
+Monthly sum: 1,210 EUR
+Funding opportunities within the university
+No","Academic admission requirements
+University studies equivalent to a three-year German Bachelor's degree, final grade 2.5 minimum
+Further requirements only for applicants from non-EU/EEA countries:
+GRE Revised General Test with at least 157 points in the ""Quantitative Reasoning"" section and at least 4.0 points in the ""Analytical Writing"" section
+Applicants with a CGPA in their Bachelor‘s degree better than 1.3 according to the German grading scale do not need to submit the GRE.
+Language requirements
+English B2 or TOEFL 87 iBT or IELTS 6.5 or CFE Note B minimum
+Application deadline
+Winter semester (starting in October): 31 May for international applicants (21 September for applications from Germany/EU)
+Summer semester (starting in April): 30 November for international applicants (21 March for applications from Germany/EU)
+Submit application to
+Non-EU citizens: Please apply via the
+uni-assist portal
+.
+EU citizens: Please apply via the
+online application portal
+of Paderborn University.
+The application process is completely digital. You don't need to submit any paper documents.","Possibility of finding part-time employment
+You can find student jobs, internships and working student positions on the
+Students' Union Jobs page
+.
+Career advisory services and programmes for future professionals
+With the DAAD funded project
+InRegioFIT
+, Paderborn University is pursuing the goal of providing international students with targeted support throughout their studies and during their transition into the labour market. The project focuses on the specific regional requirements and circumstances in order to optimally prepare international talent for entering the local labour market.
+The International Office also provides trainings for preparing students and graduates for the German labour market.
+Support for international students and doctoral candidates
+Buddy programme
+Tutors
+Specialist counselling
+Support with registration procedures
+General services and support for international students and doctoral candidates
+In general, international students have access to all of the university's services, such as academic advising, counselling, etc. We also offer a vibrant international student community, special events and job application training for international students.",2026-02-01T13:15:06.818949+00:00,daad_api,2026-02-01T17:42:20.510320,['No program image available'],0.9,True,6.5,87,"[{""exam"": ""Cambridge CFE"", ""language"": ""english"", ""minScore"": ""Note B""}]",,B2,"English proficiency required at B2 level minimum. Acceptable proof: TOEFL iBT 87+, IELTS 6.5+, or Cambridge CFE with Note B minimum. No German language requirement specified."
+9145,Adult Education and Management in Lifelong Education,Julius-Maximilians-Universität Würzburg,Würzburg,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/9145/,,master,master,Master's degree,education,"['international pedagogy', 'pedagogy']",0,EUR,,,True,False,winter,['winter'],[],,24,4,70,"['english', 'german']",{},"Academic admission requirements
+Please find up-to-date information about the admission requirements on our website:
+https://go.uniwue.de/mae-application
+.
+For admission to the programme, you need:
+A Bachelor's degree (180 ECTS)
+with an
+average grade of at least 2.2
+, or an average grade of at least 2.0 in 25 ECTS of modules related to adult education
+Proof of competence
+in modules regarding the following educational and pedagogical areas (minimum 40 ECTS credits), with at least 5 ECTS credits in at least two of the following areas:
+Micro level of education and pedagogy
+(e.g. teaching, learning, didactics, methodology, educational practice)
+Meso level of education and pedagogy
+(e.g. programme planning, organisational development, management)
+Macro level of education and pedagogy
+(e.g. educational policy, educational law, educational theories, theories on societal context)
+English proficiency: B2 level
+For applicants with
+university degrees from a non-EU/EEA country
+: We require a prelim",[],[],,40.0,False,"Degree Master of Arts Double Degree with University of Padua Course location Würzburg In cooperation with Università Degli Studi Di Padova, Italy Teaching language English German Languages All courses are held in English. However, to offer students additional options, some modules in the elective area are exclusively available in German. One such exception is the compulsory elective module Group E (Diversity and Difference Criteria), which is only available in German. Full-time / part-time full-... | Course organisation The Master's programme consists of three compulsory parts (70 ECTS), a compulsory elective part (20 ECTS), and a Master's thesis (30 ECTS). Each part is made up of several modules that students are required to complete. Please find more information about the courses offered on our course website (--> Study Structure). Compulsory I (20 ECTS credits): Theories and Social Framework Conditions for Lifelong Education Compulsory II (25 ECTS credits): Professional Skills in the Cont...",4 semesters,False,True,,['Welcome event | Help with finding accommodation | Support with registration procedures | Visa matters'],"Degree
+Master of Arts
+Double Degree with University of Padua
+Course location
+Würzburg
+In cooperation with
+Università Degli Studi Di Padova, Italy
+Teaching language
+English
+German
+Languages
+All courses are held in English.
+However, to offer students additional options, some modules in the elective area are exclusively available in German. One such exception is the compulsory elective module Group E (Diversity and Difference Criteria), which is only available in German.
+Full-time / part-time
+full-time
+Mode of study
+Hybrid
+Programme duration
+4 semesters
+Beginning
+Winter and summer semester
+Additional information on beginning, duration and mode of study
+The programme starts each year in the
+winter and the summer semester
+. It is an
+on-site study programme
+offered in
+Würzburg
+, although most modules can be taken online in a synchronous way.
+It is also possible to study only individual modules, for which a transcript of records will be issued after successful completion of the modules attended.
+Application deadline
+For the winter semester: 15 July
+For the summer semester: 15 January
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+No
+Joint degree / double degree programme
+Yes
+Description/content
+The focus of the programme lies on
+internationally-oriented adult education and management in lifelong learning
+. It aims to provide students with
+interdisciplinary training
+in the fields of
+management in lifelong education
+and
+adult and continuing education
+. The spectrum of topics ranges from adult education, continuing education and philosophy of education to methods of adult education research and media pedagogy to organisational and personnel development.
+In addition to our
+course website
+, you can find more information about the study programme on our
+social media channels
+of the Professorship for Adult and Continuing Education. We cordially invite you to follow us on these channels:
+Instagram
+X
+LinkedIn
+These channels are an addition to the social media channels managed by the University of Würzburg (on the right, see
+""Contact""
+).","Course organisation
+The Master's programme consists of three compulsory parts (70 ECTS), a compulsory elective part (20 ECTS), and a Master's thesis (30 ECTS). Each part is made up of several modules that students are required to complete.
+Please find more information about the courses offered on our
+course website
+(--> Study Structure).
+Compulsory I (20 ECTS credits): Theories and Social Framework Conditions for Lifelong Education
+Compulsory II (25 ECTS credits): Professional Skills in the Context of Lifelong Education
+Compulsory III (25 ECTS credits): Research in Adult and Continuing Education
+Compulsory Elective Courses (20 ECTS): Professional Skills in Adult Education / International Relations / Mediation in Museums / International Human Resource Management / Diversity and Difference Criteria (available only in German) / Linguistic Skills
+A Diploma supplement will be issued
+Yes
+International elements
+Courses are led with foreign partners
+International comparisons and thematic reference to the international context
+Language training provided
+International guest lecturers
+Integrated/optional study abroad unit(s)
+Training in intercultural skills
+Description of other international elements
+International Adult Education Academy
+Double degree with University of Padua
+Different electives covering (e.g.) international perspectives on lifelong education, international relations, and international HR management
+Optional blended-intensive programme in Florence
+Optional ERASMUS exchange in Europe and North America
+Optional international internships
+Integrated/optional study abroad unit(s)
+Double degree option with the University of Padua: Double Degree in Management of Educational Services, Adult and Continuing Education
+We anticipate presenting additional double degree options by autumn 2025.
+Diverse intercultural background of students
+Students studying the programme are coming from diverse international countries.
+Integrated internships
+Students can do an
+internship
+as part of their studies, which can take place either in
+Germany
+or
+abroad
+. Through our
+partnerships with international organisations
+(e.g. DVV, EAEA), contacts for an internship can be arranged.
+Course-specific, integrated German language courses
+Yes
+Course-specific, integrated English language courses
+Yes","Tuition fees per semester in EUR
+None
+Semester contribution
+There are generally no tuition fees at the University of Würzburg. However, each semester, students are required to pay a contribution for enrolment or registration. This fee, approximately 170 EUR, not only supports various student services but also includes a semester ticket that grants you unlimited access to public transportation throughout the city of Würzburg.
+Costs of living
+Living in Würzburg is quite affordable compared to other German cities, making it an attractive option. While individual lifestyles vary, here is an estimate of typical costs:
+Food: 300 EUR
+Rent: 350 to 500 EUR
+Student health insurance: 140 EUR
+Würzburg offers a vibrant student life with plenty of affordable options for dining, entertainment, and leisure activities. The University of Würzburg, its student representation and wider network of local partners help you manage your budget effectively, also by offering student discounts.
+Funding opportunities within the university
+Yes
+Description of the above-mentioned funding opportunities within the university
+There are several scholarship options for your
+study stay in Würzburg:
+“Bayhost”
+supports graduates in financing their Master's studies.
+Students of all nationalities and disciplines can apply for the
+""Deutschlandstipendium""
+.
+The
+DAAD provides scholarships for graduate students
+For more information on scholarships:
+https://go.uniwue.de/mae-scholarships","Academic admission requirements
+Please find up-to-date information about the admission requirements on our website:
+https://go.uniwue.de/mae-application
+.
+For admission to the programme, you need:
+A Bachelor's degree (180 ECTS)
+with an
+average grade of at least 2.2
+, or an average grade of at least 2.0 in 25 ECTS of modules related to adult education
+Proof of competence
+in modules regarding the following educational and pedagogical areas (minimum 40 ECTS credits), with at least 5 ECTS credits in at least two of the following areas:
+Micro level of education and pedagogy
+(e.g. teaching, learning, didactics, methodology, educational practice)
+Meso level of education and pedagogy
+(e.g. programme planning, organisational development, management)
+Macro level of education and pedagogy
+(e.g. educational policy, educational law, educational theories, theories on societal context)
+English proficiency: B2 level
+For applicants with
+university degrees from a non-EU/EEA country
+: We require a preliminary review documentation (VPD) from uni-assist to process your application.
+Language requirements
+The language requirements are
+level B2 in English
+.
+German language skills are not mandatory, but we strongly recommend them for career perspectives and living in Germany.
+Technical equipment and programmes
+For all students participating in the programme, a computer or laptop is necessary as well as good competencies in Office programmes. Moreover, for synchronous participation, a headset, a stable internet connection, and a quiet working environment are necessary.
+Application deadline
+For the winter semester: 15 July
+For the summer semester: 15 January
+Submit application to
+Apply via our WueStudy portal. For more information about the application, please refer to our website:
+https://go.uniwue.de/mae-application
+.","Possibility of finding part-time employment
+Finding part-time employment in Würzburg is a great way to gain experience, make new connections, and supplement your finances while studying. Students from EU and EEA countries enjoy equal terms in the labour market and can work freely during their studies. Students from other countries can work up to 140 full days or 280 half days per year, including voluntary internships. If you wish to work more, you'll need permission from the
+employment agency (""Agentur für Arbeit"")
+or the
+immigration office
+.
+It's important to ensure that your studies remain your top priority, so choose a side job that complements your academic schedule. The University of Würzburg offers resources to help you find part-time work, such as the
+student job portal
+. Popular student jobs include roles as academic assistants, bartenders, cashiers, personal trainers, translators, and more.
+Accommodation
+Finding the perfect place to live is an important part of your student experience at the University of Würzburg. Unlike some other countries, students in Germany need to find their own accommodation, as universities do not automatically provide it. At the University of Würzburg, you have two main options:
+""Studierendenwerk""
+housing or private rooms/student halls.
+The Student Housing Service (""Studierendenwerk"") manages 12 student residences in Würzburg, offering a total of 2,887 rooms. These dormitories provide a variety of amenities:
+Single and double rooms or apartments shared by two to four students, with communal kitchens and bathrooms
+Furnished rooms and apartments are available, though you'll need to bring your own dishes, cooking items, bedding, and towels.
+To apply for housing, note the deadlines: 15 June for the winter semester and 15 January for the summer semester. For more information about private rooms and student halls, visit the
+Central Student Advisory Service
+.
+In addition to Studierendenwerk housing, there are many private accommodation options available:
+Shared apartments (""Wohngemeinschaften"" or ""WGs""): These are popular among students and offer a great way to meet new people and share living costs.
+Private student halls: These are often run by private companies and offer similar amenities to Studierendenwerk dormitories. They can be a bit more expensive but may offer more modern facilities.
+Short-term accommodation: If you need a place to stay while you search for permanent housing, consider options like hostels, guest houses, or short-term rentals.
+Remember to start your housing search early and stay positive! With a bit of patience and diligence, you'll find a cosy place to call home.
+Career advisory services and programmes for future professionals
+The
+Career Centre at the University of Würzburg
+assists students of the University of Würzburg in paving their way to an ideal job entry by offering courses for attaining transdisciplinary competences and individual counselling at every stage of student development.
+Support for international students and doctoral candidates
+Welcome event
+Help with finding accommodation
+Support with registration procedures
+Visa matters",2026-02-01T13:15:06.818962+00:00,daad_api,2026-02-01T17:42:20.510552,['No program image available'],0.9,True,,,[],,B2,"English proficiency at B2 level required. Additional requirements may apply for applicants with university degrees from non-EU/EEA countries (text appears truncated). No specific test mentioned, suggesting flexibility in proof of English competence."
+4770,Advanced and Computational Mathematics – International Master's Programme,Chemnitz University of Technology,Chemnitz,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4770/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/5b0522b0f0bb0886398206.jpeg,master,master,Master's degree,natural sciences,"['applied mathematics', 'mathematics']",0,EUR,,,True,False,winter,['winter'],[],,24,4,120,['english'],{},"Academic admission requirements
+BSc degree in Mathematics
+Language requirements
+English:
+Accepted certificates:
+IELTS 5.5
+TOEFL iBT (Internet-based test): 72 points
+TOEFL ITP Level 1: 543 points
+Cambridge Preliminary English Test + Result Distinction (PET)
+Cambridge First Certificate in English: Grade B or C (FCE)
+Cambridge English: Business Vantage (BEC Vantage), Legal (ILEC), Financial (ICFE)
+Cambridge IGCSE: first or second language with B2
+Pearson PTE Academic: 59 points
+TOEIC: Listening and Reading Test 785 points, Speaking Test 160 points, Writing Test 150 points
+telc B2 certificate
+UNIcert II
+Completed degree in English Studies or American Studies
+Completed degree with English as the language of instruction
+Proof of professional qualification as a state-examined interpreter/translator
+Applicants from countries with English as official/educational or native language are not required to submit proof of English language proficiency with their application.
+German:
+Although not compu",[],"['IELTS', 'TOEFL', 'TELC', 'CAMBRIDGE', 'CEFR']",,,False,"Degree Master of Science in Mathematics Course location Chemnitz Teaching language English Languages Courses are held in English (100%). Participants can choose to write the Master's thesis in English or German. Chemnitz University of Technology offers German language courses for students from abroad. Upon successful completion of these courses, students are awarded a certificate. Full-time / part-time full-time Mode of study Less than 50% online Programme duration 4 semesters Beginning Winter a... | Course organisation The curriculum extends over four semesters, during which you must acquire 120 ECTS credits. Throughout the programme, current topics in applied mathematics and pure mathematics are taught in comprehensive lecture series by internationally renowned scientists. All lecture topics are discussed in depth in tutorial classes, ensuring that you receive continuous feedback regarding your academic performance. Upon admission to the programme, you can already start an online course in...",4 semesters,False,True,,['Buddy programme'],"Degree
+Master of Science in Mathematics
+Course location
+Chemnitz
+Teaching language
+English
+Languages
+Courses are held in English (100%). Participants can choose to write the Master's thesis in English or German.
+Chemnitz University of Technology offers German language courses for students from abroad. Upon successful completion of these courses, students are awarded a certificate.
+Full-time / part-time
+full-time
+Mode of study
+Less than 50% online
+Programme duration
+4 semesters
+Beginning
+Winter and summer semester
+Additional information on beginning, duration and mode of study
+Only parts of the first-semester curriculum can be studied online. The exams to be taken after the lecture period cannot be taken online, but only in person. Students must be present at the university location no later than the end of the first semester.
+Application deadline
+15 July for the following winter semester
+15 January for the following summer semester
+All documents (see course website) have to be submitted by the deadline via
+https://www.eduapplication.de/
+. Please start your application as early as possible.
+International applicants are very welcome!
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+No
+Joint degree / double degree programme
+No
+Description/content
+Learn how mathematics can solve real-world problems and go beyond academic challenges. The Advanced and Computational Mathematics Master's programme trains individuals to unlock their full potential, enabling groundbreaking achievements in both academic and practical working fields. Students prepare for an impactful career by mastering the mathematics that drives innovation in today's tech-driven world.
+The programme starts with a solid foundation in advanced mathematics. In the second semester, students gain expertise in one of three fields of specialisation:
+Advanced Pure Mathematics
+Computational Mathematics
+Data Sciences
+Additionally, students will participate in a seminar and complete their studies with a Master's thesis in their specialisation. Moreover, they will have the opportunity to learn languages, including mandatory German courses.
+Outstanding achievers may also qualify for the PhD programme in the Faculty of Mathematics, paving the way for careers in scientific research and academia.
+For more information, please visit the programme website.","Course organisation
+The curriculum extends over four semesters, during which you must acquire 120 ECTS credits. Throughout the programme, current topics in applied mathematics and pure mathematics are taught in comprehensive lecture series by internationally renowned scientists. All lecture topics are discussed in depth in tutorial classes, ensuring that you receive continuous feedback regarding your academic performance.
+Upon admission to the programme, you can already start an online course in your home country, which will be continued in Chemnitz and be credited accordingly. This approach ensures that you do not lose precious time in the event of delays in obtaining your student visa.
+During the first semester, you will gain a solid foundation in advanced mathematics (29 ECTS covered by four courses). Starting in the second semester, according to your personal interests, you will select your field of specialisation: Advanced Pure Mathematics, Computational Mathematics, or Data Science, where you will gain state-of-the-art expertise and earn at least 38 ECTS. In preparation for your Master's thesis, you will participate in a seminar (8 ECTS) during the third semester. Finally, during the fourth semester, you will write your Master's thesis (30 ECTS) on a subject from your field of specialisation under the guidance and supervision of a professor from the Faculty of Mathematics.
+In addition to courses in mathematics, you may earn up to 15 ECTS in language courses (5 ECTS per course). Upon completion of the programme, you will have German proficiency at an A2 level, which, depending on your background, will require you to obtain up to 10 ECTS in German courses.
+The degree of Master of Science (MSc) will be awarded upon successful completion of the programme. During the programme, oral exams will be taken at the end of each semester.
+A Diploma supplement will be issued
+Yes
+International elements
+International guest lecturers
+Description of other international elements
+Possibility to take part in the exchange programmes / scientific cooperation programmes of the faculty (maximum one semester)
+International programmes like summer schools are embedded in the programme.
+Heterogeneous groups of students
+Embedded in the university's international networks and programmes:
+www.tu-chemnitz.de/international/index.php.en
+Course-specific, integrated German language courses
+Yes
+Course-specific, integrated English language courses
+Yes","Tuition fees per semester in EUR
+None
+Semester contribution
+All students have to pay a semester contribution of approx. 330 EUR. This fee also covers the semester ticket, which permits you to use buses and trams in Chemnitz as well as regional trains throughout Germany during the semester. International students will receive the bank account details after admission, with which they can transfer the semester contribution. However, the fee can also be paid after arrival in Chemnitz (by German bank card or transfer).
+Costs of living
+Approx. 970 EUR per month to cover personal expenses
+Funding opportunities within the university
+Yes
+Description of the above-mentioned funding opportunities within the university
+Incoming students can apply for different funding opportunities via the International Office of Chemnitz University of Technology:
+https://www.tu-chemnitz.de/international/incoming/stipendien/index.php.en
+.","Academic admission requirements
+BSc degree in Mathematics
+Language requirements
+English:
+Accepted certificates:
+IELTS 5.5
+TOEFL iBT (Internet-based test): 72 points
+TOEFL ITP Level 1: 543 points
+Cambridge Preliminary English Test + Result Distinction (PET)
+Cambridge First Certificate in English: Grade B or C (FCE)
+Cambridge English: Business Vantage (BEC Vantage), Legal (ILEC), Financial (ICFE)
+Cambridge IGCSE: first or second language with B2
+Pearson PTE Academic: 59 points
+TOEIC: Listening and Reading Test 785 points, Speaking Test 160 points, Writing Test 150 points
+telc B2 certificate
+UNIcert II
+Completed degree in English Studies or American Studies
+Completed degree with English as the language of instruction
+Proof of professional qualification as a state-examined interpreter/translator
+Applicants from countries with English as official/educational or native language are not required to submit proof of English language proficiency with their application.
+German:
+Although not compulsory, basic knowledge of German is recommended at the beginning of the programme. Courses to obtain the required level of German language (A2) are included within the curriculum for non-native speakers. Students providing a certificate of A2 level (CEFR) may choose advanced language courses or subject studies.
+Application deadline
+15 July for the following winter semester
+15 January for the following summer semester
+All documents (see course website) have to be submitted by the deadline via
+https://www.eduapplication.de/
+. Please start your application as early as possible.
+International applicants are very welcome!
+Submit application to
+Applications may be submitted online at
+https://www.eduapplication.de/
+.
+It is not necessary to send certified copies. Please note that all application documents must be handed in by the application deadline.","Possibility of finding part-time employment
+Students can find offers for part-time jobs, work placements etc. on the job portal offered by the Career Service of Chemnitz University of Technology:
+https://www.tu-chemnitz.de/career-service/jobboerse/
+Accommodation
+The ""Studentenwerk"" Chemnitz-Zwickau runs several student residences. International students can apply for a single room in one of the residences. The prices depend on the size and furnishings of the room and vary between 270 EUR and 350 EUR:
+https://www.swcz.de/en/student-housing/our-halls-of-residence/
+Career advisory services and programmes for future professionals
+The Career Service of Chemnitz University of Technology supports students during their studies as well as graduates entering their professional life. The Career Service provides a platform for companies and institutions to present themselves:
+https://www.tu-chemnitz.de/career-service/index.php.en
+Support for international students and doctoral candidates
+Buddy programme
+General services and support for international students and doctoral candidates
+Mentorship Programme for New Students
+Starting your studies in a new country can be challenging, especially when visa processing delays prevent a timely arrival. To support new students in the Master’s programme in Advanced and Computational Mathematics at Chemnitz University of Technology, a mentorship programme is offered. Experienced students from the same programme act as mentors, organising regular online meetings to help new students navigate their studies from day one — even before arriving in Chemnitz. Through this programme, they will:
+Connect with fellow students early on
+Get essential information about courses, exams, and university procedures
+Have a student mentor to support them with any questions or concerns
+This way, they’ll feel prepared and welcomed, no matter when they arrive!
+Supervisor-student ratio
+1:10 - 1:5",2026-02-01T13:15:06.818968+00:00,daad_api,2026-02-01T17:42:20.510765,[],1.0,False,,,[],,,Extraction failed: Unterminated string starting at: line 64 column 21 (char 1345)
+7065,Advanced Architecture — From Urban Design to Building Construction,Frankfurt University of Applied Sciences,Frankfurt am Main,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/7065/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/68154123ebe60.jpeg,master,master,Master's degree,architecture,['architecture'],0,EUR,,,True,False,summer,['summer'],[],,24,4,120,['english'],{},"Academic admission requirements
+Admission to the English-language Master’s degree programme in “Advanced Architecture“ is granted to applicants with a diploma or Bachelor's degree in architecture with 180 ECTS, completed with a grade that corresponds at least to the grade of 2.3, as calculated according to the German grading system. Applicants will have to submit a CV, a portfolio describing their studies and their first work experiences, and a letter of motivation. They also have to provide proof of at least a four-month internship in an area relevant to architecture after their first degree.
+The portfolio comprises the following:
+Eight pages in total are required (DIN A3 landscape format / font size min. 10 pt / file size max. 10 MB). The portfolio does not include a cover or a table of contents (contents are explained on the respective page). This semester a maximum of 12 pages is still permitted. However, we would appreciate if you are able to prioritise and present your selection ","['diploma', 'cv', 'motivation_letter', 'portfolio']","['IELTS', 'TOEFL', 'CAMBRIDGE', 'CEFR']",graduate,,True,"Degree Master of Science (MSc) Course location Frankfurt am Main In cooperation with International partner universities Europe: Belgium, Czech Republic, Estonia, France, Italy, Latvia, Poland, Portugal, Slovenia, Spain, Turkey Overseas: Australia, Chile, Colombia, Costa Rica, Ghana, India, Indonesia, Japan, Malaysia, Mexico, Namibia, South Africa, South Korea, Taiwan Teaching language English Languages All courses (120 ECTS) are offered in English. For interested participants, however, it is als... | Course organisation The full-time English Master’s degree programme in “Advanced Architecture. From Urban Design to Building Construction” lasts for four semesters and operates in close conjunction with the existing German Master’s degree programme in “Design and Construction"". During their two years of study, students will acquire 120 ECTS credits and will be awarded the academic degree of Master of Science (MSc). The degree course is aimed at graduates with a first academic degree in architect...",4 semesters,False,False,,['Welcome event | Buddy programme | Tutors | Accompanying programme | Cultural and linguistic preparation'],"Degree
+Master of Science (MSc)
+Course location
+Frankfurt am Main
+In cooperation with
+International partner universities
+Europe:
+Belgium, Czech Republic, Estonia, France, Italy, Latvia, Poland, Portugal, Slovenia, Spain, Turkey
+Overseas:
+Australia, Chile, Colombia, Costa Rica, Ghana, India, Indonesia, Japan, Malaysia, Mexico, Namibia, South Africa, South Korea, Taiwan
+Teaching language
+English
+Languages
+All courses (120 ECTS) are offered in English.
+For interested participants, however, it is also possible to choose courses taught in the German language (maximum of 30 ECTS) from the closely-related “Entwurf und Konstruktion” German Master's programme.
+Full-time / part-time
+full-time
+Programme duration
+4 semesters
+Beginning
+Summer semester
+Application deadline
+The application deadline for the next summer semester is 1 March of the same year for applicants holding German Bachelor's degrees. Applicants with Bachelor's degrees from foreign countries must submit their applications by 15 October of the previous year.
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+No
+Joint degree / double degree programme
+No
+Description/content
+Students gain broad knowledge of design and construction through a combination of lecture series and modules that discuss design and construction in the areas of urban design, design of buildings in existing contexts and built environments, and design of new buildings. These topics are directly related to internationally-oriented projects and a series of elective modules, giving students the chance to focus on their individual interests, which may then become the main focus of their Master’s theses. Moreover, 30 ECTS can be chosen from the German Master’s degree programme in “Design and Construction“ (“Entwurf und Konstruktion”).
+By intensively studying several contexts from a global, diversity-oriented, and multicultural point of view, students develop an ability to independently translate any abstract design into a concrete implementation of material and construction. They will be able to combine professional, practical, technical, economic, ecological, and social aspects while, at the same time, taking varied cultural, historical, and climatic situations into consideration.
+In the fourth semester, students write their Master’s theses.
+The modules complement each other and are linked to one another, for instance, through combined projects, excursions, lectures, conferences, and e-learning. The integrated, international structure of the degree course offers students the chance to have a unique study experience in the future-oriented metropolis of Frankfurt.
+Course objectives
+The study programme concentrates on the combination of design and construction. “Advanced Architecture“ means designing and constructing on all scales, from urban contexts to single details. Advanced, future-oriented concepts are developed and addressed in study projects and office internships as well as with the FFin (the Frankfurt University research institute) and in close collaboration with our cooperation partners from the construction sector.
+In particular, graduates will be able to work at the interface between abstract designs and their concrete implementations. This means a focus on the planning phase, referred to in the German Official Scale of Fees for Services by Architects and Engineers as “execution planning“, with strong feedback on the design process and in close connection with current developments of scientific research in design and construction.
+Relevant occupational fields of graduates are in architectural, engineering, and construction companies, the construction industry, property development and housing associations, real estate companies, and the public sector as well as the research and technological development of design and construction.","Course organisation
+The full-time English Master’s degree programme in “Advanced Architecture. From Urban Design to Building Construction” lasts for four semesters and operates in close conjunction with the existing German Master’s degree programme in “Design and Construction"". During their two years of study, students will acquire 120 ECTS credits and will be awarded the academic degree of Master of Science (MSc).
+The degree course is aimed at graduates with a first academic degree in architecture from European and non-European countries who want to focus on architecture in an international context. The Frankfurt University of Applied Sciences cooperates with the Frankfurt Research Institute (Frankfurter Forschungsinstitut FFin) and a specific architectural trainee programme called TRAX to offer special on-site opportunities to students. Students can get involved in ongoing research projects in order to learn and develop scientific work through application-oriented research in the field of design and construction, or they can learn the actual implementation of concepts in practice.
+The study programme complies with the UIA standards (Union of International Architects). It provides a prerequisite for entry into the German Chamber of Architects.
+First semester
+Starting with the 2024 summer semester, five modules will be offered: Lecture Series Design (5 ECTS), Urban Contexts — Design and Construction (10 ECTS), International Design and Build Project (5 ECTS), Impromptu Designs (5 ECTS), and one elective course (5 ECTS).
+The elective course can be chosen from a pool of seven courses offered in English, including the following courses: Climate Design; Rehabilitate, Reuse, Add-On; Urban Design and Public Space; Urban Renewal and Redevelopment; Digital Basics; and Construction, Material, and Experimental Design. The elective courses may also be chosen from fifteen further courses from the closely related ""Entwurf und Konstruktion” German Master's programme, which is offered in German.
+Second semester
+Five modules are offered: Lecture Series Construction (5 ECTS), New Buildings — Design and Construction (10 ECTS), International Design Project (5 ECTS), and two elective courses (each with 5 ECTS).
+Third semester
+Four modules are offered: Existing Contexts — Design and Construction (10 ECTS), specialisation project (10 ECTS), and two more elective courses (each with 5 ECTS).
+Fourth semester
+Master's thesis and colloquium (30 ECTS)
+PDF Download
+A Diploma supplement will be issued
+Yes
+International elements
+International guest lecturers
+Language training provided
+Training in intercultural skills
+Courses are led with foreign partners
+Projects with partners in Germany and abroad
+Special promotion / funding of the programme
+ERASMUS+
+Course-specific, integrated German language courses
+No
+Course-specific, integrated English language courses
+No","Tuition fees per semester in EUR
+None
+Semester contribution
+The enrolment fees are currently approx. 360 EUR per semester. They also cover public transportation in the greater Frankfurt area.
+Costs of living
+Approx. 1,000 EUR per month, depending on accommodation costs and lifestyle
+Funding opportunities within the university
+Yes
+Description of the above-mentioned funding opportunities within the university
+All excursions are co-financed, and scholarships can be requested for the preparation of the thesis.","Academic admission requirements
+Admission to the English-language Master’s degree programme in “Advanced Architecture“ is granted to applicants with a diploma or Bachelor's degree in architecture with 180 ECTS, completed with a grade that corresponds at least to the grade of 2.3, as calculated according to the German grading system. Applicants will have to submit a CV, a portfolio describing their studies and their first work experiences, and a letter of motivation. They also have to provide proof of at least a four-month internship in an area relevant to architecture after their first degree.
+The portfolio comprises the following:
+Eight pages in total are required (DIN A3 landscape format / font size min. 10 pt / file size max. 10 MB). The portfolio does not include a cover or a table of contents (contents are explained on the respective page). This semester a maximum of 12 pages is still permitted. However, we would appreciate if you are able to prioritise and present your selection on eight pages.
+Your portfolio shows two study projects that are two pages each, two pages of thesis (first professionally qualifying degree), and two pages documenting practical activity in a field relevant to architecture.
+No exceptions will be permitted.
+Language requirements
+English language skills should be at the level of TOEFL iBT 79, IELTS 6, or Cambridge First Certificate (A), corresponding to the level GER/CEFR B2. Native English speakers as well as graduates from English-language Bachelor's programmes are exempt.
+Application deadline
+The application deadline for the next summer semester is 1 March of the same year for applicants holding German Bachelor's degrees. Applicants with Bachelor's degrees from foreign countries must submit their applications by 15 October of the previous year.
+Submit application to
+Frankfurt University of Applied Sciences
+c/o uni-assist e.V.
+11507 Berlin
+Germany","Accommodation
+Accommodation is provided by state-run as well as private sector halls of residence. The university website provides useful addresses.
+Career advisory services and programmes for future professionals
+The International Office offers International Career Service as an additional support for international students.
+Support for international students and doctoral candidates
+Welcome event
+Buddy programme
+Tutors
+Accompanying programme
+Cultural and linguistic preparation
+Supervisor-student ratio
+1:20",2026-02-01T13:15:06.818973+00:00,daad_api,2026-02-01T17:42:20.511042,[],1.0,False,,,[],,,"The programme is described as 'English-language' but no specific language proficiency requirements, test scores, or minimum CEFR levels are mentioned in the provided text. Applicants may need to demonstrate English proficiency through other means not specified in this excerpt."
+6318,Advanced Computational Methods in Civil Engineering,RWTH Aachen University,Aachen,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/6318/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/5ccaebd48afea082059831.jpeg,master,master,Master's degree,engineering,"['engineering', 'civil engineering', 'civil']",0,EUR,,,True,False,winter,['winter'],[],,24,4,,['english'],{},"Academic admission requirements
+One of the prerequisites for studying this Master's degree programme is a first university degree, which proves the necessary background education.
+Applicants must have a profound knowledge in following areas:
+Mathematical-physical basics (38 CP):
+mathematics: 16 CP
+statistics: 3 CP
+mechanics: 16 CP
+hydromechanics: 3 CP
+Civil engineering basics (80 CP), whereof at least 20 CP each must be demonstrated from two of the areas listed below:
+constructive engineering
+water management
+construction operations and geotechnics
+transportation
+The examination board may admit a student to a Master's course of study on the condition that they obtain additional qualifications. Proof of completion of such additional requirements must be provided before registering for the Master's thesis.
+Admission to the Master's programme civil engineering is not possible if your additional requirements exceed the CP listed below:
+mathematical-physical basics: 9 CP
+civil engineering b",['language_certificate'],"['IELTS', 'TOEFL', 'CEFR']",graduate,,False,"Degree Master of Science Course location Aachen Teaching language English Languages The language of the programme is English. Participants can attend elective subjects taught in German. Programme duration 4 semesters Beginning Winter and summer semester Application deadline EU/EEA applicants: 15 July for the following winter semester and 15 January for the following summer semester Non-EU / non-EEA applicants: 1 March for the following winter semester and 1 September for the following summer sem... | Course organisation The faculty of Civil Engineering offers a Master's programme with eight areas of specialisation. While seven of them are only offered in German, the Master's programme Advanced Computational Methods in Civil Engineering (AdCom) is offered in English. The AdCom Master's programme is organised by the Chair of Structural Analysis and Dynamics (LBB) and the Institute of Applied Mechanics (IFAM). LBB website: www.lbb.rwth-aachen.de IFAM website: www.ifam.rwth-aachen.de Example of ...",4 semesters,False,False,,['Welcome event | Buddy programme | Cultural and linguistic preparation | Visa matters'],"Degree
+Master of Science
+Course location
+Aachen
+Teaching language
+English
+Languages
+The language of the programme is English. Participants can attend elective subjects taught in German.
+Programme duration
+4 semesters
+Beginning
+Winter and summer semester
+Application deadline
+EU/EEA applicants: 15 July for the following winter semester and 15 January for the following summer semester
+Non-EU / non-EEA applicants: 1 March for the following winter semester and 1 September for the following summer semester
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+No
+Joint degree / double degree programme
+No
+Description/content
+Over the last few decades, computational methods in civil engineering have grown to become an essential tool for engineers.
+Nowadays, nearly every engineering problem can be solved solely with this tool. As a reaction to the ever-growing importance of computational methods for the modern civil engineer, the Faculty of Civil Engineering at RWTH Aachen University has developed the new specialisation Advanced Computational Methods in Civil Engineering (AdCom) for the Civil Engineering Master's degree programme. Taught completely in English, this specialisation lends itself not only to the tendencies of present-day engineering but also to the future of civil engineering. AdCom graduates are able to apply and develop numerical methods and simulations for the realisation of innovative civil engineering structures. The curriculum is interdisciplinary with courses from the faculties of Civil Engineering, Mechanical Engineering and Mathematics. This allows students to obtain a deeper understanding of the key skills in structural mechanics, fluid mechanics, and numerical mathematics.
+Students will learn to master challenges such as those which arise from the use of new resource-conserving materials and advanced composite materials as well as those that arise from the trend towards extremely light load-bearing structures. The development of state-of-the-art lightweight structures, which are subject to dynamic loads such as wind and traffic, will be just one of many expertises that our students possess. The knowledge and use of numerical methods, mechanical principles and the development of software code account for just a fraction of skills that make up our students' repertoire, which enables them to assess the strength and limits of numerical modelling in civil engineering.
+The curriculum of Advanced Computational Methods in Civil Engineering is highly scientific and research-oriented and thus prepares graduates for a PhD programme and ultimately a scientific career in research or in industry. To prepare students for such a future, a new research module and a scientific mini-thesis are a part of the curriculum in addition to the Master's thesis.
+Future opportunities
+The Master's programme has a strong focus on research that is accompanied by an excellent international reputation. This is especially present in the second year, where students work side by side with university researchers, thus gaining unique insights and experience in modern scientific methodologies.
+Engineers with expertise in computational methods are multidisciplinarily trained professionals. They are able to pursue a successful career not only in academics but also in an industrial environment, which could range from classic civil engineering to the various areas of mechanical engineering.","Course organisation
+The faculty of Civil Engineering offers a Master's programme with eight areas of specialisation. While seven of them are only offered in German, the Master's programme
+Advanced Computational Methods in Civil Engineering
+(AdCom)
+is offered in English.
+The AdCom Master's programme is organised by the
+Chair of Structural Analysis and Dynamics (LBB)
+and the
+Institute of Applied Mechanics (IFAM).
+LBB
+website:
+www.lbb.rwth-aachen.de
+IFAM
+website:
+www.ifam.rwth-aachen.de
+Example of a study plan
+First semester:
+Plates and Shells
+Mechanics of Materials
+Structural Steel III
+Finite Elements in Fluids
+Second semester:
+Brittle-Matrix-Composite Structures: Modelling and Design Methods
+Continuum Mechanics
+Nonlinear Structural Analysis
+Finite Element Technology
+Third semester:
+Research Module: Numerical Methods in Structural Mechanics and Dynamics
+Selected Topics of lnelasticity Theory
+Advanced Structural Analysis
+Numerical Methods for Fluid-Structure Interaction
+Fourth semester:
+Master's Thesis
+Porous Media Mechanics
+A Diploma supplement will be issued
+Yes
+International elements
+Language training provided
+Projects with partners in Germany and abroad
+International comparisons and thematic reference to the international context
+Course-specific, integrated German language courses
+No
+Course-specific, integrated English language courses
+No","Tuition fees per semester in EUR
+None
+Semester contribution
+All RWTH students must pay a social contribution to student services, which amounts to approx. 317 EUR per semester. This is not a tuition fee. Please visit our website for further information on how the fee is spent:
+http://www.rwth-aachen.de/re-enrollment/?lidx=1
+Costs of living
+The cost of living is approximately 1,132 EUR per month (including social contribution fee for each semester).
+Funding opportunities within the university
+Yes
+Description of the above-mentioned funding opportunities within the university
+RWTH offers a variety of scholarships. Please find more information online:
+http://www.rwth-aachen.de/go/id/dyiv/lidx/1","Academic admission requirements
+One of the prerequisites for studying this Master's degree programme is a first university degree, which proves the necessary background education.
+Applicants must have a profound knowledge in following areas:
+Mathematical-physical basics (38 CP):
+mathematics: 16 CP
+statistics: 3 CP
+mechanics: 16 CP
+hydromechanics: 3 CP
+Civil engineering basics (80 CP), whereof at least 20 CP each must be demonstrated from two of the areas listed below:
+constructive engineering
+water management
+construction operations and geotechnics
+transportation
+The examination board may admit a student to a Master's course of study on the condition that they obtain additional qualifications. Proof of completion of such additional requirements must be provided before registering for the Master's thesis.
+Admission to the Master's programme civil engineering is not possible if your additional requirements exceed the CP listed below:
+mathematical-physical basics: 9 CP
+civil engineering basics: 26 CP
+the total scope of all additional requirements: 30 CP
+In addition to the subject-related prerequisites, applicants must show proof of a profound level of the English language (see below).
+In addition, proof of the Graduate Record Examination (GRE) General Test is required. Applicants who are nationals of a member state of the European Union or of the European Economic Area as well as applicants who have successfully passed the German ""Abitur"" (regardless of where they have earned their Bachelor's degree) are exempt from this requirement.
+Language requirements
+Applicants must show proof of a profound level of the English language, at least equivalent to the B2 level of the Common European Framework of Reference for Languages (CEFR).
+The following language tests are accepted as proof of English language skills:
+Test of English as Foreign Language / TOEFL, Internet-based test iBT, with at least 90 points
+International English Language Testing System, IELTS, with a grade of at least 5.5
+Certificate of Advanced English CAE
+First Certificate in English FCE, with a grade of at least B
+Any official certificate that certifies English language skills at level B2 of the Common European Frame of Reference for Languages, CEFR
+Placement test of the RWTH Aachen Language Center at the B2 level (This language certificate can only be obtained by individuals who are already enrolled as students at RWTH Aachen.)
+Application deadline
+EU/EEA applicants: 15 July for the following winter semester and 15 January for the following summer semester
+Non-EU / non-EEA applicants: 1 March for the following winter semester and 1 September for the following summer semester
+Submit application to
+Please submit your application online:
+http://www.rwth-aachen.de/go/id/dqml/lidx/1/
+.","Possibility of finding part-time employment
+International students may take up work in the private sector during the semester or in the semester breaks for up to three months without having to obtain a work permit. Students may thus take up full-time work for 120 days or part-time positions for 240 days. This regulation is also stated on the residence permit. During the semester, students are allowed to take up jobs with working hours of up to 20 hours a week.
+Student assistants are more flexible with regard to working hours.
+Accommodation
+Availability of university accommodation in Aachen is limited. Therefore, participation in individual allocation procedures is usually required. Because of the demand for university accommodation, it can be necessary to switch to the private accommodation market.
+Especially family and couples apartments are very high in demand, so that accommodation from the private market is seemingly mandatory. The majority of RWTH Aachen University's students are committed to the private accommodation market.
+There are a number of options for finding private accommodation in and around Aachen. Accommodation on the private market is priced between 290 EUR and 550 EUR per month, of course depending on the size and the number of rooms.
+For short-term accommodation, there are many hotels, a few youth hostels, and a boardinghouse located in and around Aachen (reservation is recommended).
+Please visit
+https://www.rwth-aachen.de/housing
+for further information.
+Career advisory services and programmes for future professionals
+The RWTH Aachen University Career Center offers support by providing opportunities that strengthen your professionalism and exercise your individual skills in the application process. All enrolled RWTH Aachen University students can participate in the seminars at the Career Center. Please find more information online:
+https://www.rwth-aachen.de/go/id/sff/?lidx=1
+Support for international students and doctoral candidates
+Welcome event
+Buddy programme
+Cultural and linguistic preparation
+Visa matters",2026-02-01T13:15:06.818979+00:00,daad_api,2026-02-01T17:42:20.511302,[],1.0,False,,,[],,,No language proficiency requirements mentioned in the provided text. The text only contains academic admission requirements related to mathematical-physical basics and civil engineering knowledge areas.
+4695,Advanced Functional Materials,Chemnitz University of Technology,Chemnitz,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4695/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/5ae1a53b82801287691974.jpeg,master,master,Master's degree,natural sciences,['chemistry'],0,EUR,,,True,False,winter,['winter'],[],,24,4,,['english'],{},"Academic admission requirements
+In general, a university Bachelor's degree in Physics, Chemistry or Materials Science is required.
+Degrees from universities other than Chemnitz University of Technology are to be checked by a board of examiners on the basis of the record of study. The applicant is to provide this record of study. The applicants must have basic lab experience.
+Language requirements
+German:
+Courses to obtain the required level of German language (A2 by the end of the third semester) are included within the curriculum for non-native speakers. Students providing a certificate of A2 level (CEFR) may choose advanced language courses or subject studies.
+English:
+IELTS 5.5
+TOEFL iBT (Internet-based test): 72 points
+TOEFL ITP Level 1: 543 points
+Cambridge Preliminary English Test + Result Distinction (PET)
+Cambridge First Certificate in English: Grade B or C (FCE)
+Cambridge English: Business Vantage (BEC Vantage), Legal (ILEC), Financial (ICFE)
+Cambridge IGCSE: first or second l",[],"['IELTS', 'TOEFL', 'TELC', 'CAMBRIDGE', 'CEFR']",,,False,"Degree Master of Science (MSc) Course location Chemnitz Teaching language English Languages Obligatory courses are held in English. Additional elective courses that are taught in German are available. Full-time / part-time full-time Programme duration 4 semesters Beginning Winter and summer semester Application deadline 15 January for the following summer semester 15 July for the following winter semester Tuition fees per semester in EUR None Combined Master's degree / PhD programme No Joint deg... | Course organisation Mandatory Basic Modules The mandatory basic modules (first to third semesters) are taught in English. Advanced Concepts in Chemistry and Physics Synthetic Methods in Chemistry Material Characterisation Surfaces, Thin Films and Interfaces Sustainable Production Technologies Semiconductor Physics – Nano Structures Facets of Material Science Physics of Solar Cells Research project Soft skills ""Deutsch als Fremdsprache"" (German as a foreign language) I and II (A1/A2)* *for non-na...",4 semesters,False,False,,['Tutors | Buddy programme'],"Degree
+Master of Science (MSc)
+Course location
+Chemnitz
+Teaching language
+English
+Languages
+Obligatory courses are held in English. Additional elective courses that are taught in German are available.
+Full-time / part-time
+full-time
+Programme duration
+4 semesters
+Beginning
+Winter and summer semester
+Application deadline
+15 January for the following summer semester
+15 July for the following winter semester
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+No
+Joint degree / double degree programme
+No
+Description/content
+The advanced chemical and physical aspects of modern materials and the transfer of skills in synthesis, development, analysis and manufacturing of functional materials are the key issues of the Master's degree programme in Advanced Functional Materials. The interdisciplinary programme is offered by the Faculty of Natural Sciences and is based on courses in materials chemistry and materials physics. The research-oriented extension and intensification of physical and chemical knowledge is completed by advanced courses in modern research fields including the lab-oriented modules, which include a research project and the Master's thesis.","Course organisation
+Mandatory Basic Modules
+The mandatory basic modules (first to third semesters) are taught in English.
+Advanced Concepts in Chemistry and Physics
+Synthetic Methods in Chemistry
+Material Characterisation
+Surfaces, Thin Films and Interfaces
+Sustainable Production Technologies
+Semiconductor Physics – Nano Structures
+Facets of Material Science
+Physics of Solar Cells
+Research project
+Soft skills
+""Deutsch als Fremdsprache"" (German as a foreign language) I and II (A1/A2)*
+*for non-native speakers only
+Compulsory Elective Modules
+(first to third semesters)
+The following compulsory elective modules are taught in English (only a selection is shown):
+Materials in Micro and Nano Technologies
+Modern Microscopies
+Complex Materials for Manufacturing
+Surface and Interface Engineering
+Introduction to Magnetic Materials (Magnetism I)
+Methods and Applications of Magnetic Materials (Magnetism II)
+Light Emitting Diodes (LEDs), Laser Diodes, and Optical Sensor Systems
+Nanophysics – Physics of Mesoscopic Systems
+Physics of 2D Materials
+Aspects of Modern Optics
+Halide Perovskites in Optoelectronics
+Physics of Organic Semiconductors
+Modern Battery Materials
+Flexible Electronics
+Printed Electronics & Special Topics of Functional Printing
+Electroplating and Thermal Coating
+Functional Materials
+Kinetics of Materials
+Polymer Materials
+Colloids & Interfaces
+Colloids & Interfaces lab course
+Circular Economy of Polymers
+Computational Chemistry
+Modern Synthetic Methods and Homogeneous Catalysis
+Molecular Electronics
+Photocatalysis
+Synthesis of Functional Polymers for Energy Conversion and Storage
+The following compulsory elective modules are taught in German only (only a selection is shown):
+""Prozesse und Produkte der chemischen Industrie""
+""Heterogene Katalyse""
+""Werkstoffwissenschaft – Strukturbildungsprozesse""
+Non-native speakers of English can choose one of the following modules if the ""Deutsch als Fremdsprache I"" module or the ""Deutsch als Fremdsprache II"" module have not been attended:
+Englisch in Studien- und Fachkommunikation I
+Englisch in Studien- und Fachkommunikation III
+Non-native speakers of German can choose one of the following modules if the ""Deutsch als Fremdsprache I"" module or the ""Deutsch als Fremdsprache II"" module have not been attended:
+Deutsch als Fremdsprache III (level B1)
+Deutsch als Fremdsprache IV (level B2)
+Deutsch als Fremdsprache – Fachkommunikation I (level C1)
+A summary and detailed information of all elective modules is in the
+regulations
+.
+Course-specific, integrated German language courses
+Yes
+Course-specific, integrated English language courses
+No","Tuition fees per semester in EUR
+None
+Semester contribution
+All students have to pay a semester contribution of approx. 330 EUR. This fee also covers the semester ticket, which permits you to use buses and trams in Chemnitz as well as regional trains throughout Germany during the semester. International students will receive the bank account details after admission, with which they can transfer the semester contribution. However, the fee can also be paid after arrival in Chemnitz (by German bank card or transfer).
+Costs of living
+Approx. 970 EUR per month to cover personal expenses
+Funding opportunities within the university
+Yes
+Description of the above-mentioned funding opportunities within the university
+Incoming students can apply for different funding opportunities via the International Office of Chemnitz University of Technology:
+https://www.tu-chemnitz.de/international/incoming/stipendien/index.php.en","Academic admission requirements
+In general, a university Bachelor's degree in Physics, Chemistry or Materials Science is required.
+Degrees from universities other than Chemnitz University of Technology are to be checked by a board of examiners on the basis of the record of study. The applicant is to provide this record of study. The applicants must have basic lab experience.
+Language requirements
+German:
+Courses to obtain the required level of German language (A2 by the end of the third semester) are included within the curriculum for non-native speakers. Students providing a certificate of A2 level (CEFR) may choose advanced language courses or subject studies.
+English:
+IELTS 5.5
+TOEFL iBT (Internet-based test): 72 points
+TOEFL ITP Level 1: 543 points
+Cambridge Preliminary English Test + Result Distinction (PET)
+Cambridge First Certificate in English: Grade B or C (FCE)
+Cambridge English: Business Vantage (BEC Vantage), Legal (ILEC), Financial (ICFE)
+Cambridge IGCSE: first or second language with B2
+Pearson PTE Academic: 59 points
+TOEIC: Listening and Reading Test 785 points, Speaking Test 160 points, Writing Test 150 points
+telc B2 certificate
+UNIcert II
+Completed degree in English Studies or American Studies
+Completed degree with English as the language of instruction
+Proof of professional qualification as a state-examined interpreter/translator
+Applicants from countries with English as official/educational or native language are not required to submit proof of English language proficiency within their application.
+Application deadline
+15 January for the following summer semester
+15 July for the following winter semester
+Submit application to
+Applications may be submitted online at
+https://www.uni-assist.de/en
+.
+It is not necessary to send certified copies. Please note that uni-assist must receive all application documents by the application deadline.","Possibility of finding part-time employment
+Students can find offers for part-time jobs, work placements etc. on the job portal offered by the Career Service of Chemnitz University of Technology:
+https://www.tu-chemnitz.de/career-service/jobboerse/
+Accommodation
+The ""Studentenwerk"" Chemnitz-Zwickau runs several student residences. International students can apply for a single room in one of the residences. The prices depend on the size and furnishings of the room and vary between 270 EUR and 350 EUR:
+https://www.swcz.de/en/student-housing/our-halls-of-residence/
+Career advisory services and programmes for future professionals
+The Career Service of Chemnitz University of Technology supports students during their studies as well as graduates entering their professional life. The Career Service provides a platform for companies and institutions to present themselves:
+https://www.tu-chemnitz.de/career-service/index.php.en
+Support for international students and doctoral candidates
+Tutors
+Buddy programme",2026-02-01T13:15:06.818984+00:00,daad_api,2026-02-01T17:42:20.511545,[],1.0,True,5.5,72,"[{""exam"": ""TOEFL ITP Level 1"", ""language"": ""english"", ""minScore"": ""543""}, {""exam"": ""Cambridge PET"", ""language"": ""english"", ""minScore"": ""Distinction""}, {""exam"": ""Cambridge FCE"", ""language"": ""english"", ""minScore"": ""Grade B or C""}, {""exam"": ""Cambridge BEC Vantage"", ""language"": ""english"", ""minScore"": ""Pass""}, {""exam"": ""Cambridge ILEC"", ""language"": ""english"", ""minScore"": ""Pass""}, {""exam"": ""Cambridge ICFE"", ""language"": ""english"", ""minScore"": ""Pass""}]",A2,B1,German A2 level must be achieved by the end of the third semester. Language courses are included in curriculum for non-native speakers. Students with A2 certificate may choose advanced language courses or subject studies instead. English requirements correspond to approximately B1-B2 level based on exam equivalencies. Cambridge IGCSE entry appears incomplete in source text.
+8579,Advanced Industrial Engineering,Rosenheim Technical University of Applied Sciences,Rosenheim,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/8579/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/6616626cad943931001340.jpeg,master,master,Master's degree,engineering,"['engineering', 'manufacturing', 'manufacturing engineering']",500.0,EUR,500.0,500.0,False,False,winter,['winter'],[],,18,3,,['english'],{},"Academic admission requirements
+A Bachelor's degree in Industrial Engineering or an equivalent qualification obtained in Germany or abroad with an overall grade of 2.0 or higher is required.
+More detailed information on the admission requirements is available at the
+course website
+.
+Language requirements
+In order to apply for the programme, you will need a language level of
+English B2
+according to the CEFR.
+The following
+English language tests
+are recognised:
+Internet-based TOEFL with 72 or more points
+TOEIC with 785 or more points
+IELTS or IELTS Academic with a band score of 6.0 or higher
+Cambridge CEFR B2 First (FCE), Grade C (at least 160 points) or higher
+Cambridge CEFR C1 Advanced (CAE) with level B2 (at least 160 points) or higher 3
+TELC Certificate English B2 or higher, or TELC English University B2/C1
+Pearson PTE Academic, 60 or more points
+Trinity ISE II or higher or Trinity ISE Digital 80 points or more
+KMK-Fremdsprachenzertifikat III
+AKS UNIcert® II or higher
+At least six ye",[],"['IELTS', 'TOEFL', 'TELC', 'CAMBRIDGE', 'CEFR']",,,False,"Degree Master of Science Course location Rosenheim Teaching language English Languages The language of instruction is English. Full-time / part-time full-time part-time (study alongside work) Programme duration 3 semesters, 6 semesters Beginning Winter semester Additional information on beginning, duration and mode of study Duration: three semesters full-time, six semesters part-time Part-time (study alongside work), dual education is possible Blended learning approach: on campus learning combin... | International elements Training in intercultural skills Language training provided International guest lecturers Projects with partners in Germany and abroad Integrated internships There is no mandatory internship. However, our curriculum involves close connections to local companies in many ways: case studies with industrial partners, projects in our innovations lab with collaborative robots, augmented, virtual and mixed reality, data science and artificial intelligence, field trips to companie...","3 semesters, 6 semesters",False,False,,['Welcome event | Tutors | Cultural and linguistic preparation'],"Degree
+Master of Science
+Course location
+Rosenheim
+Teaching language
+English
+Languages
+The language of instruction is English.
+Full-time / part-time
+full-time
+part-time (study alongside work)
+Programme duration
+3 semesters, 6 semesters
+Beginning
+Winter semester
+Additional information on beginning, duration and mode of study
+Duration: three semesters full-time, six semesters part-time
+Part-time (study alongside work), dual education is possible
+Blended learning approach: on campus learning combined with online components
+Application deadline
+15 April - 30 April for the following winter semester
+Please check the application deadlines on
+TH Rosenheim’s official page
+, as dates may be subject to change.
+Here
+you can find a step-by-step guide on how to apply.
+Tuition fees per semester in EUR
+Varied
+Additional information on tuition fees
+For international students from non-EU countries, tuition fees of 500 EUR per enrolled semester will apply from summer semester 2026. More information can be found
+here
+.
+Combined Master's degree / PhD programme
+No
+Joint degree / double degree programme
+No
+Description/content
+The Master's degree programme in Advanced Industrial Engineering combines elements of engineering and business administration with new approaches to sustainable concepts and new digital technologies such as artificial intelligence, data science, collaborative robots as well as augmented, virtual and mixed reality.
+Partnering with successful local hidden champions and global leaders in engineering, the programme puts much emphasis on the application of study contents in engineering practice. Thereby, this degree programme will empower students to embark on successful careers in the field of Industrial Engineering.
+Our partnerships with leading companies will offer students outstanding career entry opportunities and future positions (e.g. as a production engineer, technical buyer, in technical sales, supply chain management or as a management consultant).
+The degree programme is in English and will prepare students for international requirements, enabling students to acquire excellent technical English skills.","International elements
+Training in intercultural skills
+Language training provided
+International guest lecturers
+Projects with partners in Germany and abroad
+Integrated internships
+There is no mandatory internship. However, our curriculum involves close connections to local companies in many ways: case studies with industrial partners, projects in our innovations lab with collaborative robots, augmented, virtual and mixed reality, data science and artificial intelligence, field trips to companies and lectures including insights into engineering work in Germany.
+Course-specific, integrated German language courses
+Yes
+Course-specific, integrated English language courses
+No","Tuition fees per semester in EUR
+500 EUR
+Additional information on tuition fees
+For international students from non-EU countries, tuition fees of 500 EUR per enrolled semester will apply from summer semester 2026. More information can be found
+here
+.
+Semester contribution
+97 EUR student union contribution per semester
+Costs of living
+Each student needs about
+992 EUR per month
+to cover living expenses, student accommodation, health insurance and other related costs in Rosenheim. We recommend calculating approx. 11,904 EUR per year in total.
+For international students from non-EU countries
+Proof of financial resources / blocked account: With a blocked account, you can provide evidence that you have adequate financial resources during the visa application process. The presumed annual requirement that must be paid into the blocked account when applying for a visa amounts to 11,904 EUR. Please see the information from the Federal Foreign Office:
+www.auswaertiges-amt.de/en/visa-service/visabestimmungen-node/sperrkonto-seite
+.
+Funding opportunities within the university
+No","Academic admission requirements
+A Bachelor's degree in Industrial Engineering or an equivalent qualification obtained in Germany or abroad with an overall grade of 2.0 or higher is required.
+More detailed information on the admission requirements is available at the
+course website
+.
+Language requirements
+In order to apply for the programme, you will need a language level of
+English B2
+according to the CEFR.
+The following
+English language tests
+are recognised:
+Internet-based TOEFL with 72 or more points
+TOEIC with 785 or more points
+IELTS or IELTS Academic with a band score of 6.0 or higher
+Cambridge CEFR B2 First (FCE), Grade C (at least 160 points) or higher
+Cambridge CEFR C1 Advanced (CAE) with level B2 (at least 160 points) or higher 3
+TELC Certificate English B2 or higher, or TELC English University B2/C1
+Pearson PTE Academic, 60 or more points
+Trinity ISE II or higher or Trinity ISE Digital 80 points or more
+KMK-Fremdsprachenzertifikat III
+AKS UNIcert® II or higher
+At least six years of English tuition at school with a grade of at least “sufficient” in the final year proven by a German-language university entrance qualification or an equivalent, recognised university entrance qualification from a non-German school
+Completed English-language Bachelor's or Master's degree
+Completed English studies university degree in Germany or abroad
+Passing ""Technical English"", ""Business English"" or a comparable English module with a grade of 3.0 or better worth at least 4 ECTS from a German university degree
+Native English-speaking applicants are not required to submit proof of sufficient English language skills.
+Application deadline
+15 April - 30 April for the following winter semester
+Please check the application deadlines on
+TH Rosenheim’s official page
+, as dates may be subject to change.
+Here
+you can find a step-by-step guide on how to apply.
+Submit application to
+If you obtained your university entrance qualification
+outside of Germany,
+please apply through
+uni-assist
+.
+If you obtained your university entrance qualification
+in Germany,
+please apply through the
+online application portal
+of TH Rosenheim.","Possibility of finding part-time employment
+Students can find part-time jobs in cooperation with our partner companies in the Rosenheim/Chiemgau region as well as at businesses within the Munich metropolitan area or in Salzburg.
+Online job market at TH Rosenheim:
+You will find job postings on the internal online job market of TH Rosenheim.
+Bavaria-wide job exchange:
+You will also find interesting job offers at
+https://jobboerse.th-rosenheim.de/index.php/en
+.
+More helpful tips:
+Our
+website
+also provides practical advice about working in Bavaria, Germany.
+Accommodation
+More information can be found here:
+www.th-rosenheim.de/housing
+.
+An online portal recommended among students to find a shared flat is
+wg-gesucht.de
+.
+Career advisory services and programmes for future professionals
+Applying for jobs and starting your career
+The
+Career Centre
+provides students and graduates with information and advice on applying for jobs, career planning and starting out in the world of work.
+International students who need assistance with writing applications have the chance to arrange individual appointments in English and German.
+Support for international students and doctoral candidates
+Welcome event
+Tutors
+Cultural and linguistic preparation
+General services and support for international students and doctoral candidates
+TH Rosenheim offers a variety of services, such as German language courses, language tandems and student tutors who assist with everyday university life, to ensure that international students feel at home in Rosenheim. To find out more, please have a look at
+www.th-rosenheim.de/welcome
+. You are also welcome to join our
+online information sessions
+for international prospective students, and you can find us on
+Instagram
+and
+Facebook
+!
+Supervisor-student ratio
+Good professor-student ratio, small groups",2026-02-01T13:15:06.818988+00:00,daad_api,2026-02-01T17:42:20.511794,[],1.0,False,,,[],,,Extraction failed: Unterminated string starting at: line 49 column 21 (char 1107)
+8555,Advanced Intensive German (AIG),Osnabrück University,Osnabrück,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/8555/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/63a0304879090170942666.jpeg,language_course,language_course,Language course,languages,"['german as a foreign language', 'language', 'german']",2.25,EUR,2.25,2.25,False,False,,['summer'],[7],2026-04-07,,,,"['german', 'english']","{'german': 'B1, B2', 'english': 'B1'}","Teaching language
+German
+English
+Language level of course
+German:
+B1, B2
+English:
+B1
+Language requirements
+German B1, English B1
+Submit application to
+The application period is from 1 November 2025 to 7 April 2026. Please check out our
+website
+for more details and the application form.",[],[],,,False,"Course location Osnabrück Teaching language German English Language level of course German: B1, B2 English: B1 Date(s) 6 July - 5 August 2026 (Registration deadline of course provider: 7 April 2026) Information on dates, prices and mode of study Students from partner universities get a 250 EUR discount! You might be eligible for a DAAD scholarship! Target group BA students, MA students, and PhD students with German language proficiency at B1 level Description/content Course description This summ...",,False,False,,,"Course location
+Osnabrück
+Teaching language
+German
+English
+Language level of course
+German: B1, B2
+English: B1
+Date(s)
+6 July - 5 August 2026 (Registration deadline of course provider: 7 April 2026)
+Information on dates, prices and mode of study
+Students from partner universities get a 250 EUR discount! You might be eligible for a DAAD scholarship!
+Target group
+BA students, MA students, and PhD students with German language proficiency at B1 level
+Description/content
+Course description
+This summer school offers participants with prior knowledge of the German language at level B1 (CEFR) the opportunity to deepen their knowledge of the language and to experience more than 1,000 years of German culture and civilisation in and around the city of Osnabrück, the City of Peace. By the end of the programme, students will have mastered advanced language skills in German equivalent to level B1/B2 of the Common European Framework of Reference for Languages (CEFR).
+In addition, you will have the chance to design and conduct remedial and tutorial sessions for an international group of German language learners at CEFR level A1.1. This will provide participants with a chance to practice their teaching skills and to explore techniques and strategies for developing effective teaching materials.
+The programme is a cooperation between the Language Centre and the International Office at Osnabrück University.
+We offer
+A project-based course, i.e., there is no course book or curriculum based on grammar topics, but students will choose a topic and form of presentation (e.g., video, podcast, website, Instagram stories, etc.) at the start of the course
+Projects should be selected based on UOS research foci such as ""peace and conviviality"", ""sustainability"", ""migration"" and ""artificial intelligence"".
+Resources and technical equipment from UOS’s DigiLab can be used to complete projects; DigiLab staff will introduce all resources available to students.
+Besides assisting students with their projects, lecturers will introduce students to relevant research skills and language competences in German to prepare and present their projects in the daily lessons.
+A rich cultural and recreational programme, including a four-day trip to Berlin
+Students will qualify for up to nine ECTS credit points at proficiency level B1/B2 CEFR upon successful completion of the language course.",,"Dates and costs
+6 July - 5 August 2026 (Registration deadline of course provider: 7 April 2026),
+costs: EUR 2,250
+This price includes
+Accommodation
+Accompanying programme
+Course fees
+Information on dates, prices and mode of study
+Students from partner universities get a 250 EUR discount! You might be eligible for a DAAD scholarship!","Teaching language
+German
+English
+Language level of course
+German:
+B1, B2
+English:
+B1
+Language requirements
+German B1, English B1
+Submit application to
+The application period is from 1 November 2025 to 7 April 2026. Please check out our
+website
+for more details and the application form.","Is accommodation organised?
+Accommodation is arranged by the organiser.
+Type of accommodation
+Student dormitory or homestay
+Meals
+In four dining halls and eight cafeterias, the ""Studentenwerk"" (student administration) catering service offers healthy and varied food options for students, employees, and guests of Osnabrück University. Summer school participants will benefit from reduced fees.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+You will take part in a wide variety of cultural, social, and outdoor activities, including activities and sights in Osnabrück (e.g. Felix Nussbaum exhibition, night watchman tour), a trip to Bremen, (if weather allows) a guided mudflat hiking tour from the East Frisian mainland to the island of Baltrum or to the North Sea, plus a three-day trip to our capital, Berlin.
+For more information, please visit our
+website
+.
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+Yes",2026-02-01T13:15:06.818994+00:00,daad_api,2026-02-01T17:42:20.511898,"['Limited course details available', 'Program duration not specified']",0.7000000000000001,True,,,[],B2,B1,Course is taught in both German and English. German proficiency at B1 or B2 level required. English proficiency at B1 level required. Application period: 1 November 2025 to 7 April 2026.
