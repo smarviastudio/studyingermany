@@ -13,6 +13,7 @@ type WpPost = {
   date: string;
   modified: string;
   categories: number[];
+  featuredImage: string | null;
 };
 
 async function fetchWpPost(slug: string): Promise<WpPost | null> {
@@ -21,7 +22,39 @@ async function fetchWpPost(slug: string): Promise<WpPost | null> {
     const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts?slug=${slug}&_embed=1`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const posts = await res.json();
-    return posts[0] || null;
+    const post = posts[0];
+    if (!post) return null;
+
+    // Extract featured image from _embedded
+    const embedded = post._embedded as Record<string, unknown> | undefined;
+    const featuredMediaCandidates = Array.isArray(embedded?.['wp:featuredmedia'])
+      ? (embedded['wp:featuredmedia'] as Record<string, unknown>[])
+      : [];
+    const featuredMedia = featuredMediaCandidates.find((media) => {
+      const sourceUrl = media?.source_url;
+      const mediaType = media?.media_type;
+      return typeof sourceUrl === 'string' && sourceUrl.length > 0 && mediaType !== 'site';
+    }) || null;
+
+    const featuredMediaDetails = featuredMedia?.media_details as Record<string, unknown> | undefined;
+    const featuredSizes = featuredMediaDetails?.sizes as Record<string, Record<string, unknown>> | undefined;
+    const featuredImage =
+      (typeof featuredSizes?.large?.source_url === 'string' && featuredSizes.large.source_url) ||
+      (typeof featuredSizes?.full?.source_url === 'string' && featuredSizes.full.source_url) ||
+      (typeof featuredSizes?.medium_large?.source_url === 'string' && featuredSizes.medium_large.source_url) ||
+      (featuredMedia && typeof featuredMedia.source_url === 'string' ? featuredMedia.source_url : null);
+
+    return {
+      id: post.id,
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      slug: post.slug,
+      date: post.date,
+      modified: post.modified,
+      categories: post.categories,
+      featuredImage,
+    };
   } catch {
     return null;
   }
@@ -301,6 +334,18 @@ export default async function BlogPostPage({ params }: Props) {
           <span>{readTime} min read</span>
         </div>
       </header>
+
+      {/* Hero Image */}
+      {wpPost.featuredImage && (
+        <figure className="max-w-[1100px] mx-auto px-6">
+          <img
+            src={wpPost.featuredImage}
+            alt={stripHtml(title)}
+            className="w-full h-[420px] object-cover rounded-xl mt-7"
+            loading="eager"
+          />
+        </figure>
+      )}
 
       {/* Body Grid */}
       <div className="max-w-[1100px] mx-auto px-6 py-9">
