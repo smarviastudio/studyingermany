@@ -2,6 +2,63 @@ export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from 'next/server';
 
+type FAQItem = {
+  question: string;
+  answer: string;
+};
+
+function normalizeFaqs(input: unknown, topic: string, category: string): FAQItem[] {
+  const fallbackFaqs: FAQItem[] = [
+    {
+      question: `What should international students know about ${topic}?`,
+      answer: `International students should check official university and government requirements early, compare deadlines carefully, and prepare documents in advance for ${topic}.`,
+    },
+    {
+      question: `How can students get started with ${topic}?`,
+      answer: `Start with official sources, make a step-by-step checklist, and focus first on the most important requirements related to ${topic}.`,
+    },
+    {
+      question: `Are there common mistakes to avoid with ${topic}?`,
+      answer: `Yes. Many students rely on outdated information, miss deadlines, or ignore program-specific rules, so always verify details through official channels.`,
+    },
+  ];
+
+  const cleaned = Array.isArray(input)
+    ? input
+        .map((faq) => ({
+          question: typeof faq?.question === 'string' ? faq.question.trim() : '',
+          answer: typeof faq?.answer === 'string' ? faq.answer.trim() : '',
+        }))
+        .filter((faq) => faq.question && faq.answer)
+    : [];
+
+  const merged = [...cleaned];
+
+  if (merged.length < 3) {
+    for (const faq of fallbackFaqs) {
+      if (merged.length >= 3) break;
+      if (!merged.some((item) => item.question.toLowerCase() === faq.question.toLowerCase())) {
+        merged.push(faq);
+      }
+    }
+  }
+
+  if (merged.length < 3) {
+    merged.push(
+      {
+        question: `How does ${topic} relate to studying in Germany?`,
+        answer: `${topic} can affect admission planning, budgeting, relocation, or student life, so it is worth understanding the details before making decisions.`,
+      },
+      {
+        question: `Where can students find reliable information about ${category}?`,
+        answer: `Use official university pages, DAAD resources, and government websites first, then compare that information with trusted student guides and communities.`,
+      }
+    );
+  }
+
+  return merged.slice(0, 5);
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { topic, tone, length, keywords, category } = await request.json();
@@ -75,6 +132,8 @@ Return ONLY the JSON, no markdown code blocks, no extra text.`;
     } catch {
       return NextResponse.json({ error: 'Failed to parse AI response', raw }, { status: 500 });
     }
+
+    parsed.faqs = normalizeFaqs(parsed?.faqs, topic.trim(), category || 'Guides');
 
     return NextResponse.json({ post: parsed });
   } catch (error) {
