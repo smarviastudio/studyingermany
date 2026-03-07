@@ -29,9 +29,14 @@ export async function GET(request: Request) {
 
     const simplified = posts.map((post: Record<string, unknown>) => {
       const embedded = post._embedded as Record<string, unknown> | undefined;
-      const featuredMedia = Array.isArray(embedded?.['wp:featuredmedia'])
-        ? (embedded['wp:featuredmedia'] as Record<string, unknown>[])[0]
-        : null;
+      const featuredMediaCandidates = Array.isArray(embedded?.['wp:featuredmedia'])
+        ? (embedded['wp:featuredmedia'] as Record<string, unknown>[])
+        : [];
+      const featuredMedia = featuredMediaCandidates.find((media) => {
+        const sourceUrl = media?.source_url;
+        const mediaType = media?.media_type;
+        return typeof sourceUrl === 'string' && sourceUrl.length > 0 && mediaType !== 'site';
+      }) || null;
       const terms = Array.isArray(embedded?.['wp:term'])
         ? (embedded['wp:term'] as unknown[][]).flat()
         : [];
@@ -43,6 +48,15 @@ export async function GET(request: Request) {
           slug: (t as Record<string, unknown>).slug,
         }));
 
+      const featuredMediaDetails = featuredMedia?.media_details as Record<string, unknown> | undefined;
+      const featuredSizes = featuredMediaDetails?.sizes as Record<string, Record<string, unknown>> | undefined;
+      const featuredImage =
+        (typeof featuredSizes?.medium_large?.source_url === 'string' && featuredSizes.medium_large.source_url) ||
+        (typeof featuredSizes?.large?.source_url === 'string' && featuredSizes.large.source_url) ||
+        (typeof featuredSizes?.full?.source_url === 'string' && featuredSizes.full.source_url) ||
+        (typeof featuredSizes?.medium?.source_url === 'string' && featuredSizes.medium.source_url) ||
+        (featuredMedia && typeof featuredMedia.source_url === 'string' ? featuredMedia.source_url : null);
+
       return {
         id: post.id,
         title: (post.title as Record<string, unknown>)?.rendered || '',
@@ -50,7 +64,7 @@ export async function GET(request: Request) {
         slug: post.slug,
         date: post.date,
         link: post.link,
-        featuredImage: featuredMedia ? (featuredMedia.source_url as string) : null,
+        featuredImage,
         categories,
       };
     });
