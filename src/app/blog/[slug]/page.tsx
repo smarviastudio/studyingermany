@@ -27,6 +27,10 @@ async function fetchWpPost(slug: string): Promise<WpPost | null> {
   }
 }
 
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, '').replace(/&[#A-Za-z0-9]+;/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
@@ -235,6 +239,7 @@ export default async function BlogPostPage({ params }: Props) {
   const content = wpPost.content.rendered;
   const publishedAt = new Date(wpPost.date);
   const updatedAt = wpPost.modified ? new Date(wpPost.modified) : null;
+  const related = BLOG_POSTS.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-[#0a0a1a]">
@@ -262,10 +267,19 @@ export default async function BlogPostPage({ params }: Props) {
           <ChevronRight className="w-3 h-3" />
           <Link href="/blog" className="hover:text-white/60 transition-colors">Blog</Link>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-white/50 truncate max-w-[200px]" dangerouslySetInnerHTML={{ __html: title }} />
+          <span className="text-white/50 truncate max-w-[200px]">{stripHtml(title)}</span>
         </div>
 
         <header className="mb-8">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400">
+              WordPress Article
+            </span>
+            <span className="text-white/20 text-xs flex items-center gap-1">
+              <Clock className="w-3 h-3" /> Live content
+            </span>
+          </div>
+
           <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-3" dangerouslySetInnerHTML={{ __html: title }} />
           <div className="text-white/40 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: excerpt }} />
 
@@ -282,13 +296,38 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </header>
 
-        <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
+        <div
+          className="prose-custom"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
 
         <div className="mt-12 pt-8 border-t border-white/[0.06]">
           <Link href="/blog" className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to all articles
           </Link>
         </div>
+
+        {related.length > 0 && (
+          <section className="mt-10">
+            <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-4">More articles</h2>
+            <div className="grid sm:grid-cols-3 gap-3">
+              {related.map(p => {
+                const rCat = CATEGORIES[p.category];
+                return (
+                  <Link
+                    key={p.slug}
+                    href={`/blog/${p.slug}`}
+                    className="group p-4 rounded-xl border border-white/[0.06] bg-[#0f0f23] hover:border-white/[0.12] transition-all"
+                  >
+                    <span className="text-2xl mb-2 block">{p.coverEmoji}</span>
+                    <span className={`text-[9px] font-semibold uppercase tracking-wider ${rCat.color}`}>{rCat.label}</span>
+                    <h3 className="text-white text-xs font-medium mt-1 group-hover:text-blue-300 transition-colors line-clamp-2">{p.title}</h3>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         <div className="mt-10 p-6 rounded-xl border border-white/[0.06] bg-gradient-to-br from-blue-500/[0.04] to-purple-500/[0.04] text-center">
           <h3 className="text-white font-bold mb-1">Ready to apply?</h3>
