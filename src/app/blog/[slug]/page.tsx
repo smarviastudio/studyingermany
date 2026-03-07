@@ -149,6 +149,30 @@ function renderMarkdown(md: string): string {
 function renderWordPressHtml(html: string): string {
   let out = html;
 
+  out = out.replace(/<section class="sig-faqs">([\s\S]*?)<\/section>/gi, (_match, inner: string) => {
+    const headingMatch = inner.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
+    const heading = headingMatch?.[1]?.trim() || 'Frequently Asked Questions';
+    const items = Array.from(
+      inner.matchAll(/<article class="sig-faq( open)?">[\s\S]*?<h3>([\s\S]*?)<\/h3>[\s\S]*?<div class="sig-faq__answer">\s*<p>([\s\S]*?)<\/p>\s*<\/div>\s*<\/article>/gi)
+    );
+
+    if (!items.length) {
+      return `<section class="my-12 rounded-[28px] border border-[#f1e3a6] bg-gradient-to-br from-[#fffdf5] via-white to-[#fff8e8] p-6 md:p-8 shadow-[0_18px_50px_rgba(17,24,39,0.08)]"><div class="mb-5 flex items-start gap-4"><div class="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ffce00]/20 text-xl">?</div><div><span class="inline-flex rounded-full bg-[#fff3c4] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9a3412]">FAQ</span><h2 class="mt-3 text-[28px] font-bold leading-tight text-gray-900" style="font-family: 'Space Grotesk', sans-serif;">${heading}</h2><p class="mt-2 text-sm text-gray-600">Quick answers to the most common questions about this topic.</p></div></div></section>`;
+    }
+
+    const itemsHtml = items
+      .map((item, index) => {
+        const isOpen = Boolean(item[1]);
+        const question = item[2].trim();
+        const answer = item[3].trim();
+
+        return `<details class="group rounded-2xl border border-[#eadfd0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-200 hover:border-[#ffce00] hover:shadow-[0_14px_30px_rgba(221,0,0,0.08)]"${isOpen || index === 0 ? ' open' : ''}><summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 text-left"><span class="pr-2 text-[19px] font-semibold leading-snug text-gray-900" style="font-family: 'Space Grotesk', sans-serif;">${question}</span><span class="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#fff6d6] text-lg font-bold text-[#dd0000]">+</span></summary><div class="px-5 pb-5"><div class="h-px w-full bg-gradient-to-r from-[#ffce00]/60 via-[#f4e7b5] to-transparent"></div><p class="mt-4 text-[16px] leading-8 text-gray-700">${answer}</p></div></details>`;
+      })
+      .join('');
+
+    return `<section class="my-12 rounded-[28px] border border-[#f1e3a6] bg-gradient-to-br from-[#fffdf5] via-white to-[#fff8e8] p-6 md:p-8 shadow-[0_18px_50px_rgba(17,24,39,0.08)]"><div class="mb-6 flex items-start gap-4"><div class="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ffce00]/20 text-xl">?</div><div><span class="inline-flex rounded-full bg-[#fff3c4] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9a3412]">FAQ</span><h2 class="mt-3 text-[28px] font-bold leading-tight text-gray-900" style="font-family: 'Space Grotesk', sans-serif;">${heading}</h2><p class="mt-2 text-sm text-gray-600">Quick answers to the most common questions readers ask.</p></div></div><div class="space-y-3">${itemsHtml}</div></section>`;
+  });
+
   // Light theme styles matching original WordPress theme
   out = out.replace(/<h2([^>]*)>/gi, '<h2$1 class="text-2xl font-bold text-gray-900 mt-10 mb-3 pb-2 border-b-2 border-[#ffce00]" style="font-family: \'Space Grotesk\', sans-serif;">');
   out = out.replace(/<h3([^>]*)>/gi, '<h3$1 class="text-xl font-semibold text-gray-900 mt-8 mb-2.5" style="font-family: \'Space Grotesk\', sans-serif;">');

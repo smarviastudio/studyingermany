@@ -23,33 +23,25 @@ export async function POST(request: NextRequest) {
     }
 
     const wpUrl = process.env.WP_URL || 'https://cms.germanpath.com';
-    const wpUser = process.env.WP_USER || 'admin';
-    const wpAppPassword = process.env.WP_APP_PASSWORD;
+    const wpCustomApiToken = process.env.WP_CUSTOM_API_TOKEN;
 
-    if (!wpAppPassword) {
-      return NextResponse.json({ error: 'WP_APP_PASSWORD missing' }, { status: 500 });
+    if (!wpCustomApiToken) {
+      return NextResponse.json({ error: 'WP_CUSTOM_API_TOKEN missing' }, { status: 500 });
     }
-
-    const credentials = Buffer.from(`${wpUser}:${wpAppPassword}`).toString('base64');
-
-    const imgRes = await fetch(imageUrl);
-    if (!imgRes.ok) {
-      return NextResponse.json({ error: 'Failed to download image' }, { status: 400 });
-    }
-
-    const arrayBuffer = await imgRes.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const contentType = imgRes.headers.get('content-type') || 'image/jpeg';
     const safeFilename = (filename || `unsplash-${Date.now()}.jpg`).replace(/[^a-z0-9.-]/gi, '-');
 
-    const uploadRes = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
+    const uploadRes = await fetch(`${wpUrl}/wp-json/custom/v1/upload-media`, {
       method: 'POST',
       headers: {
-        Authorization: `Basic ${credentials}`,
-        'Content-Disposition': `attachment; filename="${safeFilename}"`,
-        'Content-Type': contentType,
+        'Content-Type': 'application/json',
       },
-      body: buffer,
+      body: JSON.stringify({
+        api_token: wpCustomApiToken,
+        image_url: imageUrl,
+        filename: safeFilename,
+        alt_text: altText || credit || '',
+        caption: credit || '',
+      }),
     });
 
     if (!uploadRes.ok) {
@@ -60,29 +52,10 @@ export async function POST(request: NextRequest) {
 
     const media = await uploadRes.json();
 
-    if (credit || altText) {
-      try {
-        await fetch(`${wpUrl}/wp-json/wp/v2/media/${media.id}`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Basic ${credentials}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            caption: credit || undefined,
-            alt_text: altText || credit || undefined,
-            description: credit || undefined,
-          }),
-        });
-      } catch (error) {
-        console.warn('Failed to set media metadata', error);
-      }
-    }
-
     await registerUnsplashDownload(downloadLocation);
 
     return NextResponse.json({
-      id: media.id,
+      id: media.media_id,
       source_url: media.source_url,
     });
   } catch (error) {

@@ -27,87 +27,13 @@ export async function POST(request: NextRequest) {
     }
 
     const wpUrl = process.env.WP_URL || 'https://cms.germanpath.com';
-    const wpUser = process.env.WP_USER || 'admin';
-    const wpAppPassword = process.env.WP_APP_PASSWORD || '';
+    const wpCustomApiToken = process.env.WP_CUSTOM_API_TOKEN || '';
 
-    if (!wpAppPassword) {
+    if (!wpCustomApiToken) {
       return NextResponse.json(
-        { error: 'WP_APP_PASSWORD not set in environment. Please add it to .env.local.' },
+        { error: 'WP_CUSTOM_API_TOKEN not set in environment. Please add it to .env.local.' },
         { status: 500 }
       );
-    }
-
-    const credentials = Buffer.from(`${wpUser}:${wpAppPassword}`).toString('base64');
-
-    // Create/get tags first
-    const tagIds: number[] = [];
-    if (Array.isArray(tags) && tags.length > 0) {
-      for (const tagName of tags) {
-        try {
-          const tagRes = await fetch(
-            `${wpUrl}/wp-json/wp/v2/tags?search=${encodeURIComponent(tagName)}`,
-            { headers: { Authorization: `Basic ${credentials}` } }
-          );
-          if (tagRes.ok) {
-            const existing = await tagRes.json();
-            if (existing.length > 0) {
-              tagIds.push(existing[0].id);
-            } else {
-              const createRes = await fetch(`${wpUrl}/wp-json/wp/v2/tags`, {
-                method: 'POST',
-                headers: {
-                  Authorization: `Basic ${credentials}`,
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: tagName }),
-              });
-              if (createRes.ok) {
-                const newTag = await createRes.json();
-                tagIds.push(newTag.id);
-              }
-            }
-          }
-        } catch { /* skip tag errors */ }
-      }
-    }
-
-    // Create/get category
-    let categoryId: number | null = null;
-    if (categoryName?.trim()) {
-      const searchQuery = encodeURIComponent(categoryName.trim());
-      try {
-        const catRes = await fetch(
-          `${wpUrl}/wp-json/wp/v2/categories?search=${searchQuery}`,
-          { headers: { Authorization: `Basic ${credentials}` } }
-        );
-        if (catRes.ok) {
-          const cats = await catRes.json();
-          if (cats.length > 0) {
-            categoryId = cats[0].id;
-          } else {
-            const slug = categoryName
-              .trim()
-              .toLowerCase()
-              .replace(/[^a-z0-9\s-]/g, '')
-              .replace(/\s+/g, '-')
-              .slice(0, 32);
-            const createCatRes = await fetch(`${wpUrl}/wp-json/wp/v2/categories`, {
-              method: 'POST',
-              headers: {
-                Authorization: `Basic ${credentials}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ name: categoryName.trim(), slug }),
-            });
-            if (createCatRes.ok) {
-              const newCat = await createCatRes.json();
-              categoryId = newCat.id;
-            }
-          }
-        }
-      } catch (error) {
-        console.warn('Category sync failed', error);
-      }
     }
 
     const sanitizedFaqs: FAQItem[] = Array.isArray(faqs)
@@ -133,13 +59,13 @@ export async function POST(request: NextRequest) {
 
     const finalContent = `${content}${faqSection}`;
 
-    // Publish the post
     const postBody: Record<string, unknown> = {
+      api_token: wpCustomApiToken,
       title,
       content: finalContent,
       excerpt: excerpt || '',
       status: status || 'draft',
-      tags: tagIds,
+      tags: Array.isArray(tags) ? tags : [],
     };
 
     if (slug) {
@@ -147,23 +73,20 @@ export async function POST(request: NextRequest) {
     }
 
     if (featuredMediaId) {
-      postBody.featured_media = featuredMediaId;
+      postBody.featured_media = Number(featuredMediaId);
     }
 
-    if (categoryId) {
-      postBody.categories = [categoryId];
+    if (categoryName?.trim()) {
+      postBody.categories = [categoryName.trim()];
     }
 
     if (typeof showInTicker === 'boolean') {
-      postBody.meta = {
-        sig_show_in_ticker: showInTicker,
-      };
+      postBody.show_in_ticker = showInTicker;
     }
 
-    const postRes = await fetch(`${wpUrl}/wp-json/wp/v2/posts`, {
+    const postRes = await fetch(`${wpUrl}/wp-json/custom/v1/create-post`, {
       method: 'POST',
       headers: {
-        Authorization: `Basic ${credentials}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(postBody),
@@ -182,10 +105,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      postId: post.id,
+      postId: post.post_id,
       postUrl: post.link,
-      editUrl: `${wpUrl}/wp-admin/post.php?post=${post.id}&action=edit`,
-      status: post.status,
+      editUrl: `${wpUrl}/wp-admin/post.php?post=${post.post_id}&action=edit`,
+      status: status || 'draft',
     });
   } catch (error) {
     console.error('Publish error:', error);
