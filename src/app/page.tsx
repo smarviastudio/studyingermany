@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef, FormEvent } from 'react';
+import { useState, useEffect, useMemo, FormEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import {
-  Search, Loader2, Bookmark, ChevronRight,
-  X, ArrowRight, BookOpen, Newspaper, Calendar,
-  MessageSquare
+  Search, Loader2, Bookmark, X, ArrowRight, BookOpen, Newspaper, Calendar,
+  GraduationCap, FileText, Languages, Home, Briefcase, CreditCard, Shield,
+  Plane, Star, Zap, TrendingUp, Users, Globe, Clock
 } from 'lucide-react';
 import { ProgramModal } from '@/components/ProgramModal';
 import type { ProgramSummary } from '@/lib/types';
@@ -21,16 +21,21 @@ const HERO_SUGGESTIONS = [
   'MBA in Berlin · summer intake',
 ];
 
-const QUICK_TOPICS = [
-  'student visa', 'blocked account', 'housing tips', 'health insurance', 'jobs in germany', 'scholarships',
+const TOOLS = [
+  { href: '/cv-maker',          label: 'AI CV Maker',       desc: 'Build a German-format CV in minutes with AI assistance',  icon: FileText,    gradient: 'from-red-500 to-rose-600' },
+  { href: '/cover-letter',      label: 'Cover Letter',      desc: 'Draft professional cover letters tailored to German employers',  icon: Briefcase,   gradient: 'from-amber-500 to-orange-600' },
+  { href: '/motivation-letter', label: 'Motivation Letter', desc: 'Create compelling motivation letters for university applications',  icon: Star,        gradient: 'from-violet-500 to-purple-600' },
+  { href: '/gpa-converter',     label: 'GPA Converter',     desc: 'Convert your grades to the German grading scale instantly',  icon: TrendingUp,  gradient: 'from-emerald-500 to-green-600' },
+  { href: '/dashboard',         label: 'My Dashboard',      desc: 'Track your applications, shortlists and study plans',  icon: Zap,         gradient: 'from-blue-500 to-indigo-600' },
 ];
 
-const TOOLS = [
-  { href: '/cv-maker',          label: 'AI CV Maker',       desc: 'German-format CV',          emoji: '📄' },
-  { href: '/cover-letter',      label: 'Cover Letter',      desc: 'Draft & refine',             emoji: '✉️' },
-  { href: '/motivation-letter', label: 'Motivation Letter', desc: 'Tailored to program',        emoji: '🎯' },
-  { href: '/gpa-converter',     label: 'GPA Converter',     desc: 'Convert to German scale',    emoji: '🔢' },
-  { href: '/dashboard',         label: 'My Dashboard',      desc: 'Shortlist & track apps',     emoji: '📊' },
+const JOURNEY_CATEGORIES = [
+  { key: 'getting-started', label: 'Getting Started', icon: Plane, color: '#dd0000', desc: 'First steps to study in Germany', slugs: ['guides', 'getting-started', 'visa-immigration', 'visa'] },
+  { key: 'university-life', label: 'University Life', icon: GraduationCap, color: '#7c3aed', desc: 'Admissions, programs & campus', slugs: ['university-life', 'admissions', 'programs'] },
+  { key: 'housing',         label: 'Housing & Living', icon: Home, color: '#059669', desc: 'Find accommodation & settle in', slugs: ['housing', 'living', 'accommodation'] },
+  { key: 'finance',         label: 'Finance & Insurance', icon: CreditCard, color: '#d97706', desc: 'Blocked accounts, insurance & more', slugs: ['finance', 'insurance', 'blocked-account'] },
+  { key: 'jobs-career',     label: 'Jobs & Career', icon: Briefcase, color: '#0284c7', desc: 'Working while studying & after', slugs: ['jobs-career', 'jobs', 'career'] },
+  { key: 'language',        label: 'Language & Culture', icon: Languages, color: '#be185d', desc: 'German language & integration', slugs: ['language', 'culture', 'integration'] },
 ];
 
 type WpPost = {
@@ -45,12 +50,7 @@ type WpPost = {
 };
 
 const HTML_ENTITY_MAP: Record<string, string> = {
-  amp: '&',
-  lt: '<',
-  gt: '>',
-  quot: '"',
-  apos: "'",
-  nbsp: ' ',
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
 };
 
 function decodeHtmlEntities(text: string) {
@@ -68,17 +68,8 @@ function decodeHtmlEntities(text: string) {
 
 function stripHtml(html: string) {
   return decodeHtmlEntities(
-    html
-      .replace(/<[^>]*>/g, '')
-      .replace(/\[\s*\]/g, '')
-      .replace(/\s{2,}/g, ' ')
-      .trim()
+    html.replace(/<[^>]*>/g, '').replace(/\[\s*\]/g, '').replace(/\s{2,}/g, ' ').trim()
   );
-}
-
-function truncateText(text: string, limit = 160) {
-  if (text.length <= limit) return text;
-  return `${text.slice(0, limit).trim()}…`;
 }
 
 function timeAgo(dateStr: string) {
@@ -108,28 +99,21 @@ export default function HomePage() {
   const [wpPosts, setWpPosts] = useState<WpPost[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const toolsScrollRef = useRef<HTMLDivElement>(null);
+  const [activeCategory, setActiveCategory] = useState('all');
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); }),
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.08, rootMargin: '0px 0px -60px 0px' }
     );
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
     return () => observer.disconnect();
-  }, [wpPosts, postsLoading]);
-
-  const scrollTools = (direction: 'left' | 'right') => {
-    const container = toolsScrollRef.current;
-    if (!container) return;
-    const offset = direction === 'left' ? -320 : 320;
-    container.scrollBy({ left: offset, behavior: 'smooth' });
-  };
+  }, [wpPosts, postsLoading, activeCategory]);
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('/api/wp-posts?per_page=6');
+        const res = await fetch('/api/wp-posts?per_page=30');
         if (res.ok) {
           const data = await res.json();
           setWpPosts(data.posts || []);
@@ -152,6 +136,35 @@ export default function HomePage() {
       } catch { /* silent */ }
     })();
   }, [status]);
+
+  const categorizedPosts = useMemo(() => {
+    const groups: Record<string, WpPost[]> = {};
+    JOURNEY_CATEGORIES.forEach(cat => { groups[cat.key] = []; });
+    groups['other'] = [];
+    wpPosts.forEach(post => {
+      const postSlugs = post.categories.map(c => c.slug.toLowerCase());
+      const postNames = post.categories.map(c => c.name.toLowerCase());
+      let placed = false;
+      for (const journeyCat of JOURNEY_CATEGORIES) {
+        if (journeyCat.slugs.some(s => postSlugs.some(ps => ps.includes(s)) || postNames.some(pn => pn.includes(s)))) {
+          groups[journeyCat.key].push(post);
+          placed = true;
+          break;
+        }
+      }
+      if (!placed) groups['other'].push(post);
+    });
+    return groups;
+  }, [wpPosts]);
+
+  const filteredPosts = useMemo(() => {
+    if (activeCategory === 'all') return wpPosts;
+    return categorizedPosts[activeCategory] || [];
+  }, [activeCategory, wpPosts, categorizedPosts]);
+
+  const featuredPost = useMemo(() => {
+    return wpPosts.find(p => p.featuredImage) || wpPosts[0] || null;
+  }, [wpPosts]);
 
   const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
@@ -199,21 +212,19 @@ export default function HomePage() {
   };
 
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#fff', color: '#171717', minHeight: '100vh' }}>
+    <div className="homepage-root">
 
-      {/* ── Sign-in toast ── */}
       {signInToast && (
         <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[60]">
           <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white border border-gray-200 shadow-lg">
             <Bookmark className="w-4 h-4 flex-shrink-0" style={{ color: RED }} />
             <p className="text-gray-800 text-sm font-medium">Sign in to save programs</p>
-            <Link href="/auth/signin" className="ml-1 px-3 py-1 rounded-lg text-white text-xs font-semibold transition-colors" style={{ background: RED }}>Sign in</Link>
+            <Link href="/auth/signin" className="ml-1 px-3 py-1 rounded-lg text-white text-xs font-semibold" style={{ background: RED }}>Sign in</Link>
             <button onClick={() => setSignInToast(false)}><X className="w-3.5 h-3.5 text-gray-400" /></button>
           </div>
         </div>
       )}
 
-      {/* ── Program modal ── */}
       {selectedProgramId && (
         <ProgramModal
           programId={selectedProgramId}
@@ -226,102 +237,67 @@ export default function HomePage() {
         />
       )}
 
-      {/* ── Search Results Modal ── */}
       {showSearchResults && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '60px 20px', overflowY: 'auto' }}
-          onClick={() => setShowSearchResults(false)}>
-          <div style={{ background: '#fff', borderRadius: 20, maxWidth: 1000, width: '100%', maxHeight: 'calc(100vh - 120px)', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}
-            onClick={e => e.stopPropagation()}>
-            
-            {/* Modal Header */}
-            <div style={{ position: 'sticky', top: 0, background: '#fff', borderBottom: '1px solid #e5e5e5', padding: '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderRadius: '20px 20px 0 0', zIndex: 10 }}>
+        <div className="search-modal-overlay" onClick={() => setShowSearchResults(false)}>
+          <div className="search-modal-content" onClick={e => e.stopPropagation()}>
+            <div className="search-modal-header">
               <div>
-                <h1 style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif", fontSize: 20, fontWeight: 700, color: '#171717', margin: 0 }}>
+                <h1 className="search-modal-title">
                   {searching ? 'Searching programs...' : results.length > 0 ? `Found ${results.length} programs` : 'Search Results'}
                 </h1>
-                {reasoning && !searching && <p style={{ fontSize: 13, color: '#737373', margin: '4px 0 0', maxWidth: 600 }}>{reasoning}</p>}
+                {reasoning && !searching && <p className="search-modal-subtitle">{reasoning}</p>}
               </div>
-              <button onClick={() => setShowSearchResults(false)}
-                style={{ width: 36, height: 36, borderRadius: 999, border: '1px solid #e5e5e5', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#f5f5f5'; e.currentTarget.style.borderColor = '#d4d4d4'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#e5e5e5'; }}>
-                <X className="w-4 h-4" style={{ color: '#737373' }} />
+              <button onClick={() => setShowSearchResults(false)} className="search-modal-close">
+                <X className="w-4 h-4" />
               </button>
             </div>
-
-            {/* Modal Body */}
-            <div style={{ padding: '24px 28px 32px' }}>
+            <div className="search-modal-body">
               {searching && (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px' }}>
+                <div className="search-modal-loading">
                   <Loader2 className="w-8 h-8 animate-spin mb-4" style={{ color: RED }} />
-                  <p style={{ fontSize: 15, color: '#737373', fontWeight: 500 }}>Finding the best programs for you...</p>
+                  <p>Finding the best programs for you...</p>
                 </div>
               )}
-
               {searchError && (
-                <div style={{ padding: '40px 20px', textAlign: 'center' }}>
-                  <p style={{ fontSize: 15, color: RED, fontWeight: 600, marginBottom: 8 }}>Search Error</p>
-                  <p style={{ fontSize: 14, color: '#737373' }}>{searchError}</p>
+                <div className="search-modal-error">
+                  <p className="error-title">Search Error</p>
+                  <p>{searchError}</p>
                 </div>
               )}
-
               {!searching && nonCourseMessage && (
-                <div style={{ padding: '40px 20px', textAlign: 'center' }}>
-                  <p style={{ fontSize: 15, color: '#737373', lineHeight: 1.65, maxWidth: 500, margin: '0 auto' }}>{nonCourseMessage}</p>
-                </div>
+                <div className="search-modal-message"><p>{nonCourseMessage}</p></div>
               )}
-
               {!searching && results.length > 0 && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+                <div className="search-results-grid">
                   {results.map(program => (
-                    <div key={program.id}
-                      onClick={() => { setSelectedProgramId(program.id); setShowSearchResults(false); }}
-                      style={{ background: '#fafafa', border: '1px solid #e5e5e5', borderRadius: 14, overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s' }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = RED; e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e5e5'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; }}>
-                      
-                      <div style={{ position: 'relative', height: 140, background: '#f0f0f0' }}>
+                    <div key={program.id} onClick={() => { setSelectedProgramId(program.id); setShowSearchResults(false); }} className="program-card">
+                      <div className="program-card-image">
                         {program.image_url && (
                           <Image src={program.image_url} alt={program.program_name} fill style={{ objectFit: 'cover' }} sizes="280px" unoptimized onError={e => { e.currentTarget.style.display = 'none'; }} />
                         )}
-                        {program.is_free && (
-                          <span style={{ position: 'absolute', top: 10, left: 10, background: '#16a34a', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 99 }}>No Tuition</span>
-                        )}
-                        <button
-                          onClick={e => { e.stopPropagation(); handleShortlist(program); }}
-                          disabled={shortlistingId === program.id}
-                          style={{ position: 'absolute', top: 10, right: 10, padding: 7, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: 999, cursor: 'pointer', color: shortlistedPrograms.includes(program.id) ? '#d97706' : '#525252', transition: 'all 0.2s' }}>
+                        {program.is_free && <span className="program-badge-free">No Tuition</span>}
+                        <button onClick={e => { e.stopPropagation(); handleShortlist(program); }} disabled={shortlistingId === program.id} className="program-bookmark-btn" style={{ color: shortlistedPrograms.includes(program.id) ? '#d97706' : '#525252' }}>
                           {shortlistingId === program.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" style={{ fill: shortlistedPrograms.includes(program.id) ? 'currentColor' : 'none' }} />}
                         </button>
                       </div>
-
-                      <div style={{ padding: '14px 16px' }}>
-                        <h4 style={{ fontSize: 14, fontWeight: 700, color: '#171717', lineHeight: 1.4, margin: '0 0 6px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                          {program.program_name}
-                        </h4>
-                        <p style={{ fontSize: 12, color: '#737373', margin: '0 0 8px', lineHeight: 1.4 }}>
-                          {program.university}{program.city ? ` · ${program.city}` : ''}
-                        </p>
-                        {program.match_reason && (
-                          <p style={{ fontSize: 11, color: '#16a34a', lineHeight: 1.5, margin: '0 0 10px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                            {program.match_reason}
-                          </p>
-                        )}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: '#a3a3a3', paddingTop: 10, borderTop: '1px solid #ebebeb' }}>
-                          {program.tuition_fee_number != null ? <span>€{program.tuition_fee_number.toLocaleString()}</span> : program.is_free ? <span style={{ color: '#16a34a', fontWeight: 600 }}>Free</span> : null}
+                      <div className="program-card-body">
+                        <h4 className="program-card-title">{program.program_name}</h4>
+                        <p className="program-card-uni">{program.university}{program.city ? ` · ${program.city}` : ''}</p>
+                        {program.match_reason && <p className="program-card-match">{program.match_reason}</p>}
+                        <div className="program-card-footer">
+                          {program.tuition_fee_number != null ? <span>€{program.tuition_fee_number.toLocaleString()}</span> : program.is_free ? <span className="text-emerald-600 font-semibold">Free</span> : null}
                           {program.beginning_normalized && <span>{program.beginning_normalized}</span>}
-                          <span style={{ marginLeft: 'auto', color: RED, fontWeight: 700, fontSize: 12 }}>View →</span>
+                          <span className="program-card-view">View →</span>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
-
               {!searching && !searchError && !nonCourseMessage && results.length === 0 && (
-                <div style={{ padding: '60px 20px', textAlign: 'center' }}>
+                <div className="search-modal-empty">
                   <Search className="w-12 h-12 mx-auto mb-4" style={{ color: '#d4d4d4' }} />
-                  <p style={{ fontSize: 15, color: '#737373' }}>No results yet. Try searching for a program above.</p>
+                  <p>No results yet. Try searching for a program above.</p>
                 </div>
               )}
             </div>
@@ -331,222 +307,147 @@ export default function HomePage() {
 
       <SiteNav />
 
-      {/* ══ SEARCH HERO ══ */}
-      <section id="hero" style={{ position: 'relative', background: 'linear-gradient(135deg, #fdfcfb 0%, #fef9f5 50%, #fff5f0 100%)', padding: '96px 0 80px', overflow: 'hidden' }}>
-        
-        {/* Decorative gradient orbs */}
-        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(221,0,0,0.08) 0%, transparent 70%)', filter: 'blur(60px)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-15%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,206,0,0.06) 0%, transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
-        
-        <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          
-          {/* Animated badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 18px', borderRadius: 999, background: 'linear-gradient(135deg, rgba(221,0,0,0.08) 0%, rgba(255,206,0,0.08) 100%)', border: '1px solid rgba(221,0,0,0.15)', marginBottom: 24, animation: 'fadeInUp 0.6s ease-out' }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: RED, animation: 'pulse 2s ease-in-out infinite' }} />
-            <span style={{ fontSize: 12, fontWeight: 700, color: '#171717', letterSpacing: '0.05em' }}>AI-POWERED · 20,000+ PROGRAMS</span>
+      {/* ══ HERO ══ */}
+      <section className="hero-section" id="hero">
+        <div className="hero-bg-orbs">
+          <div className="hero-orb hero-orb-1" />
+          <div className="hero-orb hero-orb-2" />
+          <div className="hero-orb hero-orb-3" />
+        </div>
+        <div className="hero-content">
+          <div className="hero-badge animate-fade-up-1">
+            <span className="hero-badge-dot" />
+            <span>AI-POWERED · 20,000+ PROGRAMS</span>
           </div>
-
-          <h1 style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif", fontSize: 'clamp(38px,5vw,64px)', fontWeight: 700, background: 'linear-gradient(135deg, #000 0%, #171717 50%, #404040 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.08, letterSpacing: '-1.2px', marginBottom: 20, animation: 'fadeInUp 0.7s ease-out 0.1s both' }}>
-            Find your perfect program<br />in Germany
+          <h1 className="hero-title animate-fade-up-2">
+            Your journey to<br />
+            <span className="hero-title-gradient">Germany starts here</span>
           </h1>
-          
-          <p style={{ fontSize: 18, color: '#525252', lineHeight: 1.7, maxWidth: 680, margin: '0 auto 40px', fontWeight: 500, animation: 'fadeInUp 0.7s ease-out 0.2s both' }}>
-            Describe what you want in plain English. Our AI instantly searches 20,000+ German university programs
-            and shows you the <span style={{ color: RED, fontWeight: 700 }}>exact matches</span> — tuition, intake, language, everything.
+          <p className="hero-subtitle animate-fade-up-3">
+            Search 20,000+ university programs, read step-by-step guides, and use free AI tools —
+            everything international students need to study in Germany.
           </p>
-
-          <form onSubmit={handleSearch} style={{ maxWidth: 760, margin: '0 auto', animation: 'fadeInUp 0.7s ease-out 0.3s both' }}>
-            <div className="search-bar-hero" style={{ position: 'relative', borderRadius: 20, background: '#fff', border: '2px solid #e8e8e8', padding: '8px 8px 8px 20px', display: 'flex', alignItems: 'center', boxShadow: '0 12px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02)', transition: 'all 0.3s ease' }}>
-              <Search className="w-5 h-5" style={{ color: '#a3a3a3', marginRight: 14, flexShrink: 0 }} />
+          <form onSubmit={handleSearch} className="hero-search-form animate-fade-up-4">
+            <div className="hero-search-bar">
+              <Search className="hero-search-icon" />
               <textarea
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSearch(e as unknown as FormEvent);
-                  }
-                }}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSearch(e as unknown as FormEvent); } }}
                 rows={1}
                 placeholder="e.g. tuition-free data science master in English, Berlin intake 2025"
-                style={{ flex: 1, border: 'none', outline: 'none', fontSize: 16, background: 'transparent', color: '#111', resize: 'none', fontWeight: 500 }}
+                className="hero-search-input"
               />
-              <button
-                type="submit"
-                disabled={searching || !query.trim()}
-                style={{ border: 'none', borderRadius: 16, padding: '12px 28px', fontWeight: 700, fontSize: 15, background: `linear-gradient(135deg, ${RED} 0%, #bb0000 100%)`, color: '#fff', cursor: 'pointer', opacity: searching || !query.trim() ? 0.5 : 1, boxShadow: searching || !query.trim() ? 'none' : '0 4px 16px rgba(221,0,0,0.25)', transition: 'all 0.2s', flexShrink: 0 }}
-                onMouseEnter={e => { if (!searching && query.trim()) e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; }}
-              >
-                {searching ? 'Searching…' : 'Search'}
+              <button type="submit" disabled={searching || !query.trim()} className="hero-search-btn">
+                {searching ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Search'}
               </button>
             </div>
           </form>
-
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10, marginTop: 20, animation: 'fadeInUp 0.7s ease-out 0.4s both' }}>
-            {HERO_SUGGESTIONS.map((suggestion) => (
-              <button
-                key={suggestion}
-                type="button"
-                onClick={() => setQuery(suggestion)}
-                className="suggestion-chip"
-                style={{ border: '1px solid #e0e0e0', borderRadius: 999, padding: '8px 16px', background: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(8px)', fontSize: 13, fontWeight: 600, color: '#525252', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = RED; e.currentTarget.style.color = RED; e.currentTarget.style.background = 'rgba(221,0,0,0.04)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.color = '#525252'; e.currentTarget.style.background = 'rgba(255,255,255,0.8)'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)'; }}
-              >
-                {suggestion}
-              </button>
+          <div className="hero-suggestions animate-fade-up-4">
+            {HERO_SUGGESTIONS.map((s) => (
+              <button key={s} type="button" onClick={() => setQuery(s)} className="hero-chip">{s}</button>
             ))}
           </div>
-
-        </div>
-      </section>
-
-      {/* ══ FREE TOOLS ══ */}
-      <section id="tools" style={{ background: '#fff', padding: '80px 0', borderBottom: '1px solid #e5e5e5' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px' }}>
-          <div style={{ textAlign: 'center', marginBottom: 36 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: RED, margin: '0 0 10px' }}>Free AI Tools</p>
-            <h2 style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif", fontSize: 'clamp(24px,2.7vw,36px)', fontWeight: 800, color: '#0f0f0f', margin: 0 }}>
-              Everything you need to apply
-            </h2>
-            <p style={{ fontSize: 15, color: '#666', margin: '12px auto 0', maxWidth: 560 }}>Spark-grade assistants for your CV, letters, GPA conversion and dashboard — all aligned with German formats.</p>
-          </div>
-
-          <div style={{ position: 'relative', padding: '0 32px' }}>
-            <button
-              type="button"
-              aria-label="Scroll tools left"
-              onClick={() => scrollTools('left')}
-              style={{ position: 'absolute', left: -26, top: '50%', transform: 'translateY(-50%)', zIndex: 3, background: '#fff', border: '1px solid #e5e5e5', borderRadius: '999px', width: 42, height: 42, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 24px rgba(0,0,0,0.12)', cursor: 'pointer' }}
-            >
-              <ChevronRight style={{ transform: 'rotate(180deg)', color: '#555' }} className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              aria-label="Scroll tools right"
-              onClick={() => scrollTools('right')}
-              style={{ position: 'absolute', right: -26, top: '50%', transform: 'translateY(-50%)', zIndex: 3, background: '#fff', border: '1px solid #e5e5e5', borderRadius: '999px', width: 42, height: 42, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 24px rgba(0,0,0,0.12)', cursor: 'pointer' }}
-            >
-              <ChevronRight style={{ color: '#555' }} className="w-4 h-4" />
-            </button>
-
-            <div style={{ position: 'absolute', left: 24, top: 0, bottom: 0, width: 70, pointerEvents: 'none', background: 'linear-gradient(90deg,#fff 0%,rgba(255,255,255,0) 100%)' }} />
-            <div style={{ position: 'absolute', right: 24, top: 0, bottom: 0, width: 70, pointerEvents: 'none', background: 'linear-gradient(270deg,#fff 0%,rgba(255,255,255,0) 100%)' }} />
-
-            <div ref={toolsScrollRef} style={{ display: 'flex', gap: 18, overflowX: 'auto', padding: '16px 80px 28px', scrollSnapType: 'x mandatory', scrollBehavior: 'smooth', justifyContent: 'center' }}>
-              {TOOLS.map(({ href, label, desc, emoji }) => (
-                <Link key={href} href={href}
-                  style={{ flex: '0 0 260px', minHeight: 240, scrollSnapAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 16, padding: '28px 24px', border: '1px solid #ececec', borderRadius: 24, textDecoration: 'none', background: '#fff', transition: 'all 0.28s cubic-bezier(0.22,1,0.36,1)', boxShadow: '0 8px 24px rgba(0,0,0,0.04)' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = RED; e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 24px 48px rgba(221,0,0,0.12)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#ececec'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.04)'; }}>
-                  <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #fff 0%, #fafafa 100%)', border: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, boxShadow: '0 4px 12px rgba(0,0,0,0.06)', transition: 'transform 0.3s ease' }}
-                    onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1) rotate(5deg)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.transform = 'none'; }}>
-                    <span>{emoji}</span>
-                  </div>
-                  <div>
-                    <strong style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, fontWeight: 700, color: '#0f0f0f', display: 'block', marginBottom: 6, letterSpacing: '-0.2px' }}>{label}</strong>
-                    <span style={{ fontSize: 13, color: '#5f5f5f', lineHeight: 1.6, display: 'block' }}>{desc}</span>
-                  </div>
-                  <div style={{ marginTop: 'auto', paddingTop: 12 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: RED, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                      Try it free <ArrowRight className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
+          <div className="hero-trust animate-fade-up-4">
+            <div className="hero-trust-item"><Shield className="w-4 h-4" /><span>Free forever</span></div>
+            <div className="hero-trust-divider" />
+            <div className="hero-trust-item"><Users className="w-4 h-4" /><span>15,000+ students helped</span></div>
+            <div className="hero-trust-divider" />
+            <div className="hero-trust-item"><Globe className="w-4 h-4" /><span>All German universities</span></div>
           </div>
         </div>
       </section>
 
-      {/* ══ LATEST ARTICLES ══ */}
-      <section id="guides" style={{ background: '#fff', padding: '72px 0' }}>
-        <div style={{ maxWidth: 1140, margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 36 }}>
-            <div>
-              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: RED, margin: '0 0 8px' }}>Knowledge Base</p>
-              <h2 style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif", fontSize: 'clamp(22px,2.5vw,32px)', fontWeight: 800, color: '#111', margin: 0, letterSpacing: '-0.3px' }}>
-                Latest Guides &amp; Articles
-              </h2>
-            </div>
-            <a href="http://localhost:8000" target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: 14, fontWeight: 700, color: RED, textDecoration: 'none' }}>
-              View all →
-            </a>
+      {/* ══ STUDENT JOURNEY ARTICLES ══ */}
+      <section className="journey-section" id="guides">
+        <div className="section-container">
+          <div className="section-header scroll-reveal">
+            <div className="section-label">Your Student Journey</div>
+            <h2 className="section-title">Step-by-step guides for every stage</h2>
+            <p className="section-desc">From your first visa application to landing a job — organized by the stages of your Germany experience.</p>
           </div>
+
+          <div className="journey-pills scroll-reveal">
+            <button className={`journey-pill ${activeCategory === 'all' ? 'active' : ''}`} onClick={() => setActiveCategory('all')}>
+              <BookOpen className="w-4 h-4" /> All Articles
+            </button>
+            {JOURNEY_CATEGORIES.map(cat => {
+              const Icon = cat.icon;
+              const count = categorizedPosts[cat.key]?.length || 0;
+              return (
+                <button key={cat.key} className={`journey-pill ${activeCategory === cat.key ? 'active' : ''}`} onClick={() => setActiveCategory(cat.key)} style={{ '--pill-color': cat.color } as React.CSSProperties}>
+                  <Icon className="w-4 h-4" />
+                  {cat.label}
+                  {count > 0 && <span className="journey-pill-count">{count}</span>}
+                </button>
+              );
+            })}
+          </div>
+
+          {activeCategory === 'all' && featuredPost && !postsLoading && (
+            <Link href={`/blog/${featuredPost.slug}`} className="featured-card scroll-reveal">
+              <div className="featured-card-image">
+                {featuredPost.featuredImage ? (
+                  <img src={featuredPost.featuredImage} alt={stripHtml(featuredPost.title)} className="featured-img" />
+                ) : (
+                  <div className="featured-img-placeholder">
+                    <BookOpen className="w-16 h-16" style={{ color: 'rgba(255,255,255,0.3)' }} />
+                  </div>
+                )}
+                <div className="featured-card-overlay" />
+                <div className="featured-card-content">
+                  {featuredPost.categories[0] && <span className="featured-badge">{decodeHtmlEntities(featuredPost.categories[0].name)}</span>}
+                  <h3 className="featured-title">{stripHtml(featuredPost.title)}</h3>
+                  <p className="featured-excerpt">{stripHtml(featuredPost.excerpt)}</p>
+                  <div className="featured-meta">
+                    <Clock className="w-3.5 h-3.5" /><span>{timeAgo(featuredPost.date)}</span>
+                    <span className="featured-read">Read article <ArrowRight className="w-3.5 h-3.5" /></span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )}
 
           {postsLoading && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
-              {[1,2,3].map(i => (
-                <div key={i} style={{ borderRadius: 16, background: '#f5f5f5', overflow: 'hidden' }}>
-                  <div style={{ height: 190, background: '#ebebeb' }} />
-                  <div style={{ padding: 20 }}>
-                    <div style={{ height: 16, background: '#e5e5e5', borderRadius: 4, marginBottom: 8, width: '80%' }} />
-                    <div style={{ height: 12, background: '#e5e5e5', borderRadius: 4, width: '60%' }} />
+            <div className="articles-grid">
+              {[1,2,3,4,5,6].map(i => (
+                <div key={i} className="article-skeleton">
+                  <div className="skeleton-image" />
+                  <div className="skeleton-body">
+                    <div className="skeleton-line w80" />
+                    <div className="skeleton-line w60" />
+                    <div className="skeleton-line w40" />
                   </div>
                 </div>
               ))}
             </div>
           )}
 
-          {!postsLoading && wpPosts.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '60px 0', border: '2px dashed #e5e5e5', borderRadius: 16 }}>
-              <Newspaper className="w-10 h-10 mx-auto mb-3" style={{ color: '#d4d4d4' }} />
-              <p style={{ fontSize: 15, color: '#737373', fontWeight: 600, marginBottom: 6 }}>No articles loaded yet</p>
-              <p style={{ fontSize: 13, color: '#a3a3a3', marginBottom: 16 }}>Start the WordPress server at localhost:8000 to see articles here.</p>
-              <a href="http://localhost:8000" target="_blank" rel="noopener noreferrer"
-                style={{ fontSize: 14, fontWeight: 700, color: RED, textDecoration: 'none' }}>
-                Open WordPress →
-              </a>
+          {!postsLoading && filteredPosts.length === 0 && (
+            <div className="empty-articles scroll-reveal">
+              <Newspaper className="w-12 h-12 mb-4" style={{ color: '#d4d4d4' }} />
+              <p className="empty-title">No articles in this category yet</p>
+              <p className="empty-desc">{activeCategory === 'all' ? 'Articles will appear here once published on WordPress.' : 'Try selecting "All Articles" or check back soon.'}</p>
             </div>
           )}
 
-          {!postsLoading && wpPosts.length > 0 && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
-              {wpPosts.map((post, idx) => (
-                <Link key={post.id} href={`/blog/${post.slug}`}
-                  className={`scroll-reveal card-hover`}
-                  style={{ textDecoration: 'none', background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', animationDelay: `${idx * 0.1}s`, transitionDelay: `${idx * 0.08}s` }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = RED; e.currentTarget.style.boxShadow = `0 12px 40px rgba(221,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)`; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; }}>
-
-                  <div style={{ height: 200, background: 'linear-gradient(135deg, #f5f5f0 0%, #eeeeea 100%)', overflow: 'hidden', position: 'relative' }}>
+          {!postsLoading && filteredPosts.length > 0 && (
+            <div className="articles-grid">
+              {(activeCategory === 'all' ? filteredPosts.filter(p => p.id !== featuredPost?.id) : filteredPosts).slice(0, 9).map((post, idx) => (
+                <Link key={post.id} href={`/blog/${post.slug}`} className="article-card scroll-reveal" style={{ transitionDelay: `${idx * 0.06}s` }}>
+                  <div className="article-card-image">
                     {post.featuredImage ? (
-                      <img
-                        src={post.featuredImage}
-                        alt={stripHtml(post.title)}
-                        loading="lazy"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }}
-                        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.04)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
-                        onError={e => { e.currentTarget.style.display = 'none'; }}
-                      />
+                      <img src={post.featuredImage} alt={stripHtml(post.title)} loading="lazy" className="article-img" />
                     ) : (
-                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <BookOpen className="w-10 h-10" style={{ color: '#d4d4d4' }} />
-                      </div>
+                      <div className="article-img-placeholder"><BookOpen className="w-8 h-8" style={{ color: '#d4d4d4' }} /></div>
                     )}
-                    {post.categories[0] && (
-                      <span style={{ position: 'absolute', top: 12, left: 12, background: RED, color: '#fff', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.06em', boxShadow: '0 2px 8px rgba(221,0,0,0.3)' }}>
-                        {decodeHtmlEntities(post.categories[0].name)}
-                      </span>
-                    )}
+                    {post.categories[0] && <span className="article-badge">{decodeHtmlEntities(post.categories[0].name)}</span>}
                   </div>
-
-                  <div style={{ padding: '18px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-                      <Calendar className="w-3 h-3" style={{ color: '#c4c4c4' }} />
-                      <span style={{ fontSize: 11, color: '#b0b0b0', fontWeight: 600, letterSpacing: '0.03em' }}>{timeAgo(post.date)}</span>
-                    </div>
-                    <h3 style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif", fontSize: 15, fontWeight: 700, color: '#111', lineHeight: 1.4, margin: '0 0 8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                      {stripHtml(post.title)}
-                    </h3>
-                    <p style={{ fontSize: 13, color: '#6b6b6b', lineHeight: 1.6, margin: '0 0 16px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                      {stripHtml(post.excerpt)}
-                    </p>
-                    <span style={{ marginTop: 'auto', fontSize: 13, fontWeight: 700, color: RED, display: 'inline-flex', alignItems: 'center', gap: 4 }}>Read article →</span>
+                  <div className="article-card-body">
+                    <div className="article-meta"><Calendar className="w-3 h-3" /><span>{timeAgo(post.date)}</span></div>
+                    <h3 className="article-title">{stripHtml(post.title)}</h3>
+                    <p className="article-excerpt">{stripHtml(post.excerpt)}</p>
+                    <span className="article-link">Read article <ArrowRight className="w-3.5 h-3.5" /></span>
                   </div>
                 </Link>
               ))}
@@ -555,156 +456,96 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══ STATS STRIP ══ */}
-      <section style={{ background: '#f8f8f5', borderTop: '1px solid #e5e5e5', borderBottom: '1px solid #e5e5e5', padding: '48px 0' }}>
-        <div style={{ maxWidth: 1140, margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 24, textAlign: 'center' }}>
+      {/* ══ STATS ══ */}
+      <section className="stats-section">
+        <div className="stats-bg-pattern" />
+        <div className="section-container stats-grid">
           {[
-            { num: '20,000+', label: 'Study programs' },
-            { num: '15,000+', label: 'Students helped' },
-            { num: '5 AI tools', label: 'Completely free' },
-            { num: '200+', label: 'Guides & articles' },
-          ].map(({ num, label }, idx) => (
-            <div key={label} className="scroll-reveal" style={{ transitionDelay: `${idx * 0.1}s` }}>
-              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 34, fontWeight: 800, color: RED, margin: '0 0 4px', letterSpacing: '-0.5px' }}>{num}</p>
-              <p style={{ fontSize: 14, color: '#6b6b6b', margin: 0, fontWeight: 500 }}>{label}</p>
+            { num: '20,000+', label: 'Study programs indexed', icon: GraduationCap },
+            { num: '15,000+', label: 'Students helped', icon: Users },
+            { num: '5 AI tools', label: 'Completely free', icon: Zap },
+            { num: '200+', label: 'Guides & articles', icon: BookOpen },
+          ].map(({ num, label, icon: Icon }, idx) => (
+            <div key={label} className="stat-card scroll-reveal" style={{ transitionDelay: `${idx * 0.1}s` }}>
+              <div className="stat-icon-wrap"><Icon className="w-6 h-6" /></div>
+              <p className="stat-number">{num}</p>
+              <p className="stat-label">{label}</p>
             </div>
           ))}
         </div>
       </section>
 
+      {/* ══ TOOLS ══ */}
+      <section className="tools-section" id="tools">
+        <div className="section-container">
+          <div className="section-header scroll-reveal">
+            <div className="section-label">Free AI Tools</div>
+            <h2 className="section-title">Everything you need to apply</h2>
+            <p className="section-desc">AI-powered assistants for CVs, cover letters, GPA conversion — all aligned with German standards.</p>
+          </div>
+          <div className="tools-grid">
+            {TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
+              <Link key={href} href={href} className="tool-card scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
+                <div className={`tool-icon bg-gradient-to-br ${gradient}`}>
+                  <Icon className="w-7 h-7 text-white" />
+                </div>
+                <div className="tool-info">
+                  <h3 className="tool-label">{label}</h3>
+                  <p className="tool-desc">{desc}</p>
+                </div>
+                <div className="tool-arrow"><ArrowRight className="w-5 h-5" /></div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══ CTA ══ */}
+      <section className="cta-section scroll-reveal">
+        <div className="cta-bg" />
+        <div className="section-container cta-content">
+          <h2 className="cta-title">Ready to start your Germany journey?</h2>
+          <p className="cta-desc">Search programs, build your CV, and get step-by-step guidance — all for free.</p>
+          <div className="cta-buttons">
+            <a href="#hero" className="cta-btn-primary"><Search className="w-5 h-5" />Search Programs</a>
+            <Link href="/cv-maker" className="cta-btn-secondary">Build Your CV <ArrowRight className="w-4 h-4" /></Link>
+          </div>
+        </div>
+      </section>
+
       {/* ══ FOOTER ══ */}
-      <footer style={{ background: '#1a1a1a', position: 'relative' }}>
-        {/* German flag bar on top */}
-        <div style={{ height: 6, background: 'linear-gradient(90deg, #000 0%, #000 33.33%, #dd0000 33.33%, #dd0000 66.66%, #ffce00 66.66%, #ffce00 100%)' }} />
-        
-        <div style={{ maxWidth: 1140, margin: '0 auto', padding: '64px 24px 32px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 48, marginBottom: 48 }}>
-            
-            {/* Logo & Description */}
-            <div>
-              <Image src="/logo_wp.png" alt="Students in Germany" width={140} height={44} style={{ objectFit: 'contain', marginBottom: 16 }} priority />
-              <p style={{ fontSize: 14, color: '#a3a3a3', lineHeight: 1.6, margin: 0 }}>
-                Your guide to studying and living in Germany
-              </p>
+      <footer className="site-footer">
+        <div className="footer-flag" />
+        <div className="section-container">
+          <div className="footer-grid">
+            <div className="footer-brand">
+              <Image src="/logo_wp.png" alt="Students in Germany" width={140} height={44} style={{ objectFit: 'contain' }} priority />
+              <p className="footer-brand-desc">Your AI-powered guide to studying and living in Germany. Free tools, expert guides, and 20,000+ programs.</p>
             </div>
-
-            {/* Resources */}
-            <div>
-              <h4 style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff', marginBottom: 20 }}>Resources</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {[
-                  { label: 'Study Guides', href: '#guides' },
-                  { label: 'Universities', href: '#universities' },
-                  { label: 'Scholarships', href: 'http://localhost:8000/?cat=scholarships' },
-                  { label: 'Student Visa', href: 'http://localhost:8000/?cat=visa' },
-                ].map(({ label, href }) => (
-                  <a key={label} href={href} style={{ fontSize: 14, color: '#a3a3a3', textDecoration: 'none', transition: 'color 0.2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                    onMouseLeave={e => (e.currentTarget.style.color = '#a3a3a3')}>
-                    {label}
-                  </a>
-                ))}
-              </div>
+            <div className="footer-col">
+              <h4 className="footer-col-title">Resources</h4>
+              {[{ label: 'Study Guides', href: '#guides' }, { label: 'Course Finder', href: '#hero' }, { label: 'All Articles', href: '#guides' }].map(({ label, href }) => (
+                <a key={label} href={href} className="footer-link">{label}</a>
+              ))}
             </div>
-
-            {/* Tools */}
-            <div>
-              <h4 style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff', marginBottom: 20 }}>Tools</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {[
-                  { label: 'CV Maker', href: '/cv-maker' },
-                  { label: 'Cover Letter', href: '/cover-letter' },
-                  { label: 'Motivation Letter', href: '/motivation-letter' },
-                  { label: 'GPA Converter', href: '/gpa-converter' },
-                ].map(({ label, href }) => (
-                  <a key={label} href={href} style={{ fontSize: 14, color: '#a3a3a3', textDecoration: 'none', transition: 'color 0.2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                    onMouseLeave={e => (e.currentTarget.style.color = '#a3a3a3')}>
-                    {label}
-                  </a>
-                ))}
-              </div>
+            <div className="footer-col">
+              <h4 className="footer-col-title">Tools</h4>
+              {[{ label: 'CV Maker', href: '/cv-maker' }, { label: 'Cover Letter', href: '/cover-letter' }, { label: 'Motivation Letter', href: '/motivation-letter' }, { label: 'GPA Converter', href: '/gpa-converter' }].map(({ label, href }) => (
+                <a key={label} href={href} className="footer-link">{label}</a>
+              ))}
             </div>
-
-            {/* Support */}
-            <div>
-              <h4 style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff', marginBottom: 20 }}>Support</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {[
-                  { label: 'Contact', href: 'http://localhost:8000/#contact' },
-                  { label: 'FAQ', href: 'http://localhost:8000/?cat=faq' },
-                  { label: 'Privacy', href: '/privacy' },
-                  { label: 'Dashboard', href: '/dashboard' },
-                ].map(({ label, href }) => (
-                  <a key={label} href={href} style={{ fontSize: 14, color: '#a3a3a3', textDecoration: 'none', transition: 'color 0.2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                    onMouseLeave={e => (e.currentTarget.style.color = '#a3a3a3')}>
-                    {label}
-                  </a>
-                ))}
-              </div>
+            <div className="footer-col">
+              <h4 className="footer-col-title">Account</h4>
+              {[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Sign in', href: '/auth/signin' }, { label: 'Privacy', href: '/privacy' }].map(({ label, href }) => (
+                <a key={label} href={href} className="footer-link">{label}</a>
+              ))}
             </div>
           </div>
-
-          {/* Bottom bar */}
-          <div style={{ borderTop: '1px solid #2a2a2a', paddingTop: 24, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-            <p style={{ fontSize: 13, color: '#666', margin: 0 }}>© 2026 Students in Germany. All rights reserved.</p>
-            <div style={{ display: 'flex', gap: 20 }}>
-              <a href="/auth/signin" style={{ fontSize: 13, color: '#a3a3a3', textDecoration: 'none' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#a3a3a3')}>
-                Sign in
-              </a>
-              <a href="http://localhost:8000" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: '#a3a3a3', textDecoration: 'none' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#a3a3a3')}>
-                Blog
-              </a>
-            </div>
+          <div className="footer-bottom">
+            <p>© 2026 Students in Germany. All rights reserved.</p>
           </div>
         </div>
       </footer>
-
-      <style>{`
-        @keyframes ticker-scroll {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-        
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.7;
-            transform: scale(1.1);
-          }
-        }
-        
-        .search-bar-hero:focus-within {
-          border-color: ${RED} !important;
-          box-shadow: 0 16px 48px rgba(221,0,0,0.12), 0 0 0 4px rgba(221,0,0,0.08) !important;
-          transform: translateY(-2px);
-        }
-        
-        .suggestion-chip:active {
-          transform: translateY(0px) !important;
-        }
-      `}</style>
-
     </div>
   );
 }
-
