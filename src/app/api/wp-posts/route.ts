@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   const wpUrl =
     process.env.WP_URL ||
     (process.env.NODE_ENV === 'production'
-      ? 'https://germanpath.com'
+      ? 'https://cms.germanpath.com'
       : 'http://localhost:8000');
 
   try {
