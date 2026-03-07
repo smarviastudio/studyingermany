@@ -312,7 +312,7 @@ export default function HomePage() {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {navAllResults.map(post => (
-                  <a key={post.id} href={post.link} target="_blank" rel="noopener noreferrer"
+                  <Link key={post.id} href={`/blog/${post.slug}`}
                     style={{ textDecoration: 'none', border: '1px solid #f2f2f2', borderRadius: 18, padding: '18px 22px', display: 'flex', gap: 18, alignItems: 'stretch', transition: 'border-color 0.2s, transform 0.2s, box-shadow 0.2s' }}
                     onMouseEnter={e => { e.currentTarget.style.borderColor = RED; e.currentTarget.style.boxShadow = '0 18px 40px rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
                     onMouseLeave={e => { e.currentTarget.style.borderColor = '#f2f2f2'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; }}>
@@ -338,7 +338,7 @@ export default function HomePage() {
                         <span style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 700, color: RED, display: 'inline-flex', alignItems: 'center', gap: 4 }}>Read article <ArrowRight className="w-3 h-3" /></span>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 ))}
               </div>
             )}
@@ -498,11 +498,11 @@ export default function HomePage() {
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {navResults.map(post => (
-                        <a key={post.id} href={post.link} target="_blank" rel="noopener noreferrer"
+                        <Link key={post.id} href={`/blog/${post.slug}`}
                           style={{ textDecoration: 'none', color: '#111', paddingBottom: 10, borderBottom: '1px solid #f0f0f0' }}>
                           <p style={{ fontSize: 13, fontWeight: 700, margin: '0 0 4px' }}>{stripHtml(post.title)}</p>
                           <span style={{ fontSize: 12, color: '#777' }}>{timeAgo(post.date)}</span>
-                        </a>
+                        </Link>
                       ))}
                       <button type="button" onClick={openNavAllResults}
                         style={{ fontSize: 12, fontWeight: 600, color: RED, textDecoration: 'none', alignSelf: 'flex-end', background: 'none', border: 'none', cursor: 'pointer' }}>
@@ -736,7 +736,7 @@ export default function HomePage() {
           {!postsLoading && wpPosts.length > 0 && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
               {wpPosts.map((post, idx) => (
-                <a key={post.id} href={post.link} target="_blank" rel="noopener noreferrer"
+                <Link key={post.id} href={`/blog/${post.slug}`}
                   className={`scroll-reveal card-hover`}
                   style={{ textDecoration: 'none', background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', animationDelay: `${idx * 0.1}s`, transitionDelay: `${idx * 0.08}s` }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = RED; e.currentTarget.style.boxShadow = `0 12px 40px rgba(221,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)`; }}
@@ -778,7 +778,7 @@ export default function HomePage() {
                     </p>
                     <span style={{ marginTop: 'auto', fontSize: 13, fontWeight: 700, color: RED, display: 'inline-flex', alignItems: 'center', gap: 4 }}>Read article →</span>
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
           )}

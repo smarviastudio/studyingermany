@@ -94,7 +94,7 @@ function MiniCV({ tpl }: { tpl: CVTemplate }) {
   );
   const Pills = ({ n = 5, bg = `${a}18`, tc = a }: { n?: number; bg?: string; tc?: string }) => (
     <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 2 }}>
-      {d.skills.slice(0, n).map((s, i) => <span key={i} style={{ fontSize: 3.8, background: bg, color: tc, padding: '1px 5px', borderRadius: 99, fontWeight: 600 }}>{s}</span>)}
+      {d.skills.slice(0, n).map((s, i) => <span key={i} data-export-chip="true" style={{ fontSize: 3.8, background: bg, color: tc, padding: '0 5px', borderRadius: 99, fontWeight: 600, display: 'inline-block', height: 10, lineHeight: '10px', boxSizing: 'border-box', verticalAlign: 'top', whiteSpace: 'nowrap' }}><span data-export-chip-text="true">{s}</span></span>)}
     </div>
   );
   const BarsLight = ({ n = 4 }: { n?: number }) => (
@@ -486,6 +486,101 @@ function MiniCV({ tpl }: { tpl: CVTemplate }) {
     </div>
   );
 
+  if (tpl.layout === 'ats-classic') return (
+    <div style={{ width: W, height: H, fontFamily: 'Arial,sans-serif', background: '#fff', overflow: 'hidden', padding: '14px 16px' }}>
+      <div style={{ borderBottom: `2px solid ${a}`, paddingBottom: 6, marginBottom: 2 }}>
+        <div style={{ fontSize: 13, fontWeight: 900, color: '#111' }}>{d.name}</div>
+        <div style={{ fontSize: 5.5, color: a, fontWeight: 700 }}>{d.title}</div>
+        <div style={{ fontSize: 4, color: '#9CA3AF' }}>{d.email} · {d.phone} · {d.location}</div>
+      </div>
+      <SecPlain t="Professional Summary" />
+      <div style={{ fontSize: 4.5, color: '#374151', lineHeight: 1.45 }}>{d.summary.slice(0, 85)}…</div>
+      <SecPlain t="Experience" /><Exp n={2} />
+      <SecPlain t="Education" /><Edu />
+      <SecPlain t="Core Skills" />
+      <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 2 }}>
+        {d.skills.slice(0, 8).map((s, i) => <span key={i} style={{ fontSize: 4, color: '#374151', border: '1px solid #D1D5DB', padding: '1px 5px', borderRadius: 2 }}>{s}</span>)}
+      </div>
+    </div>
+  );
+
+  if (tpl.layout === 'student-first') return (
+    <div style={{ width: W, height: H, fontFamily: tpl.font, background: '#fff', overflow: 'hidden' }}>
+      <div style={{ background: `${a}10`, borderBottom: `3px solid ${a}`, padding: '10px 14px 8px' }}>
+        <div style={{ fontSize: 12, fontWeight: 900, color: '#111' }}>{d.name}</div>
+        <div style={{ fontSize: 5.5, color: a, fontWeight: 700 }}>{d.title}</div>
+        <div style={{ fontSize: 4, color: '#6B7280', marginTop: 2 }}>{d.email} · {d.phone}</div>
+      </div>
+      <div style={{ padding: '4px 14px' }}>
+        <Sec t="Profile" />
+        <div style={{ fontSize: 4.5, color: '#374151', lineHeight: 1.4 }}>{d.summary.slice(0, 75)}…</div>
+        <Sec t="Education" /><Edu />
+        <Sec t="Projects & Experience" /><Exp n={2} />
+        <Sec t="Skills" /><Pills n={7} bg={`${a}14`} tc={a} />
+      </div>
+    </div>
+  );
+
+  if (tpl.layout === 'hybrid-pro') return (
+    <div style={{ width: W, height: H, fontFamily: tpl.font, background: '#fff', overflow: 'hidden' }}>
+      <div style={{ padding: '10px 14px 7px', borderBottom: `2px solid ${a}` }}>
+        <div style={{ fontSize: 12, fontWeight: 900, color: '#111' }}>{d.name}</div>
+        <div style={{ fontSize: 5.5, color: a, fontWeight: 700 }}>{d.title}</div>
+        <div style={{ fontSize: 4, color: '#9CA3AF', marginTop: 2 }}>{d.email} · {d.phone} · {d.location}</div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '84px 1fr', height: 'calc(100% - 38px)' }}>
+        <div style={{ background: '#FAF5FF', padding: '8px 7px', borderRight: `1px solid ${a}22` }}>
+          <Sec t="Skills" />
+          <BarsLight n={5} />
+        </div>
+        <div style={{ padding: '4px 12px' }}>
+          <Sec t="Summary" />
+          <div style={{ fontSize: 4.5, color: '#374151', lineHeight: 1.4 }}>{d.summary.slice(0, 72)}…</div>
+          <Sec t="Experience" /><Exp n={2} />
+          <Sec t="Education" /><Edu />
+        </div>
+      </div>
+    </div>
+  );
+
+  if (tpl.layout === 'executive-brief') return (
+    <div style={{ width: W, height: H, fontFamily: tpl.font, background: '#fff', overflow: 'hidden', padding: '14px 16px' }}>
+      <div style={{ borderBottom: `3px solid ${a}`, paddingBottom: 7, marginBottom: 2 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 900, color: '#111' }}>{d.name}</div>
+            <div style={{ fontSize: 5.5, color: '#374151', fontWeight: 700 }}>{d.title}</div>
+          </div>
+          <div style={{ fontSize: 4, color: '#6B7280', textAlign: 'right' as const }}>{d.email}<div>{d.phone}</div></div>
+        </div>
+      </div>
+      <SecPlain t="Executive Summary" />
+      <div style={{ fontSize: 4.5, color: '#374151', lineHeight: 1.45 }}>{d.summary.slice(0, 80)}…</div>
+      <SecPlain t="Core Competencies" />
+      <Pills n={6} bg="#F3F4F6" tc="#111827" />
+      <SecPlain t="Leadership Experience" /><Exp n={2} />
+      <SecPlain t="Education" /><Edu />
+    </div>
+  );
+
+  if (tpl.layout === 'consulting-clean') return (
+    <div style={{ width: W, height: H, fontFamily: 'Calibri,Arial,sans-serif', background: '#fff', overflow: 'hidden', padding: '14px 16px' }}>
+      <div style={{ borderBottom: `2px solid ${a}`, paddingBottom: 6, marginBottom: 2, textAlign: 'center' as const }}>
+        <div style={{ fontSize: 13, fontWeight: 900, color: '#111' }}>{d.name}</div>
+        <div style={{ fontSize: 5.5, color: a, fontWeight: 700 }}>{d.title}</div>
+        <div style={{ fontSize: 4, color: '#6B7280' }}>{d.email} · {d.phone} · {d.location}</div>
+      </div>
+      <Sec t="Profile" />
+      <div style={{ fontSize: 4.5, color: '#374151', lineHeight: 1.45 }}>{d.summary.slice(0, 78)}…</div>
+      <Sec t="Selected Experience" /><Exp n={2} />
+      <Sec t="Education" /><Edu />
+      <Sec t="Capabilities" />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
+        {d.skills.slice(0, 6).map((s, i) => <div key={i} style={{ fontSize: 4, color: '#374151' }}>• {s}</div>)}
+      </div>
+    </div>
+  );
+
   /* ── DEFAULT fallback ── */
   return (
     <div style={{ width: W, height: H, fontFamily: tpl.font, background: '#fff', padding: '14px 16px', overflow: 'hidden' }}>
@@ -638,17 +733,53 @@ export default function CVMakerPage() {
         throw new Error('CV preview not found');
       }
 
-      // Temporarily remove scale transform and set to actual size
-      const originalTransform = previewElement.style.transform;
-      const originalWidth = previewElement.style.width;
-      previewElement.style.transform = 'none';
-      previewElement.style.width = '595px';
+      const exportRoot = document.createElement('div');
+      exportRoot.style.position = 'fixed';
+      exportRoot.style.left = '-99999px';
+      exportRoot.style.top = '0';
+      exportRoot.style.width = '595px';
+      exportRoot.style.background = '#ffffff';
+      exportRoot.style.zIndex = '-1';
 
-      // Wait for layout to settle (skills pills need time to reflow)
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const exportNode = previewElement.cloneNode(true) as HTMLElement;
+      exportNode.style.transform = 'none';
+      exportNode.style.width = '595px';
+      exportNode.style.background = '#ffffff';
+
+      const chipCandidates = Array.from(exportNode.querySelectorAll('[data-export-chip="true"]')) as HTMLElement[];
+      chipCandidates.forEach((node) => {
+        const textNode = node.querySelector('[data-export-chip-text="true"]') as HTMLElement | null;
+        const currentFontSize = parseFloat(node.style.fontSize || '10');
+        const targetHeight = Math.max(18, Math.round(currentFontSize * 2.1));
+        const borderTop = parseFloat(node.style.borderTopWidth || '1');
+        const borderBottom = parseFloat(node.style.borderBottomWidth || '1');
+        const innerHeight = Math.max(currentFontSize + 1, targetHeight - borderTop - borderBottom);
+
+        node.style.display = 'inline-block';
+        node.style.height = `${targetHeight}px`;
+        node.style.lineHeight = `${innerHeight}px`;
+        node.style.paddingTop = '0';
+        node.style.paddingBottom = '0';
+        node.style.boxSizing = 'border-box';
+        node.style.verticalAlign = 'top';
+        node.style.whiteSpace = 'nowrap';
+        node.style.overflow = 'hidden';
+
+        if (textNode) {
+          textNode.style.display = 'inline-block';
+          textNode.style.lineHeight = '1';
+          textNode.style.transform = 'translateY(-1px)';
+        }
+      });
+
+      exportRoot.appendChild(exportNode);
+      document.body.appendChild(exportRoot);
+
+      // Wait for layout to settle in the off-screen clone
+      await new Promise(resolve => setTimeout(resolve, 150));
 
       // Capture with high quality
-      const canvas = await html2canvas(previewElement, {
+      const canvas = await html2canvas(exportNode, {
         scale: 2,
         useCORS: true,
         logging: false,
@@ -657,9 +788,7 @@ export default function CVMakerPage() {
         height: 842
       });
 
-      // Restore original styles
-      previewElement.style.transform = originalTransform;
-      previewElement.style.width = originalWidth;
+      document.body.removeChild(exportRoot);
 
       // Create PDF
       const pdf = new jsPDF({
@@ -841,8 +970,8 @@ export default function CVMakerPage() {
     const skillsBlock = (
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', maxWidth: '100%' }}>
         {cv.skills.map((s, i) => (
-          <span key={i} className={forPrint ? '' : 'group/skill relative'} style={{ fontSize: 10, background: `${accent}15`, color: accent, padding: '3px 10px', borderRadius: 999, border: `1px solid ${accent}30`, whiteSpace: 'nowrap', flexShrink: 0 }}>
-            {s}
+          <span key={i} data-export-chip="true" className={forPrint ? '' : 'group/skill relative'} style={{ fontSize: 10, background: `${accent}15`, color: accent, padding: '0 10px', borderRadius: 999, border: `1px solid ${accent}30`, whiteSpace: 'nowrap', flexShrink: 0, display: 'inline-block', height: 22, lineHeight: '20px', boxSizing: 'border-box', verticalAlign: 'top' }}>
+            <span data-export-chip-text="true">{s}</span>
             {!forPrint && <button onClick={() => rmSkill(i)} className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white opacity-0 group-hover/skill:opacity-100 transition-opacity flex items-center justify-center"><X className="w-2 h-2" /></button>}
           </span>
         ))}
@@ -1281,8 +1410,8 @@ export default function CVMakerPage() {
           <div style={{ fontSize: 9, fontWeight: 800, textTransform: 'uppercase' as const, letterSpacing: 1.5, color: '#111', borderBottom: '1.5px solid #111', paddingBottom: 4, marginBottom: 10, marginTop: 20 }}>Skills</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {cv.skills.map((s, i) => (
-              <span key={i} style={{ fontSize: 10, border: '1px solid #999', color: '#333', padding: '2px 10px', borderRadius: 2 }} className={forPrint ? '' : 'group/skill relative'}>
-                {s}{!forPrint && <button onClick={() => rmSkill(i)} className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white opacity-0 group-hover/skill:opacity-100 flex items-center justify-center"><X className="w-2 h-2" /></button>}
+              <span key={i} data-export-chip="true" style={{ fontSize: 10, border: '1px solid #999', color: '#333', padding: '0 10px', borderRadius: 2, display: 'inline-block', height: 22, lineHeight: '20px', boxSizing: 'border-box', verticalAlign: 'top', whiteSpace: 'nowrap' }} className={forPrint ? '' : 'group/skill relative'}>
+                <span data-export-chip-text="true">{s}</span>{!forPrint && <button onClick={() => rmSkill(i)} className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white opacity-0 group-hover/skill:opacity-100 flex items-center justify-center"><X className="w-2 h-2" /></button>}
               </span>
             ))}
             {!forPrint && <form onSubmit={e => { e.preventDefault(); if (newSkill.trim()) { setCv(p => ({ ...p, skills: [...p.skills, newSkill.trim()] })); setNewSkill(''); } }}><input value={newSkill} onChange={e => setNewSkill(e.target.value)} placeholder="+ Add skill" className="text-[10px] bg-transparent border border-dashed border-gray-400 rounded px-2 py-0.5 outline-none focus:border-gray-600 w-20" /></form>}
@@ -1452,7 +1581,7 @@ export default function CVMakerPage() {
           <SH id="edu">{cv.sectionTitles?.education || 'Education'}</SH>{eduBlock}
           <SH id="skills">{cv.sectionTitles?.skills || 'Core Competencies'}</SH>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {cv.skills.map((s, i) => <span key={i} style={{ fontSize: 10, border: `1px solid ${accent}`, color: accent, padding: '3px 12px', borderRadius: 3 }} className={forPrint ? '' : 'group/skill relative'}>{s}{!forPrint && <button onClick={() => rmSkill(i)} className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white opacity-0 group-hover/skill:opacity-100 flex items-center justify-center"><X className="w-2 h-2" /></button>}</span>)}
+            {cv.skills.map((s, i) => <span key={i} data-export-chip="true" style={{ fontSize: 10, border: `1px solid ${accent}`, color: accent, padding: '0 12px', borderRadius: 3, display: 'inline-block', height: 22, lineHeight: '20px', boxSizing: 'border-box', verticalAlign: 'top', whiteSpace: 'nowrap' }} className={forPrint ? '' : 'group/skill relative'}><span data-export-chip-text="true">{s}</span>{!forPrint && <button onClick={() => rmSkill(i)} className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white opacity-0 group-hover/skill:opacity-100 flex items-center justify-center"><X className="w-2 h-2" /></button>}</span>)}
             {!forPrint && <form onSubmit={e => { e.preventDefault(); if (newSkill.trim()) { setCv(p => ({ ...p, skills: [...p.skills, newSkill.trim()] })); setNewSkill(''); } }}><input value={newSkill} onChange={e => setNewSkill(e.target.value)} placeholder="+ Add" className="text-[10px] bg-transparent border border-dashed border-amber-400 rounded px-2 py-0.5 outline-none w-20" /></form>}
           </div>
           {customSectionsBlock}
@@ -1528,6 +1657,134 @@ export default function CVMakerPage() {
               </div>
             </div>
           </div>
+        </div>
+      );
+    }
+
+    if (tpl.layout === 'ats-classic') {
+      return (
+        <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: 'Arial,sans-serif', fontSize: 12, padding: 32 }} className="bg-white shadow-2xl">
+          <div style={{ borderBottom: `2.5px solid ${accent}`, paddingBottom: 12, marginBottom: 4 }}>
+            {forPrint ? <div style={{ fontSize: 28, fontWeight: 900, color: '#111' }}>{cv.name}</div> : <E v={cv.name} onChange={v => up('name', v)} k="name" cls="text-[28px] font-black block text-gray-900" ph="Your Name" />}
+            {forPrint ? <div style={{ fontSize: 13, color: accent, fontWeight: 700, marginTop: 2 }}>{cv.title}</div> : <E v={cv.title} onChange={v => up('title', v)} k="title" cls="text-[13px] font-bold block mt-1" sty={{ color: accent }} ph="Job Title" />}
+            {contactLine}
+          </div>
+          <SH id="sum">Professional Summary</SH>{summaryEl}
+          <SH id="exp">Professional Experience</SH>{expBlock}
+          <SH id="edu">Education</SH>{eduBlock}
+          <SH id="skills">Core Skills</SH>{skillsBlock}
+          {customSectionsBlock}
+        </div>
+      );
+    }
+
+    if (tpl.layout === 'student-first') {
+      return (
+        <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: effectiveFont, fontSize: 12 }} className="bg-white shadow-2xl">
+          <div style={{ background: `${accent}12`, borderBottom: `3px solid ${accent}`, padding: '22px 28px 18px' }}>
+            {forPrint ? <div style={{ fontSize: 24, fontWeight: 900, color: '#111' }}>{cv.name}</div> : <E v={cv.name} onChange={v => up('name', v)} k="name" cls="text-[24px] font-black block text-gray-900" ph="Your Name" />}
+            {forPrint ? <div style={{ fontSize: 12, color: accent, fontWeight: 700, marginTop: 2 }}>{cv.title}</div> : <E v={cv.title} onChange={v => up('title', v)} k="title" cls="text-[12px] font-bold block mt-1" sty={{ color: accent }} ph="Target Role / Degree" />}
+            {contactLine}
+          </div>
+          <div style={{ padding: '18px 28px 28px' }}>
+            <SH id="sum">Profile</SH>{summaryEl}
+            <SH id="edu">Education</SH>{eduBlock}
+            <SH id="exp">Projects & Experience</SH>{expBlock}
+            <SH id="skills">Skills</SH>{skillsBlock}
+            {customSectionsBlock}
+          </div>
+        </div>
+      );
+    }
+
+    if (tpl.layout === 'hybrid-pro') {
+      const hybridSkills = (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {cv.skills.map((s, i) => {
+            const level = getSkillLevel(i);
+            return (
+              <div key={i} className={forPrint ? '' : 'group/skill relative'}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#111827', marginBottom: 3, fontWeight: 700 }}>
+                  <span>{s}</span><span style={{ color: accent }}>{level}%</span>
+                </div>
+                <div style={{ height: 4, background: '#E9D5FF', borderRadius: 99 }}>
+                  <div style={{ width: `${level}%`, height: '100%', background: accent, borderRadius: 99 }} />
+                </div>
+                {!forPrint && <button onClick={() => rmSkill(i)} className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white opacity-0 group-hover/skill:opacity-100 flex items-center justify-center"><X className="w-2 h-2" /></button>}
+              </div>
+            );
+          })}
+          {!forPrint && <form onSubmit={e => { e.preventDefault(); if (newSkill.trim()) { setCv(p => ({ ...p, skills: [...p.skills, newSkill.trim()] })); setNewSkill(''); } }}><input value={newSkill} onChange={e => setNewSkill(e.target.value)} placeholder="+ Add skill" className="text-[10px] bg-transparent border border-dashed border-violet-300 rounded px-2 py-0.5 outline-none w-24" /></form>}
+        </div>
+      );
+      return (
+        <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: effectiveFont, fontSize: 12 }} className="bg-white shadow-2xl">
+          <div style={{ borderBottom: `3px solid ${accent}`, padding: '20px 28px 14px' }}>
+            {forPrint ? <div style={{ fontSize: 24, fontWeight: 900, color: '#111' }}>{cv.name}</div> : <E v={cv.name} onChange={v => up('name', v)} k="name" cls="text-[24px] font-black block text-gray-900" ph="Your Name" />}
+            {forPrint ? <div style={{ fontSize: 12, color: accent, fontWeight: 700 }}>{cv.title}</div> : <E v={cv.title} onChange={v => up('title', v)} k="title" cls="text-[12px] font-bold block" sty={{ color: accent }} ph="Job Title" />}
+            {contactLine}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', minHeight: 700 }}>
+            <div style={{ padding: '16px 18px 28px 28px', borderRight: `1px solid ${accent}22`, background: '#FAF5FF' }}>
+              <SH id="skills">Key Skills</SH>{hybridSkills}
+            </div>
+            <div style={{ padding: '16px 24px 28px 20px' }}>
+              <SH id="sum">Summary</SH>{summaryEl}
+              <SH id="exp">Experience</SH>{expBlock}
+              <SH id="edu">Education</SH>{eduBlock}
+              {customSectionsBlock}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (tpl.layout === 'executive-brief') {
+      return (
+        <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: effectiveFont, fontSize: 12, padding: 32 }} className="bg-white shadow-2xl">
+          <div style={{ borderBottom: `3px solid ${accent}`, paddingBottom: 12, marginBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
+              <div>
+                {forPrint ? <div style={{ fontSize: 26, fontWeight: 900, color: '#111' }}>{cv.name}</div> : <E v={cv.name} onChange={v => up('name', v)} k="name" cls="text-[26px] font-black block text-gray-900" ph="Your Name" />}
+                {forPrint ? <div style={{ fontSize: 12, color: '#374151', fontWeight: 700, marginTop: 2 }}>{cv.title}</div> : <E v={cv.title} onChange={v => up('title', v)} k="title" cls="text-[12px] font-bold block mt-1 text-gray-700" ph="Executive Title" />}
+              </div>
+              <div style={{ textAlign: 'right' as const, fontSize: 10, color: '#6B7280' }}>
+                {forPrint ? <><div>{cv.email}</div><div>{cv.phone}</div><div>{cv.location}</div></> : <><E v={cv.email} onChange={v => up('email', v)} k="email" cls="block text-[10px] text-right" ph="email" /><E v={cv.phone} onChange={v => up('phone', v)} k="phone" cls="block text-[10px] text-right" ph="phone" /><E v={cv.location} onChange={v => up('location', v)} k="loc" cls="block text-[10px] text-right" ph="location" /></>}
+              </div>
+            </div>
+          </div>
+          <SH id="sum">Executive Summary</SH>{summaryEl}
+          <SH id="skills">Core Competencies</SH>{skillsBlock}
+          <SH id="exp">Leadership Experience</SH>{expBlock}
+          <SH id="edu">Education</SH>{eduBlock}
+          {customSectionsBlock}
+        </div>
+      );
+    }
+
+    if (tpl.layout === 'consulting-clean') {
+      const consultingSkills = (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          {cv.skills.map((s, i) => (
+            <div key={i} style={{ fontSize: 10, color: '#374151' }} className={forPrint ? '' : 'group/skill relative'}>
+              • {s}
+              {!forPrint && <button onClick={() => rmSkill(i)} className="absolute -right-1 top-0 opacity-0 group-hover/skill:opacity-100 text-red-400"><X className="w-2.5 h-2.5" /></button>}
+            </div>
+          ))}
+        </div>
+      );
+      return (
+        <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: 'Calibri,Arial,sans-serif', fontSize: 12, padding: 32 }} className="bg-white shadow-2xl">
+          <div style={{ borderBottom: `2px solid ${accent}`, paddingBottom: 12, marginBottom: 4, textAlign: 'center' as const }}>
+            {forPrint ? <div style={{ fontSize: 26, fontWeight: 900, color: '#111' }}>{cv.name}</div> : <E v={cv.name} onChange={v => up('name', v)} k="name" cls="text-[26px] font-black block text-center text-gray-900" ph="Your Name" />}
+            {forPrint ? <div style={{ fontSize: 12, color: accent, fontWeight: 700, marginTop: 2 }}>{cv.title}</div> : <E v={cv.title} onChange={v => up('title', v)} k="title" cls="text-[12px] font-bold block mt-1 text-center" sty={{ color: accent }} ph="Consulting Title" />}
+            {forPrint ? <div style={{ fontSize: 10, color: '#6B7280', marginTop: 6 }}>{cv.email} · {cv.phone} · {cv.location}</div> : <div style={{ fontSize: 10, color: '#6B7280', marginTop: 6, display: 'flex', justifyContent: 'center', gap: 8 }}><E v={cv.email} onChange={v => up('email', v)} k="email" cls="text-[10px]" ph="email" /><span>·</span><E v={cv.phone} onChange={v => up('phone', v)} k="phone" cls="text-[10px]" ph="phone" /><span>·</span><E v={cv.location} onChange={v => up('location', v)} k="loc" cls="text-[10px]" ph="location" /></div>}
+          </div>
+          <SH id="sum">Profile</SH>{summaryEl}
+          <SH id="exp">Selected Experience</SH>{expBlock}
+          <SH id="edu">Education</SH>{eduBlock}
+          <SH id="skills">Capabilities</SH>{consultingSkills}
+          {customSectionsBlock}
         </div>
       );
     }
@@ -1712,7 +1969,7 @@ export default function CVMakerPage() {
               onClick={() => setShowTemplatesModal(true)}
               className="w-full mt-2 py-1.5 text-[10px] text-blue-400 hover:text-blue-300 transition-colors"
             >
-              View all 15 templates →
+              View all {TEMPLATES.length} templates →
             </button>
           </div>
 
