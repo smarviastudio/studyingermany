@@ -297,7 +297,7 @@ export default function BlogGeneratorPage() {
           </div>
         </div>
         <a
-          href="http://localhost:8000/wp-admin"
+          href="https://cms.germanpath.com/wp-admin"
           target="_blank"
           rel="noopener"
           className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"

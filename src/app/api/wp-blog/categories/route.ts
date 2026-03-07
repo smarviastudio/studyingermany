@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const wpUrl = process.env.WP_URL || 'http://localhost:8000';
+    const wpUrl = process.env.WP_URL || 'https://cms.germanpath.com';
     const wpUser = process.env.WP_USER || 'admin';
     const wpAppPassword = process.env.WP_APP_PASSWORD || '';
 
