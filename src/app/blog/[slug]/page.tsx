@@ -4,6 +4,29 @@ import { GraduationCap, Clock, ChevronRight, ArrowLeft, Calendar } from 'lucide-
 import { BLOG_POSTS, CATEGORIES, getPostBySlug, type BlogPost } from '@/content/blog';
 import type { Metadata } from 'next';
 
+type WpPost = {
+  id: number;
+  title: { rendered: string };
+  excerpt: { rendered: string };
+  content: { rendered: string };
+  slug: string;
+  date: string;
+  modified: string;
+  categories: number[];
+};
+
+async function fetchWpPost(slug: string): Promise<WpPost | null> {
+  const wpUrl = process.env.WP_URL || (process.env.NODE_ENV === 'production' ? 'https://cms.germanpath.com' : 'http://localhost:8000');
+  try {
+    const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts?slug=${slug}&_embed=1`, { next: { revalidate: 60 } });
+    if (!res.ok) return null;
+    const posts = await res.json();
+    return posts[0] || null;
+  } catch {
+    return null;
+  }
+}
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
@@ -12,17 +35,33 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-  if (!post) return { title: 'Not Found' };
+  const staticPost = getPostBySlug(slug);
+  if (staticPost) {
+    return {
+      title: `${staticPost.title} — StudyGermany`,
+      description: staticPost.excerpt,
+      openGraph: {
+        title: staticPost.title,
+        description: staticPost.excerpt,
+        type: 'article',
+        publishedTime: staticPost.publishedAt,
+        modifiedTime: staticPost.updatedAt,
+      },
+    };
+  }
+  const wpPost = await fetchWpPost(slug);
+  if (!wpPost) return { title: 'Not Found' };
+  const title = wpPost.title.rendered.replace(/<[^>]*>/g, '');
+  const excerpt = wpPost.excerpt.rendered.replace(/<[^>]*>/g, '').trim();
   return {
-    title: `${post.title} — StudyGermany`,
-    description: post.excerpt,
+    title: `${title} — StudyGermany`,
+    description: excerpt,
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      title,
+      description: excerpt,
       type: 'article',
-      publishedTime: post.publishedAt,
-      modifiedTime: post.updatedAt,
+      publishedTime: wpPost.date,
+      modifiedTime: wpPost.modified,
     },
   };
 }
@@ -72,15 +111,16 @@ function renderMarkdown(md: string): string {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-  if (!post) notFound();
+  const staticPost = getPostBySlug(slug);
+  
+  if (staticPost) {
+    const cat = CATEGORIES[staticPost.category];
+    const related = BLOG_POSTS.filter(p => p.slug !== slug).slice(0, 3);
+    const bodyHtml = renderMarkdown(staticPost.body);
+    const post = staticPost;
 
-  const cat = CATEGORIES[post.category];
-  const related = BLOG_POSTS.filter(p => p.slug !== slug).slice(0, 3);
-  const bodyHtml = renderMarkdown(post.body);
-
-  return (
-    <div className="min-h-screen bg-[#0a0a1a]">
+    return (
+      <div className="min-h-screen bg-[#0a0a1a]">
       {/* Nav */}
       <nav className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0a0a1a]/80 backdrop-blur-xl">
         <div className="max-w-4xl mx-auto flex items-center justify-between px-6 h-14">
@@ -174,6 +214,82 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         {/* CTA */}
+        <div className="mt-10 p-6 rounded-xl border border-white/[0.06] bg-gradient-to-br from-blue-500/[0.04] to-purple-500/[0.04] text-center">
+          <h3 className="text-white font-bold mb-1">Ready to apply?</h3>
+          <p className="text-white/35 text-xs mb-4">Use our free AI tools to find programs, build your CV, and write motivation letters.</p>
+          <Link href="/dashboard" className="inline-flex px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all">
+            Get Started Free
+          </Link>
+        </div>
+      </article>
+    </div>
+    );
+  }
+
+  // Fallback to WordPress
+  const wpPost = await fetchWpPost(slug);
+  if (!wpPost) notFound();
+
+  const title = wpPost.title.rendered;
+  const excerpt = wpPost.excerpt.rendered;
+  const content = wpPost.content.rendered;
+  const publishedAt = new Date(wpPost.date);
+  const updatedAt = wpPost.modified ? new Date(wpPost.modified) : null;
+
+  return (
+    <div className="min-h-screen bg-[#0a0a1a]">
+      <nav className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0a0a1a]/80 backdrop-blur-xl">
+        <div className="max-w-4xl mx-auto flex items-center justify-between px-6 h-14">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+              <GraduationCap className="w-3.5 h-3.5 text-white" />
+            </div>
+            <span className="text-white font-semibold text-sm">StudyGermany</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard" className="text-white/40 hover:text-white/70 text-sm transition-colors">Dashboard</Link>
+            <Link href="/blog" className="text-white/40 hover:text-white/70 text-sm transition-colors">Blog</Link>
+            <Link href="/auth/signin" className="px-3 py-1.5 rounded-lg bg-white/[0.06] border border-white/[0.08] text-white/70 hover:text-white text-xs font-medium transition-all hover:bg-white/[0.1]">
+              Sign In
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      <article className="max-w-3xl mx-auto px-6 py-10">
+        <div className="flex items-center gap-2 text-white/30 text-xs mb-6">
+          <Link href="/" className="hover:text-white/60 transition-colors">Home</Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link href="/blog" className="hover:text-white/60 transition-colors">Blog</Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-white/50 truncate max-w-[200px]" dangerouslySetInnerHTML={{ __html: title }} />
+        </div>
+
+        <header className="mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-3" dangerouslySetInnerHTML={{ __html: title }} />
+          <div className="text-white/40 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: excerpt }} />
+
+          <div className="flex items-center gap-4 mt-4 text-white/20 text-xs">
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3" />
+              Published {publishedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </span>
+            {updatedAt && (
+              <span>
+                Updated {updatedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </span>
+            )}
+          </div>
+        </header>
+
+        <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
+
+        <div className="mt-12 pt-8 border-t border-white/[0.06]">
+          <Link href="/blog" className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Back to all articles
+          </Link>
+        </div>
+
         <div className="mt-10 p-6 rounded-xl border border-white/[0.06] bg-gradient-to-br from-blue-500/[0.04] to-purple-500/[0.04] text-center">
           <h3 className="text-white font-bold mb-1">Ready to apply?</h3>
           <p className="text-white/35 text-xs mb-4">Use our free AI tools to find programs, build your CV, and write motivation letters.</p>
