@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { GraduationCap, Clock, ChevronRight, ArrowLeft, Calendar } from 'lucide-react';
+import { Clock, ChevronRight, ArrowLeft, Calendar } from 'lucide-react';
 import { BLOG_POSTS, CATEGORIES, getPostBySlug, type BlogPost } from '@/content/blog';
 import type { Metadata } from 'next';
+import { SiteNav } from '@/components/SiteNav';
 
 type WpPost = {
   id: number;
@@ -211,24 +212,7 @@ export default async function BlogPostPage({ params }: Props) {
 
     return (
       <div className="min-h-screen bg-[#0a0a1a]">
-      {/* Nav */}
-      <nav className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0a0a1a]/80 backdrop-blur-xl">
-        <div className="max-w-4xl mx-auto flex items-center justify-between px-6 h-14">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <GraduationCap className="w-3.5 h-3.5 text-white" />
-            </div>
-            <span className="text-white font-semibold text-sm">StudyGermany</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-white/40 hover:text-white/70 text-sm transition-colors">Dashboard</Link>
-            <Link href="/blog" className="text-white/40 hover:text-white/70 text-sm transition-colors">Blog</Link>
-            <Link href="/auth/signin" className="px-3 py-1.5 rounded-lg bg-white/[0.06] border border-white/[0.08] text-white/70 hover:text-white text-xs font-medium transition-all hover:bg-white/[0.1]">
-              Sign In
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <SiteNav />
 
       <article className="max-w-3xl mx-auto px-6 py-10">
         {/* Breadcrumb */}
@@ -329,25 +313,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <div className="min-h-screen" style={{ background: '#f8f8f6' }}>
-      {/* Nav */}
-      <nav className="sticky top-0 z-40 bg-gradient-to-r from-[#fff8f0] to-[#f5f5f5] shadow-sm">
-        <div className="h-[6px] bg-gradient-to-r from-black via-[#dd0000] to-[#ffce00]" style={{ backgroundSize: '300% 100%', backgroundPosition: '0 0', background: 'linear-gradient(90deg, #000 0%, #000 33.33%, #dd0000 33.33%, #dd0000 66.66%, #ffce00 66.66%, #ffce00 100%)' }} />
-        <div className="max-w-[1100px] mx-auto flex items-center justify-between px-6 h-14">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#dd0000] to-[#ffce00] flex items-center justify-center">
-              <GraduationCap className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-gray-900 font-semibold text-sm">StudyGermany</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-gray-500 hover:text-[#dd0000] text-sm transition-colors">Dashboard</Link>
-            <Link href="/blog" className="text-gray-500 hover:text-[#dd0000] text-sm transition-colors">Blog</Link>
-            <Link href="/auth/signin" className="px-3 py-1.5 rounded-lg bg-[#dd0000] text-white text-xs font-medium hover:bg-[#bb0000] transition-all">
-              Sign In
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <SiteNav />
 
       {/* Header */}
       <header className="max-w-[1100px] mx-auto px-6 pt-8 pb-7 border-b-2 border-[#ffce00]">
