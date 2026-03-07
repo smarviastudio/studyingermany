@@ -113,6 +113,34 @@ function renderMarkdown(md: string): string {
   return html;
 }
 
+function renderWordPressHtml(html: string): string {
+  let out = html;
+
+  out = out.replace(/<h2([^>]*)>/gi, '<h2$1 class="text-lg font-bold text-white mt-8 mb-3 pb-2 border-b border-white/[0.06]">');
+  out = out.replace(/<h3([^>]*)>/gi, '<h3$1 class="text-base font-bold text-white mt-6 mb-2">');
+  out = out.replace(/<p([^>]*)>/gi, '<p$1 class="text-white/40 text-sm leading-relaxed my-2">');
+  out = out.replace(/<ul([^>]*)>/gi, '<ul$1 class="space-y-1.5 my-3 ml-4 list-disc list-outside marker:text-white/20">');
+  out = out.replace(/<ol([^>]*)>/gi, '<ol$1 class="space-y-1.5 my-3 ml-4 list-decimal list-outside marker:text-white/20">');
+  out = out.replace(/<li([^>]*)>/gi, '<li$1 class="text-white/45 text-sm pl-1">');
+  out = out.replace(/<blockquote([^>]*)>/gi, '<blockquote$1 class="border-l-2 border-blue-500/40 pl-4 py-1 my-3 text-white/40 text-sm italic">');
+  out = out.replace(/<a([^>]*?)>/gi, (_match, attrs: string) => {
+    const hasClass = /class\s*=/.test(attrs);
+    const hasTarget = /target\s*=/.test(attrs);
+    const nextAttrs = `${attrs}${hasClass ? '' : ' class="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"'}${hasTarget ? '' : ' target="_blank" rel="noopener noreferrer"'}`;
+    return `<a${nextAttrs}>`;
+  });
+  out = out.replace(/<strong([^>]*)>/gi, '<strong$1 class="text-white font-semibold">');
+  out = out.replace(/<img([^>]*)>/gi, '<img$1 class="w-full h-auto rounded-xl border border-white/[0.08] my-6" loading="lazy" />');
+  out = out.replace(/<figure([^>]*)>/gi, '<figure$1 class="my-6">');
+  out = out.replace(/<figcaption([^>]*)>/gi, '<figcaption$1 class="text-white/30 text-xs mt-2 text-center">');
+  out = out.replace(/<table([^>]*)>/gi, '<div class="overflow-x-auto my-4 rounded-lg border border-white/[0.06]"><table$1 class="w-full">');
+  out = out.replace(/<\/table>/gi, '</table></div>');
+  out = out.replace(/<th([^>]*)>/gi, '<th$1 class="px-3 py-2 text-left text-white/60 text-xs font-semibold border-b border-white/[0.08]">');
+  out = out.replace(/<td([^>]*)>/gi, '<td$1 class="px-3 py-2 text-white/45 text-xs border-b border-white/[0.04]">');
+
+  return out;
+}
+
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const staticPost = getPostBySlug(slug);
@@ -236,7 +264,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const title = wpPost.title.rendered;
   const excerpt = wpPost.excerpt.rendered;
-  const content = wpPost.content.rendered;
+  const content = renderWordPressHtml(wpPost.content.rendered);
   const publishedAt = new Date(wpPost.date);
   const updatedAt = wpPost.modified ? new Date(wpPost.modified) : null;
   const related = BLOG_POSTS.slice(0, 3);
