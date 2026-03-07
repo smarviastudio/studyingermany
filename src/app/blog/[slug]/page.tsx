@@ -116,27 +116,28 @@ function renderMarkdown(md: string): string {
 function renderWordPressHtml(html: string): string {
   let out = html;
 
-  out = out.replace(/<h2([^>]*)>/gi, '<h2$1 class="text-lg font-bold text-white mt-8 mb-3 pb-2 border-b border-white/[0.06]">');
-  out = out.replace(/<h3([^>]*)>/gi, '<h3$1 class="text-base font-bold text-white mt-6 mb-2">');
-  out = out.replace(/<p([^>]*)>/gi, '<p$1 class="text-white/40 text-sm leading-relaxed my-2">');
-  out = out.replace(/<ul([^>]*)>/gi, '<ul$1 class="space-y-1.5 my-3 ml-4 list-disc list-outside marker:text-white/20">');
-  out = out.replace(/<ol([^>]*)>/gi, '<ol$1 class="space-y-1.5 my-3 ml-4 list-decimal list-outside marker:text-white/20">');
-  out = out.replace(/<li([^>]*)>/gi, '<li$1 class="text-white/45 text-sm pl-1">');
-  out = out.replace(/<blockquote([^>]*)>/gi, '<blockquote$1 class="border-l-2 border-blue-500/40 pl-4 py-1 my-3 text-white/40 text-sm italic">');
+  // Light theme styles matching original WordPress theme
+  out = out.replace(/<h2([^>]*)>/gi, '<h2$1 class="text-2xl font-bold text-gray-900 mt-10 mb-3 pb-2 border-b-2 border-[#ffce00]" style="font-family: \'Space Grotesk\', sans-serif;">');
+  out = out.replace(/<h3([^>]*)>/gi, '<h3$1 class="text-xl font-semibold text-gray-900 mt-8 mb-2.5" style="font-family: \'Space Grotesk\', sans-serif;">');
+  out = out.replace(/<p([^>]*)>/gi, '<p$1 class="text-gray-700 mb-5">');
+  out = out.replace(/<ul([^>]*)>/gi, '<ul$1 class="my-3 ml-2 pl-6 list-disc list-outside space-y-2">');
+  out = out.replace(/<ol([^>]*)>/gi, '<ol$1 class="my-3 ml-2 pl-6 list-decimal list-outside space-y-2">');
+  out = out.replace(/<li([^>]*)>/gi, '<li$1 class="text-gray-700 mb-2">');
+  out = out.replace(/<blockquote([^>]*)>/gi, '<blockquote$1 class="my-7 py-4 px-5 bg-[#fff9e6] border-l-4 border-[#ffce00] rounded-r-lg italic text-gray-700">');
   out = out.replace(/<a([^>]*?)>/gi, (_match, attrs: string) => {
     const hasClass = /class\s*=/.test(attrs);
     const hasTarget = /target\s*=/.test(attrs);
-    const nextAttrs = `${attrs}${hasClass ? '' : ' class="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"'}${hasTarget ? '' : ' target="_blank" rel="noopener noreferrer"'}`;
+    const nextAttrs = `${attrs}${hasClass ? '' : ' class="text-[#dd0000] underline underline-offset-2 hover:text-[#bb0000] transition-colors"'}${hasTarget ? '' : ' target="_blank" rel="noopener noreferrer"'}`;
     return `<a${nextAttrs}>`;
   });
-  out = out.replace(/<strong([^>]*)>/gi, '<strong$1 class="text-white font-semibold">');
-  out = out.replace(/<img([^>]*)>/gi, '<img$1 class="w-full h-auto rounded-xl border border-white/[0.08] my-6" loading="lazy" />');
+  out = out.replace(/<strong([^>]*)>/gi, '<strong$1 class="font-semibold text-gray-900">');
+  out = out.replace(/<img([^>]*)>/gi, '<img$1 class="w-full h-auto rounded-xl my-6" loading="lazy" />');
   out = out.replace(/<figure([^>]*)>/gi, '<figure$1 class="my-6">');
-  out = out.replace(/<figcaption([^>]*)>/gi, '<figcaption$1 class="text-white/30 text-xs mt-2 text-center">');
-  out = out.replace(/<table([^>]*)>/gi, '<div class="overflow-x-auto my-4 rounded-lg border border-white/[0.06]"><table$1 class="w-full">');
+  out = out.replace(/<figcaption([^>]*)>/gi, '<figcaption$1 class="text-gray-500 text-sm mt-2 text-center">');
+  out = out.replace(/<table([^>]*)>/gi, '<div class="overflow-x-auto my-4 rounded-lg border border-gray-200"><table$1 class="w-full">');
   out = out.replace(/<\/table>/gi, '</table></div>');
-  out = out.replace(/<th([^>]*)>/gi, '<th$1 class="px-3 py-2 text-left text-white/60 text-xs font-semibold border-b border-white/[0.08]">');
-  out = out.replace(/<td([^>]*)>/gi, '<td$1 class="px-3 py-2 text-white/45 text-xs border-b border-white/[0.04]">');
+  out = out.replace(/<th([^>]*)>/gi, '<th$1 class="px-3 py-2 text-left text-gray-700 text-sm font-semibold border-b border-gray-200 bg-gray-50">');
+  out = out.replace(/<td([^>]*)>/gi, '<td$1 class="px-3 py-2 text-gray-600 text-sm border-b border-gray-100">');
 
   return out;
 }
@@ -263,108 +264,119 @@ export default async function BlogPostPage({ params }: Props) {
   if (!wpPost) notFound();
 
   const title = wpPost.title.rendered;
-  const excerpt = wpPost.excerpt.rendered;
   const content = renderWordPressHtml(wpPost.content.rendered);
   const publishedAt = new Date(wpPost.date);
   const updatedAt = wpPost.modified ? new Date(wpPost.modified) : null;
-  const related = BLOG_POSTS.slice(0, 3);
+  const wordCount = wpPost.content.rendered.replace(/<[^>]*>/g, '').split(/\s+/).length;
+  const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a]">
-      <nav className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0a0a1a]/80 backdrop-blur-xl">
-        <div className="max-w-4xl mx-auto flex items-center justify-between px-6 h-14">
+    <div className="min-h-screen" style={{ background: '#f8f8f6' }}>
+      {/* Nav */}
+      <nav className="sticky top-0 z-40 bg-gradient-to-r from-[#fff8f0] to-[#f5f5f5] shadow-sm">
+        <div className="h-[6px] bg-gradient-to-r from-black via-[#dd0000] to-[#ffce00]" style={{ backgroundSize: '300% 100%', backgroundPosition: '0 0', background: 'linear-gradient(90deg, #000 0%, #000 33.33%, #dd0000 33.33%, #dd0000 66.66%, #ffce00 66.66%, #ffce00 100%)' }} />
+        <div className="max-w-[1100px] mx-auto flex items-center justify-between px-6 h-14">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <GraduationCap className="w-3.5 h-3.5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#dd0000] to-[#ffce00] flex items-center justify-center">
+              <GraduationCap className="w-4 h-4 text-white" />
             </div>
-            <span className="text-white font-semibold text-sm">StudyGermany</span>
+            <span className="text-gray-900 font-semibold text-sm">StudyGermany</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-white/40 hover:text-white/70 text-sm transition-colors">Dashboard</Link>
-            <Link href="/blog" className="text-white/40 hover:text-white/70 text-sm transition-colors">Blog</Link>
-            <Link href="/auth/signin" className="px-3 py-1.5 rounded-lg bg-white/[0.06] border border-white/[0.08] text-white/70 hover:text-white text-xs font-medium transition-all hover:bg-white/[0.1]">
+            <Link href="/dashboard" className="text-gray-500 hover:text-[#dd0000] text-sm transition-colors">Dashboard</Link>
+            <Link href="/blog" className="text-gray-500 hover:text-[#dd0000] text-sm transition-colors">Blog</Link>
+            <Link href="/auth/signin" className="px-3 py-1.5 rounded-lg bg-[#dd0000] text-white text-xs font-medium hover:bg-[#bb0000] transition-all">
               Sign In
             </Link>
           </div>
         </div>
       </nav>
 
-      <article className="max-w-3xl mx-auto px-6 py-10">
-        <div className="flex items-center gap-2 text-white/30 text-xs mb-6">
-          <Link href="/" className="hover:text-white/60 transition-colors">Home</Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link href="/blog" className="hover:text-white/60 transition-colors">Blog</Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-white/50 truncate max-w-[200px]">{stripHtml(title)}</span>
+      {/* Header */}
+      <header className="max-w-[1100px] mx-auto px-6 pt-8 pb-7 border-b-2 border-[#ffce00]">
+        <h1 className="text-[clamp(28px,4vw,46px)] font-bold text-gray-900 leading-[1.15] tracking-tight mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }} dangerouslySetInnerHTML={{ __html: title }} />
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <span>{publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+          <span className="text-gray-400">·</span>
+          <span>{readTime} min read</span>
         </div>
+      </header>
 
-        <header className="mb-8">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400">
-              WordPress Article
-            </span>
-            <span className="text-white/20 text-xs flex items-center gap-1">
-              <Clock className="w-3 h-3" /> Live content
-            </span>
-          </div>
+      {/* Body Grid */}
+      <div className="max-w-[1100px] mx-auto px-6 py-9">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10 items-start">
 
-          <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-3" dangerouslySetInnerHTML={{ __html: title }} />
-          <div className="text-white/40 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: excerpt }} />
+          {/* Main Prose */}
+          <article className="bg-white rounded-2xl p-10 shadow-sm" style={{ fontSize: '17px', lineHeight: '1.8', color: '#262626' }}>
+            <div
+              className="wp-prose"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
 
-          <div className="flex items-center gap-4 mt-4 text-white/20 text-xs">
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
-              Published {publishedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </span>
-            {updatedAt && (
-              <span>
-                Updated {updatedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-              </span>
-            )}
-          </div>
-        </header>
-
-        <div
-          className="prose-custom"
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
-
-        <div className="mt-12 pt-8 border-t border-white/[0.06]">
-          <Link href="/blog" className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to all articles
-          </Link>
-        </div>
-
-        {related.length > 0 && (
-          <section className="mt-10">
-            <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-4">More articles</h2>
-            <div className="grid sm:grid-cols-3 gap-3">
-              {related.map(p => {
-                const rCat = CATEGORIES[p.category];
-                return (
-                  <Link
-                    key={p.slug}
-                    href={`/blog/${p.slug}`}
-                    className="group p-4 rounded-xl border border-white/[0.06] bg-[#0f0f23] hover:border-white/[0.12] transition-all"
-                  >
-                    <span className="text-2xl mb-2 block">{p.coverEmoji}</span>
-                    <span className={`text-[9px] font-semibold uppercase tracking-wider ${rCat.color}`}>{rCat.label}</span>
-                    <h3 className="text-white text-xs font-medium mt-1 group-hover:text-blue-300 transition-colors line-clamp-2">{p.title}</h3>
-                  </Link>
-                );
-              })}
+            {/* Share Row */}
+            <div className="mt-10 pt-7 border-t border-gray-200">
+              <span className="block text-xs uppercase tracking-wider text-gray-500 mb-3">Share this article</span>
+              <div className="flex flex-wrap gap-2">
+                <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://germanpath.com/blog/${slug}`)}&text=${encodeURIComponent(stripHtml(title))}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-800 text-sm font-semibold hover:bg-[#e7f0f9] hover:border-[#b3cfe8] hover:text-[#1d9bf0] transition-all">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.255 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  Twitter
+                </a>
+                <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://germanpath.com/blog/${slug}`)}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-800 text-sm font-semibold hover:bg-[#e8f0f8] hover:border-[#b3cfe8] hover:text-[#0a66c2] transition-all">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+                  LinkedIn
+                </a>
+              </div>
             </div>
-          </section>
-        )}
+          </article>
 
-        <div className="mt-10 p-6 rounded-xl border border-white/[0.06] bg-gradient-to-br from-blue-500/[0.04] to-purple-500/[0.04] text-center">
-          <h3 className="text-white font-bold mb-1">Ready to apply?</h3>
-          <p className="text-white/35 text-xs mb-4">Use our free AI tools to find programs, build your CV, and write motivation letters.</p>
-          <Link href="/dashboard" className="inline-flex px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all">
-            Get Started Free
-          </Link>
+          {/* Sidebar */}
+          <aside className="flex flex-col gap-5 lg:sticky lg:top-6">
+            {/* Meta Widget */}
+            <div className="bg-gradient-to-br from-white to-[#f8f8ff] rounded-2xl p-5 shadow-lg border border-gray-100">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#dd0000] mb-3">Snapshot</p>
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                <span className="bg-[#ffce00]/20 text-gray-900 rounded-full px-3 py-1 text-xs font-semibold">📅 {publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                <span className="bg-[#ffce00]/20 text-gray-900 rounded-full px-3 py-1 text-xs font-semibold">⏱ {readTime} min read</span>
+              </div>
+
+              <div className="mt-4">
+                <h5 className="text-[13px] uppercase tracking-wide text-gray-500 mb-2">Helpful resources</h5>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="/dashboard" className="block p-2.5 rounded-lg border border-gray-100 bg-white/90 hover:border-[#dd0000] transition-all">
+                      <strong className="block text-[13px] text-[#dd0000]">Free AI tools</strong>
+                      <span className="text-xs text-gray-600">Automate CVs, motivation letters, and visa prep.</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/course-finder" className="block p-2.5 rounded-lg border border-gray-100 bg-white/90 hover:border-[#dd0000] transition-all">
+                      <strong className="block text-[13px] text-[#dd0000]">Course finder</strong>
+                      <span className="text-xs text-gray-600">Search 20,000+ German programs with filters.</span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-4 flex flex-col gap-2">
+                <Link href="/blog" className="flex justify-center items-center rounded-lg px-4 py-2.5 font-semibold text-sm bg-gradient-to-r from-[#11132c] to-[#191f4a] text-white">
+                  Browse all guides
+                </Link>
+              </div>
+            </div>
+
+            {/* CTA Widget */}
+            <div className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-2xl p-5 text-white shadow-lg">
+              <span className="inline-block px-2.5 py-1 bg-[#ffce00] text-gray-900 text-[11px] font-bold uppercase tracking-wide rounded mb-3">Free tools</span>
+              <h4 className="text-lg font-bold mb-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Plan your move to Germany</h4>
+              <p className="text-sm text-white/75 mb-5 leading-relaxed">AI tools for visa, housing, CV, and motivation letters — all in one place.</p>
+              <Link href="/dashboard" className="block text-center py-3 px-5 bg-[#dd0000] text-white font-bold text-sm rounded-lg hover:bg-[#bb0000] transition-all">
+                Explore tools →
+              </Link>
+            </div>
+          </aside>
+
         </div>
-      </article>
+      </div>
     </div>
   );
 }
