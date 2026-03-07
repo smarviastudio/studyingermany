@@ -1,30 +1,18 @@
 export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
+import { requireAdminApi } from '@/lib/admin';
 
 export async function GET() {
   try {
-    const wpUrl = process.env.WP_URL || 'https://cms.germanpath.com';
-    const wpUser = process.env.WP_USER || 'admin';
-    const wpAppPassword = process.env.WP_APP_PASSWORD || '';
-
-    if (!wpAppPassword) {
-      return NextResponse.json(
-        { error: 'WP_APP_PASSWORD not set in environment. Please add it to .env.local.' },
-        { status: 500 }
-      );
+    const unauthorizedResponse = await requireAdminApi();
+    if (unauthorizedResponse) {
+      return unauthorizedResponse;
     }
 
-    const credentials = Buffer.from(`${wpUser}:${wpAppPassword}`).toString('base64');
+    const wpUrl = process.env.WP_URL || 'https://cms.germanpath.com';
 
-    const res = await fetch(
-      `${wpUrl}/wp-json/wp/v2/categories?per_page=100&orderby=name&order=asc`,
-      {
-        headers: {
-          Authorization: `Basic ${credentials}`,
-        },
-      }
-    );
+    const res = await fetch(`${wpUrl}/wp-json/wp/v2/categories?per_page=100&orderby=name&order=asc`);
 
     if (!res.ok) {
       const err = await res.text();

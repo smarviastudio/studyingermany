@@ -1,6 +1,7 @@
 export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminApi } from '@/lib/admin';
 
 async function registerUnsplashDownload(downloadLocation?: string) {
   const accessKey = process.env.UNSPLASH_ACCESS_KEY;
@@ -15,6 +16,11 @@ async function registerUnsplashDownload(downloadLocation?: string) {
 
 export async function POST(request: NextRequest) {
   try {
+    const unauthorizedResponse = await requireAdminApi();
+    if (unauthorizedResponse) {
+      return unauthorizedResponse;
+    }
+
     const body = await request.json();
     const { imageUrl, filename, credit, altText, downloadLocation } = body || {};
 

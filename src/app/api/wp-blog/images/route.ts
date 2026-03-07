@@ -1,11 +1,17 @@
 export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminApi } from '@/lib/admin';
 
 const UNSPLASH_ENDPOINT = 'https://api.unsplash.com/search/photos';
 
 export async function GET(request: NextRequest) {
   try {
+    const unauthorizedResponse = await requireAdminApi();
+    if (unauthorizedResponse) {
+      return unauthorizedResponse;
+    }
+
     const accessKey = process.env.UNSPLASH_ACCESS_KEY;
     if (!accessKey) {
       return NextResponse.json(

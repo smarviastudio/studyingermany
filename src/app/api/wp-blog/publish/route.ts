@@ -1,6 +1,7 @@
 export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminApi } from '@/lib/admin';
 
 type FAQItem = {
   question: string;
@@ -9,6 +10,11 @@ type FAQItem = {
 
 export async function POST(request: NextRequest) {
   try {
+    const unauthorizedResponse = await requireAdminApi();
+    if (unauthorizedResponse) {
+      return unauthorizedResponse;
+    }
+
     const {
       title,
       content,

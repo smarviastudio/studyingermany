@@ -1,6 +1,7 @@
 export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminApi } from '@/lib/admin';
 
 type FAQItem = {
   question: string;
@@ -61,6 +62,11 @@ function normalizeFaqs(input: unknown, topic: string, category: string): FAQItem
 
 export async function POST(request: NextRequest) {
   try {
+    const unauthorizedResponse = await requireAdminApi();
+    if (unauthorizedResponse) {
+      return unauthorizedResponse;
+    }
+
     const { topic, tone, length, keywords, category } = await request.json();
 
     if (!topic?.trim()) {
