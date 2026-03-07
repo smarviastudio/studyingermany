@@ -67,11 +67,13 @@ export async function POST(request: NextRequest) {
       return unauthorizedResponse;
     }
 
-    const { topic, tone, length, keywords, category } = await request.json();
+    const { topic, tone, length, keywords, category, model } = await request.json();
 
     if (!topic?.trim()) {
       return NextResponse.json({ error: 'Topic is required' }, { status: 400 });
     }
+
+    const selectedModel = model || 'google/gemini-2.0-flash-001';
 
     const wordTarget =
       length === 'short' ? '400–600' : length === 'long' ? '1200–1800' : '700–1000';
@@ -113,7 +115,7 @@ Return ONLY the JSON, no markdown code blocks, no extra text.`;
         'X-Title': 'Students in Germany Blog Generator',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.0-flash-001',
+        model: selectedModel,
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 3000,

@@ -56,6 +56,49 @@ const LENGTHS = [
   { value: 'long', label: 'Long', desc: '1200–1800 words' },
 ];
 
+const AI_MODELS = [
+  { 
+    id: 'google/gemini-2.0-flash-001', 
+    name: 'Gemini 2.0 Flash', 
+    provider: 'Google',
+    inputPrice: 0.0, 
+    outputPrice: 0.0,
+    desc: 'Fast & free (experimental)'
+  },
+  { 
+    id: 'google/gemini-3.1-flash-lite-preview', 
+    name: 'Gemini 3.1 Flash Lite', 
+    provider: 'Google',
+    inputPrice: 0.25, 
+    outputPrice: 1.50,
+    desc: 'High efficiency, low cost'
+  },
+  { 
+    id: 'google/gemini-2.5-flash-lite', 
+    name: 'Gemini 2.5 Flash Lite', 
+    provider: 'Google',
+    inputPrice: 0.10, 
+    outputPrice: 0.40,
+    desc: 'Lightweight & fast'
+  },
+  { 
+    id: 'anthropic/claude-haiku-4.5', 
+    name: 'Claude Haiku 4.5', 
+    provider: 'Anthropic',
+    inputPrice: 1.0, 
+    outputPrice: 5.0,
+    desc: 'Efficient frontier model'
+  },
+  { 
+    id: 'moonshotai/kimi-k2.5', 
+    name: 'Kimi K2.5', 
+    provider: 'MoonshotAI',
+    inputPrice: 0.45, 
+    outputPrice: 2.20,
+    desc: 'Multimodal capability'
+  },
+];
+
 const TOPIC_IDEAS = [
   'How to register your address (Anmeldung) in Berlin',
   'Best student cities in Germany 2025',
@@ -72,6 +115,7 @@ export default function BlogGeneratorPage() {
   const [length, setLength] = useState('medium');
   const [keywords, setKeywords] = useState('');
   const [category, setCategory] = useState('Guides');
+  const [selectedModel, setSelectedModel] = useState('google/gemini-2.0-flash-001');
   const [wpCategories, setWpCategories] = useState<string[]>(CATEGORIES);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [publishStatus, setPublishStatus] = useState<'draft' | 'publish'>('draft');
@@ -190,7 +234,7 @@ export default function BlogGeneratorPage() {
       const res = await fetch('/api/wp-blog/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, tone, length, keywords, category }),
+        body: JSON.stringify({ topic, tone, length, keywords, category, model: selectedModel }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Generation failed');
@@ -432,6 +476,63 @@ export default function BlogGeneratorPage() {
                   placeholder="visa, Germany, student, 2025"
                   className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-violet-500/50"
                 />
+              </div>
+
+              {/* AI Model */}
+              <div>
+                <label className="text-white/40 text-xs mb-1.5 block">AI Model</label>
+                <div className="space-y-2">
+                  {AI_MODELS.map((model) => {
+                    const isSelected = selectedModel === model.id;
+                    const estimatedCost = model.inputPrice === 0 && model.outputPrice === 0 
+                      ? 'Free' 
+                      : `~$${((model.inputPrice * 1.5 + model.outputPrice * 1.5) / 1000).toFixed(3)}/post`;
+                    
+                    return (
+                      <button
+                        key={model.id}
+                        type="button"
+                        onClick={() => setSelectedModel(model.id)}
+                        className={`w-full text-left p-3 rounded-xl border transition-all ${
+                          isSelected
+                            ? 'border-violet-500/60 bg-violet-500/10'
+                            : 'border-white/[0.07] bg-white/[0.02] hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-white/70'}`}>
+                                {model.name}
+                              </span>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded ${isSelected ? 'bg-violet-500/20 text-violet-300' : 'bg-white/[0.05] text-white/40'}`}>
+                                {model.provider}
+                              </span>
+                            </div>
+                            <p className={`text-[11px] mt-1 ${isSelected ? 'text-white/60' : 'text-white/40'}`}>
+                              {model.desc}
+                            </p>
+                            <div className="flex items-center gap-3 mt-1.5 text-[10px]">
+                              <span className={isSelected ? 'text-white/50' : 'text-white/30'}>
+                                In: ${model.inputPrice}/M
+                              </span>
+                              <span className={isSelected ? 'text-white/50' : 'text-white/30'}>
+                                Out: ${model.outputPrice}/M
+                              </span>
+                            </div>
+                          </div>
+                          <div className={`text-xs font-semibold px-2 py-1 rounded ${
+                            model.inputPrice === 0 && model.outputPrice === 0
+                              ? isSelected ? 'bg-emerald-500/20 text-emerald-300' : 'bg-emerald-500/10 text-emerald-400'
+                              : isSelected ? 'bg-white/10 text-white/70' : 'bg-white/[0.05] text-white/50'
+                          }`}>
+                            {estimatedCost}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
