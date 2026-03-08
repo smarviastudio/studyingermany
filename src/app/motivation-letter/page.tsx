@@ -279,53 +279,55 @@ function MotivationLetterContent() {
 
           {!useManualProgram ? (
             shortlistLoading ? (
-              <div className="flex items-center gap-2 text-sm text-white/60">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#999' }}>
                 <Loader2 className="w-4 h-4 animate-spin" /> Loading shortlist...
               </div>
             ) : shortlist.length === 0 ? (
-              <div className="text-sm text-white/60 space-y-2">
-                <p>You have no shortlisted programs yet.</p>
-                <Link href="/course-finder" className="text-blue-300 hover:text-blue-200 inline-flex items-center gap-1 text-xs">
+              <div style={{ fontSize: 14, color: '#999' }}>
+                <p style={{ margin: '0 0 8px' }}>You have no shortlisted programs yet.</p>
+                <Link href="/course-finder" style={{ color: '#dd0000', fontSize: 13, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
                   Browse programs <ChevronDown className="w-3 h-3 -rotate-90" />
                 </Link>
               </div>
             ) : (
-              <div className="relative" ref={dropdownRef}>
+              <div style={{ position: 'relative' }} ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown(prev => !prev)}
-                  className="w-full text-left px-4 py-3 rounded-xl border border-white/10 bg-white/[0.02] flex items-center justify-between"
+                  style={{ width: '100%', textAlign: 'left', padding: '12px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', transition: 'all 0.2s' }}
                 >
                   {selectedItem ? (
-                    <div className="flex items-center gap-3 truncate">
-                      <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                        <GraduationCap className="w-4 h-4 text-blue-300" />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflow: 'hidden' }}>
+                      <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(221,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <GraduationCap className="w-4 h-4" style={{ color: '#dd0000' }} />
                       </div>
-                      <div className="truncate">
-                        <p className="text-sm truncate">{selectedItem.programName}</p>
-                        <p className="text-xs text-white/50 truncate">{selectedItem.university}</p>
+                      <div style={{ overflow: 'hidden' }}>
+                        <p style={{ fontSize: 14, fontWeight: 600, color: '#111', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selectedItem.programName}</p>
+                        <p style={{ fontSize: 12, color: '#999', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selectedItem.university}</p>
                       </div>
                     </div>
                   ) : (
-                    <span className="text-sm text-white/40">Select a shortlisted program</span>
+                    <span style={{ fontSize: 14, color: '#999' }}>Select a shortlisted program</span>
                   )}
-                  <ChevronDown className={`w-4 h-4 text-white/40 transition ${showDropdown ? 'rotate-180' : ''}`} />
+                  <ChevronDown className="w-4 h-4" style={{ color: '#999', transition: 'transform 0.2s', transform: showDropdown ? 'rotate(180deg)' : 'none' }} />
                 </button>
                 {showDropdown && (
-                  <div className="absolute left-0 right-0 mt-2 rounded-xl border border-white/10 bg-[#111126] shadow-2xl shadow-black/40 max-h-64 overflow-auto z-40">
+                  <div style={{ position: 'absolute', left: 0, right: 0, marginTop: 8, borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', maxHeight: 256, overflowY: 'auto', zIndex: 40 }}>
                     {shortlist.map(item => (
                       <button
                         key={item.id}
                         onClick={() => selectProgram(item.programId)}
-                        className={`w-full text-left px-4 py-3 border-b border-white/5 last:border-0 flex items-center gap-3 hover:bg-white/5 transition ${item.programId === selectedProgramId ? 'bg-blue-500/10' : ''}`}
+                        style={{ width: '100%', textAlign: 'left', padding: '12px 16px', borderBottom: '1px solid #f5f5f5', display: 'flex', alignItems: 'center', gap: 12, background: item.programId === selectedProgramId ? 'rgba(221,0,0,0.05)' : 'transparent', cursor: 'pointer', transition: 'background 0.2s', border: 'none' }}
+                        onMouseEnter={e => item.programId !== selectedProgramId && (e.currentTarget.style.background = '#fafafa')}
+                        onMouseLeave={e => item.programId !== selectedProgramId && (e.currentTarget.style.background = 'transparent')}
                       >
-                        <div className="w-7 h-7 rounded-md bg-white/5 flex items-center justify-center">
-                          <GraduationCap className="w-3.5 h-3.5 text-white/60" />
+                        <div style={{ width: 28, height: 28, borderRadius: 6, background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <GraduationCap className="w-3.5 h-3.5" style={{ color: '#999' }} />
                         </div>
-                        <div className="truncate">
-                          <p className="text-sm truncate">{item.programName}</p>
-                          <p className="text-xs text-white/50 truncate">{item.university}</p>
+                        <div style={{ flex: 1, overflow: 'hidden' }}>
+                          <p style={{ fontSize: 14, fontWeight: 600, color: '#111', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.programName}</p>
+                          <p style={{ fontSize: 12, color: '#999', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.university}</p>
                         </div>
-                        {item.programId === selectedProgramId && <CheckCircle2 className="w-4 h-4 text-blue-400 ml-auto" />}
+                        {item.programId === selectedProgramId && <CheckCircle2 className="w-4 h-4" style={{ color: '#dd0000' }} />}
                       </button>
                     ))}
                   </div>
@@ -333,59 +335,59 @@ function MotivationLetterContent() {
               </div>
             )
           ) : (
-            <div className="grid gap-3 md:grid-cols-2">
-              <label className="text-xs text-white/60 space-y-1">
-                <span>Program name *</span>
+            <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+              <label style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <span style={{ fontWeight: 600 }}>Program name *</span>
                 <input
                   value={manualProgram.program_name}
                   onChange={e => setManualProgram(p => ({ ...p, program_name: e.target.value }))}
                   placeholder="e.g. M.Sc. Data Science"
-                  className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/[0.02] text-sm placeholder:text-white/30"
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                 />
               </label>
-              <label className="text-xs text-white/60 space-y-1">
-                <span>University *</span>
+              <label style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <span style={{ fontWeight: 600 }}>University *</span>
                 <input
                   value={manualProgram.university}
                   onChange={e => setManualProgram(p => ({ ...p, university: e.target.value }))}
                   placeholder="e.g. TU Munich"
-                  className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/[0.02] text-sm placeholder:text-white/30"
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                 />
               </label>
-              <label className="text-xs text-white/60 space-y-1">
-                <span>Degree level</span>
+              <label style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <span style={{ fontWeight: 600 }}>Degree level</span>
                 <input
                   value={manualProgram.degree_level}
                   onChange={e => setManualProgram(p => ({ ...p, degree_level: e.target.value }))}
                   placeholder="e.g. Master's"
-                  className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/[0.02] text-sm placeholder:text-white/30"
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                 />
               </label>
-              <label className="text-xs text-white/60 space-y-1">
-                <span>Subject area</span>
+              <label style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <span style={{ fontWeight: 600 }}>Subject area</span>
                 <input
                   value={manualProgram.subject_area}
                   onChange={e => setManualProgram(p => ({ ...p, subject_area: e.target.value }))}
                   placeholder="e.g. Computer Science"
-                  className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/[0.02] text-sm placeholder:text-white/30"
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                 />
               </label>
               <button
                 type="button"
                 onClick={() => setShowProgramExtras(prev => !prev)}
-                className="md:col-span-2 flex items-center justify-between px-3 py-2 rounded-lg border border-white/10 text-xs text-white/70 hover:text-white"
+                style={{ gridColumn: '1 / -1', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 13, color: '#666', background: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
               >
                 More program details (optional)
-                <ChevronDown className={`w-4 h-4 transition ${showProgramExtras ? 'rotate-180' : ''}`} />
+                <ChevronDown className="w-4 h-4" style={{ transition: 'transform 0.2s', transform: showProgramExtras ? 'rotate(180deg)' : 'none' }} />
               </button>
               {showProgramExtras && (
-                <label className="text-xs text-white/60 space-y-1 md:col-span-2">
-                  <span>Program highlights</span>
+                <label style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 6, gridColumn: '1 / -1' }}>
+                  <span style={{ fontWeight: 600 }}>Program highlights</span>
                   <textarea
                     value={manualProgram.description}
                     onChange={e => setManualProgram(p => ({ ...p, description: e.target.value }))}
                     placeholder="Key modules, unique labs, special tracks..."
-                    className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/[0.02] text-sm placeholder:text-white/30 min-h-[90px]"
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', minHeight: 90, resize: 'vertical', fontFamily: 'inherit' }}
                   />
                 </label>
               )}
