@@ -356,6 +356,9 @@ details[open] summary .chevron { transform: rotate(180deg); }
 .shortlist-card { background: #fff; border: 1px solid #ebebeb; border-radius: 20px; overflow: hidden; transition: all 0.3s cubic-bezier(0.22,1,0.36,1); }
 .shortlist-card:hover { border-color: #dd0000; transform: translateY(-4px); box-shadow: 0 16px 40px rgba(221,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04); }
 
+/* ── APPLICATION PLAN PAGE ── */
+.application-step-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.06); transform: translateY(-2px); }
+
 .program-detail-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 40px 20px; overflow-y: auto; }
 .program-detail-modal { background: #fafafa; border-radius: 24px; max-width: 800px; width: 100%; max-height: calc(100vh - 80px); overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.3); position: relative; }
 .program-detail-close { position: absolute; top: 20px; right: 20px; z-index: 10; width: 40px; height: 40px; border-radius: 999px; background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; color: #555; }
