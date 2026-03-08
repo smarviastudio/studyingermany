@@ -396,37 +396,37 @@ function MotivationLetterContent() {
         </section>
 
         {/* Applicant input */}
-        <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
-          <div>
-            <p className="text-sm font-medium">Tell us about yourself</p>
-            <p className="text-xs text-white/50">Just share the essentials. You can optionally add more context.</p>
+        <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 28, marginBottom: 24 }}>
+          <div style={{ marginBottom: 20 }}>
+            <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Tell us about yourself</p>
+            <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Just share the essentials. You can optionally add more context.</p>
           </div>
-          <label className="text-xs text-white/60 space-y-1">
-            <span>Full name *</span>
-            <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-white/10 bg-white/[0.02]">
-              <User className="w-4 h-4 text-white/40" />
+          <label style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 }}>
+            <span style={{ fontWeight: 600 }}>Full name *</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff' }}>
+              <User className="w-4 h-4" style={{ color: '#999' }} />
               <input
                 value={userInput.fullName}
                 onChange={e => setUserInput(prev => ({ ...prev, fullName: e.target.value }))}
                 placeholder="e.g. Aisha Khan"
-                className="flex-1 bg-transparent outline-none text-sm placeholder:text-white/30"
+                style={{ flex: 1, background: 'transparent', outline: 'none', fontSize: 14, color: '#111', border: 'none' }}
               />
             </div>
           </label>
-          <div className="grid gap-4">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {primaryFields.map(field => {
               const Icon = field.icon;
               return (
-                <label key={field.key} className="text-xs text-white/60 space-y-2">
-                  <span className="inline-flex items-center gap-2 text-white/80 text-[13px]">
-                    <Icon className="w-3.5 h-3.5 text-white/40" />
+                <label key={field.key} style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontWeight: 600, fontSize: 14, color: '#111' }}>
+                    <Icon className="w-4 h-4" style={{ color: '#dd0000' }} />
                     {field.label}
                   </span>
                   <textarea
                     value={(userInput as any)[field.key] as string}
                     onChange={e => setUserInput(prev => ({ ...prev, [field.key]: e.target.value }))}
                     placeholder={field.placeholder}
-                    className="w-full px-3 py-2 rounded-xl border border-white/10 bg-white/[0.02] text-sm leading-6 placeholder:text-white/30 min-h-[90px]"
+                    style={{ width: '100%', padding: '12px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', minHeight: 90, resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.6 }}
                   />
                 </label>
               );
@@ -434,24 +434,24 @@ function MotivationLetterContent() {
             <button
               type="button"
               onClick={() => setShowOptionalDetails(prev => !prev)}
-              className="flex items-center justify-between px-3 py-2 rounded-xl border border-white/10 text-xs text-white/70 hover:text-white"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: 12, border: '1px solid #e5e5e5', fontSize: 13, color: '#666', background: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
             >
               Add more story (optional)
-              <ChevronDown className={`w-4 h-4 transition ${showOptionalDetails ? 'rotate-180' : ''}`} />
+              <ChevronDown className="w-4 h-4" style={{ transition: 'transform 0.2s', transform: showOptionalDetails ? 'rotate(180deg)' : 'none' }} />
             </button>
             {showOptionalDetails && optionalFields.map(field => {
               const Icon = field.icon;
               return (
-                <label key={field.key} className="text-xs text-white/60 space-y-2">
-                  <span className="inline-flex items-center gap-2 text-white/80 text-[13px]">
-                    <Icon className="w-3.5 h-3.5 text-white/40" />
+                <label key={field.key} style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontWeight: 600, fontSize: 14, color: '#111' }}>
+                    <Icon className="w-4 h-4" style={{ color: '#dd0000' }} />
                     {field.label}
                   </span>
                   <textarea
                     value={(userInput as any)[field.key] as string}
                     onChange={e => setUserInput(prev => ({ ...prev, [field.key]: e.target.value }))}
                     placeholder={field.placeholder}
-                    className="w-full px-3 py-2 rounded-xl border border-white/10 bg-white/[0.02] text-sm leading-6 placeholder:text-white/30 min-h-[90px]"
+                    style={{ width: '100%', padding: '12px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', minHeight: 90, resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.6 }}
                   />
                 </label>
               );
@@ -460,56 +460,58 @@ function MotivationLetterContent() {
         </section>
 
         {/* CV upload */}
-        <section className="rounded-2xl border border-dashed border-white/15 bg-white/[0.01] p-5">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="shrink-0 w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center">
-              <Upload className="w-5 h-5 text-white/50" />
-            </div>
-            <div className="flex-1 space-y-3">
-              <div>
-                <p className="text-sm font-medium">Upload CV (optional)</p>
-                <p className="text-xs text-white/50">We extract snippets to personalize the tone.</p>
+        <section style={{ background: '#fff', border: '2px dashed #e5e5e5', borderRadius: 20, padding: 24, marginBottom: 24 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div style={{ flexShrink: 0, width: 48, height: 48, borderRadius: 12, background: 'rgba(221,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Upload className="w-6 h-6" style={{ color: '#dd0000' }} />
               </div>
-              {cvText ? (
-                <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
-                  <div>
-                    <p className="text-sm">{cvFileName}</p>
-                    <p className="text-xs text-white/50">{Math.max(1, Math.floor(cvText.length / 12))} words parsed</p>
-                  </div>
-                  <button onClick={removeCv} className="text-xs text-white/60 hover:text-white">Remove</button>
-                </div>
-              ) : (
-                <label className="flex flex-col items-center justify-center gap-2 px-6 py-8 rounded-2xl border border-white/10 bg-white/[0.02] cursor-pointer">
-                  {cvParsing ? <Loader2 className="w-5 h-5 text-white/60 animate-spin" /> : <FileText className="w-6 h-6 text-white/50" />}
-                  <span className="text-sm">Drop PDF here or click to upload</span>
-                  <span className="text-xs text-white/40">Max 5MB</span>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="application/pdf"
-                    onChange={e => {
-                      const file = e.target.files?.[0];
-                      if (file) parseCv(file);
-                    }}
-                    className="hidden"
-                  />
-                </label>
-              )}
-              {cvError && <p className="text-xs text-red-400">{cvError}</p>}
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 15, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Upload CV (optional)</p>
+                <p style={{ fontSize: 13, color: '#737373', margin: 0 }}>We extract snippets to personalize the tone.</p>
+              </div>
             </div>
+            {cvText ? (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fafafa' }}>
+                <div>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: '#111', margin: '0 0 2px' }}>{cvFileName}</p>
+                  <p style={{ fontSize: 12, color: '#999', margin: 0 }}>{Math.max(1, Math.floor(cvText.length / 12))} words parsed</p>
+                </div>
+                <button onClick={removeCv} style={{ fontSize: 13, color: '#dd0000', background: 'transparent', border: 'none', cursor: 'pointer', fontWeight: 600 }}>Remove</button>
+              </div>
+            ) : (
+              <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '32px 24px', borderRadius: 16, border: '2px dashed #e5e5e5', background: '#fafafa', cursor: 'pointer', transition: 'all 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.background = 'rgba(221,0,0,0.02)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e5e5'; e.currentTarget.style.background = '#fafafa'; }}>
+                {cvParsing ? <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#dd0000' }} /> : <FileText className="w-7 h-7" style={{ color: '#999' }} />}
+                <span style={{ fontSize: 14, fontWeight: 600, color: '#111' }}>Drop PDF here or click to upload</span>
+                <span style={{ fontSize: 12, color: '#999' }}>Max 5MB</span>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="application/pdf"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (file) parseCv(file);
+                  }}
+                  className="hidden"
+                />
+              </label>
+            )}
+            {cvError && <p style={{ fontSize: 13, color: '#dc2626', margin: 0 }}>{cvError}</p>}
           </div>
         </section>
 
         {/* Actions */}
-        <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-3">
-          {error && <div className="text-sm text-red-300 bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">{error}</div>}
-          <div className="flex flex-col sm:flex-row gap-3">
+        <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, marginBottom: 24 }}>
+          {error && <div style={{ fontSize: 14, color: '#dc2626', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 12, padding: '12px 16px', marginBottom: 16 }}>{error}</div>}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <button
               onClick={generateLetter}
               disabled={!canGenerate || loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold bg-gradient-to-r from-blue-500 to-purple-500 disabled:opacity-40"
+              style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 700, background: loading || !canGenerate ? '#ccc' : 'linear-gradient(135deg, #dd0000, #7c3aed)', color: '#fff', border: 'none', cursor: loading || !canGenerate ? 'not-allowed' : 'pointer', transition: 'all 0.2s', boxShadow: loading || !canGenerate ? 'none' : '0 4px 16px rgba(221,0,0,0.2)', opacity: loading || !canGenerate ? 0.5 : 1 }}
             >
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Wand2 className="w-5 h-5" />}
               {loading ? 'Generating...' : 'Generate letter'}
             </button>
             <button
@@ -526,39 +528,41 @@ function MotivationLetterContent() {
                 setLetter('');
                 removeCv();
               }}
-              className="px-4 py-3 rounded-xl border border-white/10 text-sm text-white/70 hover:text-white"
+              style={{ padding: '12px 24px', borderRadius: 12, border: '1px solid #e5e5e5', fontSize: 14, color: '#666', background: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
             >
               Reset form
             </button>
           </div>
           {!canGenerate && (
-            <p className="text-xs text-white/50">Enter your name, background, and program info to enable the generator.</p>
+            <p style={{ fontSize: 13, color: '#999', margin: '12px 0 0', textAlign: 'center' }}>Enter your name, background, and program info to enable the generator.</p>
           )}
         </section>
 
         {/* Letter preview */}
-        <section ref={letterRef} className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-            <h2 className="text-lg font-semibold">Generated letter</h2>
-            {letter && (
-              <div className="flex items-center gap-2">
-                <button onClick={copyToClipboard} className="inline-flex items-center gap-1 text-xs px-3 py-2 rounded-lg border border-white/10 text-white/80">
-                  {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                  {copied ? 'Copied' : 'Copy'}
-                </button>
-                <button onClick={downloadLetter} className="inline-flex items-center gap-1 text-xs px-3 py-2 rounded-lg border border-white/10 text-white/80">
-                  <Download className="w-4 h-4" /> Save
-                </button>
-              </div>
-            )}
+        <section ref={letterRef} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 28 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: 0 }}>Generated letter</h2>
+              {letter && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <button onClick={copyToClipboard} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, padding: '8px 16px', borderRadius: 10, border: '1px solid #e5e5e5', color: copied ? '#10b981' : '#666', background: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>
+                    {copied ? <Check className="w-4 h-4" style={{ color: '#10b981' }} /> : <Copy className="w-4 h-4" />}
+                    {copied ? 'Copied' : 'Copy'}
+                  </button>
+                  <button onClick={downloadLetter} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, padding: '8px 16px', borderRadius: 10, border: '1px solid #e5e5e5', color: '#666', background: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>
+                    <Download className="w-4 h-4" /> Save
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           {letter ? (
-            <div className="rounded-xl bg-black/25 border border-white/5 p-5 text-sm leading-7 whitespace-pre-line text-white/90">
+            <div style={{ borderRadius: 12, background: '#fafafa', border: '1px solid #e5e5e5', padding: 24, fontSize: 15, lineHeight: 1.8, whiteSpace: 'pre-line', color: '#111' }}>
               {letter}
             </div>
           ) : (
-            <p className="text-sm text-white/50 flex items-center gap-2">
-              <Sparkles className="w-4 h-4" /> Your AI-written letter will appear here.
+            <p style={{ fontSize: 14, color: '#999', display: 'flex', alignItems: 'center', gap: 8, margin: 0, padding: '40px 0', justifyContent: 'center' }}>
+              <Sparkles className="w-5 h-5" /> Your AI-written letter will appear here.
             </p>
           )}
         </section>
@@ -571,8 +575,8 @@ function MotivationLetterContent() {
 export default function MotivationLetterPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#0a0a1a] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
+      <div style={{ minHeight: '100vh', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#dd0000' }} />
       </div>
     }>
       <MotivationLetterContent />
