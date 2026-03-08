@@ -258,6 +258,24 @@ export default function DashboardPage() {
               </div>
             </Link>
 
+            <Link href="/netto-brutto-calculator" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <TrendingUp className="w-6 h-6" style={{ color: '#fff' }} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Salary Calculator</h3>
+                  <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Calculate net/gross salary</p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#dd0000', fontSize: 14, fontWeight: 600 }}>
+                Calculate Salary
+                <ChevronRight className="w-4 h-4" />
+              </div>
+            </Link>
+
             {isAuthenticated && hasShortlist && (
               <Link href="/my-shortlist" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
