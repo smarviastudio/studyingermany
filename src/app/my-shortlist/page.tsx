@@ -6,10 +6,11 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
-  Loader2, Bookmark, Trash2, ArrowRight, ArrowLeft, Search,
-  GraduationCap, MapPin, Calendar, FileText, Sparkles, ChevronRight,
-  BookOpen, ExternalLink
+  Loader2, Bookmark, Trash2, ArrowRight, Search,
+  GraduationCap, MapPin, Calendar, FileText, Sparkles,
+  BookOpen, ExternalLink, X, Euro, Clock, Globe, Award, CheckCircle2, Info
 } from 'lucide-react';
+import { SiteNav } from '@/components/SiteNav';
 import type { Program } from '@/lib/types';
 
 interface ShortlistItem {
@@ -37,6 +38,7 @@ export default function MyShortlistPage() {
   const [planProgress, setPlanProgress] = useState<Record<string, PlanProgress>>({});
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [navigatingId, setNavigatingId] = useState<string | null>(null);
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -181,25 +183,14 @@ export default function MyShortlistPage() {
     router.push(path);
   };
 
-  /* ── Loading skeleton ── */
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a1a]">
-        <nav className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0a0a1a]/80 backdrop-blur-xl">
-          <div className="max-w-6xl mx-auto flex items-center justify-between px-6 h-14">
-            <div className="flex items-center gap-2 text-white/40 text-sm"><ArrowLeft className="w-4 h-4" /> Dashboard</div>
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"><GraduationCap className="w-3.5 h-3.5 text-white" /></div>
-              <span className="text-white font-semibold text-sm">StudyGermany</span>
-            </div>
-          </div>
-        </nav>
-        <div className="max-w-5xl mx-auto px-6 py-10">
-          <div className="flex items-center justify-center py-20">
-            <div className="flex flex-col items-center gap-3">
-              <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
-              <p className="text-white/40 text-sm">Loading your shortlist...</p>
-            </div>
+      <div style={{ minHeight: '100vh', background: '#fff' }}>
+        <SiteNav />
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 24px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+            <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#dd0000' }} />
+            <p style={{ fontSize: 15, color: '#737373', fontWeight: 500 }}>Loading your shortlist...</p>
           </div>
         </div>
       </div>
@@ -209,159 +200,224 @@ export default function MyShortlistPage() {
   const progressPct = (p: PlanProgress) => Math.round((p.completed / p.total) * 100);
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a]">
-      {/* Nav */}
-      <nav className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0a0a1a]/80 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 h-14">
-          <Link href="/dashboard" className="flex items-center gap-2 text-white/40 hover:text-white/70 text-sm transition-colors"><ArrowLeft className="w-4 h-4" /> Dashboard</Link>
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"><GraduationCap className="w-3.5 h-3.5 text-white" /></div>
-            <span className="text-white font-semibold text-sm">StudyGermany</span>
-          </Link>
-        </div>
-      </nav>
+    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+      <SiteNav />
 
-      <div className="max-w-5xl mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+      {/* Program Detail Modal */}
+      {selectedProgram && (
+        <div className="program-detail-modal-overlay" onClick={() => setSelectedProgram(null)}>
+          <div className="program-detail-modal" onClick={e => e.stopPropagation()}>
+            <button onClick={() => setSelectedProgram(null)} className="program-detail-close">
+              <X className="w-5 h-5" />
+            </button>
+
+            {selectedProgram.image_url && (
+              <div style={{ height: 240, position: 'relative', borderRadius: '20px 20px 0 0', overflow: 'hidden', background: 'linear-gradient(135deg, #f5f5f0, #eee)' }}>
+                <Image src={selectedProgram.image_url} alt={selectedProgram.program_name} fill style={{ objectFit: 'cover' }} sizes="800px" unoptimized />
+              </div>
+            )}
+
+            <div style={{ padding: 32 }}>
+              <div style={{ marginBottom: 24 }}>
+                <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 28, fontWeight: 800, color: '#0a0a0a', margin: '0 0 8px', lineHeight: 1.2 }}>
+                  {selectedProgram.program_name}
+                </h2>
+                <p style={{ fontSize: 16, color: '#666', margin: '0 0 16px' }}>{selectedProgram.university}</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {selectedProgram.city && (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 14px', background: '#f5f5f5', borderRadius: 8, fontSize: 13, color: '#555', fontWeight: 600 }}>
+                      <MapPin className="w-3.5 h-3.5" /> {selectedProgram.city}
+                    </span>
+                  )}
+                  {selectedProgram.degree_level && (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 14px', background: '#f5f5f5', borderRadius: 8, fontSize: 13, color: '#555', fontWeight: 600 }}>
+                      <Award className="w-3.5 h-3.5" /> {selectedProgram.degree_level}
+                    </span>
+                  )}
+                  {selectedProgram.beginning_normalized && (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 14px', background: '#f5f5f5', borderRadius: 8, fontSize: 13, color: '#555', fontWeight: 600 }}>
+                      <Calendar className="w-3.5 h-3.5" /> {selectedProgram.beginning_normalized}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, marginBottom: 28 }}>
+                <div style={{ padding: 20, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <Euro className="w-4 h-4" style={{ color: '#dd0000' }} />
+                    <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#999' }}>Tuition</span>
+                  </div>
+                  <p style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: 0 }}>
+                    {selectedProgram.is_free ? 'Free' : selectedProgram.tuition_fee_number != null ? `€${selectedProgram.tuition_fee_number.toLocaleString()}` : 'N/A'}
+                  </p>
+                </div>
+
+                <div style={{ padding: 20, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <Clock className="w-4 h-4" style={{ color: '#dd0000' }} />
+                    <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#999' }}>Duration</span>
+                  </div>
+                  <p style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: 0 }}>
+                    {selectedProgram.duration || 'N/A'}
+                  </p>
+                </div>
+
+                <div style={{ padding: 20, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <Globe className="w-4 h-4" style={{ color: '#dd0000' }} />
+                    <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#999' }}>Language</span>
+                  </div>
+                  <p style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: 0 }}>
+                    {selectedProgram.languages || 'N/A'}
+                  </p>
+                </div>
+
+                <div style={{ padding: 20, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <BookOpen className="w-4 h-4" style={{ color: '#dd0000' }} />
+                    <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#999' }}>Subject</span>
+                  </div>
+                  <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>
+                    {selectedProgram.subject_area || 'N/A'}
+                  </p>
+                </div>
+              </div>
+
+              {selectedProgram.detail_url && (
+                <a href={selectedProgram.detail_url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: '#dd0000', color: '#fff', borderRadius: 12, textDecoration: 'none', fontWeight: 700, fontSize: 15, transition: 'all 0.2s' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
+                  View on DAAD <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <h1 className="text-2xl font-bold text-white mb-1">My Shortlist</h1>
-            <p className="text-white/40 text-sm">
+            <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(26px, 3vw, 36px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>
+              My Shortlist
+            </h1>
+            <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>
               {shortlist.length} program{shortlist.length !== 1 ? 's' : ''} saved
             </p>
           </div>
-          <Link
-            href="/course-finder"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium text-sm hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-purple-600/20"
-          >
-            <Search className="w-4 h-4" /> Find Programs
+          <Link href="/#hero" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: '#dd0000', color: '#fff', borderRadius: 12, textDecoration: 'none', fontWeight: 700, fontSize: 15, transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(221,0,0,0.25)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(221,0,0,0.2)'; }}>
+            <Search className="w-4 h-4" /> Find More Programs
           </Link>
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg mb-6 text-sm">
+          <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#dc2626', padding: '14px 18px', borderRadius: 12, marginBottom: 24, fontSize: 14 }}>
             {error}
           </div>
         )}
 
         {shortlist.length === 0 ? (
-          <div className="rounded-2xl border border-white/[0.06] bg-[#0f0f23] p-16 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center mx-auto mb-5">
-              <Bookmark className="w-8 h-8 text-blue-400" />
+          <div style={{ background: '#fff', border: '2px dashed #e5e5e5', borderRadius: 24, padding: '80px 24px', textAlign: 'center' }}>
+            <div style={{ width: 72, height: 72, borderRadius: 20, background: 'linear-gradient(135deg, rgba(221,0,0,0.08), rgba(221,0,0,0.04))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+              <Bookmark className="w-8 h-8" style={{ color: '#dd0000' }} />
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">No programs shortlisted yet</h2>
-            <p className="text-white/40 text-sm mb-6 max-w-md mx-auto">
-              Start exploring programs and save the ones you&apos;re interested in to track your applications.
+            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: '#111', margin: '0 0 10px' }}>
+              No programs shortlisted yet
+            </h2>
+            <p style={{ fontSize: 15, color: '#737373', margin: '0 auto 28px', maxWidth: 480, lineHeight: 1.6 }}>
+              Start exploring programs and save the ones you're interested in to track your applications.
             </p>
-            <Link
-              href="/course-finder"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg"
-            >
+            <Link href="/#hero" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: '#dd0000', color: '#fff', borderRadius: 12, textDecoration: 'none', fontWeight: 700, fontSize: 15, transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
               Browse Programs <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 20 }}>
             {shortlist.map((item) => {
               const prog = programDetails[item.programId];
               const plan = planProgress[item.programId];
               const isRemoving = removingId === item.programId;
 
               return (
-                <div
-                  key={item.id}
-                  className={`rounded-xl border border-white/[0.06] bg-[#0f0f23] hover:border-white/[0.12] transition-all ${isRemoving ? 'opacity-50 pointer-events-none' : ''}`}
-                >
-                  <div className="p-5 flex flex-col md:flex-row gap-5">
-                    {/* Image */}
-                    <div className="flex-shrink-0">
-                      {prog?.image_url ? (
-                        <div className="w-full md:w-28 h-28 relative rounded-lg overflow-hidden border border-white/[0.06]">
-                          <Image
-                            src={prog.image_url as string}
-                            alt={item.programName}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, 112px"
-                            unoptimized={true}
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-full md:w-28 h-28 rounded-lg border border-dashed border-white/[0.08] flex items-center justify-center bg-white/[0.02]">
-                          <GraduationCap className="w-8 h-8 text-white/10" />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-white font-semibold text-lg mb-1 truncate">{item.programName}</h3>
-                      <p className="text-white/50 text-sm mb-3">{item.university}</p>
-
-                      <div className="flex flex-wrap gap-3 text-xs text-white/30">
-                        {prog?.city && (
-                          <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{prog.city}</span>
-                        )}
-                        {prog?.degree_level && (
-                          <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" />{prog.degree_level}</span>
-                        )}
-                        <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />Added {new Date(item.addedAt).toLocaleDateString()}</span>
+                <div key={item.id} className="shortlist-card" style={{ opacity: isRemoving ? 0.5 : 1, pointerEvents: isRemoving ? 'none' : 'auto' }}>
+                  <div style={{ position: 'relative', height: 180, borderRadius: '20px 20px 0 0', overflow: 'hidden', background: 'linear-gradient(135deg, #f5f5f0, #eee)' }}>
+                    {prog?.image_url ? (
+                      <Image src={prog.image_url} alt={item.programName} fill style={{ objectFit: 'cover' }} sizes="340px" unoptimized />
+                    ) : (
+                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <GraduationCap className="w-12 h-12" style={{ color: '#d4d4d4' }} />
                       </div>
+                    )}
+                    {prog?.is_free && (
+                      <span style={{ position: 'absolute', top: 12, left: 12, background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        No Tuition
+                      </span>
+                    )}
+                    <button onClick={() => removeFromShortlist(item.programId)} disabled={isRemoving} style={{ position: 'absolute', top: 12, right: 12, width: 36, height: 36, borderRadius: 999, background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.borderColor = '#dc2626'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.95)'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; }}>
+                      {isRemoving ? <Loader2 className="w-4 h-4 animate-spin" style={{ color: '#dc2626' }} /> : <Trash2 className="w-4 h-4" style={{ color: '#dc2626' }} />}
+                    </button>
+                  </div>
 
-                      {/* Progress bar */}
-                      {plan && (
-                        <div className="mt-3">
-                          <div className="flex items-center justify-between text-xs mb-1.5">
-                            <span className="text-emerald-400 font-medium">Application progress</span>
-                            <span className="text-white/40">{plan.completed}/{plan.total} steps</span>
-                          </div>
-                          <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                            <div className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full transition-all" style={{ width: `${progressPct(plan)}%` }} />
-                          </div>
-                        </div>
+                  <div style={{ padding: 20 }}>
+                    <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, fontWeight: 700, color: '#111', margin: '0 0 6px', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {item.programName}
+                    </h3>
+                    <p style={{ fontSize: 14, color: '#666', margin: '0 0 14px', lineHeight: 1.4 }}>{item.university}</p>
+
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
+                      {prog?.city && (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#888', fontWeight: 500 }}>
+                          <MapPin className="w-3 h-3" /> {prog.city}
+                        </span>
+                      )}
+                      {prog?.degree_level && (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#888', fontWeight: 500 }}>
+                          <Award className="w-3 h-3" /> {prog.degree_level}
+                        </span>
                       )}
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex flex-col gap-2 md:w-52 flex-shrink-0">
-                      <button
-                        onClick={() => handleNavigate(item.programId, `/course-finder/${item.programId}?source=shortlist`)}
-                        disabled={navigatingId === item.programId + `/course-finder/${item.programId}?source=shortlist`}
-                        className="flex items-center justify-between gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium text-sm hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-60"
-                      >
-                        <span>{plan ? 'Continue application' : 'Start application'}</span>
-                        {navigatingId === item.programId + `/course-finder/${item.programId}?source=shortlist` ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4" />
-                        )}
+                    {plan && (
+                      <div style={{ marginBottom: 16, padding: 12, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <CheckCircle2 className="w-3.5 h-3.5" /> Application Progress
+                          </span>
+                          <span style={{ fontSize: 11, color: '#16a34a', fontWeight: 600 }}>{plan.completed}/{plan.total} steps</span>
+                        </div>
+                        <div style={{ height: 6, background: '#dcfce7', borderRadius: 99, overflow: 'hidden' }}>
+                          <div style={{ height: '100%', background: 'linear-gradient(90deg, #16a34a, #22c55e)', borderRadius: 99, transition: 'width 0.3s ease', width: `${progressPct(plan)}%` }} />
+                        </div>
+                      </div>
+                    )}
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      <button onClick={() => handleNavigate(item.programId, `/course-finder/${item.programId}?source=shortlist`)} disabled={navigatingId === item.programId + `/course-finder/${item.programId}?source=shortlist`} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 20px', background: '#dd0000', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: 'pointer', transition: 'all 0.2s' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
+                        {navigatingId === item.programId + `/course-finder/${item.programId}?source=shortlist` ? <Loader2 className="w-4 h-4 animate-spin" /> : <>{plan ? 'Continue Application' : 'Start Application'}</>}
                       </button>
 
-                      <button
-                        onClick={() => handleNavigate(item.programId, `/motivation-letter?programId=${item.programId}`)}
-                        disabled={navigatingId === item.programId + `/motivation-letter?programId=${item.programId}`}
-                        className="flex items-center justify-between gap-2 px-4 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white/60 hover:text-white/80 hover:bg-white/[0.06] font-medium text-sm transition-all disabled:opacity-60"
-                      >
-                        <span className="flex items-center gap-1.5"><FileText className="w-3.5 h-3.5" /> Motivation Letter</span>
-                        {navigatingId === item.programId + `/motivation-letter?programId=${item.programId}` ? (
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        ) : (
-                          <Sparkles className="w-3.5 h-3.5" />
-                        )}
-                      </button>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                        <button onClick={() => prog && setSelectedProgram(prog)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '9px 14px', background: '#fff', border: '1px solid #e5e5e5', borderRadius: 10, fontSize: 13, fontWeight: 600, color: '#555', cursor: 'pointer', transition: 'all 0.2s' }}
+                          onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.color = '#dd0000'; }}
+                          onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e5e5'; e.currentTarget.style.color = '#555'; }}>
+                          <Info className="w-3.5 h-3.5" /> Details
+                        </button>
 
-                      <button
-                        onClick={() => removeFromShortlist(item.programId)}
-                        disabled={isRemoving}
-                        className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-red-400/60 hover:text-red-400 hover:bg-red-500/10 text-xs transition-all disabled:opacity-60"
-                      >
-                        {isRemoving ? (
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        ) : (
-                          <Trash2 className="w-3.5 h-3.5" />
-                        )}
-                        Remove
-                      </button>
+                        <button onClick={() => handleNavigate(item.programId, `/motivation-letter?programId=${item.programId}`)} disabled={navigatingId === item.programId + `/motivation-letter?programId=${item.programId}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '9px 14px', background: '#fff', border: '1px solid #e5e5e5', borderRadius: 10, fontSize: 13, fontWeight: 600, color: '#555', cursor: 'pointer', transition: 'all 0.2s' }}
+                          onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.color = '#dd0000'; }}
+                          onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e5e5'; e.currentTarget.style.color = '#555'; }}>
+                          {navigatingId === item.programId + `/motivation-letter?programId=${item.programId}` ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <><FileText className="w-3.5 h-3.5" /> Letter</>}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
