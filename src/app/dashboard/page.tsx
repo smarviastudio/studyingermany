@@ -27,13 +27,47 @@ type PlanProgress = {
   nextStepDue?: string;
 };
 
+type UserProfile = {
+  targetDegreeLevel?: string;
+  targetSubjects?: string[];
+  preferredLanguage?: string;
+  germanLevel?: string;
+  englishLevel?: string;
+  academicBackground?: string;
+  backgroundSummary?: string;
+  skills?: string;
+  careerGoals?: string;
+  preferredCities?: string[];
+};
+
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const isAuthenticated = status === 'authenticated';
   const [shortlistEntries, setShortlistEntries] = useState<ShortlistEntry[]>([]);
   const [planProgress, setPlanProgress] = useState<PlanProgress[]>([]);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [profileCompletion, setProfileCompletion] = useState(0);
 
-  // Load user's shortlist and progress
+  // Calculate profile completion percentage
+  const calculateProfileCompletion = (profile: UserProfile | null) => {
+    if (!profile) return 0;
+    const fields = [
+      profile.targetDegreeLevel,
+      profile.targetSubjects && profile.targetSubjects.length > 0,
+      profile.preferredLanguage,
+      profile.germanLevel,
+      profile.englishLevel,
+      profile.academicBackground,
+      profile.backgroundSummary,
+      profile.skills,
+      profile.careerGoals,
+      profile.preferredCities && profile.preferredCities.length > 0
+    ];
+    const completed = fields.filter(Boolean).length;
+    return Math.round((completed / fields.length) * 100);
+  };
+
+  // Load user's shortlist, progress, and profile
   useEffect(() => {
     if (!isAuthenticated) return;
     let cancelled = false;
@@ -59,8 +93,21 @@ export default function DashboardPage() {
         console.warn('Failed to load progress', error);
       }
     };
+    const loadProfile = async () => {
+      try {
+        const res = await fetch('/api/user/profile');
+        if (res.ok && !cancelled) {
+          const data = await res.json();
+          setUserProfile(data.profile || null);
+          setProfileCompletion(calculateProfileCompletion(data.profile || null));
+        }
+      } catch (error) {
+        console.warn('Failed to load profile', error);
+      }
+    };
     loadShortlist();
     loadProgress();
+    loadProfile();
     return () => { cancelled = true; };
   }, [isAuthenticated]);
 
@@ -127,7 +174,7 @@ export default function DashboardPage() {
               <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(59,130,246,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <TrendingUp className="w-6 h-6" style={{ color: '#3b82f6' }} />
               </div>
-              <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>85%</span>
+              <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{profileCompletion}%</span>
             </div>
             <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Profile Complete</h3>
             <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Your profile completion status</p>
@@ -138,23 +185,6 @@ export default function DashboardPage() {
         <section style={{ marginBottom: 40 }}>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: '0 0 20px' }}>Quick Actions</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
-            <Link href="/course-finder" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <BookOpen className="w-6 h-6" style={{ color: '#fff' }} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Browse Programs</h3>
-                  <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Explore universities and courses</p>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#dd0000', fontSize: 14, fontWeight: 600 }}>
-                Explore Programs
-                <ChevronRight className="w-4 h-4" />
-              </div>
-            </Link>
 
             <Link href="/cv-maker" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
@@ -228,7 +258,7 @@ export default function DashboardPage() {
               </div>
             </Link>
 
-            {isAuthenticated && (
+            {isAuthenticated && hasShortlist && (
               <Link href="/my-shortlist" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
@@ -309,11 +339,11 @@ export default function DashboardPage() {
             </div>
             <h2 style={{ fontSize: 20, fontWeight: 600, color: '#111', marginBottom: 12 }}>Start Your Journey</h2>
             <p style={{ fontSize: 16, color: '#737373', marginBottom: 24, maxWidth: 500, margin: '0 auto 24px' }}>
-              Begin by exploring programs, creating your CV, or generating motivation letters to kickstart your study in Germany journey.
+              Begin by creating your CV or generating motivation letters to kickstart your study in Germany journey.
             </p>
-            <Link href="/course-finder" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 600, color: '#fff', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', textDecoration: 'none', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}>
-              <BookOpen className="w-5 h-5" />
-              Browse Programs
+            <Link href="/cv-maker" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 600, color: '#fff', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', textDecoration: 'none', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}>
+              <FileText className="w-5 h-5" />
+              Create CV
             </Link>
           </section>
         )}
