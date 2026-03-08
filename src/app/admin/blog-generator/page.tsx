@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import {
   Sparkles, Send, Loader2, CheckCircle, ExternalLink,
   FileText, Tag, Globe, RefreshCw, Eye, EyeOff,
   ChevronDown, AlertCircle, Copy, Check, Pencil,
-  Image as ImageIcon, Search
+  Image as ImageIcon, Home, ArrowLeft
 } from 'lucide-react';
+import { SiteNav } from '@/components/SiteNav';
 
 type FAQItem = {
   question: string;
@@ -328,600 +330,410 @@ export default function BlogGeneratorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a] text-white">
-    <header className="border-b border-white/[0.07] bg-[#0d0d20]">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <h1 className="text-white font-semibold text-base leading-tight">AI Blog Generator</h1>
-            <p className="text-white/30 text-xs">Students in Germany — WordPress Publisher</p>
-          </div>
-        </div>
-        <a
-          href="https://cms.germanpath.com/wp-admin"
-          target="_blank"
-          rel="noopener"
-          className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"
-        >
-          <Globe className="w-3.5 h-3.5" />
-          WP Admin
-          <ExternalLink className="w-3 h-3" />
-        </a>
-      </div>
-    </header>
+    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+      <SiteNav />
 
-    <div className="max-w-6xl mx-auto px-6 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-8 items-start">
-        {/* LEFT PANEL: Controls */}
-        <div className="space-y-5">
-          {/* Topic Input */}
-          <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 space-y-4">
-            <h2 className="text-white font-semibold text-sm flex items-center gap-2">
-              <FileText className="w-4 h-4 text-violet-400" />
-              Blog Topic
-            </h2>
-            <textarea
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              placeholder="e.g. How to apply for a student visa in Germany"
-              rows={3}
-              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-white placeholder:text-white/25 text-sm focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 resize-none transition-all"
-            />
+      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
+        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 40 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
+              <Sparkles className="w-8 h-8" style={{ color: '#fff' }} />
+            </div>
             <div>
-              <p className="text-white/30 text-xs mb-2">Quick ideas:</p>
-              <div className="flex flex-wrap gap-1.5">
-                {TOPIC_IDEAS.map((idea) => (
-                  <button
-                    key={idea}
-                    onClick={() => setTopic(idea)}
-                    className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.07] text-white/40 hover:text-white/70 hover:border-violet-500/30 transition-all text-left"
-                  >
-                    {idea}
-                  </button>
-                ))}
-              </div>
+              <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>AI Blog Generator</h1>
+              <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>Create and publish blog posts for Students in Germany</p>
             </div>
           </div>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 20px', borderRadius: 12, fontSize: 14, fontWeight: 600, color: '#666', background: '#fff', border: '1px solid #e5e5e5', textDecoration: 'none', transition: 'all 0.2s' }}>
+              <Home className="w-4 h-4" />
+              Home
+            </Link>
+            <a
+              href="https://cms.germanpath.com/wp-admin"
+              target="_blank"
+              rel="noopener"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 20px', borderRadius: 12, fontSize: 14, fontWeight: 600, color: '#666', background: '#fff', border: '1px solid #e5e5e5', textDecoration: 'none', transition: 'all 0.2s' }}
+            >
+              <Globe className="w-4 h-4" />
+              WP Admin
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+        </header>
 
-          {/* Settings */}
-          <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 space-y-4">
-            <h2 className="text-white font-semibold text-sm flex items-center gap-2">
-              <Tag className="w-4 h-4 text-pink-400" />
-              Settings
-            </h2>
-            <div className="space-y-4">
-              {/* Category */}
-              <div>
-                <label className="text-xs text-white/40 uppercase tracking-widest">Category</label>
-                <div className="relative mt-1">
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-violet-500/50 appearance-none"
-                  >
-                    {wpCategories.map((cat) => (
-                      <option key={cat} value={cat} className="bg-slate-900">
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="w-4 h-4 text-white/40 absolute right-3 top-1/2 -translate-y-1/2" />
-                </div>
-                <div className="flex gap-2 mt-2">
-                  <input
-                    type="text"
-                    value={newCategoryName}
-                    onChange={(e) => setNewCategoryName(e.target.value)}
-                    placeholder="Add new category"
-                    className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-violet-500/50"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddCategory}
-                    className="px-3 py-2 rounded-xl bg-white/10 text-xs font-semibold text-white hover:bg-white/20"
-                  >
-                    Add
-                  </button>
-                </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '400px 1fr', gap: 32, alignItems: 'start' }}>
+          {/* LEFT PANEL: Controls */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            {/* Topic Input */}
+            <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                <FileText className="w-5 h-5" style={{ color: '#dd0000' }} />
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Blog Topic</h2>
               </div>
-
-              {/* Tone */}
-              <div>
-                <label className="text-white/40 text-xs mb-1.5 block">Tone</label>
-                <div className="relative">
-                  <select
-                    value={tone}
-                    onChange={(e) => setTone(e.target.value)}
-                    className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-violet-500/50 appearance-none cursor-pointer"
-                  >
-                    {TONES.map((t) => (
-                      <option key={t} value={t} className="bg-[#1a1a2e]">{t}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Length */}
-              <div>
-                <label className="text-white/40 text-xs mb-1.5 block">Length</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {LENGTHS.map((l) => (
+              <textarea
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+                placeholder="e.g. How to apply for a student visa in Germany"
+                rows={3}
+                style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical', fontFamily: 'inherit', transition: 'all 0.2s' }}
+              />
+              <div style={{ marginTop: 16 }}>
+                <p style={{ fontSize: 13, color: '#737373', marginBottom: 8 }}>Quick ideas:</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {TOPIC_IDEAS.map((idea) => (
                     <button
-                      key={l.value}
-                      onClick={() => setLength(l.value)}
-                      className={`flex flex-col items-center py-2.5 rounded-xl border text-xs transition-all ${
-                        length === l.value
-                          ? 'border-violet-500/60 bg-violet-500/10 text-white'
-                          : 'border-white/[0.07] bg-white/[0.02] text-white/40 hover:border-white/20'
-                      }`}
+                      key={idea}
+                      onClick={() => setTopic(idea)}
+                      style={{ fontSize: 11, padding: '6px 12px', borderRadius: 20, border: '1px solid #e5e5e5', background: '#fff', color: '#666', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left' }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.color = '#dd0000'; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e5e5'; e.currentTarget.style.color = '#666'; }}
                     >
-                      <span className="font-semibold">{l.label}</span>
-                      <span className="text-[10px] opacity-60 mt-0.5">{l.desc}</span>
+                      {idea}
                     </button>
                   ))}
                 </div>
               </div>
+            </section>
 
-              {/* Keywords */}
-              <div>
-                <label className="text-white/40 text-xs mb-1.5 block">Keywords (optional)</label>
-                <input
-                  type="text"
-                  value={keywords}
-                  onChange={(e) => setKeywords(e.target.value)}
-                  placeholder="visa, Germany, student, 2025"
-                  className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-violet-500/50"
-                />
+        {/* Settings */}
+            <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                <Tag className="w-5 h-5" style={{ color: '#dd0000' }} />
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Settings</h2>
               </div>
-
-              {/* AI Model */}
-              <div>
-                <label className="text-white/40 text-xs mb-1.5 block">AI Model</label>
-                <div className="space-y-2">
-                  {AI_MODELS.map((model) => {
-                    const isSelected = selectedModel === model.id;
-                    const estimatedCost = model.inputPrice === 0 && model.outputPrice === 0 
-                      ? 'Free' 
-                      : `~$${((model.inputPrice * 1.5 + model.outputPrice * 1.5) / 1000).toFixed(3)}/post`;
-                    
-                    return (
-                      <button
-                        key={model.id}
-                        type="button"
-                        onClick={() => setSelectedModel(model.id)}
-                        className={`w-full text-left p-3 rounded-xl border transition-all ${
-                          isSelected
-                            ? 'border-violet-500/60 bg-violet-500/10'
-                            : 'border-white/[0.07] bg-white/[0.02] hover:border-white/20'
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-white/70'}`}>
-                                {model.name}
-                              </span>
-                              <span className={`text-[10px] px-1.5 py-0.5 rounded ${isSelected ? 'bg-violet-500/20 text-violet-300' : 'bg-white/[0.05] text-white/40'}`}>
-                                {model.provider}
-                              </span>
-                            </div>
-                            <p className={`text-[11px] mt-1 ${isSelected ? 'text-white/60' : 'text-white/40'}`}>
-                              {model.desc}
-                            </p>
-                            <div className="flex items-center gap-3 mt-1.5 text-[10px]">
-                              <span className={isSelected ? 'text-white/50' : 'text-white/30'}>
-                                In: ${model.inputPrice}/M
-                              </span>
-                              <span className={isSelected ? 'text-white/50' : 'text-white/30'}>
-                                Out: ${model.outputPrice}/M
-                              </span>
-                            </div>
-                          </div>
-                          <div className={`text-xs font-semibold px-2 py-1 rounded ${
-                            model.inputPrice === 0 && model.outputPrice === 0
-                              ? isSelected ? 'bg-emerald-500/20 text-emerald-300' : 'bg-emerald-500/10 text-emerald-400'
-                              : isSelected ? 'bg-white/10 text-white/70' : 'bg-white/[0.05] text-white/50'
-                          }`}>
-                            {estimatedCost}
-                          </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* FAQ Builder */}
-          <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-white font-semibold text-sm flex items-center gap-2">
-                <FileText className="w-4 h-4 text-emerald-400" />
-                FAQ Section
-              </h2>
-              <button
-                type="button"
-                onClick={handleAddFaq}
-                className="text-xs font-semibold text-white bg-white/10 px-3 py-1.5 rounded-lg hover:bg-white/20"
-              >
-                + Add FAQ
-              </button>
-            </div>
-            {faqs.length === 0 && (
-              <p className="text-white/40 text-sm">Add 2-3 questions your readers ask the most to boost SEO.</p>
-            )}
-            <div className="space-y-3">
-              {faqs.map((faq, idx) => (
-                <div key={idx} className="border border-white/[0.08] rounded-2xl p-3 bg-white/[0.01] space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <label className="text-xs text-white/40">Question</label>
-                    {faqs.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveFaq(idx)}
-                        className="text-[11px] text-white/40 hover:text-rose-300"
-                      >
-                        Remove
-                      </button>
-                    )}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {/* Category */}
+                <div>
+                  <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Category</label>
+                  <div style={{ position: 'relative' }}>
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', cursor: 'pointer', fontWeight: 600, appearance: 'none' }}
+                    >
+                      {wpCategories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="w-4 h-4" style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', color: '#999', pointerEvents: 'none' }} />
                   </div>
-                  <input
-                    type="text"
-                    value={faq.question}
-                    onChange={(e) => handleFaqChange(idx, 'question', e.target.value)}
-                    placeholder="What question are readers asking?"
-                    className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50"
-                  />
-                  <label className="text-xs text-white/40">Answer</label>
-                  <textarea
-                    value={faq.answer}
-                    onChange={(e) => handleFaqChange(idx, 'answer', e.target.value)}
-                    placeholder="Answer in 2-3 concise sentences"
-                    className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50 resize-none"
-                    rows={3}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Generate Button */}
-          <button
-            onClick={handleGenerate}
-            disabled={!topic.trim() || generating}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-pink-600 text-white font-semibold text-sm flex items-center justify-center gap-2 hover:from-violet-700 hover:to-pink-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-lg shadow-violet-500/20"
-          >
-            {generating ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Generating with AI...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-5 h-5" />
-                Generate Blog Post
-              </>
-            )}
-          </button>
-
-          {genError && (
-            <div className="flex items-start gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
-              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-              {genError}
-            </div>
-          )}
-        </div>
-
-        {/* RIGHT PANEL: Preview & Publish */}
-        <div className="space-y-5">
-          {!post && !generating && (
-            <div className="h-96 flex flex-col items-center justify-center bg-white/[0.02] border border-dashed border-white/[0.07] rounded-2xl text-center px-8">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/10 to-pink-500/10 flex items-center justify-center mb-4">
-                <Sparkles className="w-7 h-7 text-violet-400/50" />
-              </div>
-              <p className="text-white/50 text-sm max-w-sm">
-                Enter a topic on the left, configure your settings, then click &ldquo;Generate Blog Post&rdquo; to create AI-powered content.
-              </p>
-            </div>
-          )}
-
-          {generating && (
-            <div className="h-96 flex flex-col items-center justify-center bg-white/[0.02] border border-white/[0.08] rounded-2xl text-center px-8">
-              <Loader2 className="w-12 h-12 text-violet-400 animate-spin mb-4" />
-              <p className="text-white font-semibold mb-2">Generating your blog post...</p>
-              <p className="text-white/40 text-sm">This may take 10-20 seconds</p>
-            </div>
-          )}
-
-          {post && (
-            <>
-              {/* Editable Title */}
-              <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                    <Pencil className="w-3.5 h-3.5" /> Title
-                  </h2>
-                  <button
-                    onClick={handleGenerate}
-                    className="text-[11px] text-white/30 hover:text-white/60 flex items-center gap-1 transition-colors"
-                  >
-                    <RefreshCw className="w-3 h-3" /> Regenerate
-                  </button>
-                </div>
-                <input
-                  type="text"
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-white text-base font-semibold focus:outline-none focus:border-violet-500/50 transition-all"
-                />
-                <label className="text-white/30 text-xs block mt-3">SEO Excerpt</label>
-                <input
-                  type="text"
-                  value={editExcerpt}
-                  onChange={(e) => setEditExcerpt(e.target.value)}
-                  className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-white/70 text-sm focus:outline-none focus:border-violet-500/50 transition-all"
-                />
-                <label className="text-white/30 text-xs block mt-1">Tags (comma separated)</label>
-                <input
-                  type="text"
-                  value={editTags}
-                  onChange={(e) => setEditTags(e.target.value)}
-                  className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-white/70 text-sm focus:outline-none focus:border-violet-500/50 transition-all"
-                />
-              </div>
-
-              {/* Featured Image */}
-              <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                <ImageIcon className="w-3.5 h-3.5" /> Featured image (Unsplash)
-              </h2>
-              {selectedImage && (
-                <button
-                  onClick={() => { setSelectedImage(null); setFeaturedMediaId(null); }}
-                  className="text-[11px] text-white/30 hover:text-white/60 transition-colors"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={imageQuery}
-                    onChange={(e) => setImageQuery(e.target.value)}
-                    placeholder="Search Unsplash for a photo..."
-                    className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-10 pr-28 py-2.5 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-violet-500/50"
-                  />
-                  <Search className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <button
-                    onClick={() => handleUnsplashSearch()}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-white/10 text-white text-xs font-medium hover:bg-white/20"
-                  >
-                    Search
-                  </button>
-                </div>
-                {imageError && <p className="text-xs text-red-400 mt-2">{imageError}</p>}
-                <p className="text-white/25 text-[11px] mt-2">Photos powered by Unsplash. We automatically credit the photographer.</p>
-              </div>
-
-              {selectedImage && (
-                <div className="w-full md:w-52">
-                  <img
-                    src={selectedImage.urls.small}
-                    alt={selectedImage.alt_description || ''}
-                    className="w-full h-32 object-cover rounded-xl border border-white/10"
-                  />
-                  <p className="text-[11px] text-white/40 mt-2">
-                    {selectedImage.user?.name ? `Photo by ${selectedImage.user.name}` : 'Unsplash photo'}
-                  </p>
-                </div>
-              )}
-            </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {imageLoading && (
-                      <div className="col-span-full flex items-center justify-center py-6 text-white/40 text-sm">
-                        <Loader2 className="w-4 h-4 animate-spin mr-2" /> Loading photos…
-                      </div>
-                    )}
-                    {!imageLoading && imageResults.length === 0 && (
-                      <p className="col-span-full text-center text-white/30 text-sm">No photos yet. Try a different keyword.</p>
-                    )}
-                    {imageResults.map((img) => (
-                      <button
-                        type="button"
-                        key={img.id}
-                        onClick={() => { setSelectedImage(img); setFeaturedMediaId(null); }}
-                        className={`relative rounded-xl overflow-hidden border-2 transition-all ${
-                          selectedImage?.id === img.id
-                            ? 'border-violet-400 shadow-[0_0_0_2px_rgba(137,116,255,0.4)]'
-                            : 'border-transparent hover:border-white/30'
-                        }`}
-                      >
-                        <img src={img.urls.small} alt={img.alt_description || ''} className="w-full h-40 object-cover" />
-                        <span className="absolute inset-x-0 bottom-0 bg-black/50 text-white text-[10px] px-2 py-1 text-left">
-                          {img.user?.name || 'Unsplash'}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Content editor */}
-                <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider">Content</h2>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={handleCopyContent}
-                        className="flex items-center gap-1 text-[11px] text-white/30 hover:text-white/60 transition-colors"
-                      >
-                        {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                        {copied ? 'Copied' : 'Copy'}
-                      </button>
-                      <button
-                        onClick={() => setPreviewHtml(!previewHtml)}
-                        className="flex items-center gap-1 text-[11px] text-white/30 hover:text-white/60 transition-colors"
-                      >
-                        {previewHtml ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                        {previewHtml ? 'Edit' : 'Preview'}
-                      </button>
-                    </div>
-                  </div>
-
-                  {previewHtml ? (
-                    <div
-                      className="prose-preview bg-white rounded-xl p-5 min-h-[300px] max-h-[520px] overflow-y-auto text-gray-800"
-                      dangerouslySetInnerHTML={{ __html: editContent }}
+                  <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                    <input
+                      type="text"
+                      value={newCategoryName}
+                      onChange={(e) => setNewCategoryName(e.target.value)}
+                      placeholder="Add new category"
+                      style={{ flex: 1, padding: '8px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                     />
-                  ) : (
-                    <textarea
-                      value={editContent}
-                      onChange={(e) => setEditContent(e.target.value)}
-                      rows={16}
-                      className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-white/80 text-sm font-mono focus:outline-none focus:border-violet-500/50 resize-y transition-all min-h-[300px]"
-                    />
-                  )}
-                </div>
-
-                {/* Publish controls */}
-                <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                      <Globe className="w-3.5 h-3.5" /> Publish to WordPress
-                    </h2>
-                    {publishResult && (
-                      <span className="flex items-center gap-1 text-xs text-emerald-400">
-                        <CheckCircle className="w-3.5 h-3.5" /> Published
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Draft vs Publish toggle */}
-                  <div className="flex gap-2 mb-4">
-                    {(['draft', 'publish'] as const).map((s) => (
-                      <button
-                        key={s}
-                        onClick={() => setPublishStatus(s)}
-                        className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-all capitalize ${
-                          publishStatus === s
-                            ? s === 'publish'
-                              ? 'border-emerald-500/60 bg-emerald-500/10 text-emerald-300'
-                              : 'border-amber-500/60 bg-amber-500/10 text-amber-300'
-                            : 'border-white/[0.07] text-white/30 hover:border-white/20'
-                        }`}
-                      >
-                        {s === 'draft' ? '📝 Save as Draft' : '🚀 Publish Live'}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="flex items-start gap-3 mb-4 p-3 rounded-xl border border-white/[0.08] bg-white/[0.02]">
                     <button
                       type="button"
-                      onClick={() => setShowInTicker(!showInTicker)}
-                      className={`relative w-10 h-6 rounded-full transition-colors ${
-                        showInTicker ? 'bg-emerald-500/80' : 'bg-white/10'
-                      }`}
-                      role="switch"
-                      aria-checked={showInTicker}
+                      onClick={handleAddCategory}
+                      style={{ padding: '8px 16px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 14, fontWeight: 600, color: '#666', background: '#fff', cursor: 'pointer', transition: 'all 0.2s' }}
                     >
-                      <span
-                        className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white transition-transform ${
-                          showInTicker ? 'translate-x-4' : 'translate-x-1'
-                        }`}
-                      />
+                      Add
                     </button>
-                    <div>
-                      <p className="text-sm font-semibold text-white">Show in Updates ticker</p>
-                      <p className="text-xs text-white/40">
-                        Adds this article to the live homepage ticker. Ideal for breaking news and time-sensitive updates.
-                      </p>
+                  </div>
+                </div>
+
+                {/* Tone */}
+                <div>
+                  <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Tone</label>
+                  <div style={{ position: 'relative' }}>
+                    <select
+                      value={tone}
+                      onChange={(e) => setTone(e.target.value)}
+                      style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', cursor: 'pointer', fontWeight: 600, appearance: 'none' }}
+                    >
+                      {TONES.map((t) => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="w-4 h-4" style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', color: '#999', pointerEvents: 'none' }} />
+                  </div>
+                </div>
+
+                {/* Length */}
+                <div>
+                  <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Length</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                    {LENGTHS.map((l) => (
+                      <button
+                        key={l.value}
+                        onClick={() => setLength(l.value)}
+                        style={{
+                          padding: '10px 8px',
+                          borderRadius: 10,
+                          border: '1px solid #e5e5e5',
+                          fontSize: 12,
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          gap: 2,
+                          background: length === l.value ? '#dd0000' : '#fff',
+                          color: length === l.value ? '#fff' : '#666',
+                          borderColor: length === l.value ? '#dd0000' : '#e5e5e5'
+                        }}
+                      >
+                        <span style={{ fontWeight: 600 }}>{l.label}</span>
+                        <span style={{ fontSize: 10, opacity: 0.7 }}>{l.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Keywords */}
+                <div>
+                  <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Keywords (optional)</label>
+                  <input
+                    type="text"
+                    value={keywords}
+                    onChange={(e) => setKeywords(e.target.value)}
+                    placeholder="visa, Germany, student, 2025"
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+                  />
+                </div>
+
+                {/* Generate Button */}
+                <button
+                  onClick={handleGenerate}
+                  disabled={!topic.trim() || generating}
+                  style={{
+                    width: '100%',
+                    padding: '14px 24px',
+                    borderRadius: 12,
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: '#fff',
+                    background: generating || !topic.trim() ? '#ccc' : 'linear-gradient(135deg, #dd0000, #7c3aed)',
+                    border: 'none',
+                    cursor: generating || !topic.trim() ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    boxShadow: generating || !topic.trim() ? 'none' : '0 4px 16px rgba(221,0,0,0.2)',
+                    opacity: generating || !topic.trim() ? 0.5 : 1
+                  }}
+                >
+                  {generating ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5" />
+                      Generate Post
+                    </>
+                  )}
+                </button>
+
+                {genError && (
+                  <div style={{ padding: '12px 16px', borderRadius: 12, border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.1)', color: '#dc2626', fontSize: 13 }}>
+                    <p style={{ fontWeight: 600, marginBottom: 4 }}>Generation failed</p>
+                    <p>{genError}</p>
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
+
+          {/* RIGHT PANEL: Results */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            {post && (
+              <>
+                {/* Generated Content */}
+                <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, overflow: 'hidden' }}>
+                  <div style={{ padding: 24, borderBottom: '1px solid #f5f5f5', background: '#fafafa' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                      <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <FileText className="w-5 h-5" style={{ color: '#dd0000' }} />
+                        Generated Content
+                      </h2>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <button
+                          onClick={() => setPreviewHtml(!previewHtml)}
+                          style={{ padding: '8px', borderRadius: 8, border: '1px solid #e5e5e5', color: '#666', background: '#fff', cursor: 'pointer', transition: 'all 0.2s' }}
+                          title={previewHtml ? 'Show raw' : 'Show preview'}
+                        >
+                          {previewHtml ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                        <button
+                          onClick={handleCopyContent}
+                          style={{ padding: '8px', borderRadius: 8, border: '1px solid #e5e5e5', color: '#666', background: '#fff', cursor: 'pointer', transition: 'all 0.2s' }}
+                          title="Copy content"
+                        >
+                          {copied ? <Check className="w-4 h-4" style={{ color: '#10b981' }} /> : <Copy className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Editable Fields */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                      <div>
+                        <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Title</label>
+                        <input
+                          type="text"
+                          value={editTitle}
+                          onChange={(e) => setEditTitle(e.target.value)}
+                          style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Excerpt</label>
+                        <textarea
+                          value={editExcerpt}
+                          onChange={(e) => setEditExcerpt(e.target.value)}
+                          rows={2}
+                          style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Tags (comma-separated)</label>
+                        <input
+                          type="text"
+                          value={editTags}
+                          onChange={(e) => setEditTags(e.target.value)}
+                          placeholder="visa, germany, student"
+                          style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <button
-                    onClick={handlePublish}
-                    disabled={publishing || uploadingImage || !editTitle || !editContent}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold text-sm flex items-center justify-center gap-2 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-                  >
-                    {publishing ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Publishing to WordPress…
-                      </>
-                    ) : uploadingImage ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Uploading image…
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        {publishStatus === 'publish' ? 'Publish to WordPress' : 'Save as Draft'}
-                      </>
-                    )}
-                  </button>
-
-                  {pubError && (
-                    <div className="mt-3 flex items-start gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
-                      <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                      <span>{pubError}</span>
+                  <div style={{ padding: 24 }}>
+                    <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Content</label>
+                    <div style={{ position: 'relative' }}>
+                      <textarea
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        rows={12}
+                        style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical', fontFamily: 'monospace', lineHeight: 1.6 }}
+                      />
                     </div>
-                  )}
+                  </div>
+                </section>
 
-                  {publishResult && (
-                    <div className="mt-3 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-2">
-                      <p className="text-emerald-300 text-sm font-semibold flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4" />
-                        {publishResult.status === 'publish' ? 'Published live!' : 'Saved as draft!'}
-                      </p>
-                      <div className="flex gap-3 mt-2">
-                        <a
-                          href={publishResult.postUrl}
-                          target="_blank"
-                          rel="noopener"
-                          className="flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
-                        >
-                          <Eye className="w-3.5 h-3.5" /> View post
-                        </a>
-                        <a
-                          href={publishResult.editUrl}
-                          target="_blank"
-                          rel="noopener"
-                          className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"
-                        >
-                          <Pencil className="w-3.5 h-3.5" /> Edit in WP Admin
-                        </a>
+                {/* Publish Actions */}
+                <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                    <Send className="w-5 h-5" style={{ color: '#dd0000' }} />
+                    Publish to WordPress
+                  </h3>
+
+                  {publishResult ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      <div style={{ padding: '12px 16px', borderRadius: 12, border: '1px solid rgba(16,185,129,0.2)', background: 'rgba(16,185,129,0.1)', color: '#10b981', fontSize: 13 }}>
+                        <p style={{ fontWeight: 600, marginBottom: 4 }}>Published successfully!</p>
+                        <p style={{ marginBottom: 8 }}>Post ID: {publishResult.postId}</p>
+                        <div style={{ display: 'flex', gap: 8 }}>
+                          <a
+                            href={publishResult.postUrl}
+                            target="_blank"
+                            rel="noopener"
+                            style={{ color: '#10b981', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, fontSize: 12 }}
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            View Post
+                          </a>
+                          <a
+                            href={publishResult.editUrl}
+                            target="_blank"
+                            rel="noopener"
+                            style={{ color: '#10b981', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, fontSize: 12 }}
+                          >
+                            <Pencil className="w-3 h-3" />
+                            Edit
+                          </a>
+                        </div>
                       </div>
+                      <button
+                        onClick={() => {
+                          setPost(null);
+                          setPublishResult(null);
+                          setEditTitle('');
+                          setEditExcerpt('');
+                          setEditContent('');
+                          setEditTags('');
+                          setFaqs([]);
+                          setSelectedImage(null);
+                          setFeaturedMediaId(null);
+                        }}
+                        style={{ width: '100%', padding: '10px 16px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 14, fontWeight: 600, color: '#666', background: '#fff', cursor: 'pointer', transition: 'all 0.2s' }}
+                      >
+                        Create New Post
+                      </button>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      <button
+                        onClick={handlePublish}
+                        disabled={!editTitle.trim() || !editContent.trim() || publishing}
+                        style={{
+                          width: '100%',
+                          padding: '14px 24px',
+                          borderRadius: 12,
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: '#fff',
+                          background: publishing || !editTitle.trim() || !editContent.trim() ? '#ccc' : 'linear-gradient(135deg, #10b981, #059669)',
+                          border: 'none',
+                          cursor: publishing || !editTitle.trim() || !editContent.trim() ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.2s',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: 8,
+                          boxShadow: publishing || !editTitle.trim() || !editContent.trim() ? 'none' : '0 4px 16px rgba(16,185,129,0.2)',
+                          opacity: publishing || !editTitle.trim() || !editContent.trim() ? 0.5 : 1
+                        }}
+                      >
+                        {publishing ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            Publishing to WordPress...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-5 h-5" />
+                            Publish to WordPress
+                          </>
+                        )}
+                      </button>
+
+                      {pubError && (
+                        <div style={{ padding: '12px 16px', borderRadius: 12, border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.1)', color: '#dc2626', fontSize: 13 }}>
+                          <p style={{ fontWeight: 600, marginBottom: 4 }}>Publish failed</p>
+                          <p>{pubError}</p>
+                        </div>
+                      )}
                     </div>
                   )}
-                </div>
+                </section>
               </>
+            )}
+
+            {/* Empty State */}
+            {!post && (
+              <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 48, textAlign: 'center' }}>
+                <div style={{ width: 64, height: 64, margin: '0 auto 24px', borderRadius: 20, background: '#fafafa', border: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Sparkles className="w-8 h-8" style={{ color: '#999' }} />
+                </div>
+                <h3 style={{ fontSize: 18, fontWeight: 600, color: '#111', marginBottom: 8 }}>No content generated yet</h3>
+                <p style={{ fontSize: 14, color: '#737373', marginBottom: 24 }}>
+                  Enter a topic and click "Generate Post" to create your blog content
+                </p>
+              </section>
             )}
           </div>
         </div>
-
-        {/* Prose preview styles */}
-        <style jsx global>{`
-          .prose-preview h2 { font-size: 1.25rem; font-weight: 700; margin: 1.5rem 0 0.5rem; color: #111; }
-          .prose-preview h3 { font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.4rem; color: #222; }
-          .prose-preview p { margin-bottom: 0.9rem; line-height: 1.7; color: #333; }
-          .prose-preview ul, .prose-preview ol { margin: 0.5rem 0 1rem 1.5rem; }
-          .prose-preview li { margin-bottom: 0.35rem; color: #333; }
-          .prose-preview blockquote { border-left: 4px solid #ffce00; padding: 0.5rem 1rem; background: #fffbeb; border-radius: 0 6px 6px 0; font-style: italic; margin: 1rem 0; }
-          .prose-preview strong { font-weight: 600; color: #111; }
-          .prose-preview a { color: #dd0000; text-decoration: underline; }
-        `}</style>
-      </div>
+      </main>
     </div>
   );
 }
