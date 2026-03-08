@@ -1810,37 +1810,45 @@ export default function CVMakerPage() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-[#0a0a1a]">
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: '#fafafa' }}>
       {/* Top bar */}
-      <nav className="flex-shrink-0 border-b border-white/[0.06] bg-[#0a0a1a]/90 backdrop-blur-xl z-30">
-        <div className="flex items-center justify-between px-5 h-14">
-          <div className="flex items-center gap-4">
-            <button onClick={() => setPhase('templates')} className="flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm"><ArrowLeft className="w-4 h-4" /> Templates</button>
-            <div className="h-5 w-px bg-white/10" />
-            <span className="text-white font-medium text-sm">{tpl.name}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => setShowAI(true)} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs font-semibold hover:from-purple-600 hover:to-blue-600 transition-all shadow-lg shadow-purple-500/20">
-              <Sparkles className="w-3.5 h-3.5" /> Generate with AI
+      <nav style={{ flexShrink: 0, borderBottom: '1px solid #e5e5e5', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)', zIndex: 30 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', height: 56 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <button onClick={() => setPhase('templates')} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, color: '#666', background: 'transparent', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'color 0.2s' }}
+              onMouseEnter={e => e.currentTarget.style.color = '#dd0000'}
+              onMouseLeave={e => e.currentTarget.style.color = '#666'}>
+              <ArrowLeft className="w-4 h-4" /> Templates
             </button>
-            <button onClick={handleDownload} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-medium hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-purple-500/10">
-              <Download className="w-3.5 h-3.5" /> Download PDF
+            <div style={{ height: 20, width: 1, background: '#e5e5e5' }} />
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{tpl.name}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button onClick={() => setShowAI(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 10, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(221,0,0,0.2)' }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'none'}>
+              <Sparkles className="w-4 h-4" /> Generate with AI
+            </button>
+            <button onClick={handleDownload} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 10, background: '#dd0000', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(221,0,0,0.15)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
+              <Download className="w-4 h-4" /> Download PDF
             </button>
           </div>
         </div>
       </nav>
 
-      <div className="flex-1 flex overflow-hidden">
-        {/* Design Panel — redesigned with better visual hierarchy */}
-        <div className="w-72 flex-shrink-0 border-r border-white/[0.06] bg-[#0c0c1e] overflow-y-auto">
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        {/* Design Panel */}
+        <div style={{ width: 280, flexShrink: 0, borderRight: '1px solid #e5e5e5', background: '#fff', overflowY: 'auto' }}>
           {/* Header with save status */}
-          <div className="p-4 border-b border-white/[0.06]">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-white font-semibold text-sm flex items-center gap-2">
-                <Palette className="w-4 h-4 text-blue-400" /> Design
+          <div style={{ padding: 16, borderBottom: '1px solid #f5f5f5' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: '#111', display: 'flex', alignItems: 'center', gap: 8, margin: 0 }}>
+                <Palette className="w-4 h-4" style={{ color: '#dd0000' }} /> Design
               </h3>
               {saveMessage && (
-                <span className={`text-[10px] px-2 py-0.5 rounded-full ${saveMessage === 'Saved!' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
+                <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 999, background: saveMessage === 'Saved!' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: saveMessage === 'Saved!' ? '#10b981' : '#dc2626', fontWeight: 600 }}>
                   {saveMessage}
                 </span>
               )}
@@ -1850,69 +1858,67 @@ export default function CVMakerPage() {
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-medium hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-50"
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 16px', borderRadius: 10, background: '#dd0000', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', opacity: isSaving ? 0.5 : 1 }}
               >
-                {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 Save CV
               </button>
             ) : (
               <Link
                 href="/auth/signin"
-                className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white/60 text-xs font-medium hover:bg-white/[0.08] transition-all"
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 16px', borderRadius: 10, background: '#f5f5f5', border: '1px solid #e5e5e5', color: '#666', fontSize: 13, fontWeight: 600, textDecoration: 'none', transition: 'all 0.2s' }}
               >
-                <LogIn className="w-3.5 h-3.5" /> Sign in to save
+                <LogIn className="w-4 h-4" /> Sign in to save
               </Link>
             )}
           </div>
 
-          {/* Colors Section - Simplified */}
-          <div className="p-4 border-b border-white/[0.06]">
-            <h4 className="text-white/60 text-[10px] uppercase tracking-wider font-medium mb-3 flex items-center gap-1.5">
-              <Palette className="w-3 h-3" /> Colors
+          {/* Colors Section */}
+          <div style={{ padding: 16, borderBottom: '1px solid #f5f5f5' }}>
+            <h4 style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Palette className="w-3.5 h-3.5" /> Colors
             </h4>
             {/* Accent Color */}
-            <div className="mb-3">
-              <label className="text-white/40 text-[10px] mb-1.5 block">Accent</label>
-              <div className="flex gap-1.5 flex-wrap">
+            <div style={{ marginBottom: 12 }}>
+              <label style={{ fontSize: 11, color: '#999', marginBottom: 6, display: 'block', fontWeight: 600 }}>Accent</label>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {COLORS.map((c) => (
                   <button
                     key={c}
                     onClick={() => setAccent(c)}
-                    className={`w-7 h-7 rounded-lg border-2 transition-all ${
-                      accent === c ? 'border-white scale-110' : 'border-transparent hover:scale-105'
-                    }`}
-                    style={{ background: c }}
+                    style={{ width: 32, height: 32, borderRadius: 8, border: accent === c ? '3px solid #dd0000' : '2px solid transparent', background: c, cursor: 'pointer', transition: 'all 0.2s', transform: accent === c ? 'scale(1.1)' : 'scale(1)' }}
+                    onMouseEnter={e => accent !== c && (e.currentTarget.style.transform = 'scale(1.05)')}
+                    onMouseLeave={e => accent !== c && (e.currentTarget.style.transform = 'scale(1)')}
                   />
                 ))}
               </div>
             </div>
             {/* Text Color */}
             <div>
-              <label className="text-white/40 text-[10px] mb-1.5 block">Text</label>
-              <div className="flex gap-1.5 flex-wrap">
+              <label style={{ fontSize: 11, color: '#999', marginBottom: 6, display: 'block', fontWeight: 600 }}>Text</label>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {['#111827','#1F2937','#374151','#1E3A5F'].map((c) => (
                   <button
                     key={c}
                     onClick={() => setTextColor(c)}
-                    className={`w-7 h-7 rounded-lg border-2 transition-all ${
-                      textColor === c ? 'border-white scale-110' : 'border-transparent hover:scale-105'
-                    }`}
-                    style={{ background: c }}
+                    style={{ width: 32, height: 32, borderRadius: 8, border: textColor === c ? '3px solid #dd0000' : '2px solid transparent', background: c, cursor: 'pointer', transition: 'all 0.2s', transform: textColor === c ? 'scale(1.1)' : 'scale(1)' }}
+                    onMouseEnter={e => textColor !== c && (e.currentTarget.style.transform = 'scale(1.05)')}
+                    onMouseLeave={e => textColor !== c && (e.currentTarget.style.transform = 'scale(1)')}
                   />
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Font Section - Simplified */}
-          <div className="p-4 border-b border-white/[0.06]">
-            <h4 className="text-white/60 text-[10px] uppercase tracking-wider font-medium mb-3 flex items-center gap-1.5">
-              <Type className="w-3 h-3" /> Font
+          {/* Font Section */}
+          <div style={{ padding: 16, borderBottom: '1px solid #f5f5f5' }}>
+            <h4 style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Type className="w-3.5 h-3.5" /> Font
             </h4>
             <select
               value={fontFamily}
               onChange={(e) => setFontFamily(e.target.value)}
-              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-xs px-3 py-2 outline-none focus:border-blue-500/40 mb-2"
+              style={{ width: '100%', background: '#fff', border: '1px solid #e5e5e5', borderRadius: 8, color: '#111', fontSize: 13, padding: '8px 12px', outline: 'none', marginBottom: 8, cursor: 'pointer', fontWeight: 600 }}
             >
               <option value="Inter">Inter</option>
               <option value="Georgia">Georgia</option>
@@ -1921,16 +1927,12 @@ export default function CVMakerPage() {
               <option value="Arial">Arial</option>
               <option value="Calibri">Calibri</option>
             </select>
-            <div className="flex gap-1.5">
+            <div style={{ display: 'flex', gap: 6 }}>
               {(['small', 'normal', 'large'] as const).map((size) => (
                 <button
                   key={size}
                   onClick={() => setFontSize(size)}
-                  className={`flex-1 py-2 rounded-lg text-[11px] font-semibold transition-all ${
-                    fontSize === size
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-white/[0.04] text-white/50 hover:bg-white/[0.08]'
-                  }`}
+                  style={{ flex: 1, padding: '8px 0', borderRadius: 8, fontSize: 12, fontWeight: 700, transition: 'all 0.2s', background: fontSize === size ? '#dd0000' : '#f5f5f5', color: fontSize === size ? '#fff' : '#999', border: 'none', cursor: 'pointer' }}
                 >
                   {size === 'small' ? 'S' : size === 'normal' ? 'M' : 'L'}
                 </button>
@@ -1938,12 +1940,12 @@ export default function CVMakerPage() {
             </div>
           </div>
 
-          {/* Template Section - Compact Grid */}
-          <div className="p-4 border-b border-white/[0.06]">
-            <h4 className="text-white/60 text-[10px] uppercase tracking-wider font-medium mb-3 flex items-center gap-1.5">
-              <FolderOpen className="w-3 h-3" /> Template
+          {/* Template Section */}
+          <div style={{ padding: 16, borderBottom: '1px solid #f5f5f5' }}>
+            <h4 style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <FolderOpen className="w-3.5 h-3.5" /> Template
             </h4>
-            <div className="grid grid-cols-2 gap-1.5">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
               {TEMPLATES.slice(0, 6).map((t) => (
                 <button
                   key={t.id}
@@ -1951,44 +1953,44 @@ export default function CVMakerPage() {
                     setTplId(t.id);
                     setAccent(t.accent);
                   }}
-                  className={`text-left p-2 rounded-lg border transition-all ${
-                    tplId === t.id
-                      ? 'bg-blue-500/10 border-blue-500/30 text-white'
-                      : 'bg-white/[0.02] border-white/[0.06] text-white/50 hover:border-white/15'
-                  }`}
+                  style={{ textAlign: 'left', padding: 8, borderRadius: 8, border: `1px solid ${tplId === t.id ? '#dd0000' : '#e5e5e5'}`, background: tplId === t.id ? 'rgba(221,0,0,0.05)' : '#fff', transition: 'all 0.2s', cursor: 'pointer' }}
                 >
-                  <p className="text-[10px] font-medium truncate">{t.name}</p>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: tplId === t.id ? '#dd0000' : '#666', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</p>
                 </button>
               ))}
             </div>
             <button
               onClick={() => setShowTemplatesModal(true)}
-              className="w-full mt-2 py-1.5 text-[10px] text-blue-400 hover:text-blue-300 transition-colors"
+              style={{ width: '100%', marginTop: 8, padding: '6px 0', fontSize: 11, color: '#dd0000', background: 'transparent', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'color 0.2s' }}
+              onMouseEnter={e => e.currentTarget.style.color = '#b91c1c'}
+              onMouseLeave={e => e.currentTarget.style.color = '#dd0000'}
             >
               View all {TEMPLATES.length} templates →
             </button>
           </div>
 
           {/* Photo Section */}
-          <div className="p-4">
-            <h4 className="text-white/60 text-[10px] uppercase tracking-wider font-medium mb-3 flex items-center gap-1.5">
-              <Camera className="w-3 h-3" /> Photo
+          <div style={{ padding: 16 }}>
+            <h4 style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Camera className="w-3.5 h-3.5" /> Photo
             </h4>
-            <label className="flex items-center gap-2 w-full py-2 px-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white/60 text-[11px] cursor-pointer hover:border-white/20 hover:text-white/80 transition-colors">
-              <Camera className="w-3.5 h-3.5" />
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '10px 12px', borderRadius: 8, background: '#f5f5f5', border: '1px solid #e5e5e5', color: '#666', fontSize: 13, cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.color = '#dd0000'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e5e5'; e.currentTarget.style.color = '#666'; }}>
+              <Camera className="w-4 h-4" />
               <input type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
               {cv.photo ? 'Change photo' : 'Add photo'}
             </label>
           </div>
         </div>
 
-        {/* CV Preview — click to edit */}
-        <div className="flex-1 overflow-auto bg-[#0d0d20] flex justify-center py-6 px-4">
-          <div className="inline-block">
-            <div className="text-center mb-3">
-              <span className="text-white/20 text-[11px]">Click on any text to edit it directly</span>
+        {/* CV Preview */}
+        <div style={{ flex: 1, overflowY: 'auto', background: '#f5f5f5', display: 'flex', justifyContent: 'center', padding: '24px 16px' }}>
+          <div style={{ display: 'inline-block' }}>
+            <div style={{ textAlign: 'center', marginBottom: 12 }}>
+              <span style={{ fontSize: 12, color: '#999', fontWeight: 500 }}>Click on any text to edit it directly</span>
             </div>
-            <div style={{ transform: 'scale(0.78)', transformOrigin: 'top center' }}>
+            <div className="cv-preview-container" style={{ transform: 'scale(0.78)', transformOrigin: 'top center' }}>
               {renderCV(false)}
             </div>
           </div>
