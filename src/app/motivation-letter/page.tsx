@@ -7,7 +7,7 @@ import Link from 'next/link';
 import {
   ArrowLeft, Loader2, Download, Copy, Check, Sparkles, GraduationCap,
   ChevronDown, FileText, Wand2, User, BookOpen, Target, Briefcase,
-  Heart, RefreshCw, CheckCircle2, Upload, X
+  Heart, RefreshCw, CheckCircle2, Upload, X, Edit3
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import type { Program } from '@/lib/types';
@@ -18,6 +18,208 @@ interface ShortlistItem {
   programName: string;
   university: string;
 }
+
+// Inline editable component like CV maker
+const E = ({
+  value,
+  onChange,
+  placeholder = '',
+  maxLength,
+  showWordCount = false,
+  wordLimit,
+  multiline = false,
+  style = {},
+  ...props
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  placeholder?: string;
+  maxLength?: number;
+  showWordCount?: boolean;
+  wordLimit?: number;
+  multiline?: boolean;
+  style?: React.CSSProperties;
+  [key: string]: any;
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempValue, setTempValue] = useState(value);
+  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    setTempValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      if (multiline) {
+        const textarea = inputRef.current as HTMLTextAreaElement;
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      }
+    }
+  }, [isEditing, multiline]);
+
+  const handleSave = () => {
+    if (wordLimit && tempValue.split(' ').filter(w => w).length > wordLimit) {
+      return; // Don't save if over word limit
+    }
+    onChange(tempValue);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setTempValue(value);
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      handleCancel();
+    } else if (e.key === 'Enter' && !multiline) {
+      handleSave();
+    }
+  };
+
+  const wordCount = tempValue.split(' ').filter(w => w).length;
+  const isOverLimit = wordLimit && wordCount > wordLimit;
+
+  if (isEditing) {
+    return (
+      <div style={{ position: 'relative', ...style }}>
+        {multiline ? (
+          <textarea
+            ref={inputRef as React.RefObject<HTMLTextAreaElement>}
+            value={tempValue}
+            onChange={e => setTempValue(e.target.value)}
+            onBlur={handleSave}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            style={{
+              width: '100%',
+              padding: '8px 12px',
+              border: '1px solid #e5e5e5',
+              borderRadius: 8,
+              fontSize: 14,
+              fontFamily: 'inherit',
+              resize: 'vertical',
+              minHeight: 60,
+              outline: 'none',
+              ...props
+            }}
+          />
+        ) : (
+          <input
+            ref={inputRef as React.RefObject<HTMLInputElement>}
+            type="text"
+            value={tempValue}
+            onChange={e => setTempValue(e.target.value)}
+            onBlur={handleSave}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            style={{
+              width: '100%',
+              padding: '8px 12px',
+              border: '1px solid #e5e5e5',
+              borderRadius: 8,
+              fontSize: 14,
+              fontFamily: 'inherit',
+              outline: 'none',
+              ...props
+            }}
+          />
+        )}
+        {showWordCount && (
+          <div style={{
+            position: 'absolute',
+            bottom: multiline ? -20 : -18,
+            right: 0,
+            fontSize: 11,
+            color: isOverLimit ? '#dc2626' : '#999',
+            fontWeight: 600
+          }}>
+            {wordCount}{wordLimit ? `/${wordLimit}` : ''} words
+          </div>
+        )}
+        <div style={{ position: 'absolute', top: 4, right: 4, display: 'flex', gap: 4 }}>
+          <button
+            onClick={handleSave}
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 4,
+              border: 'none',
+              background: '#10b981',
+              color: '#fff',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            title="Save"
+          >
+            <Check className="w-3 h-3" />
+          </button>
+          <button
+            onClick={handleCancel}
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 4,
+              border: 'none',
+              background: '#ef4444',
+              color: '#fff',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            title="Cancel"
+          >
+            <X className="w-3 h-3" />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      onClick={() => setIsEditing(true)}
+      style={{
+        padding: '8px 12px',
+        border: '1px dashed #e5e5e5',
+        borderRadius: 8,
+        minHeight: multiline ? 60 : 36,
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: multiline ? 'flex-start' : 'center',
+        justifyContent: value ? 'flex-start' : 'center',
+        transition: 'all 0.2s',
+        ...style
+      }}
+      onMouseEnter={e => e.currentTarget.style.borderColor = '#dd0000'}
+      onMouseLeave={e => e.currentTarget.style.borderColor = '#e5e5e5'}
+    >
+      {value ? (
+        <div style={{ width: '100%' }}>
+          <div style={{ fontSize: 14, color: '#111', whiteSpace: multiline ? 'pre-wrap' : 'nowrap', overflow: multiline ? 'visible' : 'hidden', textOverflow: 'ellipsis' }}>
+            {value}
+          </div>
+          {showWordCount && (
+            <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>
+              {wordCount}{wordLimit ? `/${wordLimit}` : ''} words
+            </div>
+          )}
+        </div>
+      ) : (
+        <span style={{ fontSize: 14, color: '#999' }}>{placeholder}</span>
+      )}
+      <Edit3 className="w-3 h-3" style={{ color: '#999', marginLeft: 8, flexShrink: 0 }} />
+    </div>
+  );
+};
 
 function MotivationLetterContent() {
   const searchParams = useSearchParams();
@@ -401,18 +603,17 @@ function MotivationLetterContent() {
             <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Tell us about yourself</p>
             <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Just share the essentials. You can optionally add more context.</p>
           </div>
-          <label style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 }}>
+          <div style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 }}>
             <span style={{ fontWeight: 600 }}>Full name *</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff' }}>
-              <User className="w-4 h-4" style={{ color: '#999' }} />
-              <input
-                value={userInput.fullName}
-                onChange={e => setUserInput(prev => ({ ...prev, fullName: e.target.value }))}
-                placeholder="e.g. Aisha Khan"
-                style={{ flex: 1, background: 'transparent', outline: 'none', fontSize: 14, color: '#111', border: 'none' }}
-              />
-            </div>
-          </label>
+            <E
+              value={userInput.fullName}
+              onChange={val => setUserInput(prev => ({ ...prev, fullName: val }))}
+              placeholder="e.g. Aisha Khan"
+              maxLength={100}
+              wordLimit={5}
+              showWordCount={true}
+            />
+          </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {primaryFields.map(field => {
               const Icon = field.icon;
@@ -422,11 +623,14 @@ function MotivationLetterContent() {
                     <Icon className="w-4 h-4" style={{ color: '#dd0000' }} />
                     {field.label}
                   </span>
-                  <textarea
+                  <E
                     value={(userInput as any)[field.key] as string}
-                    onChange={e => setUserInput(prev => ({ ...prev, [field.key]: e.target.value }))}
+                    onChange={val => setUserInput(prev => ({ ...prev, [field.key]: val }))}
                     placeholder={field.placeholder}
-                    style={{ width: '100%', padding: '12px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', minHeight: 90, resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.6 }}
+                    multiline={true}
+                    wordLimit={field.key === 'background' ? 100 : 50}
+                    showWordCount={true}
+                    style={{ minHeight: 90 }}
                   />
                 </label>
               );
@@ -447,11 +651,14 @@ function MotivationLetterContent() {
                     <Icon className="w-4 h-4" style={{ color: '#dd0000' }} />
                     {field.label}
                   </span>
-                  <textarea
+                  <E
                     value={(userInput as any)[field.key] as string}
-                    onChange={e => setUserInput(prev => ({ ...prev, [field.key]: e.target.value }))}
+                    onChange={val => setUserInput(prev => ({ ...prev, [field.key]: val }))}
                     placeholder={field.placeholder}
-                    style={{ width: '100%', padding: '12px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', minHeight: 90, resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.6 }}
+                    multiline={true}
+                    wordLimit={50}
+                    showWordCount={true}
+                    style={{ minHeight: 90 }}
                   />
                 </label>
               );
@@ -557,8 +764,16 @@ function MotivationLetterContent() {
             </div>
           </div>
           {letter ? (
-            <div style={{ borderRadius: 12, background: '#fafafa', border: '1px solid #e5e5e5', padding: 24, fontSize: 15, lineHeight: 1.8, whiteSpace: 'pre-line', color: '#111' }}>
-              {letter}
+            <div style={{ borderRadius: 12, background: '#fafafa', border: '1px solid #e5e5e5', padding: 24 }}>
+              <E
+                value={letter}
+                onChange={setLetter}
+                placeholder="Your generated letter will appear here..."
+                multiline={true}
+                wordLimit={500}
+                showWordCount={true}
+                style={{ fontSize: 15, lineHeight: 1.8, whiteSpace: 'pre-line', color: '#111', minHeight: 400 }}
+              />
             </div>
           ) : (
             <p style={{ fontSize: 14, color: '#999', display: 'flex', alignItems: 'center', gap: 8, margin: 0, padding: '40px 0', justifyContent: 'center' }}>
