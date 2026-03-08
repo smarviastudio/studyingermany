@@ -8,6 +8,7 @@ import {
   GraduationCap, Loader2, Check, Palette, Camera,
   ChevronRight, X, Wand2, Printer, Save, Type, AArrowUp, User, LogIn, FolderOpen
 } from 'lucide-react';
+import { SiteNav } from '@/components/SiteNav';
 import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
 import { templates as TEMPLATE_LIBRARY } from '@/lib/cv-maker/templates';
 
@@ -845,69 +846,64 @@ export default function CVMakerPage() {
      ═══════════════════════════════════════════════════════ */
   if (phase === 'templates') {
     return (
-      <div className="min-h-screen bg-[#0a0a1a]">
-        <nav className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0a0a1a]/80 backdrop-blur-xl">
-          <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-14">
-            <Link href="/" className="flex items-center gap-2 text-white/40 hover:text-white/70 text-sm"><ArrowLeft className="w-4 h-4" /> Back home</Link>
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"><GraduationCap className="w-3.5 h-3.5 text-white" /></div>
-              <span className="text-white font-semibold text-sm">StudyGermany</span>
-            </Link>
-          </div>
-        </nav>
+      <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+        <SiteNav />
 
-        <div className="max-w-4xl mx-auto px-6 py-8">
-          <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold text-white mb-3">Create your CV</h1>
-            <p className="text-white/40 text-sm max-w-lg mx-auto">Choose a template designed for German universities and employers. Click any text to edit directly.</p>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 12px' }}>Create your CV</h1>
+            <p style={{ fontSize: 16, color: '#737373', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 }}>Choose a template designed for German universities and employers. Click any text to edit directly.</p>
           </div>
 
           {/* AI Banner */}
-          <div className="mb-8 rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-cyan-500/10 p-5 flex items-center gap-5">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/20">
-              <Wand2 className="w-6 h-6 text-white" />
+          <div style={{ marginBottom: 40, borderRadius: 20, border: '2px solid rgba(221,0,0,0.15)', background: 'linear-gradient(135deg, rgba(221,0,0,0.05), rgba(124,58,237,0.05))', padding: 24, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+            <div style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
+              <Wand2 className="w-7 h-7" style={{ color: '#fff' }} />
             </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-white font-semibold mb-0.5">Let AI write your CV</h3>
-              <p className="text-white/40 text-xs">Tell us about yourself and AI generates professional content for every section.</p>
+            <div style={{ flex: 1, minWidth: 250 }}>
+              <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Let AI write your CV</h3>
+              <p style={{ fontSize: 14, color: '#666', margin: 0, lineHeight: 1.5 }}>Tell us about yourself and AI generates professional content for every section.</p>
             </div>
-            <button onClick={() => { setPhase('editor'); setTimeout(() => setShowAI(true), 400); }} className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium text-sm hover:from-purple-600 hover:to-blue-600 transition-all shadow-lg flex items-center gap-2 flex-shrink-0">
-              <Sparkles className="w-4 h-4" /> Generate with AI
+            <button onClick={() => { setPhase('editor'); setTimeout(() => setShowAI(true), 400); }} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 24px', borderRadius: 12, background: '#dd0000', color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)', flexShrink: 0 }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
+              <Sparkles className="w-5 h-5" /> Generate with AI
             </button>
           </div>
 
-          {/* Template Grid — 4 columns, compact thumbnails */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 pb-24">
+          {/* Template Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16, paddingBottom: 100 }}>
             {TEMPLATES.map(t => (
-              <button key={t.id} onClick={() => { setTplId(t.id); setAccent(t.accent); }}
-                className={`group relative text-left rounded-lg overflow-hidden border-2 transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/5 ${tplId === t.id ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-white/[0.08] hover:border-white/20'}`}>
-                <div className="bg-white overflow-hidden flex justify-center" style={{ height: 160 }}>
+              <button key={t.id} onClick={() => { setTplId(t.id); setAccent(t.accent); }} className="cv-template-card" style={{ position: 'relative', textAlign: 'left', borderRadius: 16, overflow: 'hidden', border: `2px solid ${tplId === t.id ? '#dd0000' : '#ebebeb'}`, background: '#fff', cursor: 'pointer', transition: 'all 0.3s', boxShadow: tplId === t.id ? '0 8px 24px rgba(221,0,0,0.15)' : 'none' }}>
+                <div style={{ background: '#fff', overflow: 'hidden', display: 'flex', justifyContent: 'center', height: 180 }}>
                   <MiniCV tpl={t} />
                 </div>
-                <div className="px-2.5 py-2 bg-[#0f0f23] border-t border-white/[0.06]">
-                  <div className="flex items-center justify-between gap-1">
-                    <div className="min-w-0">
-                      <p className="text-white font-medium text-[11px] truncate">{t.name}</p>
-                      <p className="text-white/30 text-[9px] mt-0.5 truncate">{t.description}</p>
+                <div style={{ padding: '12px 14px', background: '#fafafa', borderTop: '1px solid #ebebeb' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: '#111', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</p>
+                      <p style={{ fontSize: 11, color: '#999', margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.description}</p>
                     </div>
                     {t.hasPhoto && (
-                      <span className="px-1 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[8px] font-medium flex-shrink-0 flex items-center gap-0.5">
-                        <Camera className="w-2 h-2" />Photo
+                      <span style={{ padding: '3px 8px', borderRadius: 6, background: 'rgba(221,0,0,0.1)', color: '#dd0000', fontSize: 10, fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <Camera className="w-3 h-3" />Photo
                       </span>
                     )}
                   </div>
                 </div>
-                {tplId === t.id && <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center shadow-lg"><Check className="w-3 h-3 text-white" /></div>}
+                {tplId === t.id && <div style={{ position: 'absolute', top: 12, right: 12, width: 28, height: 28, borderRadius: 999, background: '#dd0000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(221,0,0,0.3)' }}><Check className="w-4 h-4" style={{ color: '#fff' }} /></div>}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Sticky bottom bar — always visible */}
-        <div className="sticky bottom-0 z-30 border-t border-white/[0.06] bg-[#0a0a1a]/95 backdrop-blur-xl">
-          <div className="max-w-4xl mx-auto px-6 py-3 flex items-center justify-between">
-            <div className="text-white/30 text-xs">Selected: <span className="text-white font-medium">{tpl.name}</span></div>
-            <button onClick={() => setPhase('editor')} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium text-sm hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-purple-600/20">
+        {/* Sticky bottom bar */}
+        <div style={{ position: 'sticky', bottom: 0, zIndex: 30, borderTop: '1px solid #e5e5e5', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+            <div style={{ fontSize: 14, color: '#999' }}>Selected: <span style={{ color: '#111', fontWeight: 700 }}>{tpl.name}</span></div>
+            <button onClick={() => setPhase('editor')} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', borderRadius: 12, background: '#dd0000', color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
               Start editing <ChevronRight className="w-4 h-4" />
             </button>
           </div>

@@ -9,6 +9,7 @@ import {
   ChevronDown, FileText, Wand2, User, BookOpen, Target, Briefcase,
   Heart, RefreshCw, CheckCircle2, Upload, X
 } from 'lucide-react';
+import { SiteNav } from '@/components/SiteNav';
 import type { Program } from '@/lib/types';
 
 interface ShortlistItem {
@@ -239,50 +240,38 @@ function MotivationLetterContent() {
   ] as const;
 
   return (
-    <div className="min-h-screen bg-[#050511] text-white">
-      <nav className="sticky top-0 border-b border-white/10 bg-[#050511]/90 backdrop-blur z-30">
-        <div className="max-w-4xl mx-auto flex items-center justify-between px-6 h-14">
-          <Link href="/" className="inline-flex items-center gap-2 text-xs text-white/60 hover:text-white">
-            <ArrowLeft className="w-4 h-4" /> Back home
-          </Link>
-          <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-white">
-            <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <GraduationCap className="w-3.5 h-3.5" />
-            </div>
-            StudyGermany
-          </Link>
-        </div>
-      </nav>
+    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+      <SiteNav />
 
-      <main className="max-w-4xl mx-auto px-6 py-10 space-y-6">
-        <header className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-            <FileText className="w-5 h-5" />
+      <main style={{ maxWidth: 1000, margin: '0 auto', padding: '48px 24px 80px' }}>
+        <header style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 40 }}>
+          <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
+            <FileText className="w-8 h-8" style={{ color: '#fff' }} />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold">Motivation Letter Generator</h1>
-            <p className="text-sm text-white/60">Share a few details and let AI craft a tailored letter.</p>
+            <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>Motivation Letter Generator</h1>
+            <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>Share a few details and let AI craft a tailored letter.</p>
           </div>
         </header>
 
         {/* Program details */}
-        <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 28, marginBottom: 24 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
             <div>
-              <p className="text-sm font-medium">Program details</p>
-              <p className="text-xs text-white/50">Only two quick fields required. Share more if you have it.</p>
+              <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Program details</p>
+              <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Only two quick fields required. Share more if you have it.</p>
             </div>
             {status === 'authenticated' && shortlist.length > 0 && (
-              <div className="flex text-xs rounded-xl border border-white/10 overflow-hidden">
+              <div style={{ display: 'flex', fontSize: 13, borderRadius: 10, border: '1px solid #e5e5e5', overflow: 'hidden', alignSelf: 'flex-start' }}>
                 <button
                   type="button"
                   onClick={() => setUseManualProgram(false)}
-                  className={`px-3 py-1.5 ${!useManualProgram ? 'bg-blue-500/20 text-white' : 'text-white/60'}`}
+                  style={{ padding: '8px 16px', background: !useManualProgram ? '#dd0000' : 'transparent', color: !useManualProgram ? '#fff' : '#666', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
                 >Shortlist</button>
                 <button
                   type="button"
                   onClick={() => setUseManualProgram(true)}
-                  className={`px-3 py-1.5 ${useManualProgram ? 'bg-blue-500/20 text-white' : 'text-white/60'}`}
+                  style={{ padding: '8px 16px', background: useManualProgram ? '#dd0000' : 'transparent', color: useManualProgram ? '#fff' : '#666', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
                 >Custom</button>
               </div>
             )}
