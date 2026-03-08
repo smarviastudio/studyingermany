@@ -236,25 +236,23 @@ export function SiteNav() {
             <Image src="/logo_wp.png" alt="Students in Germany" width={140} height={44} style={{ objectFit: 'contain' }} priority />
           </Link>
 
-          <nav className="hidden md:flex" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+          <nav className="hidden md:flex" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
             {[
               { label: 'Guides', href: '/#guides' },
-              { label: 'Universities', href: '/#universities' },
               { label: 'Tools', href: '/#tools' },
-              { label: 'Course Finder', href: '/#search' },
-              { label: 'Contact', href: '/#contact' },
+              { label: 'Course Finder', href: '/#hero' },
             ].map(({ label, href }) => (
               <a
                 key={label}
                 href={href}
-                style={{ fontSize: 14, fontWeight: 600, color: '#404040', textDecoration: 'none', letterSpacing: '0.01em' }}
+                style={{ fontSize: 14, fontWeight: 600, color: '#404040', textDecoration: 'none', letterSpacing: '0.01em', transition: 'color 0.2s' }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = RED)}
                 onMouseLeave={(e) => (e.currentTarget.style.color = '#404040')}
               >
                 {label}
               </a>
             ))}
-            <form onSubmit={handleNavSearchSubmit} style={{ position: 'relative', marginLeft: 4 }}>
+            <form onSubmit={handleNavSearchSubmit} style={{ position: 'relative', marginLeft: 8 }}>
               <Search className="w-4 h-4" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#a3a3a3', pointerEvents: 'none' }} />
               <input
                 ref={navInputRef}
@@ -352,14 +350,25 @@ export function SiteNav() {
             Updates
           </span>
           <div style={{ overflow: 'hidden', flex: 1 }}>
-            <div style={{ display: 'flex', gap: 40, animation: 'ticker-scroll 30s linear infinite', whiteSpace: 'nowrap' }}>
-              {wpPosts.slice(0, 4).map((p) => (
-                <a key={p.id} href={p.link} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: RED }}>{timeAgo(p.date)}</span>
-                  <span style={{ fontSize: 13, color: '#404040' }}>{stripHtml(p.title)}</span>
-                </a>
-              ))}
-              {wpPosts.length === 0 && <span style={{ fontSize: 13, color: '#737373' }}>Stay tuned for the latest German visa and study news.</span>}
+            <div className="news-ticker-track" style={{ display: 'flex', gap: 40, whiteSpace: 'nowrap' }}>
+              {wpPosts.length > 0 ? (
+                <>
+                  {wpPosts.slice(0, 5).map((p) => (
+                    <Link key={`a-${p.id}`} href={`/blog/${p.slug}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: RED }}>{timeAgo(p.date)}</span>
+                      <span style={{ fontSize: 13, color: '#404040' }}>{stripHtml(p.title)}</span>
+                    </Link>
+                  ))}
+                  {wpPosts.slice(0, 5).map((p) => (
+                    <Link key={`b-${p.id}`} href={`/blog/${p.slug}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: RED }}>{timeAgo(p.date)}</span>
+                      <span style={{ fontSize: 13, color: '#404040' }}>{stripHtml(p.title)}</span>
+                    </Link>
+                  ))}
+                </>
+              ) : (
+                <span style={{ fontSize: 13, color: '#737373' }}>Stay tuned for the latest guides on studying in Germany.</span>
+              )}
             </div>
           </div>
         </div>
