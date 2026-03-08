@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {
   ArrowLeft, Calculator, Info, GraduationCap, ChevronDown, RotateCcw
 } from 'lucide-react';
+import { SiteNav } from '@/components/SiteNav';
 
 type GradingPreset = {
   id: string;
@@ -38,11 +39,11 @@ const PRESETS: GradingPreset[] = [
 ];
 
 const GRADE_SCALE = [
-  { range: '1.0 – 1.5', label: 'Sehr gut', en: 'Very Good', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
-  { range: '1.6 – 2.5', label: 'Gut', en: 'Good', color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
-  { range: '2.6 – 3.5', label: 'Befriedigend', en: 'Satisfactory', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
-  { range: '3.6 – 4.0', label: 'Ausreichend', en: 'Sufficient', color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/20' },
-  { range: '4.1 – 5.0', label: 'Nicht ausreichend', en: 'Fail', color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/20' },
+  { range: '1.0 – 1.5', label: 'Sehr gut', en: 'Very Good', color: '#10b981', bg: 'rgba(16,185,129,0.1)', border: '#10b981' },
+  { range: '1.6 – 2.5', label: 'Gut', en: 'Good', color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', border: '#3b82f6' },
+  { range: '2.6 – 3.5', label: 'Befriedigend', en: 'Satisfactory', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: '#f59e0b' },
+  { range: '3.6 – 4.0', label: 'Ausreichend', en: 'Sufficient', color: '#f97316', bg: 'rgba(249,115,22,0.1)', border: '#f97316' },
+  { range: '4.1 – 5.0', label: 'Nicht ausreichend', en: 'Fail', color: '#ef4444', bg: 'rgba(239,68,68,0.1)', border: '#ef4444' },
 ];
 
 function getGradeInfo(gpa: number) {
@@ -134,68 +135,55 @@ export default function GPAConverterPage() {
   const gradeInfo = result ? getGradeInfo(result.gpa) : null;
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a]">
-      {/* Nav */}
-      <nav className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0a0a1a]/80 backdrop-blur-xl">
-        <div className="max-w-3xl mx-auto flex items-center justify-between px-6 h-14">
-          <Link href="/" className="flex items-center gap-2 text-white/40 hover:text-white/70 text-sm transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back home
-          </Link>
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"><GraduationCap className="w-3.5 h-3.5 text-white" /></div>
-            <span className="text-white font-semibold text-sm">StudyGermany</span>
-          </Link>
-        </div>
-      </nav>
+    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+      <SiteNav />
 
-      <div className="max-w-3xl mx-auto px-6 py-8">
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '48px 24px 80px' }}>
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <Calculator className="w-4.5 h-4.5 text-white" />
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #10b981, #059669)', marginBottom: 16, boxShadow: '0 8px 24px rgba(16,185,129,0.2)' }}>
+            <Calculator className="w-8 h-8" style={{ color: '#fff' }} />
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">GPA Converter</h1>
-            <p className="text-white/35 text-xs">Convert your grades to the German scale using the Modified Bavarian Formula</p>
-          </div>
+          <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 12px' }}>GPA Converter</h1>
+          <p style={{ fontSize: 16, color: '#737373', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 }}>Convert your grades to the German scale using the Modified Bavarian Formula</p>
         </div>
 
         {/* Main card */}
-        <div className="rounded-xl border border-white/[0.06] bg-[#0f0f23]">
+        <div style={{ borderRadius: 20, border: '1px solid #ebebeb', background: '#fff', overflow: 'hidden' }}>
           {/* Country / system selector */}
-          <div className="px-6 pt-5 pb-4 border-b border-white/[0.04]">
-            <label className="text-white/40 text-xs font-medium mb-2 block">Your grading system</label>
-            <div className="relative" ref={dropdownRef}>
+          <div style={{ padding: '24px 28px', borderBottom: '1px solid #f5f5f5' }}>
+            <label style={{ fontSize: 13, fontWeight: 600, color: '#999', marginBottom: 8, display: 'block' }}>Your grading system</label>
+            <div style={{ position: 'relative' }} ref={dropdownRef}>
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
-                className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.15] transition-all text-left"
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 12, background: '#fff', border: '1px solid #e5e5e5', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left' }}
               >
                 {preset ? (
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-lg flex-shrink-0">{preset.flag}</span>
-                    <div className="min-w-0">
-                      <div className="text-white text-sm font-medium truncate">{preset.country} — {preset.name}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+                    <span style={{ fontSize: 20, flexShrink: 0 }}>{preset.flag}</span>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{preset.country} — {preset.name}</div>
                     </div>
                   </div>
                 ) : (
-                  <span className="text-white/25 text-sm">Select your country & scale...</span>
+                  <span style={{ fontSize: 14, color: '#999' }}>Select your country & scale...</span>
                 )}
-                <ChevronDown className={`w-4 h-4 text-white/20 transition-transform flex-shrink-0 ${showDropdown ? 'rotate-180' : ''}`} />
+                <ChevronDown className="w-4 h-4" style={{ color: '#999', transition: 'transform 0.2s', transform: showDropdown ? 'rotate(180deg)' : 'none', flexShrink: 0 }} />
               </button>
 
               {showDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-1 rounded-lg bg-[#14142b] border border-white/[0.1] shadow-2xl shadow-black/50 z-50 max-h-64 overflow-y-auto">
+                <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, borderRadius: 12, background: '#fff', border: '1px solid #e5e5e5', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 50, maxHeight: 256, overflowY: 'auto' }}>
                   {PRESETS.map(p => (
                     <button
                       key={p.id}
                       onClick={() => selectPreset(p.id)}
-                      className={`w-full text-left px-4 py-2.5 hover:bg-white/[0.04] transition-colors border-b border-white/[0.04] last:border-0 flex items-center gap-3 ${
-                        p.id === selectedPreset ? 'bg-emerald-500/10' : ''
-                      }`}
+                      style={{ width: '100%', textAlign: 'left', padding: '12px 16px', background: p.id === selectedPreset ? 'rgba(16,185,129,0.05)' : 'transparent', border: 'none', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: 12 }}
+                      onMouseEnter={e => p.id !== selectedPreset && (e.currentTarget.style.background = '#fafafa')}
+                      onMouseLeave={e => p.id !== selectedPreset && (e.currentTarget.style.background = 'transparent')}
                     >
-                      <span className="text-base flex-shrink-0">{p.flag}</span>
-                      <div className="min-w-0">
-                        <div className="text-white text-sm truncate">{p.country} — {p.name}</div>
+                      <span style={{ fontSize: 18, flexShrink: 0 }}>{p.flag}</span>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.country} — {p.name}</div>
                       </div>
                     </button>
                   ))}
@@ -206,11 +194,11 @@ export default function GPAConverterPage() {
 
           {/* Input fields */}
           {selectedPreset && (
-            <div className="px-6 py-5 space-y-4">
+            <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 16 }}>
               {/* Your grade */}
               <div>
-                <label className="flex items-center gap-1.5 text-white/45 text-xs font-medium mb-1.5">
-                  <Calculator className="w-3.5 h-3.5" /> Your Grade / GPA <span className="text-red-400/70">*</span>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: '#666', marginBottom: 6 }}>
+                  <Calculator className="w-4 h-4" /> Your Grade / GPA <span style={{ color: '#dd0000' }}>*</span>
                 </label>
                 <input
                   type="number"
@@ -218,53 +206,59 @@ export default function GPAConverterPage() {
                   value={yourGrade}
                   onChange={e => { setYourGrade(e.target.value); setResult(null); }}
                   placeholder={preset?.placeholder || 'Enter your grade'}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-white/15 focus:outline-none focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: 10, background: '#fff', border: '1px solid #e5e5e5', fontSize: 14, color: '#111', outline: 'none', transition: 'all 0.2s' }}
+                  onFocus={e => e.target.style.borderColor = '#10b981'}
+                  onBlur={e => e.target.style.borderColor = '#e5e5e5'}
                 />
               </div>
 
               {/* Max & Min in 2 cols */}
-              <div className="grid grid-cols-2 gap-3">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <label className="text-white/45 text-xs font-medium mb-1.5 block">Max grade in your system</label>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: '#666', marginBottom: 6, display: 'block' }}>Max grade in your system</label>
                   <input
                     type="number"
                     step="0.01"
                     value={maxGrade}
                     onChange={e => { setMaxGrade(e.target.value); setResult(null); }}
                     placeholder="e.g. 10"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-white/15 focus:outline-none focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                    style={{ width: '100%', padding: '12px 14px', borderRadius: 10, background: selectedPreset !== 'custom' ? '#f5f5f5' : '#fff', border: '1px solid #e5e5e5', fontSize: 14, color: '#111', outline: 'none', transition: 'all 0.2s', cursor: selectedPreset !== 'custom' ? 'not-allowed' : 'text' }}
                     readOnly={selectedPreset !== 'custom'}
+                    onFocus={e => selectedPreset === 'custom' && (e.target.style.borderColor = '#10b981')}
+                    onBlur={e => e.target.style.borderColor = '#e5e5e5'}
                   />
                 </div>
                 <div>
-                  <label className="text-white/45 text-xs font-medium mb-1.5 block">Min passing grade</label>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: '#666', marginBottom: 6, display: 'block' }}>Min passing grade</label>
                   <input
                     type="number"
                     step="0.01"
                     value={minGrade}
                     onChange={e => { setMinGrade(e.target.value); setResult(null); }}
                     placeholder="e.g. 4"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-white/15 focus:outline-none focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                    style={{ width: '100%', padding: '12px 14px', borderRadius: 10, background: selectedPreset !== 'custom' ? '#f5f5f5' : '#fff', border: '1px solid #e5e5e5', fontSize: 14, color: '#111', outline: 'none', transition: 'all 0.2s', cursor: selectedPreset !== 'custom' ? 'not-allowed' : 'text' }}
                     readOnly={selectedPreset !== 'custom'}
+                    onFocus={e => selectedPreset === 'custom' && (e.target.style.borderColor = '#10b981')}
+                    onBlur={e => e.target.style.borderColor = '#e5e5e5'}
                   />
                 </div>
               </div>
 
-              {error && <p className="text-red-400 text-xs">{error}</p>}
+              {error && <p style={{ fontSize: 13, color: '#dc2626', margin: 0 }}>{error}</p>}
 
               {/* Buttons */}
-              <div className="flex gap-2 pt-1">
+              <div style={{ display: 'flex', gap: 8, paddingTop: 4 }}>
                 <button
                   onClick={convert}
                   disabled={!yourGrade || !maxGrade || !minGrade}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-green-600 text-white text-sm font-medium hover:from-emerald-600 hover:to-green-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20"
+                  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, background: (!yourGrade || !maxGrade || !minGrade) ? '#ccc' : 'linear-gradient(135deg, #10b981, #059669)', color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: (!yourGrade || !maxGrade || !minGrade) ? 'not-allowed' : 'pointer', transition: 'all 0.2s', boxShadow: (!yourGrade || !maxGrade || !minGrade) ? 'none' : '0 4px 16px rgba(16,185,129,0.2)', opacity: (!yourGrade || !maxGrade || !minGrade) ? 0.4 : 1 }}
                 >
-                  <Calculator className="w-4 h-4" /> Convert
+                  <Calculator className="w-5 h-5" /> Convert
                 </button>
                 {(yourGrade || result) && (
                   <button
                     onClick={reset}
-                    className="px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white/40 hover:text-white/70 text-sm transition-all"
+                    style={{ padding: '12px 16px', borderRadius: 12, background: '#fff', border: '1px solid #e5e5e5', color: '#666', fontSize: 14, cursor: 'pointer', transition: 'all 0.2s' }}
                     title="Reset"
                   >
                     <RotateCcw className="w-4 h-4" />
@@ -276,45 +270,43 @@ export default function GPAConverterPage() {
 
           {/* Result — inline */}
           {result && gradeInfo && (
-            <div ref={resultRef} className="border-t border-white/[0.04]">
-              <div className="px-6 py-6">
+            <div ref={resultRef} style={{ borderTop: '1px solid #f5f5f5' }}>
+              <div style={{ padding: '24px 28px' }}>
                 {/* Big number + classification */}
-                <div className="flex items-center gap-5 mb-5">
-                  <div className={`w-20 h-20 rounded-2xl ${gradeInfo.bg} border ${gradeInfo.border} flex flex-col items-center justify-center flex-shrink-0`}>
-                    <span className={`text-2xl font-bold ${gradeInfo.color}`}>{result.gpa.toFixed(1)}</span>
-                    <span className="text-white/25 text-[10px]">/ 5.0</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 20 }}>
+                  <div style={{ width: 80, height: 80, borderRadius: 16, background: gradeInfo.bg, border: `2px solid ${gradeInfo.border}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ fontSize: 28, fontWeight: 800, color: gradeInfo.color }}>{result.gpa.toFixed(1)}</span>
+                    <span style={{ fontSize: 10, color: '#999' }}>/ 5.0</span>
                   </div>
                   <div>
-                    <p className={`text-lg font-bold ${gradeInfo.color}`}>{gradeInfo.label}</p>
-                    <p className="text-white/40 text-sm">{gradeInfo.en}</p>
-                    <p className="text-white/20 text-xs mt-1 font-mono">{result.formula}</p>
+                    <p style={{ fontSize: 20, fontWeight: 700, color: gradeInfo.color, margin: '0 0 4px' }}>{gradeInfo.label}</p>
+                    <p style={{ fontSize: 14, color: '#999', margin: '0 0 6px' }}>{gradeInfo.en}</p>
+                    <p style={{ fontSize: 12, color: '#ccc', margin: 0, fontFamily: 'monospace' }}>{result.formula}</p>
                   </div>
                 </div>
 
                 {/* Grade scale reference */}
-                <div className="space-y-1.5">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   {GRADE_SCALE.map(g => {
                     const isActive = gradeInfo.range === g.range;
                     return (
                       <div
                         key={g.range}
-                        className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
-                          isActive ? `${g.bg} border ${g.border}` : 'bg-white/[0.02] border border-transparent'
-                        }`}
+                        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', borderRadius: 10, background: isActive ? g.bg : '#fafafa', border: `1px solid ${isActive ? g.border : 'transparent'}`, transition: 'all 0.2s' }}
                       >
-                        <span className={`text-xs font-mono w-20 flex-shrink-0 ${isActive ? g.color : 'text-white/25'}`}>{g.range}</span>
-                        <span className={`text-xs font-medium ${isActive ? 'text-white' : 'text-white/30'}`}>{g.label}</span>
-                        <span className={`text-xs ml-auto ${isActive ? 'text-white/50' : 'text-white/15'}`}>{g.en}</span>
+                        <span style={{ fontSize: 13, fontFamily: 'monospace', width: 80, flexShrink: 0, color: isActive ? g.color : '#999', fontWeight: 600 }}>{g.range}</span>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: isActive ? '#111' : '#999' }}>{g.label}</span>
+                        <span style={{ fontSize: 13, marginLeft: 'auto', color: isActive ? '#666' : '#ccc' }}>{g.en}</span>
                       </div>
                     );
                   })}
                 </div>
 
                 {/* Disclaimer */}
-                <div className="flex gap-2.5 mt-5 p-3 rounded-lg bg-amber-500/[0.04] border border-amber-500/10">
-                  <Info className="w-3.5 h-3.5 text-amber-400/60 flex-shrink-0 mt-0.5" />
-                  <p className="text-white/30 text-[11px] leading-relaxed">
-                    This is an estimate using the <strong className="text-white/40">Modified Bavarian Formula</strong>. Each university may use its own conversion method — always verify with your target university&apos;s admissions office.
+                <div style={{ display: 'flex', gap: 10, marginTop: 20, padding: 12, borderRadius: 12, background: 'rgba(245,158,11,0.05)', border: '1px solid rgba(245,158,11,0.2)' }}>
+                  <Info className="w-4 h-4" style={{ color: '#f59e0b', flexShrink: 0, marginTop: 2 }} />
+                  <p style={{ fontSize: 12, color: '#666', lineHeight: 1.6, margin: 0 }}>
+                    This is an estimate using the <strong style={{ color: '#111' }}>Modified Bavarian Formula</strong>. Each university may use its own conversion method — always verify with your target university&apos;s admissions office.
                   </p>
                 </div>
               </div>
@@ -323,20 +315,20 @@ export default function GPAConverterPage() {
         </div>
 
         {/* FAQ — compact */}
-        <div className="mt-6 rounded-xl border border-white/[0.06] bg-[#0f0f23] p-5">
-          <h3 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3">How it works</h3>
-          <div className="space-y-3 text-xs">
+        <div style={{ marginTop: 24, borderRadius: 20, border: '1px solid #ebebeb', background: '#fff', padding: 28 }}>
+          <h3 style={{ fontSize: 12, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 16 }}>How it works</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div>
-              <p className="text-white/60 font-medium mb-0.5">Modified Bavarian Formula</p>
-              <p className="text-white/30">German Grade = 1 + 3 × ((Max − Your Grade) / (Max − Min Passing)). Used by most German universities for international grade conversion.</p>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 4 }}>Modified Bavarian Formula</p>
+              <p style={{ fontSize: 13, color: '#666', lineHeight: 1.6, margin: 0 }}>German Grade = 1 + 3 × ((Max − Your Grade) / (Max − Min Passing)). Used by most German universities for international grade conversion.</p>
             </div>
             <div>
-              <p className="text-white/60 font-medium mb-0.5">Is this official?</p>
-              <p className="text-white/30">It&apos;s the most widely accepted formula, but some universities have their own tables. Always double-check with your target uni.</p>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 4 }}>Is this official?</p>
+              <p style={{ fontSize: 13, color: '#666', lineHeight: 1.6, margin: 0 }}>It&apos;s the most widely accepted formula, but some universities have their own tables. Always double-check with your target uni.</p>
             </div>
             <div>
-              <p className="text-white/60 font-medium mb-0.5">My country isn&apos;t listed</p>
-              <p className="text-white/30">Choose &quot;Other — Custom scale&quot; and enter your system&apos;s max and min passing grades manually.</p>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 4 }}>My country isn&apos;t listed</p>
+              <p style={{ fontSize: 13, color: '#666', lineHeight: 1.6, margin: 0 }}>Choose &quot;Other — Custom scale&quot; and enter your system&apos;s max and min passing grades manually.</p>
             </div>
           </div>
         </div>
