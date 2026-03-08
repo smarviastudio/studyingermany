@@ -311,7 +311,7 @@ function MotivationLetterContent() {
                   <ChevronDown className="w-4 h-4" style={{ color: '#999', transition: 'transform 0.2s', transform: showDropdown ? 'rotate(180deg)' : 'none' }} />
                 </button>
                 {showDropdown && (
-                  <div style={{ position: 'absolute', left: 0, right: 0, marginTop: 8, borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', maxHeight: 256, overflowY: 'auto', zIndex: 40 }}>
+                  <div style={{ position: 'absolute', left: 0, right: 0, marginTop: 8, borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', maxHeight: 256, overflowY: 'auto', zIndex: 9999 }}>
                     {shortlist.map(item => (
                       <button
                         key={item.id}

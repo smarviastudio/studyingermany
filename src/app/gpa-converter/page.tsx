@@ -149,9 +149,9 @@ export default function GPAConverterPage() {
         </div>
 
         {/* Main card */}
-        <div style={{ borderRadius: 20, border: '1px solid #ebebeb', background: '#fff', overflow: 'hidden' }}>
+        <div style={{ borderRadius: 20, border: '1px solid #ebebeb', background: '#fff' }}>
           {/* Country / system selector */}
-          <div style={{ padding: '24px 28px', borderBottom: '1px solid #f5f5f5' }}>
+          <div style={{ padding: '24px 28px', borderBottom: '1px solid #f5f5f5', position: 'relative' }}>
             <label style={{ fontSize: 13, fontWeight: 600, color: '#999', marginBottom: 8, display: 'block' }}>Your grading system</label>
             <div style={{ position: 'relative' }} ref={dropdownRef}>
               <button
@@ -172,7 +172,7 @@ export default function GPAConverterPage() {
               </button>
 
               {showDropdown && (
-                <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, borderRadius: 12, background: '#fff', border: '1px solid #e5e5e5', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 50, maxHeight: 256, overflowY: 'auto' }}>
+                <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, borderRadius: 12, background: '#fff', border: '1px solid #e5e5e5', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 9999, maxHeight: 256, overflowY: 'auto' }}>
                   {PRESETS.map(p => (
                     <button
                       key={p.id}
