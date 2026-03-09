@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import {
-  GraduationCap, Bookmark, LogOut, CheckCircle, PlayCircle, X,
-  Calendar, FileText, Clock, Target, Users, TrendingUp, Award,
-  Home, Settings, User, BookOpen, Briefcase, Star, ChevronRight, Calculator
+  GraduationCap, Bookmark, Calendar, FileText, Target, TrendingUp, Award,
+  Briefcase, Star, ChevronRight, Calculator, Search, ArrowRight
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
@@ -123,31 +122,39 @@ export default function DashboardPage() {
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
         {/* Header */}
-        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 40 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+        <header style={{ marginBottom: 40 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24 }}>
             <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
               <GraduationCap className="w-8 h-8" style={{ color: '#fff' }} />
             </div>
             <div>
-              <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>Dashboard</h1>
-              <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>Welcome to your study in Germany journey</p>
+              <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>Your Dashboard</h1>
+              <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>Track your study in Germany journey</p>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 12 }}>
-            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 20px', borderRadius: 12, fontSize: 14, fontWeight: 600, color: '#666', background: '#fff', border: '1px solid #e5e5e5', textDecoration: 'none', transition: 'all 0.2s' }}>
-              <Home className="w-4 h-4" />
-              Home
-            </Link>
-            <button style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 20px', borderRadius: 12, fontSize: 14, fontWeight: 600, color: '#666', background: '#fff', border: '1px solid #e5e5e5', cursor: 'pointer', transition: 'all 0.2s' }}>
-              <Settings className="w-4 h-4" />
-              Settings
-            </button>
-          </div>
+          
+          {/* Main CTA */}
+          <Link href="/course-finder" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: '20px 24px', textDecoration: 'none', boxShadow: '0 4px 20px rgba(221,0,0,0.25)', transition: 'all 0.2s' }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Search className="w-6 h-6" style={{ color: '#fff' }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>Find Your Perfect Program</h3>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.9)', margin: 0 }}>Search thousands of courses in German universities</p>
+              </div>
+            </div>
+            <ArrowRight className="w-6 h-6" style={{ color: '#fff' }} />
+          </Link>
         </header>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - Now Clickable */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, marginBottom: 40 }}>
-          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
+          <Link href={hasShortlist ? "/my-shortlist" : "/course-finder"} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(221,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Bookmark className="w-6 h-6" style={{ color: '#dd0000' }} />
@@ -155,10 +162,16 @@ export default function DashboardPage() {
               <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{shortlistEntries.length}</span>
             </div>
             <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Saved Programs</h3>
-            <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Programs you've shortlisted</p>
-          </div>
+            <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Programs you've shortlisted</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#dd0000', fontSize: 13, fontWeight: 600 }}>
+              {hasShortlist ? 'View saved programs' : 'Find programs'}
+              <ChevronRight className="w-4 h-4" />
+            </div>
+          </Link>
 
-          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
+          <Link href="/course-finder" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#22c55e'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(34,197,94,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Target className="w-6 h-6" style={{ color: '#22c55e' }} />
@@ -166,8 +179,12 @@ export default function DashboardPage() {
               <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{planProgress.length}</span>
             </div>
             <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Application Plans</h3>
-            <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Programs with application plans</p>
-          </div>
+            <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Track your applications</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#22c55e', fontSize: 13, fontWeight: 600 }}>
+              Start planning
+              <ChevronRight className="w-4 h-4" />
+            </div>
+          </Link>
 
           <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -177,14 +194,14 @@ export default function DashboardPage() {
               <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{profileCompletion}%</span>
             </div>
             <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Profile Complete</h3>
-            <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Your profile completion status</p>
+            <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Complete your profile for better recommendations</p>
           </div>
         </div>
 
-        {/* Quick Actions */}
+        {/* Application Tools */}
         <section style={{ marginBottom: 40 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: '0 0 20px' }}>Quick Actions</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: '0 0 20px' }}>Application Tools</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
 
             <Link href="/cv-maker" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
@@ -276,25 +293,6 @@ export default function DashboardPage() {
               </div>
             </Link>
 
-            {isAuthenticated && hasShortlist && (
-              <Link href="/my-shortlist" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Star className="w-6 h-6" style={{ color: '#fff' }} />
-                  </div>
-                  <div>
-                    <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>My Shortlist</h3>
-                    <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>{shortlistEntries.length} saved programs</p>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#dd0000', fontSize: 14, fontWeight: 600 }}>
-                  View Shortlist
-                  <ChevronRight className="w-4 h-4" />
-                </div>
-              </Link>
-            )}
           </div>
         </section>
 
@@ -353,15 +351,15 @@ export default function DashboardPage() {
         {!hasShortlist && (
           <section style={{ textAlign: 'center', padding: '60px 20px' }}>
             <div style={{ width: 80, height: 80, margin: '0 auto 24px', borderRadius: 20, background: '#fafafa', border: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <GraduationCap className="w-10 h-10" style={{ color: '#999' }} />
+              <Search className="w-10 h-10" style={{ color: '#999' }} />
             </div>
-            <h2 style={{ fontSize: 20, fontWeight: 600, color: '#111', marginBottom: 12 }}>Start Your Journey</h2>
+            <h2 style={{ fontSize: 20, fontWeight: 600, color: '#111', marginBottom: 12 }}>Ready to Find Your Program?</h2>
             <p style={{ fontSize: 16, color: '#737373', marginBottom: 24, maxWidth: 500, margin: '0 auto 24px' }}>
-              Begin by creating your CV or generating motivation letters to kickstart your study in Germany journey.
+              Start by searching for programs that match your interests and qualifications.
             </p>
-            <Link href="/cv-maker" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 600, color: '#fff', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', textDecoration: 'none', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}>
-              <FileText className="w-5 h-5" />
-              Create CV
+            <Link href="/course-finder" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 600, color: '#fff', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', textDecoration: 'none', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}>
+              <Search className="w-5 h-5" />
+              Search Programs
             </Link>
           </section>
         )}
