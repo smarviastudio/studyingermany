@@ -415,7 +415,7 @@ details[open] summary .chevron { transform: rotate(180deg); }
 
   .section-header {
     margin-bottom: 24px;
-    text-align: left;
+    text-align: center;
   }
 
   .section-label {
@@ -448,6 +448,7 @@ details[open] summary .chevron { transform: rotate(180deg); }
 
   .hero-content {
     padding: 0 20px;
+    text-align: center;
   }
 
   .hero-badge {
@@ -507,7 +508,7 @@ details[open] summary .chevron { transform: rotate(180deg); }
   .hero-suggestions {
     gap: 6px;
     margin-bottom: 16px;
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .hero-chip {
@@ -529,13 +530,8 @@ details[open] summary .chevron { transform: rotate(180deg); }
   .journey-pills {
     gap: 6px;
     margin-bottom: 20px;
-    justify-content: flex-start;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding-bottom: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .journey-pills::-webkit-scrollbar {
@@ -772,6 +768,67 @@ details[open] summary .chevron { transform: rotate(180deg); }
     padding: 16px 0;
     font-size: 11px;
     text-align: center;
+  }
+
+  /* Mobile app-like navigation */
+  .mobile-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .mobile-nav-logo {
+    width: 120px;
+    height: auto;
+  }
+
+  .mobile-nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .mobile-nav-link {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .mobile-nav-link:hover {
+    background: #f5f5f5;
+    color: #dd0000;
+  }
+
+  .mobile-nav-link.primary {
+    background: #dd0000;
+    color: #fff;
+  }
+
+  .mobile-nav-link.primary:hover {
+    background: #b91c1c;
+  }
+
+  /* Hide desktop navigation on mobile */
+  header,
+  .news-ticker-track {
+    display: none;
+  }
+
+  /* Show mobile navigation only on mobile */
+  @media (min-width: 769px) {
+    .mobile-nav {
+      display: none;
+    }
   }
 
   /* Search modal - mobile */

@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import {
   Search, Loader2, Bookmark, X, ArrowRight, BookOpen, Newspaper, Calendar,
   GraduationCap, FileText, Languages, Home, Briefcase, CreditCard, Shield,
-  Plane, Star, Zap, TrendingUp, Users, Globe, Clock
+  Plane, Star, Zap, TrendingUp, Users, Globe, Clock, Menu, User, Settings
 } from 'lucide-react';
 import { ProgramModal } from '@/components/ProgramModal';
 import type { ProgramSummary } from '@/lib/types';
@@ -213,6 +213,30 @@ export default function HomePage() {
 
   return (
     <div className="homepage-root">
+
+      {/* Mobile Navigation - App-like */}
+      <nav className="mobile-nav">
+        <Link href="/">
+          <Image src="/logo_wp.png" alt="Students in Germany" width={120} height={38} className="mobile-nav-logo" />
+        </Link>
+        <div className="mobile-nav-menu">
+          <Link href="/dashboard" className="mobile-nav-link">
+            <Home className="w-4 h-4" />
+          </Link>
+          <Link href="/tools" className="mobile-nav-link">
+            <Zap className="w-4 h-4" />
+          </Link>
+          {isAuthenticated ? (
+            <Link href="/profile" className="mobile-nav-link">
+              <User className="w-4 h-4" />
+            </Link>
+          ) : (
+            <Link href="/auth/signin" className="mobile-nav-link primary">
+              Sign In
+            </Link>
+          )}
+        </div>
+      </nav>
 
       {signInToast && (
         <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[60]">
