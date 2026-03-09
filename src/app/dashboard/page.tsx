@@ -146,7 +146,7 @@ export default function DashboardPage() {
 
         {/* Stats Cards - Now Clickable */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, marginBottom: 40 }}>
-          <Link href="/my-shortlist" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
+          <Link href="/my-shortlist" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '100%' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -155,15 +155,17 @@ export default function DashboardPage() {
               </div>
               <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{shortlistEntries.length}</span>
             </div>
-            <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Saved Programs</h3>
-            <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Programs you've shortlisted</p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#dd0000', fontSize: 13, fontWeight: 600 }}>
+            <div style={{ flex: 1 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Saved Programs</h3>
+              <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Programs you've shortlisted</p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#dd0000', fontSize: 13, fontWeight: 600, marginTop: 'auto' }}>
               {hasShortlist ? 'View saved programs' : 'View shortlist'}
               <ChevronRight className="w-4 h-4" />
             </div>
           </Link>
 
-          <Link href="/profile" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
+          <Link href="/profile" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '100%' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -172,9 +174,11 @@ export default function DashboardPage() {
               </div>
               <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{profileCompletion}%</span>
             </div>
-            <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Profile Complete</h3>
-            <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Complete your profile for better recommendations</p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#3b82f6', fontSize: 13, fontWeight: 600 }}>
+            <div style={{ flex: 1 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Profile Complete</h3>
+              <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Complete your profile for better recommendations</p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#3b82f6', fontSize: 13, fontWeight: 600, marginTop: 'auto' }}>
               {profileCompletion === 100 ? 'View profile' : 'Complete profile'}
               <ChevronRight className="w-4 h-4" />
             </div>
