@@ -297,20 +297,25 @@ export default function MyShortlistPage() {
       )}
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
-          <div>
-            <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(26px, 3vw, 36px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>
-              My Shortlist
-            </h1>
-            <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>
-              {shortlist.length} program{shortlist.length !== 1 ? 's' : ''} saved
-            </p>
+        <div style={{ marginBottom: 40 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 20 }}>
+            <div>
+              <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#0a0a0a', margin: '0 0 8px', lineHeight: 1.2 }}>
+                My Shortlist
+              </h1>
+              <p style={{ fontSize: 16, color: '#737373', margin: 0, lineHeight: 1.5 }}>
+                {shortlist.length} program{shortlist.length !== 1 ? 's' : ''} saved
+              </p>
+            </div>
+            <Link href="/#hero" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: '#dd0000', color: '#fff', borderRadius: 12, textDecoration: 'none', fontWeight: 700, fontSize: 15, transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)', whiteSpace: 'nowrap' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(221,0,0,0.25)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(221,0,0,0.2)'; }}>
+              <Search className="w-4 h-4" /> Find More Programs
+            </Link>
           </div>
-          <Link href="/#hero" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: '#dd0000', color: '#fff', borderRadius: 12, textDecoration: 'none', fontWeight: 700, fontSize: 15, transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(221,0,0,0.25)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(221,0,0,0.2)'; }}>
-            <Search className="w-4 h-4" /> Find More Programs
-          </Link>
+          
+          {/* Divider line for cleaner separation */}
+          <div style={{ height: 1, background: 'linear-gradient(90deg, #e5e5e5, transparent)', marginBottom: 20 }} />
         </div>
 
         {error && (
