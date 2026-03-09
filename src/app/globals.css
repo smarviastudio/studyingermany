@@ -278,11 +278,13 @@ details[open] summary .chevron { transform: rotate(180deg); }
 .article-card-body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
 
 /* Kill stale mobile nav markup from old dev bundles */
+.mobile-nav,
 .mobile-nav-menu,
 .mobile-nav-link,
 .mobile-nav-link.primary,
 .mobile-nav-toggle,
-.mobile-nav-overlay {
+.mobile-nav-overlay,
+.mobile-nav-logo {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
