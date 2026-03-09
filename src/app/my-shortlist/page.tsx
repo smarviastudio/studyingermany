@@ -344,8 +344,8 @@ export default function MyShortlistPage() {
               const isRemoving = removingId === item.programId;
 
               return (
-                <div key={item.id} className="shortlist-card" style={{ opacity: isRemoving ? 0.5 : 1, pointerEvents: isRemoving ? 'none' : 'auto' }}>
-                  <div style={{ position: 'relative', height: 180, borderRadius: '20px 20px 0 0', overflow: 'hidden', background: 'linear-gradient(135deg, #f5f5f0, #eee)' }}>
+                <div key={item.id} className="shortlist-card" style={{ opacity: isRemoving ? 0.5 : 1, pointerEvents: isRemoving ? 'none' : 'auto', display: 'flex', flexDirection: 'column', height: '580px', background: '#fff', borderRadius: 20, overflow: 'hidden', border: '1px solid #e5e5e5' }}>
+                  <div style={{ position: 'relative', height: 180, overflow: 'hidden', background: 'linear-gradient(135deg, #f5f5f0, #eee)', flexShrink: 0 }}>
                     {prog?.image_url ? (
                       <Image src={prog.image_url} alt={item.programName} fill style={{ objectFit: 'cover' }} sizes="340px" unoptimized />
                     ) : (
@@ -365,40 +365,44 @@ export default function MyShortlistPage() {
                     </button>
                   </div>
 
-                  <div style={{ padding: 20 }}>
-                    <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, fontWeight: 700, color: '#111', margin: '0 0 6px', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                      {item.programName}
-                    </h3>
-                    <p style={{ fontSize: 14, color: '#666', margin: '0 0 14px', lineHeight: 1.4 }}>{item.university}</p>
+                  <div style={{ padding: 20, display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+                    <div style={{ marginBottom: 16 }}>
+                      <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, fontWeight: 700, color: '#111', margin: '0 0 6px', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '2.6em' }}>
+                        {item.programName}
+                      </h3>
+                      <p style={{ fontSize: 14, color: '#666', margin: '0 0 14px', lineHeight: 1.4, height: '1.4em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.university}</p>
 
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
-                      {prog?.city && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#888', fontWeight: 500 }}>
-                          <MapPin className="w-3 h-3" /> {prog.city}
-                        </span>
-                      )}
-                      {prog?.degree_level && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#888', fontWeight: 500 }}>
-                          <Award className="w-3 h-3" /> {prog.degree_level}
-                        </span>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, height: '24px', overflow: 'hidden' }}>
+                        {prog?.city && (
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#888', fontWeight: 500 }}>
+                            <MapPin className="w-3 h-3" /> {prog.city}
+                          </span>
+                        )}
+                        {prog?.degree_level && (
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#888', fontWeight: 500 }}>
+                            <Award className="w-3 h-3" /> {prog.degree_level}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div style={{ height: '70px', marginBottom: 16, flexShrink: 0 }}>
+                      {plan && (
+                        <div style={{ padding: 12, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <CheckCircle2 className="w-3.5 h-3.5" /> Application Progress
+                            </span>
+                            <span style={{ fontSize: 11, color: '#16a34a', fontWeight: 600 }}>{plan.completed}/{plan.total} steps</span>
+                          </div>
+                          <div style={{ height: 6, background: '#dcfce7', borderRadius: 99, overflow: 'hidden' }}>
+                            <div style={{ height: '100%', background: 'linear-gradient(90deg, #16a34a, #22c55e)', borderRadius: 99, transition: 'width 0.3s ease', width: `${progressPct(plan)}%` }} />
+                          </div>
+                        </div>
                       )}
                     </div>
 
-                    {plan && (
-                      <div style={{ marginBottom: 16, padding: 12, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Application Progress
-                          </span>
-                          <span style={{ fontSize: 11, color: '#16a34a', fontWeight: 600 }}>{plan.completed}/{plan.total} steps</span>
-                        </div>
-                        <div style={{ height: 6, background: '#dcfce7', borderRadius: 99, overflow: 'hidden' }}>
-                          <div style={{ height: '100%', background: 'linear-gradient(90deg, #16a34a, #22c55e)', borderRadius: 99, transition: 'width 0.3s ease', width: `${progressPct(plan)}%` }} />
-                        </div>
-                      </div>
-                    )}
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 'auto' }}>
                       <button onClick={() => handleNavigate(item.programId, `/course-finder/${item.programId}?source=shortlist`)} disabled={navigatingId === item.programId + `/course-finder/${item.programId}?source=shortlist`} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 20px', background: '#dd0000', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: 'pointer', transition: 'all 0.2s' }}
                         onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
