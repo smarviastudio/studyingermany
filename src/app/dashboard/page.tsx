@@ -134,25 +134,22 @@ export default function DashboardPage() {
           </div>
           
           {/* Main CTA */}
-          <Link href="/course-finder" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: '20px 24px', textDecoration: 'none', boxShadow: '0 4px 20px rgba(221,0,0,0.25)', transition: 'all 0.2s' }}
-            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: '20px 24px', boxShadow: '0 4px 20px rgba(221,0,0,0.25)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Search className="w-6 h-6" style={{ color: '#fff' }} />
+                <GraduationCap className="w-6 h-6" style={{ color: '#fff' }} />
               </div>
               <div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>Find Your Perfect Program</h3>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.9)', margin: 0 }}>Search thousands of courses in German universities</p>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>Welcome to Your Dashboard</h3>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.9)', margin: 0 }}>Track your study in Germany journey</p>
               </div>
             </div>
-            <ArrowRight className="w-6 h-6" style={{ color: '#fff' }} />
-          </Link>
+          </div>
         </header>
 
         {/* Stats Cards - Now Clickable */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, marginBottom: 40 }}>
-          <Link href={hasShortlist ? "/my-shortlist" : "/course-finder"} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
+          <Link href={hasShortlist ? "/my-shortlist" : "/"} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -164,14 +161,12 @@ export default function DashboardPage() {
             <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Saved Programs</h3>
             <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Programs you've shortlisted</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#dd0000', fontSize: 13, fontWeight: 600 }}>
-              {hasShortlist ? 'View saved programs' : 'Find programs'}
+              {hasShortlist ? 'View saved programs' : 'Browse homepage'}
               <ChevronRight className="w-4 h-4" />
             </div>
           </Link>
 
-          <Link href="/course-finder" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#22c55e'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(34,197,94,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Target className="w-6 h-6" style={{ color: '#22c55e' }} />
@@ -179,14 +174,12 @@ export default function DashboardPage() {
               <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{planProgress.length}</span>
             </div>
             <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Application Plans</h3>
-            <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Track your applications</p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#22c55e', fontSize: 13, fontWeight: 600 }}>
-              Start planning
-              <ChevronRight className="w-4 h-4" />
-            </div>
-          </Link>
+            <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Track your applications</p>
+          </div>
 
-          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
+          <Link href="/profile" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(59,130,246,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <TrendingUp className="w-6 h-6" style={{ color: '#3b82f6' }} />
@@ -194,8 +187,12 @@ export default function DashboardPage() {
               <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{profileCompletion}%</span>
             </div>
             <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Profile Complete</h3>
-            <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Complete your profile for better recommendations</p>
-          </div>
+            <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Complete your profile for better recommendations</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#3b82f6', fontSize: 13, fontWeight: 600 }}>
+              {profileCompletion === 100 ? 'View profile' : 'Complete profile'}
+              <ChevronRight className="w-4 h-4" />
+            </div>
+          </Link>
         </div>
 
         {/* Application Tools */}
@@ -353,13 +350,13 @@ export default function DashboardPage() {
             <div style={{ width: 80, height: 80, margin: '0 auto 24px', borderRadius: 20, background: '#fafafa', border: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Search className="w-10 h-10" style={{ color: '#999' }} />
             </div>
-            <h2 style={{ fontSize: 20, fontWeight: 600, color: '#111', marginBottom: 12 }}>Ready to Find Your Program?</h2>
+            <h2 style={{ fontSize: 20, fontWeight: 600, color: '#111', marginBottom: 12 }}>Start Your Journey</h2>
             <p style={{ fontSize: 16, color: '#737373', marginBottom: 24, maxWidth: 500, margin: '0 auto 24px' }}>
-              Start by searching for programs that match your interests and qualifications.
+              Complete your profile and explore our tools to prepare for studying in Germany.
             </p>
-            <Link href="/course-finder" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 600, color: '#fff', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', textDecoration: 'none', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}>
-              <Search className="w-5 h-5" />
-              Search Programs
+            <Link href="/profile" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 600, color: '#fff', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', textDecoration: 'none', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}>
+              <TrendingUp className="w-5 h-5" />
+              Complete Profile
             </Link>
           </section>
         )}
