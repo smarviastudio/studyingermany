@@ -10,7 +10,6 @@ import {
   GraduationCap, MapPin, Calendar, FileText, Sparkles,
   BookOpen, ExternalLink, X, Euro, Clock, Globe, Award, CheckCircle2, Info
 } from 'lucide-react';
-import { SiteNav } from '@/components/SiteNav';
 import type { Program } from '@/lib/types';
 
 interface ShortlistItem {
@@ -186,7 +185,6 @@ export default function MyShortlistPage() {
   if (status === 'loading' || loading) {
     return (
       <div style={{ minHeight: '100vh', background: '#fff' }}>
-        <SiteNav />
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 24px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
             <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#dd0000' }} />
