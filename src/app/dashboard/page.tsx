@@ -72,10 +72,10 @@ export default function DashboardPage() {
     let cancelled = false;
     const loadShortlist = async () => {
       try {
-        const res = await fetch('/api/user/shortlist');
+        const res = await fetch('/api/shortlist');
         if (res.ok && !cancelled) {
           const data = await res.json();
-          setShortlistEntries(data.entries || []);
+          setShortlistEntries(data.shortlists || []);
         }
       } catch (error) {
         console.warn('Failed to load shortlist', error);
@@ -83,18 +83,15 @@ export default function DashboardPage() {
     };
     const loadProgress = async () => {
       try {
-        const res = await fetch('/api/user/progress');
-        if (res.ok && !cancelled) {
-          const data = await res.json();
-          setPlanProgress(data.progress || []);
-        }
+        // Progress API doesn't exist yet, set to empty for now
+        setPlanProgress([]);
       } catch (error) {
         console.warn('Failed to load progress', error);
       }
     };
     const loadProfile = async () => {
       try {
-        const res = await fetch('/api/user/profile');
+        const res = await fetch('/api/profile');
         if (res.ok && !cancelled) {
           const data = await res.json();
           setUserProfile(data.profile || null);
