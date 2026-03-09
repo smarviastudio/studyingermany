@@ -398,7 +398,10 @@ details[open] summary .chevron { transform: rotate(180deg); }
    MOBILE-FIRST RESPONSIVE DESIGN
    ═══════════════════════════════════════════ */
 
-/* Mobile optimizations for app-like experience */
+/* ═══════════════════════════════════════════
+   COMPLETE MOBILE REDESIGN - APP-LIKE
+   ═══════════════════════════════════════════ */
+
 @media (max-width: 768px) {
   /* Global mobile adjustments */
   body {
@@ -407,285 +410,368 @@ details[open] summary .chevron { transform: rotate(180deg); }
   }
 
   .section-container {
-    padding: 0 16px;
+    padding: 0 20px;
   }
 
   .section-header {
-    margin-bottom: 32px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .section-label {
+    font-size: 11px;
+    margin-bottom: 8px;
   }
 
   .section-title {
-    font-size: 28px;
-    line-height: 1.2;
+    font-size: 24px;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
   }
 
   .section-desc {
-    font-size: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #888;
+    display: none; /* Hide on mobile for cleaner look */
   }
 
-  /* Hero section - mobile optimized */
+  /* Hero section - completely redesigned for mobile */
   .hero-section {
-    padding: 60px 0 50px;
-    background: linear-gradient(180deg, #fafafa 0%, #fff 50%, #fef7f0 100%);
+    padding: 20px 0 30px;
+    background: #fff;
+  }
+
+  .hero-bg-orbs {
+    display: none; /* Remove decorative elements on mobile */
   }
 
   .hero-content {
-    padding: 0 16px;
+    padding: 0 20px;
   }
 
   .hero-badge {
-    font-size: 10px;
-    padding: 6px 16px;
-    margin-bottom: 20px;
+    font-size: 9px;
+    padding: 5px 12px;
+    margin-bottom: 16px;
+    gap: 6px;
+  }
+
+  .hero-badge-dot {
+    width: 6px;
+    height: 6px;
   }
 
   .hero-title {
-    font-size: 36px;
-    line-height: 1.1;
-    letter-spacing: -1px;
-    margin-bottom: 16px;
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -0.8px;
+    margin-bottom: 12px;
   }
 
   .hero-subtitle {
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 28px;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    color: #666;
   }
 
   .hero-search-form {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .hero-search-bar {
-    padding: 6px 6px 6px 16px;
-    border-radius: 16px;
+    padding: 4px 4px 4px 14px;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .hero-search-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
   }
 
   .hero-search-input {
-    font-size: 15px;
+    font-size: 14px;
+    line-height: 1.4;
   }
 
   .hero-search-btn {
-    padding: 10px 20px;
-    font-size: 14px;
-    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 13px;
+    border-radius: 10px;
+    font-weight: 700;
   }
 
   .hero-suggestions {
-    gap: 8px;
-    margin-bottom: 24px;
+    gap: 6px;
+    margin-bottom: 16px;
+    justify-content: flex-start;
   }
 
   .hero-chip {
-    font-size: 12px;
-    padding: 7px 14px;
+    font-size: 11px;
+    padding: 6px 12px;
+    white-space: nowrap;
   }
 
   .hero-trust {
-    flex-direction: column;
-    gap: 12px;
+    display: none; /* Hide trust badges on mobile for cleaner look */
   }
 
-  .hero-trust-divider {
-    display: none;
-  }
-
-  .hero-trust-item {
-    font-size: 12px;
-  }
-
-  /* Journey section - mobile */
+  /* Journey section - mobile redesign */
   .journey-section {
-    padding: 60px 0 50px;
+    padding: 40px 0 30px;
+    background: #fafafa;
   }
 
   .journey-pills {
-    gap: 8px;
-    margin-bottom: 28px;
+    gap: 6px;
+    margin-bottom: 20px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 4px;
+  }
+
+  .journey-pills::-webkit-scrollbar {
+    display: none;
   }
 
   .journey-pill {
-    padding: 8px 14px;
-    font-size: 12px;
+    padding: 8px 12px;
+    font-size: 11px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-width: 1px;
   }
 
   .journey-pill-count {
-    font-size: 10px;
-    padding: 2px 6px;
+    font-size: 9px;
+    padding: 1px 5px;
   }
 
   /* Featured card - mobile */
   .featured-card {
-    height: 280px;
-    border-radius: 16px;
-    margin-bottom: 28px;
+    height: 240px;
+    border-radius: 14px;
+    margin-bottom: 20px;
   }
 
   .featured-card-content {
-    padding: 20px;
+    padding: 16px;
   }
 
   .featured-badge {
-    font-size: 10px;
-    padding: 4px 10px;
-    margin-bottom: 8px;
+    font-size: 9px;
+    padding: 3px 8px;
+    margin-bottom: 6px;
+    border-radius: 6px;
   }
 
   .featured-title {
-    font-size: 20px;
-    margin-bottom: 8px;
+    font-size: 18px;
+    margin-bottom: 6px;
+    line-height: 1.25;
   }
 
   .featured-excerpt {
-    font-size: 14px;
-    margin-bottom: 12px;
+    font-size: 13px;
+    margin-bottom: 10px;
+    line-height: 1.5;
   }
 
   .featured-meta {
-    font-size: 12px;
+    font-size: 11px;
+  }
+
+  .featured-read {
+    font-size: 11px;
   }
 
   /* Articles grid - mobile */
   .articles-grid {
-    gap: 16px;
+    gap: 12px;
   }
 
   .article-card {
-    border-radius: 16px;
+    border-radius: 14px;
+    border-width: 1px;
   }
 
   .article-card-image {
-    height: 160px;
+    height: 140px;
   }
 
   .article-badge {
-    font-size: 9px;
-    padding: 3px 10px;
-    top: 10px;
-    left: 10px;
+    font-size: 8px;
+    padding: 3px 8px;
+    top: 8px;
+    left: 8px;
+    border-radius: 6px;
   }
 
   .article-card-body {
-    padding: 14px 16px 16px;
+    padding: 12px 14px 14px;
+  }
+
+  .article-meta {
+    font-size: 10px;
+    margin-bottom: 8px;
   }
 
   .article-title {
-    font-size: 15px;
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 6px;
   }
 
   .article-excerpt {
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 12px;
   }
 
   .article-link {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   /* Stats section - mobile */
   .stats-section {
-    padding: 48px 0;
+    padding: 40px 0;
   }
 
   .stats-grid {
-    gap: 20px;
+    gap: 16px;
   }
 
   .stat-card {
-    padding: 20px 12px;
+    padding: 16px 10px;
   }
 
   .stat-icon-wrap {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 12px;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+
+  .stat-icon-wrap svg {
+    width: 18px;
+    height: 18px;
   }
 
   .stat-number {
-    font-size: 28px;
+    font-size: 24px;
+    letter-spacing: -0.3px;
   }
 
   .stat-label {
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.3;
   }
 
   /* Tools section - mobile */
   .tools-section {
-    padding: 60px 0;
+    padding: 40px 0;
   }
 
   .tools-grid {
-    gap: 12px;
+    gap: 10px;
   }
 
   .tool-card {
-    padding: 18px 20px;
-    border-radius: 16px;
+    padding: 14px 16px;
+    border-radius: 14px;
     flex-direction: row;
+    border-width: 1px;
   }
 
   .tool-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .tool-icon svg {
+    width: 22px;
+    height: 22px;
   }
 
   .tool-label {
-    font-size: 16px;
+    font-size: 15px;
+    margin-bottom: 2px;
   }
 
   .tool-desc {
-    font-size: 12px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #999;
   }
 
   /* CTA section - mobile */
   .cta-section {
-    padding: 60px 0;
+    padding: 50px 0;
   }
 
   .cta-title {
-    font-size: 28px;
-    margin-bottom: 12px;
+    font-size: 24px;
+    margin-bottom: 10px;
+    line-height: 1.25;
   }
 
   .cta-desc {
-    font-size: 16px;
-    margin-bottom: 28px;
+    font-size: 14px;
+    margin-bottom: 24px;
+    line-height: 1.5;
   }
 
   .cta-buttons {
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
   .cta-btn-primary,
   .cta-btn-secondary {
     width: 100%;
     justify-content: center;
-    padding: 14px 28px;
-    font-size: 15px;
+    padding: 13px 24px;
+    font-size: 14px;
+    border-radius: 10px;
   }
 
   /* Footer - mobile */
   .footer-grid {
-    gap: 32px;
-    padding: 48px 0 32px;
+    gap: 28px;
+    padding: 40px 0 28px;
   }
 
   .footer-brand-desc {
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .footer-col {
+    gap: 10px;
   }
 
   .footer-col-title {
     font-size: 10px;
+    margin-bottom: 6px;
   }
 
   .footer-link {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .footer-bottom {
-    padding: 20px 0;
-    font-size: 12px;
+    padding: 16px 0;
+    font-size: 11px;
+    text-align: center;
   }
 
   /* Search modal - mobile */
