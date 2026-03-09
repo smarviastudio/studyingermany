@@ -201,7 +201,6 @@ export default function MyShortlistPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
-      <SiteNav />
 
       {/* Program Detail Modal */}
       {selectedProgram && (
