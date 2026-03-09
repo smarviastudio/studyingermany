@@ -146,7 +146,7 @@ export default function DashboardPage() {
 
         {/* Stats Cards - Now Clickable */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, marginBottom: 40 }}>
-          <Link href={hasShortlist ? "/my-shortlist" : "/"} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
+          <Link href="/my-shortlist" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -158,21 +158,10 @@ export default function DashboardPage() {
             <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Saved Programs</h3>
             <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Programs you've shortlisted</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#dd0000', fontSize: 13, fontWeight: 600 }}>
-              {hasShortlist ? 'View saved programs' : 'Browse homepage'}
+              {hasShortlist ? 'View saved programs' : 'View shortlist'}
               <ChevronRight className="w-4 h-4" />
             </div>
           </Link>
-
-          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(34,197,94,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Target className="w-6 h-6" style={{ color: '#22c55e' }} />
-              </div>
-              <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{planProgress.length}</span>
-            </div>
-            <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Application Plans</h3>
-            <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Track your applications</p>
-          </div>
 
           <Link href="/profile" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
