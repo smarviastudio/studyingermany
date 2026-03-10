@@ -1,283 +1,50 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {
-  ArrowLeft,
-  Loader2,
-  Wand2,
-  User,
-  Building2,
-  Briefcase,
-  Target,
-  NotebookPen,
-  Paperclip,
-  FileText,
-  Sparkles,
-  Upload,
-  Check,
-  Copy,
-  ChevronDown,
-  ChevronUp,
-  Edit3,
-  Save,
-  X,
+  ArrowLeft, Loader2, Wand2, NotebookPen, Paperclip,
+  FileText, Sparkles, Upload, Check, Copy, X, RefreshCw,
+  Briefcase, User, ChevronRight, Download,
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 
-// Inline editable component like CV maker
-const E = ({
-  value,
-  onChange,
-  placeholder = '',
-  maxLength,
-  showWordCount = false,
-  wordLimit,
-  multiline = false,
-  style = {},
-  ...props
-}: {
-  value: string;
-  onChange: (val: string) => void;
-  placeholder?: string;
-  maxLength?: number;
-  showWordCount?: boolean;
-  wordLimit?: number;
-  multiline?: boolean;
-  style?: React.CSSProperties;
-  [key: string]: any;
-}) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [tempValue, setTempValue] = useState(value);
-  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    setTempValue(value);
-  }, [value]);
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-      if (multiline) {
-        const textarea = inputRef.current as HTMLTextAreaElement;
-        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-      }
-    }
-  }, [isEditing, multiline]);
-
-  const handleSave = () => {
-    if (wordLimit && tempValue.split(' ').filter(w => w).length > wordLimit) {
-      return; // Don't save if over word limit
-    }
-    onChange(tempValue);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setTempValue(value);
-    setIsEditing(false);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      handleCancel();
-    } else if (e.key === 'Enter' && !multiline) {
-      handleSave();
-    }
-  };
-
-  const wordCount = tempValue.split(' ').filter(w => w).length;
-  const isOverLimit = wordLimit && wordCount > wordLimit;
-
-  if (isEditing) {
-    return (
-      <div style={{ position: 'relative', ...style }}>
-        {multiline ? (
-          <textarea
-            ref={inputRef as React.RefObject<HTMLTextAreaElement>}
-            value={tempValue}
-            onChange={e => setTempValue(e.target.value)}
-            onBlur={handleSave}
-            onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            maxLength={maxLength}
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              border: '1px solid #e5e5e5',
-              borderRadius: 8,
-              fontSize: 14,
-              fontFamily: 'inherit',
-              resize: 'vertical',
-              minHeight: 60,
-              outline: 'none',
-              ...props
-            }}
-          />
-        ) : (
-          <input
-            ref={inputRef as React.RefObject<HTMLInputElement>}
-            type="text"
-            value={tempValue}
-            onChange={e => setTempValue(e.target.value)}
-            onBlur={handleSave}
-            onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            maxLength={maxLength}
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              border: '1px solid #e5e5e5',
-              borderRadius: 8,
-              fontSize: 14,
-              fontFamily: 'inherit',
-              outline: 'none',
-              ...props
-            }}
-          />
-        )}
-        {showWordCount && (
-          <div style={{
-            position: 'absolute',
-            bottom: multiline ? -20 : -18,
-            right: 0,
-            fontSize: 11,
-            color: isOverLimit ? '#dc2626' : '#999',
-            fontWeight: 600
-          }}>
-            {wordCount}{wordLimit ? `/${wordLimit}` : ''} words
-          </div>
-        )}
-        <div style={{ position: 'absolute', top: 4, right: 4, display: 'flex', gap: 4 }}>
-          <button
-            onClick={handleSave}
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 4,
-              border: 'none',
-              background: '#10b981',
-              color: '#fff',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            title="Save"
-          >
-            <Check className="w-3 h-3" />
-          </button>
-          <button
-            onClick={handleCancel}
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 4,
-              border: 'none',
-              background: '#ef4444',
-              color: '#fff',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            title="Cancel"
-          >
-            <X className="w-3 h-3" />
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      onClick={() => setIsEditing(true)}
-      style={{
-        padding: '8px 12px',
-        border: '1px dashed #e5e5e5',
-        borderRadius: 8,
-        minHeight: multiline ? 60 : 36,
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: multiline ? 'flex-start' : 'center',
-        justifyContent: value ? 'flex-start' : 'center',
-        transition: 'all 0.2s',
-        ...style
-      }}
-      onMouseEnter={e => e.currentTarget.style.borderColor = '#dd0000'}
-      onMouseLeave={e => e.currentTarget.style.borderColor = '#e5e5e5'}
-    >
-      {value ? (
-        <div style={{ width: '100%' }}>
-          <div style={{ fontSize: 14, color: '#111', whiteSpace: multiline ? 'pre-wrap' : 'nowrap', overflow: multiline ? 'visible' : 'hidden', textOverflow: 'ellipsis' }}>
-            {value}
-          </div>
-          {showWordCount && (
-            <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>
-              {wordCount}{wordLimit ? `/${wordLimit}` : ''} words
-            </div>
-          )}
-        </div>
-      ) : (
-        <span style={{ fontSize: 14, color: '#999' }}>{placeholder}</span>
-      )}
-      <Edit3 className="w-3 h-3" style={{ color: '#999', marginLeft: 8, flexShrink: 0 }} />
-    </div>
-  );
-};
-
-const InputShell = ({
-  label,
-  children,
-  required,
-}: {
-  label: string;
-  children: React.ReactNode;
-  required?: boolean;
-}) => (
-  <div style={{ fontSize: 13, color: '#666', display: 'flex', flexDirection: 'column', gap: 6 }}>
-    <span style={{ fontWeight: 600 }}>
-      {label}
-      {required && <span style={{ color: '#dd0000' }}> *</span>}
-    </span>
+const Field = ({
+  label, required, hint, children,
+}: { label: string; required?: boolean; hint?: string; children: React.ReactNode }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+    <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      {label}{required && <span style={{ color: '#dd0000', marginLeft: 2 }}>*</span>}
+    </label>
     {children}
+    {hint && <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>{hint}</p>}
   </div>
 );
 
-const initialJob = {
-  role: '',
-  company: '',
-  jobDescription: '',
-  tone: 'Professional & warm',
+const inputStyle: React.CSSProperties = {
+  width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #e5e5e5',
+  fontSize: 14, color: '#111', outline: 'none', background: '#fff', fontFamily: 'inherit',
+  transition: 'border-color 0.2s', boxSizing: 'border-box',
 };
 
-const initialApplicant = {
-  fullName: '',
-  summary: '',
-  strengths: '',
-  achievements: '',
-  closing: '',
+const taStyle: React.CSSProperties = {
+  ...inputStyle, resize: 'vertical', minHeight: 90, lineHeight: 1.6,
 };
 
-function Tip({ title, body }: { title: string; body: string }) {
-  return (
-    <div style={{ borderRadius: 12, border: '1px solid #e5e5e5', background: 'rgba(221,0,0,0.03)', padding: '12px 16px' }}>
-      <p style={{ fontSize: 14, fontWeight: 600, color: '#111', display: 'flex', alignItems: 'center', gap: 8, margin: 0 }}>
-        <Sparkles className="w-4 h-4" style={{ color: '#dd0000' }} /> {title}
-      </p>
-      <p style={{ fontSize: 13, color: '#666', marginTop: 4, lineHeight: 1.5, margin: '4px 0 0' }}>{body}</p>
-    </div>
-  );
-}
+const TONES = ['Professional & warm', 'Bold & confident', 'Humble & eager', 'Formal & structured'];
 
 export default function CoverLetterPage() {
   const { data: session } = useSession();
-  const [mode, setMode] = useState<'generate' | 'improve'>('generate');
-  const [job, setJob] = useState(initialJob);
-  const [applicant, setApplicant] = useState(initialApplicant);
+  const [role, setRole] = useState('');
+  const [company, setCompany] = useState('');
+  const [jobDescription, setJobDescription] = useState('');
+  const [tone, setTone] = useState('Professional & warm');
+  const [fullName, setFullName] = useState('');
+  const [background, setBackground] = useState('');
+  const [strengths, setStrengths] = useState('');
+  const [achievements, setAchievements] = useState('');
   const [letter, setLetter] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -285,410 +52,288 @@ export default function CoverLetterPage() {
   const [paywallData, setPaywallData] = useState<{ current: number; limit: number } | null>(null);
   const [signInPrompt, setSignInPrompt] = useState(false);
   const [copied, setCopied] = useState(false);
-
   const [cvParsing, setCvParsing] = useState(false);
   const [cvError, setCvError] = useState('');
   const [cvSummary, setCvSummary] = useState('');
   const [cvFileName, setCvFileName] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
 
-  const [expandedSections, setExpandedSections] = useState({
-    job: true,
-    applicant: true,
-    cv: false,
-  });
-
-  const toggleSection = (section: 'job' | 'applicant' | 'cv') => {
-    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
-  };
-
-  const requiredReady =
-    job.role.trim() &&
-    job.company.trim() &&
-    applicant.fullName.trim() &&
-    applicant.summary.trim() &&
-    (mode === 'generate' ? true : letter.trim().length > 80);
+  const requiredReady2 = role.trim() && company.trim() && fullName.trim() && background.trim();
 
   const parseCv = async (file: File) => {
-    if (file.type !== 'application/pdf') {
-      setCvError('Please upload a PDF file.');
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setCvError('File too large (max 5MB).');
-      return;
-    }
+    if (file.type !== 'application/pdf') { setCvError('Please upload a PDF file.'); return; }
+    if (file.size > 5 * 1024 * 1024) { setCvError('File too large (max 5MB).'); return; }
     try {
-      setCvParsing(true);
-      setCvError('');
-      const formData = new FormData();
-      formData.append('file', file);
-      const res = await fetch('/api/parse-cv', {
-        method: 'POST',
-        body: formData,
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || 'Failed to parse CV');
-      }
+      setCvParsing(true); setCvError('');
+      const fd = new FormData(); fd.append('file', file);
+      const res = await fetch('/api/parse-cv', { method: 'POST', body: fd });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'Failed'); }
       const data = await res.json();
-      setCvSummary(data.text);
-      setCvFileName(file.name);
-      if (!applicant.summary.trim()) {
-        const snippet = data.text.split('\n').slice(0, 3).join(' ').slice(0, 160);
-        setApplicant((prev) => ({ ...prev, summary: snippet }));
-      }
-    } catch (err) {
-      setCvError(err instanceof Error ? err.message : 'Failed to parse CV');
-    } finally {
-      setCvParsing(false);
-    }
+      setCvSummary(data.text); setCvFileName(file.name);
+      if (!background.trim()) setBackground(data.text.split('\n').slice(0, 3).join(' ').slice(0, 200));
+    } catch (err) { setCvError(err instanceof Error ? err.message : 'Failed to parse CV'); }
+    finally { setCvParsing(false); }
   };
 
-  const removeCv = () => {
-    setCvSummary('');
-    setCvFileName('');
-    setCvError('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
+  const removeCv = () => { setCvSummary(''); setCvFileName(''); setCvError(''); if (fileInputRef.current) fileInputRef.current.value = ''; };
 
   const handleGenerate = async () => {
-    if (!requiredReady) return;
+    if (!requiredReady2) return;
     if (!session) { setSignInPrompt(true); return; }
     try {
-      setLoading(true);
-      setError(null);
+      setLoading(true); setError(null);
       const response = await fetch('/api/cover-letter/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mode,
-          job,
-          applicant,
-          draftText: mode === 'improve' ? letter : undefined,
-          cvText: cvSummary || undefined,
-        }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'generate', job: { role, company, jobDescription, tone }, applicant: { fullName, summary: background, strengths, achievements, closing: '' }, cvText: cvSummary || undefined }),
       });
-      if (response.status === 402) {
-        const errData = await response.json().catch(() => ({}));
-        setPaywallData({ current: errData.current ?? 0, limit: errData.limit ?? 3 });
-        setPaywallOpen(true);
-        return;
-      }
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.message || errData.error || 'Failed to generate cover letter');
-      }
+      if (response.status === 402) { const e = await response.json().catch(() => ({})); setPaywallData({ current: e.current ?? 0, limit: e.limit ?? 3 }); setPaywallOpen(true); return; }
+      if (!response.ok) { const e = await response.json().catch(() => ({})); throw new Error(e.message || e.error || 'Failed'); }
       const data = await response.json();
       setLetter(data.letter);
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate cover letter');
-    } finally {
-      setLoading(false);
-    }
+      setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    } catch (err) { setError(err instanceof Error ? err.message : 'Failed to generate'); }
+    finally { setLoading(false); }
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(letter);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyToClipboard = () => { navigator.clipboard.writeText(letter); setCopied(true); setTimeout(() => setCopied(false), 2000); };
+
+  const downloadLetter = () => {
+    const blob = new Blob([letter], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `cover-letter-${company || 'letter'}.txt`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   };
+
+  const steps = [
+    { id: 1, label: 'Job details', icon: Briefcase, done: !!(role && company) },
+    { id: 2, label: 'About you', icon: User, done: !!(fullName && background) },
+    { id: 3, label: 'Generate', icon: Sparkles, done: !!letter },
+  ];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
-      <PaywallModal
-        isOpen={paywallOpen}
-        onClose={() => setPaywallOpen(false)}
-        feature="cover letter generations"
-        currentUsage={paywallData?.current}
-        limit={paywallData?.limit}
-      />
+    <div style={{ minHeight: '100vh', background: '#f3f4f6' }}>
+      <PaywallModal isOpen={paywallOpen} onClose={() => setPaywallOpen(false)} feature="cover letter generations" currentUsage={paywallData?.current} limit={paywallData?.limit} />
 
-      {/* Sign-in prompt */}
       {signInPrompt && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', zIndex: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }} onClick={() => setSignInPrompt(false)}>
-          <div style={{ background: '#fff', borderRadius: 24, padding: '40px 36px', maxWidth: 420, width: '100%', textAlign: 'center', boxShadow: '0 30px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
-            <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-              <NotebookPen size={28} style={{ color: '#fff' }} />
-            </div>
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#111', margin: '0 0 10px' }}>Sign in to generate</h2>
-            <p style={{ fontSize: 15, color: '#666', lineHeight: 1.6, margin: '0 0 28px' }}>Create a free account to generate your AI cover letter. Free users get 3 generations per month.</p>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)', zIndex: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }} onClick={() => setSignInPrompt(false)}>
+          <div style={{ background: '#fff', borderRadius: 24, padding: '40px 36px', maxWidth: 400, width: '100%', textAlign: 'center', boxShadow: '0 32px 80px rgba(0,0,0,0.22)' }} onClick={e => e.stopPropagation()}>
+            <div style={{ width: 60, height: 60, borderRadius: 18, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}><NotebookPen size={26} color="#fff" /></div>
+            <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111', margin: '0 0 8px' }}>Sign in to generate</h2>
+            <p style={{ fontSize: 14, color: '#666', lineHeight: 1.6, margin: '0 0 24px' }}>Free account gives you 3 cover letters per month — no credit card needed.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <a href="/auth/signin?callbackUrl=/cover-letter" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px', borderRadius: 12, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', color: '#fff', fontWeight: 700, fontSize: 15, textDecoration: 'none' }}>Sign in</a>
-              <a href="/auth/register?callbackUrl=/cover-letter" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px', borderRadius: 12, background: '#f5f5f5', color: '#111', fontWeight: 700, fontSize: 15, textDecoration: 'none' }}>Create free account</a>
+              <a href="/auth/signin?callbackUrl=/cover-letter" style={{ padding: '13px', borderRadius: 12, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', color: '#fff', fontWeight: 700, fontSize: 14, textDecoration: 'none', display: 'block' }}>Sign in</a>
+              <a href="/auth/register?callbackUrl=/cover-letter" style={{ padding: '13px', borderRadius: 12, background: '#f5f5f5', color: '#111', fontWeight: 700, fontSize: 14, textDecoration: 'none', display: 'block' }}>Create free account</a>
             </div>
-            <button onClick={() => setSignInPrompt(false)} style={{ marginTop: 16, background: 'none', border: 'none', color: '#999', fontSize: 13, cursor: 'pointer' }}>Maybe later</button>
+            <button onClick={() => setSignInPrompt(false)} style={{ marginTop: 14, background: 'none', border: 'none', color: '#aaa', fontSize: 13, cursor: 'pointer' }}>Maybe later</button>
           </div>
         </div>
       )}
 
       <SiteNav />
 
-      <main style={{ maxWidth: 1000, margin: '0 auto', padding: '48px 24px 80px' }}>
-        <header style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 40 }}>
-          <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
-            <NotebookPen className="w-8 h-8" style={{ color: '#fff' }} />
-          </div>
-          <div>
-            <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>Cover Letter Studio</h1>
-            <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>Create professional cover letters in minutes with AI assistance</p>
-          </div>
-        </header>
-
-        {/* Job Details Section */}
-        <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 28, marginBottom: 24 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
+      {/* Hero bar */}
+      <div style={{ background: 'linear-gradient(135deg,#0f0c29,#302b63,#24243e)', padding: '40px 24px 32px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.5)', fontSize: 13, textDecoration: 'none', marginBottom: 20 }}>
+            <ArrowLeft size={14} /> Back
+          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+            <div style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.35)', flexShrink: 0 }}>
+              <NotebookPen size={26} color="#fff" />
+            </div>
             <div>
-              <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Job details</p>
-              <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Fill in the job information you're applying for.</p>
-            </div>
-            {/* Mode Selection */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13 }}>
-              <span style={{ color: '#999', fontWeight: 600 }}>Mode:</span>
-              <div style={{ display: 'flex', borderRadius: 10, border: '1px solid #e5e5e5', overflow: 'hidden' }}>
-                <button
-                  type="button"
-                  onClick={() => setMode('generate')}
-                  style={{ padding: '8px 16px', background: mode === 'generate' ? '#dd0000' : 'transparent', color: mode === 'generate' ? '#fff' : '#666', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
-                >
-                  ✨ Generate
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMode('improve')}
-                  style={{ padding: '8px 16px', background: mode === 'improve' ? '#dd0000' : 'transparent', color: mode === 'improve' ? '#fff' : '#666', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
-                >
-                  ♻️ Improve
-                </button>
-              </div>
+              <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 'clamp(22px,3vw,30px)', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>Cover Letter Studio</h1>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: 0 }}>AI-powered cover letters tailored to German employers — ready in 60 seconds</p>
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-            <InputShell label="Role title" required>
-              <E
-                value={job.role}
-                onChange={val => setJob(prev => ({ ...prev, role: val }))}
-                placeholder="e.g. Data Analyst Intern"
-                maxLength={100}
-                wordLimit={10}
-                showWordCount={true}
-              />
-            </InputShell>
-            <InputShell label="Company" required>
-              <E
-                value={job.company}
-                onChange={val => setJob(prev => ({ ...prev, company: val }))}
-                placeholder="e.g. Siemens Mobility"
-                maxLength={100}
-                wordLimit={5}
-                showWordCount={true}
-              />
-            </InputShell>
-            <InputShell label="Tone preference">
-              <select
-                value={job.tone}
-                onChange={(e) => setJob((p) => ({ ...p, tone: e.target.value }))}
-                style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', cursor: 'pointer', fontWeight: 600 }}
-              >
-                <option value="Professional & warm">Professional & warm</option>
-                <option value="Bold & confident">Bold & confident</option>
-                <option value="Humble & eager">Humble & eager</option>
-              </select>
-            </InputShell>
-            <InputShell label="Job description">
-              <E
-                value={job.jobDescription}
-                onChange={val => setJob(prev => ({ ...prev, jobDescription: val }))}
-                placeholder="Paste key requirements or highlights..."
-                multiline={true}
-                wordLimit={150}
-                showWordCount={true}
-              />
-            </InputShell>
-          </div>
-        </section>
-
-        {/* Applicant Details Section */}
-        <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 28, marginBottom: 24 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
-            <div>
-              <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>About you</p>
-              <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Tell us about yourself and your qualifications.</p>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <InputShell label="Full name" required>
-              <E
-                value={applicant.fullName}
-                onChange={val => setApplicant(prev => ({ ...prev, fullName: val }))}
-                placeholder="e.g. Aisha Khan"
-                maxLength={100}
-                wordLimit={5}
-                showWordCount={true}
-              />
-            </InputShell>
-            <InputShell label="Your elevator pitch" required>
-              <E
-                value={applicant.summary}
-                onChange={val => setApplicant(prev => ({ ...prev, summary: val }))}
-                placeholder="One paragraph on who you are + what you bring."
-                multiline={true}
-                wordLimit={50}
-                showWordCount={true}
-              />
-            </InputShell>
-            <InputShell label="Strengths / skills">
-              <E
-                value={applicant.strengths}
-                onChange={val => setApplicant(prev => ({ ...prev, strengths: val }))}
-                placeholder="Technical tools, languages, soft skills..."
-                multiline={true}
-                wordLimit={100}
-                showWordCount={true}
-              />
-            </InputShell>
-            <InputShell label="Achievements / proof">
-              <E
-                value={applicant.achievements}
-                onChange={val => setApplicant(prev => ({ ...prev, achievements: val }))}
-                placeholder="Impact metrics, standout projects, leadership moments..."
-                multiline={true}
-                wordLimit={100}
-                showWordCount={true}
-              />
-            </InputShell>
-            <InputShell label="Closing preference">
-              <E
-                value={applicant.closing}
-                onChange={val => setApplicant(prev => ({ ...prev, closing: val }))}
-                placeholder="Optional: specify availability, gratitude note, or CTA."
-                multiline={true}
-                wordLimit={50}
-                showWordCount={true}
-              />
-            </InputShell>
-          </div>
-        </section>
-
-        {/* CV Upload Section */}
-        <section style={{ background: '#fff', border: '2px dashed #e5e5e5', borderRadius: 20, padding: 24, marginBottom: 24 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <div style={{ flexShrink: 0, width: 48, height: 48, borderRadius: 12, background: 'rgba(221,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Upload className="w-6 h-6" style={{ color: '#dd0000' }} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 15, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Upload CV (optional)</p>
-                <p style={{ fontSize: 13, color: '#737373', margin: 0 }}>We extract snippets to personalize the tone.</p>
-              </div>
-            </div>
-            {cvSummary ? (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fafafa' }}>
-                <div>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: '#111', margin: '0 0 2px' }}>{cvFileName}</p>
-                  <p style={{ fontSize: 12, color: '#999', margin: 0 }}>{Math.floor(cvSummary.length / 10)} words parsed</p>
+          {/* Progress steps */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginTop: 28, maxWidth: 420 }}>
+            {steps.map((s, i) => (
+              <div key={s.id} style={{ display: 'flex', alignItems: 'center', flex: i < steps.length - 1 ? 1 : undefined }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: s.done ? '#22c55e' : 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.3s' }}>
+                    {s.done ? <Check size={14} color="#fff" /> : <s.icon size={12} color="rgba(255,255,255,0.6)" />}
+                  </div>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: s.done ? '#86efac' : 'rgba(255,255,255,0.5)', whiteSpace: 'nowrap' }}>{s.label}</span>
                 </div>
-                <button onClick={removeCv} style={{ fontSize: 13, color: '#dd0000', background: 'transparent', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
-                  Remove
-                </button>
+                {i < steps.length - 1 && <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.15)', margin: '0 12px' }} />}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <main style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
+
+          {/* LEFT — Form */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {/* Job Card */}
+            <div style={{ background: '#fff', borderRadius: 20, padding: 24, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #e5e7eb' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg,#dd0000,#ff6b6b)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Briefcase size={16} color="#fff" />
+                </div>
+                <div>
+                  <h2 style={{ fontSize: 15, fontWeight: 700, color: '#111', margin: 0 }}>Job Details</h2>
+                  <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>Tell us about the position</p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <Field label="Role title" required>
+                    <input style={inputStyle} value={role} onChange={e => setRole(e.target.value)} placeholder="e.g. Data Analyst Intern" />
+                  </Field>
+                  <Field label="Company" required>
+                    <input style={inputStyle} value={company} onChange={e => setCompany(e.target.value)} placeholder="e.g. Siemens Mobility" />
+                  </Field>
+                </div>
+                <Field label="Writing tone">
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {TONES.map(t => (
+                      <button key={t} onClick={() => setTone(t)} style={{ padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, border: `1.5px solid ${tone === t ? '#dd0000' : '#e5e5e5'}`, background: tone === t ? 'rgba(221,0,0,0.06)' : '#fff', color: tone === t ? '#dd0000' : '#666', cursor: 'pointer', transition: 'all 0.18s' }}>{t}</button>
+                    ))}
+                  </div>
+                </Field>
+                <Field label="Job description" hint="Paste 3-5 key requirements for a tailored result">
+                  <textarea style={taStyle} value={jobDescription} onChange={e => setJobDescription(e.target.value)} placeholder="Paste the job description or key requirements..." rows={4} />
+                </Field>
+              </div>
+            </div>
+
+            {/* About You Card */}
+            <div style={{ background: '#fff', borderRadius: 20, padding: 24, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #e5e7eb' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg,#7c3aed,#a78bfa)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <User size={16} color="#fff" />
+                </div>
+                <div>
+                  <h2 style={{ fontSize: 15, fontWeight: 700, color: '#111', margin: 0 }}>About You</h2>
+                  <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>Your background & strengths</p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <Field label="Full name" required>
+                  <input style={inputStyle} value={fullName} onChange={e => setFullName(e.target.value)} placeholder="e.g. Aisha Khan" />
+                </Field>
+                <Field label="Your background" required hint="A short intro — studies, key skills, what drives you">
+                  <textarea style={taStyle} value={background} onChange={e => setBackground(e.target.value)} placeholder="Computer Science graduate with 2 years in data engineering, passionate about AI..." rows={3} />
+                </Field>
+                <Field label="Key strengths & skills" hint="Tools, languages, soft skills">
+                  <textarea style={{ ...taStyle, minHeight: 70 }} value={strengths} onChange={e => setStrengths(e.target.value)} placeholder="Python, SQL, teamwork, communication..." rows={2} />
+                </Field>
+                <Field label="Standout achievement" hint="One metric or result that proves your value">
+                  <textarea style={{ ...taStyle, minHeight: 70 }} value={achievements} onChange={e => setAchievements(e.target.value)} placeholder="Built a dashboard that reduced reporting time by 40%..." rows={2} />
+                </Field>
+              </div>
+            </div>
+
+            {/* CV Upload */}
+            <div style={{ background: '#fff', borderRadius: 20, padding: 20, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px dashed #d1d5db' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(221,0,0,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Paperclip size={18} color="#dd0000" />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: '#111', margin: '0 0 1px' }}>Attach CV <span style={{ color: '#9ca3af', fontWeight: 400, fontSize: 12 }}>(optional)</span></p>
+                  <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>We extract context to personalise the letter</p>
+                </div>
+                {!cvSummary ? (
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 10, background: '#f5f5f5', border: '1px solid #e5e5e5', fontSize: 13, color: '#555', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                    {cvParsing ? <Loader2 size={14} className="animate-spin" style={{ color: '#dd0000' }} /> : <Upload size={14} />}
+                    {cvParsing ? 'Reading…' : 'Upload PDF'}
+                    <input ref={fileInputRef} type="file" accept="application/pdf" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) parseCv(f); }} />
+                  </label>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '6px 12px' }}>
+                    <Check size={14} color="#22c55e" />
+                    <span style={{ fontSize: 12, fontWeight: 600, color: '#16a34a', maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cvFileName}</span>
+                    <button onClick={removeCv} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 0, display: 'flex' }}><X size={12} /></button>
+                  </div>
+                )}
+              </div>
+              {cvError && <p style={{ fontSize: 12, color: '#dc2626', marginTop: 8, marginBottom: 0 }}>{cvError}</p>}
+            </div>
+
+            {/* Generate Button */}
+            <div style={{ background: '#fff', borderRadius: 20, padding: 20, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #e5e7eb' }}>
+              {error && <div style={{ fontSize: 13, color: '#dc2626', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '10px 14px', marginBottom: 14 }}>{error}</div>}
+              <button
+                onClick={handleGenerate}
+                disabled={!requiredReady2 || loading}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '15px', borderRadius: 14, fontSize: 15, fontWeight: 800, background: !requiredReady2 || loading ? '#e5e7eb' : 'linear-gradient(135deg,#dd0000,#7c3aed)', color: !requiredReady2 || loading ? '#9ca3af' : '#fff', border: 'none', cursor: !requiredReady2 || loading ? 'not-allowed' : 'pointer', transition: 'all 0.2s', boxShadow: !requiredReady2 || loading ? 'none' : '0 4px 20px rgba(221,0,0,0.25)' }}
+              >
+                {loading ? <><Loader2 size={18} className="animate-spin" /> Generating…</> : <><Wand2 size={18} /> Generate Cover Letter</>}
+              </button>
+              {!requiredReady2 && <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', marginTop: 8, marginBottom: 0 }}>Fill in role, company, your name and background to continue</p>}
+              <button onClick={() => { setRole(''); setCompany(''); setJobDescription(''); setTone('Professional & warm'); setFullName(''); setBackground(''); setStrengths(''); setAchievements(''); setLetter(''); removeCv(); }} style={{ width: '100%', marginTop: 10, padding: '10px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 13, color: '#666', background: 'transparent', cursor: 'pointer', fontWeight: 600 }}>
+                <RefreshCw size={13} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />Reset all
+              </button>
+            </div>
+          </div>
+
+          {/* RIGHT — Preview / Result */}
+          <div ref={resultRef} style={{ position: 'sticky', top: 24 }}>
+            {!letter ? (
+              <div style={{ background: '#fff', borderRadius: 20, padding: '60px 32px', textAlign: 'center', border: '2px dashed #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+                <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg,rgba(221,0,0,0.08),rgba(124,58,237,0.08))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                  <FileText size={28} color="#d1d5db" />
+                </div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#9ca3af', margin: '0 0 8px' }}>Your letter will appear here</h3>
+                <p style={{ fontSize: 13, color: '#d1d5db', margin: 0, lineHeight: 1.6 }}>Fill in the form on the left and click<br /><strong style={{ color: '#bbb' }}>Generate Cover Letter</strong></p>
+                <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 10, textAlign: 'left' }}>
+                  {['Tailored to the specific role & company', 'Highlights your most relevant skills', 'Professional German employer tone', 'Ready to edit and download'].map(t => (
+                    <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: '#9ca3af' }}>
+                      <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Check size={11} color="#d1d5db" />
+                      </div>
+                      {t}
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : (
-              <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '24px', borderRadius: 12, border: '2px dashed #e5e5e5', background: '#fafafa', cursor: 'pointer', fontSize: 14, color: '#666', transition: 'all 0.2s' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.background = 'rgba(221,0,0,0.02)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e5e5'; e.currentTarget.style.background = '#fafafa'; }}>
-                {cvParsing ? <Loader2 className="w-5 h-5 animate-spin" style={{ color: '#dd0000' }} /> : <Paperclip className="w-5 h-5" />}
-                Upload PDF (max 5MB)
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="application/pdf"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) parseCv(file);
-                  }}
-                />
-              </label>
-            )}
-            {cvError && <p style={{ fontSize: 13, color: '#dc2626', margin: 0 }}>{cvError}</p>}
-          </div>
-        </section>
-
-        {/* Tips */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24 }}>
-          <Tip title="Keep it specific" body="Mention 2-3 requirements from the job post so the letter mirrors what recruiters care about." />
-          <Tip title="Show proof fast" body="Include one metric or result in your achievements field—the model will surface it in paragraph two." />
-        </div>
-
-        {/* Action Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '20px', background: '#fff', borderRadius: 16, border: '1px solid #ebebeb', marginBottom: 24 }}>
-          {error && <div style={{ fontSize: 14, color: '#dc2626', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 12, padding: '12px 16px' }}>{error}</div>}
-          <div style={{ display: 'flex', gap: 12 }}>
-            <button
-              onClick={handleGenerate}
-              disabled={!requiredReady || loading}
-              style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 700, background: loading || !requiredReady ? '#ccc' : 'linear-gradient(135deg, #dd0000, #7c3aed)', color: '#fff', border: 'none', cursor: loading || !requiredReady ? 'not-allowed' : 'pointer', transition: 'all 0.2s', boxShadow: loading || !requiredReady ? 'none' : '0 4px 16px rgba(221,0,0,0.2)', opacity: loading || !requiredReady ? 0.5 : 1 }}
-            >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Wand2 className="w-5 h-5" />}
-              {mode === 'generate' ? 'Draft Letter' : 'Improve Draft'}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setLetter('');
-                setJob(initialJob);
-                setApplicant(initialApplicant);
-                removeCv();
-              }}
-              style={{ padding: '12px 24px', borderRadius: 12, border: '1px solid #e5e5e5', fontSize: 14, color: '#666', background: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
-            >
-              Reset
-            </button>
-          </div>
-          {!requiredReady && (
-            <p style={{ fontSize: 13, color: '#999', textAlign: 'center', margin: 0 }}>
-              Fill in role, company, your name, and a short summary to continue.
-            </p>
-          )}
-        </div>
-
-        {/* Letter Preview with Inline Editing */}
-        {letter && (
-          <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 28 }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: 0 }}>Generated letter</h2>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <button onClick={copyToClipboard} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, padding: '8px 16px', borderRadius: 10, border: '1px solid #e5e5e5', color: copied ? '#10b981' : '#666', background: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>
-                    {copied ? <Check className="w-4 h-4" style={{ color: '#10b981' }} /> : <Copy className="w-4 h-4" />}
-                    {copied ? 'Copied' : 'Copy'}
-                  </button>
-                  <button onClick={() => window.print()} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, padding: '8px 16px', borderRadius: 10, border: '1px solid #e5e5e5', color: '#666', background: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>
-                    <FileText className="w-4 h-4" /> Save
-                  </button>
+              <div style={{ background: '#fff', borderRadius: 20, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+                {/* Result Header */}
+                <div style={{ padding: '16px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg,rgba(221,0,0,0.03),rgba(124,58,237,0.03))' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Sparkles size={14} color="#fff" />
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: '#111', margin: 0 }}>Generated Letter</p>
+                      <p style={{ fontSize: 11, color: '#9ca3af', margin: 0 }}>{letter.split(/\s+/).filter(Boolean).length} words</p>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button onClick={copyToClipboard} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid #e5e5e5', fontSize: 12, color: copied ? '#16a34a' : '#555', background: copied ? 'rgba(34,197,94,0.06)' : '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>
+                      {copied ? <Check size={13} color="#16a34a" /> : <Copy size={13} />}{copied ? 'Copied!' : 'Copy'}
+                    </button>
+                    <button onClick={downloadLetter} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid #e5e5e5', fontSize: 12, color: '#555', background: '#fff', cursor: 'pointer', fontWeight: 600 }}>
+                      <Download size={13} /> Save
+                    </button>
+                    <button onClick={handleGenerate} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', border: 'none', fontSize: 12, color: '#fff', cursor: loading ? 'not-allowed' : 'pointer', fontWeight: 700, opacity: loading ? 0.7 : 1 }}>
+                      {loading ? <Loader2 size={13} className="animate-spin" /> : <RefreshCw size={13} />} Regenerate
+                    </button>
+                  </div>
+                </div>
+                {/* Letter body */}
+                <div style={{ padding: 24 }}>
+                  <textarea
+                    value={letter}
+                    onChange={e => setLetter(e.target.value)}
+                    style={{ width: '100%', border: 'none', outline: 'none', fontSize: 14, lineHeight: 1.8, color: '#1f2937', fontFamily: 'Georgia, serif', resize: 'none', minHeight: 520, background: 'transparent', boxSizing: 'border-box' }}
+                  />
                 </div>
               </div>
-            </div>
-            <div style={{ padding: 20, background: '#fafafa', borderRadius: 12, border: '1px solid #f5f5f5' }}>
-              <E
-                value={letter}
-                onChange={setLetter}
-                placeholder="Your generated letter will appear here..."
-                multiline={true}
-                wordLimit={500}
-                showWordCount={true}
-                style={{ minHeight: 400 }}
-              />
-            </div>
-          </section>
-        )}
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );
 }
 
-            

@@ -1,0 +1,40 @@
+import { NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+
+const FREE_LIMIT = 9; // 3 cv + 3 motivation + 3 cover letter per month
+
+export async function GET() {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { id: true, subscription: { select: { planType: true } } },
+    });
+
+    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+
+    const month = new Date().toISOString().slice(0, 7); // "2025-06"
+    const usage = await prisma.usageLimits.findUnique({
+      where: { userId_month: { userId: user.id, month } },
+    });
+
+    const planType = user.subscription?.planType ?? 'free';
+    const limit = planType === 'pro' ? 999 : planType === 'student' ? 30 : FREE_LIMIT;
+
+    const used = usage
+      ? (usage.cvGenerations ?? 0) +
+        (usage.motivationLetterGenerations ?? 0) +
+        (usage.coverLetterGenerations ?? 0)
+      : 0;
+
+    return NextResponse.json({ used, limit, remaining: Math.max(0, limit - used), planType, month });
+  } catch (err) {
+    console.error('[ai-credits]', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

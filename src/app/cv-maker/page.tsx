@@ -885,12 +885,17 @@ export default function CVMakerPage() {
                   <div style={{ background: '#fff', overflow: 'hidden', display: 'flex', justifyContent: 'center', height: 180, position: 'relative' }}>
                     <MiniCV tpl={t} />
                     {isPremium && (
-                      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(2px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(234,179,8,0.2)', border: '1.5px solid rgba(234,179,8,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Crown size={18} color="#fbbf24" />
+                      <>
+                        {/* Diagonal watermark text */}
+                        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', overflow: 'hidden' }}>
+                          <span style={{ transform: 'rotate(-30deg)', fontSize: 22, fontWeight: 900, color: 'rgba(234,179,8,0.22)', letterSpacing: '0.12em', whiteSpace: 'nowrap', userSelect: 'none', textTransform: 'uppercase' }}>PREMIUM</span>
                         </div>
-                        <span style={{ fontSize: 11, fontWeight: 800, color: '#fde68a', letterSpacing: '0.05em' }}>PREMIUM</span>
-                      </div>
+                        {/* Top-right badge */}
+                        <div style={{ position: 'absolute', top: 8, right: 8, display: 'flex', alignItems: 'center', gap: 4, background: 'linear-gradient(135deg,#f59e0b,#d97706)', borderRadius: 20, padding: '3px 8px 3px 5px', boxShadow: '0 2px 8px rgba(245,158,11,0.4)' }}>
+                          <Crown size={10} color="#fff" />
+                          <span style={{ fontSize: 9, fontWeight: 800, color: '#fff', letterSpacing: '0.04em' }}>PRO</span>
+                        </div>
+                      </>
                     )}
                   </div>
                   <div style={{ padding: '12px 14px', background: isPremium ? '#fefce8' : '#fafafa', borderTop: `1px solid ${isPremium ? 'rgba(234,179,8,0.3)' : '#ebebeb'}` }}>
@@ -1964,18 +1969,23 @@ export default function CVMakerPage() {
               <FolderOpen className="w-3.5 h-3.5" /> Template
             </h4>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-              {TEMPLATES.slice(0, 6).map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => {
-                    setTplId(t.id);
-                    setAccent(t.accent);
-                  }}
-                  style={{ textAlign: 'left', padding: 8, borderRadius: 8, border: `1px solid ${tplId === t.id ? '#dd0000' : '#e5e5e5'}`, background: tplId === t.id ? 'rgba(221,0,0,0.05)' : '#fff', transition: 'all 0.2s', cursor: 'pointer' }}
-                >
-                  <p style={{ fontSize: 11, fontWeight: 600, color: tplId === t.id ? '#dd0000' : '#666', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</p>
-                </button>
-              ))}
+              {TEMPLATES.slice(0, 6).map((t, idx) => {
+                const isSidebarPremium = idx >= 3;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => {
+                      if (isSidebarPremium) { setPaywallOpen(true); return; }
+                      setTplId(t.id);
+                      setAccent(t.accent);
+                    }}
+                    style={{ textAlign: 'left', padding: 8, borderRadius: 8, border: `1px solid ${isSidebarPremium ? 'rgba(234,179,8,0.4)' : tplId === t.id ? '#dd0000' : '#e5e5e5'}`, background: isSidebarPremium ? '#fefce8' : tplId === t.id ? 'rgba(221,0,0,0.05)' : '#fff', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}
+                  >
+                    <p style={{ fontSize: 11, fontWeight: 600, color: isSidebarPremium ? '#a16207' : tplId === t.id ? '#dd0000' : '#666', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{t.name}</p>
+                    {isSidebarPremium && <Crown size={10} color="#f59e0b" style={{ flexShrink: 0 }} />}
+                  </button>
+                );
+              })}
             </div>
             <button
               onClick={() => setShowTemplatesModal(true)}
@@ -2072,12 +2082,15 @@ export default function CVMakerPage() {
                       <div className="bg-white overflow-hidden flex justify-center relative" style={{ height: 130 }}>
                         <MiniCV tpl={t} />
                         {isPremium && (
-                          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] flex flex-col items-center justify-center gap-1">
-                            <div className="w-8 h-8 rounded-full bg-yellow-500/20 border border-yellow-400/40 flex items-center justify-center">
-                              <Crown className="w-4 h-4 text-yellow-400" />
+                          <>
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+                              <span style={{ transform: 'rotate(-30deg)', fontSize: 18, fontWeight: 900, color: 'rgba(234,179,8,0.2)', letterSpacing: '0.1em', whiteSpace: 'nowrap', userSelect: 'none', textTransform: 'uppercase' }}>PREMIUM</span>
                             </div>
-                            <span className="text-yellow-300 text-[10px] font-bold">Premium</span>
-                          </div>
+                            <div style={{ position: 'absolute', top: 6, right: 6, display: 'flex', alignItems: 'center', gap: 3, background: 'linear-gradient(135deg,#f59e0b,#d97706)', borderRadius: 20, padding: '2px 6px 2px 4px', boxShadow: '0 2px 6px rgba(245,158,11,0.4)' }}>
+                              <Crown size={8} color="#fff" />
+                              <span style={{ fontSize: 8, fontWeight: 800, color: '#fff' }}>PRO</span>
+                            </div>
+                          </>
                         )}
                       </div>
                       <div className="px-2.5 py-2 bg-[#0f0f23] border-t border-white/[0.06]">

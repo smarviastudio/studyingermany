@@ -16,6 +16,7 @@ export default function NettoBruttoCalculatorPage() {
   const [hasChildren, setHasChildren] = useState(false);
   const [churchTax, setChurchTax] = useState(false);
   const [healthInsuranceRate, setHealthInsuranceRate] = useState('2.5');
+  const [salaryPeriod, setSalaryPeriod] = useState<'monthly' | 'annual'>('annual');
   const [calculated, setCalculated] = useState(false);
   const [calcResult, setCalcResult] = useState<ReturnType<typeof calculateNetFromGross> | null>(null);
   const [calcGross, setCalcGross] = useState(0);
@@ -141,15 +142,17 @@ export default function NettoBruttoCalculatorPage() {
   const handleCalculate = () => {
     let gross: number;
     if (mode === 'brutto-to-netto') {
-      gross = parseFloat(bruttoSalary) || 0;
+      const inputVal = parseFloat(bruttoSalary) || 0;
+      gross = salaryPeriod === 'monthly' ? inputVal * 12 : inputVal;
       const result = calculateNetFromGross(gross);
-      setNettoSalary(result.netto.toFixed(2));
+      setNettoSalary(salaryPeriod === 'monthly' ? (result.netto / 12).toFixed(2) : result.netto.toFixed(2));
       setCalcResult(result);
       setCalcGross(gross);
     } else {
-      const net = parseFloat(nettoSalary) || 0;
-      gross = calculateGrossFromNet(net);
-      setBruttoSalary(gross.toFixed(2));
+      const inputVal = parseFloat(nettoSalary) || 0;
+      const annualNet = salaryPeriod === 'monthly' ? inputVal * 12 : inputVal;
+      gross = calculateGrossFromNet(annualNet);
+      setBruttoSalary(salaryPeriod === 'monthly' ? (gross / 12).toFixed(2) : gross.toFixed(2));
       const result = calculateNetFromGross(gross);
       setCalcResult(result);
       setCalcGross(gross);
@@ -228,12 +231,18 @@ export default function NettoBruttoCalculatorPage() {
 
             {/* Salary Input */}
             <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, marginBottom: 24 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: '0 0 16px' }}>Annual Salary</h2>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: 0 }}>Salary</h2>
+                <div style={{ display: 'flex', borderRadius: 10, border: '1px solid #e5e5e5', overflow: 'hidden', fontSize: 13 }}>
+                  <button onClick={() => setSalaryPeriod('monthly')} style={{ padding: '7px 16px', background: salaryPeriod === 'monthly' ? '#dd0000' : 'transparent', color: salaryPeriod === 'monthly' ? '#fff' : '#666', border: 'none', cursor: 'pointer', fontWeight: 700, transition: 'all 0.2s' }}>Monthly</button>
+                  <button onClick={() => setSalaryPeriod('annual')} style={{ padding: '7px 16px', background: salaryPeriod === 'annual' ? '#dd0000' : 'transparent', color: salaryPeriod === 'annual' ? '#fff' : '#666', border: 'none', cursor: 'pointer', fontWeight: 700, transition: 'all 0.2s' }}>Annual</button>
+                </div>
+              </div>
               
               {mode === 'brutto-to-netto' ? (
                 <div>
                   <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>
-                    Brutto (Gross) Salary per Year
+                    Brutto (Gross) Salary {salaryPeriod === 'monthly' ? 'per Month' : 'per Year'}
                   </label>
                   <div style={{ position: 'relative' }}>
                     <input
@@ -249,7 +258,7 @@ export default function NettoBruttoCalculatorPage() {
               ) : (
                 <div>
                   <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>
-                    Netto (Net) Salary per Year
+                    Netto (Net) Salary {salaryPeriod === 'monthly' ? 'per Month' : 'per Year'}
                   </label>
                   <div style={{ position: 'relative' }}>
                     <input
@@ -367,33 +376,36 @@ export default function NettoBruttoCalculatorPage() {
             {/* Summary Cards */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
               <div style={{ background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: 20, color: '#fff' }}>
-                <div style={{ fontSize: 12, opacity: 0.9, marginBottom: 8 }}>Annual Gross</div>
-                <div style={{ fontSize: 28, fontWeight: 800 }}>€{gross.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div style={{ fontSize: 12, opacity: 0.8, marginTop: 4 }}>€{monthlyGross.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / month</div>
+                <div style={{ fontSize: 12, opacity: 0.9, marginBottom: 8 }}>{salaryPeriod === 'monthly' ? 'Monthly' : 'Annual'} Gross</div>
+                <div style={{ fontSize: 28, fontWeight: 800 }}>€{(salaryPeriod === 'monthly' ? monthlyGross : gross).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div style={{ fontSize: 12, opacity: 0.8, marginTop: 4 }}>€{(salaryPeriod === 'monthly' ? gross : monthlyGross).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / {salaryPeriod === 'monthly' ? 'year' : 'month'}</div>
               </div>
               <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 16, padding: 20 }}>
-                <div style={{ fontSize: 12, color: '#737373', marginBottom: 8 }}>Annual Net</div>
-                <div style={{ fontSize: 28, fontWeight: 800, color: '#22c55e' }}>€{result.netto.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div style={{ fontSize: 12, color: '#737373', marginTop: 4 }}>€{monthlyNet.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / month</div>
+                <div style={{ fontSize: 12, color: '#737373', marginBottom: 8 }}>{salaryPeriod === 'monthly' ? 'Monthly' : 'Annual'} Net</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: '#22c55e' }}>€{(salaryPeriod === 'monthly' ? monthlyNet : result.netto).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div style={{ fontSize: 12, color: '#737373', marginTop: 4 }}>€{(salaryPeriod === 'monthly' ? result.netto : monthlyNet).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / {salaryPeriod === 'monthly' ? 'year' : 'month'}</div>
               </div>
             </div>
 
             {/* Deductions Breakdown */}
             <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, marginBottom: 24 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: '0 0 20px' }}>Deductions Breakdown</h2>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: 0 }}>Deductions Breakdown</h2>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#9ca3af', background: '#f3f4f6', padding: '4px 10px', borderRadius: 20 }}>{salaryPeriod === 'monthly' ? 'Monthly' : 'Annual'}</span>
+              </div>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {/* Income Tax */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f5f5f5' }}>
                   <span style={{ fontSize: 14, color: '#111' }}>Income Tax</span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{result.incomeTax.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{(salaryPeriod === 'monthly' ? result.incomeTax / 12 : result.incomeTax).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
 
                 {/* Solidarity Surcharge */}
                 {result.solidaritySurcharge > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f5f5f5' }}>
                     <span style={{ fontSize: 14, color: '#111' }}>Solidarity Surcharge</span>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{result.solidaritySurcharge.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{(salaryPeriod === 'monthly' ? result.solidaritySurcharge / 12 : result.solidaritySurcharge).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
                 )}
 
@@ -401,38 +413,38 @@ export default function NettoBruttoCalculatorPage() {
                 {result.churchTaxAmount > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f5f5f5' }}>
                     <span style={{ fontSize: 14, color: '#111' }}>Church Tax</span>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{result.churchTaxAmount.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{(salaryPeriod === 'monthly' ? result.churchTaxAmount / 12 : result.churchTaxAmount).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
                 )}
 
                 {/* Pension Insurance */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f5f5f5' }}>
                   <span style={{ fontSize: 14, color: '#111' }}>Pension Insurance (9.3%)</span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{result.pensionInsurance.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{(salaryPeriod === 'monthly' ? result.pensionInsurance / 12 : result.pensionInsurance).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
 
                 {/* Unemployment Insurance */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f5f5f5' }}>
                   <span style={{ fontSize: 14, color: '#111' }}>Unemployment Insurance (1.3%)</span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{result.unemploymentInsurance.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{(salaryPeriod === 'monthly' ? result.unemploymentInsurance / 12 : result.unemploymentInsurance).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
 
                 {/* Health Insurance */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f5f5f5' }}>
                   <span style={{ fontSize: 14, color: '#111' }}>Health Insurance</span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{result.healthInsurance.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{(salaryPeriod === 'monthly' ? result.healthInsurance / 12 : result.healthInsurance).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
 
                 {/* Care Insurance */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f5f5f5' }}>
                   <span style={{ fontSize: 14, color: '#111' }}>Long-term Care Insurance</span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{result.careInsurance.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#dd0000' }}>-€{(salaryPeriod === 'monthly' ? result.careInsurance / 12 : result.careInsurance).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
 
                 {/* Total */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', marginTop: 8, borderTop: '2px solid #ebebeb' }}>
                   <span style={{ fontSize: 16, fontWeight: 700, color: '#111' }}>Total Deductions</span>
-                  <span style={{ fontSize: 18, fontWeight: 800, color: '#dd0000' }}>-€{result.totalDeductions.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span style={{ fontSize: 18, fontWeight: 800, color: '#dd0000' }}>-€{(salaryPeriod === 'monthly' ? result.totalDeductions / 12 : result.totalDeductions).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               </div>
             </section>

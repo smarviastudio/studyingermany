@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
-import { Search, Loader2, LogOut, ArrowRight, Newspaper } from 'lucide-react';
+import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap } from 'lucide-react';
 
 const RED = '#dd0000';
 
@@ -70,6 +70,8 @@ export function SiteNav() {
   const { status } = useSession();
   const isAuthenticated = status === 'authenticated';
 
+  const [aiUsage, setAiUsage] = useState<{ used: number; limit: number } | null>(null);
+
   const [wpPosts, setWpPosts] = useState<SiteNavPost[]>([]);
   const [navQuery, setNavQuery] = useState('');
   const [navResults, setNavResults] = useState<SiteNavPost[]>([]);
@@ -95,6 +97,21 @@ export function SiteNav() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    (async () => {
+      try {
+        const res = await fetch('/api/ai-credits');
+        if (res.ok) {
+          const data = await res.json();
+          setAiUsage(data);
+        }
+      } catch {
+        // silent
+      }
+    })();
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const handler = (event: MouseEvent) => {
@@ -317,6 +334,17 @@ export function SiteNav() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuthenticated ? (
               <>
+                {aiUsage !== null && (
+                  <Link
+                    href="/dashboard"
+                    title={`${aiUsage.limit - aiUsage.used} AI generations remaining this month`}
+                    style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 20, background: aiUsage.used >= aiUsage.limit ? 'rgba(239,68,68,0.08)' : 'rgba(221,0,0,0.07)', border: `1px solid ${aiUsage.used >= aiUsage.limit ? 'rgba(239,68,68,0.2)' : 'rgba(221,0,0,0.15)'}`, textDecoration: 'none' }}
+                  >
+                    <Zap className="w-3 h-3" style={{ color: aiUsage.used >= aiUsage.limit ? '#ef4444' : RED }} />
+                    <span style={{ fontSize: 12, fontWeight: 700, color: aiUsage.used >= aiUsage.limit ? '#ef4444' : RED }}>{aiUsage.limit - aiUsage.used}</span>
+                    <span style={{ fontSize: 11, color: '#737373' }}>credits</span>
+                  </Link>
+                )}
                 <Link href="/dashboard" style={{ fontSize: 14, fontWeight: 600, color: '#525252', textDecoration: 'none' }}>
                   Dashboard
                 </Link>
