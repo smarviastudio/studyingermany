@@ -24,6 +24,7 @@ import {
   X,
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
+import { PaywallModal } from '@/components/PaywallModal';
 
 // Inline editable component like CV maker
 const E = ({
@@ -278,6 +279,8 @@ export default function CoverLetterPage() {
   const [letter, setLetter] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallData, setPaywallData] = useState<{ current: number; limit: number } | null>(null);
   const [copied, setCopied] = useState(false);
 
   const [cvParsing, setCvParsing] = useState(false);
@@ -362,6 +365,12 @@ export default function CoverLetterPage() {
           cvText: cvSummary || undefined,
         }),
       });
+      if (response.status === 402) {
+        const errData = await response.json().catch(() => ({}));
+        setPaywallData({ current: errData.current ?? 0, limit: errData.limit ?? 3 });
+        setPaywallOpen(true);
+        return;
+      }
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
         throw new Error(errData.message || errData.error || 'Failed to generate cover letter');
@@ -384,6 +393,13 @@ export default function CoverLetterPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+      <PaywallModal
+        isOpen={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        feature="cover letter generations"
+        currentUsage={paywallData?.current}
+        limit={paywallData?.limit}
+      />
       <SiteNav />
 
       <main style={{ maxWidth: 1000, margin: '0 auto', padding: '48px 24px 80px' }}>

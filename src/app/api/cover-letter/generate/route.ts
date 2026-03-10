@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { auth } from '@/lib/auth';
+import { checkUsageLimit, incrementUsage } from '@/lib/usage-tracker';
 
 const CoverLetterRequestSchema = z.object({
   mode: z.enum(['generate', 'improve']),
@@ -114,11 +116,30 @@ export async function POST(request: NextRequest) {
 
   try {
     console.log(`[Cover Letter ${requestId}] Incoming request`);
+
+    const session = await auth();
+    if (session?.user?.id) {
+      const { allowed, current, limit } = await checkUsageLimit(session.user.id, 'cover');
+      if (!allowed) {
+        return NextResponse.json({
+          error: 'Usage limit reached',
+          upgradeRequired: true,
+          current,
+          limit,
+          message: `You've used ${current}/${limit} free cover letter generations this month.`,
+        }, { status: 402 });
+      }
+    }
+
     const body = await request.json();
     const payload = CoverLetterRequestSchema.parse(body);
 
     const letter = await callOpenRouter(payload);
     console.log(`[Cover Letter ${requestId}] Success`);
+
+    if (session?.user?.id) {
+      await incrementUsage(session.user.id, 'cover');
+    }
 
     return NextResponse.json({
       letter,

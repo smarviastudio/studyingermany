@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import {
   GraduationCap, Bookmark, Calendar, FileText, Target, TrendingUp, Award,
-  Briefcase, Star, ChevronRight, Calculator, Search, ArrowRight
+  Briefcase, Star, ChevronRight, Calculator, Search, ArrowRight, Crown, Zap, Loader2
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
@@ -46,6 +46,9 @@ export default function DashboardPage() {
   const [planProgress, setPlanProgress] = useState<PlanProgress[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [profileCompletion, setProfileCompletion] = useState(0);
+  const [subscription, setSubscription] = useState<{ planType: string; status: string; currentPeriodEnd?: string } | null>(null);
+  const [usage, setUsage] = useState<{ cv: number; motivation: number; cover: number } | null>(null);
+  const [portalLoading, setPortalLoading] = useState(false);
 
   // Calculate profile completion percentage
   const calculateProfileCompletion = (profile: UserProfile | null) => {
@@ -101,9 +104,20 @@ export default function DashboardPage() {
         console.warn('Failed to load profile', error);
       }
     };
+    const loadSubscription = async () => {
+      try {
+        const res = await fetch('/api/subscription');
+        if (res.ok && !cancelled) {
+          const data = await res.json();
+          setSubscription(data.subscription || { planType: data.planType || 'free', status: 'active' });
+          setUsage(data.usage || null);
+        }
+      } catch { /* silent */ }
+    };
     loadShortlist();
     loadProgress();
     loadProfile();
+    loadSubscription();
     return () => { cancelled = true; };
   }, [isAuthenticated]);
 
@@ -130,18 +144,58 @@ export default function DashboardPage() {
             </div>
           </div>
           
-          {/* Main CTA */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: '20px 24px', boxShadow: '0 4px 20px rgba(221,0,0,0.25)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <GraduationCap className="w-6 h-6" style={{ color: '#fff' }} />
+          {/* Subscription Banner */}
+          {subscription?.planType === 'free' || !subscription ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: '20px 24px', boxShadow: '0 4px 20px rgba(221,0,0,0.25)', flexWrap: 'wrap', gap: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Zap className="w-6 h-6" style={{ color: '#fff' }} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>You're on the Free Plan</h3>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', margin: 0 }}>
+                    {usage ? `${usage.cv + usage.motivation + usage.cover} / 9 AI generations used this month · ` : ''}
+                    Upgrade for unlimited AI documents &amp; all templates.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>Welcome to Your Dashboard</h3>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.9)', margin: 0 }}>Track your study in Germany journey</p>
-              </div>
+              <Link href="/pricing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 22px', borderRadius: 12, background: '#fff', color: '#dd0000', fontSize: 14, fontWeight: 800, textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+                <Crown size={15} /> Upgrade Plan
+              </Link>
             </div>
-          </div>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: subscription.planType === 'pro' ? 'linear-gradient(135deg, #1e0a3c, #2d1457)' : 'linear-gradient(135deg, #0a2a0a, #14532d)', borderRadius: 16, padding: '20px 24px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', flexWrap: 'wrap', gap: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Crown className="w-6 h-6" style={{ color: '#fff' }} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>
+                    {subscription.planType === 'pro' ? 'Pro Plan Active' : 'Student Plan Active'}
+                  </h3>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', margin: 0 }}>
+                    Unlimited AI generations · All features unlocked
+                    {subscription.currentPeriodEnd ? ` · Renews ${new Date(subscription.currentPeriodEnd).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={async () => {
+                  setPortalLoading(true);
+                  try {
+                    const res = await fetch('/api/stripe/portal', { method: 'POST' });
+                    const data = await res.json();
+                    if (data.url) window.location.href = data.url;
+                  } finally { setPortalLoading(false); }
+                }}
+                disabled={portalLoading}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 22px', borderRadius: 12, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
+              >
+                {portalLoading ? <Loader2 size={15} className="animate-spin" /> : <ArrowRight size={15} />}
+                Manage Billing
+              </button>
+            </div>
+          )}
         </header>
 
         {/* Stats Cards - Fixed Height for Uniformity */}

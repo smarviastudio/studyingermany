@@ -23,6 +23,8 @@ model User {
   favorites        Favorite[]
   applicationPlans ApplicationPlan[]
   cvDocuments      CvDocument[] @relation("UserCvDocuments")
+  subscription     Subscription?
+  usageLimits      UsageLimits[]
 }
 
 model UserProfile {
@@ -95,6 +97,41 @@ model ApplicationPlan {
   updatedAt       DateTime @updatedAt
   
   @@unique([userId, programId])
+}
+
+model Subscription {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planType             String   @default("free") // "free" | "student" | "pro"
+  status               String   @default("active") // "active" | "canceled" | "past_due" | "trialing"
+  stripeSubscriptionId String?  @unique
+  stripeCustomerId     String?  @unique
+  stripePriceId        String?
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([userId])
+  @@index([stripeCustomerId])
+}
+
+model UsageLimits {
+  id                              String   @id @default(cuid())
+  userId                          String
+  user                            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month                           String   // "2025-03"
+  cvGenerations                   Int      @default(0)
+  motivationLetterGenerations     Int      @default(0)
+  coverLetterGenerations          Int      @default(0)
+  programSearches                 Int      @default(0)
+  createdAt                       DateTime @default(now())
+  updatedAt                       DateTime @updatedAt
+
+  @@unique([userId, month])
+  @@index([userId])
 }
 
 model CvDocument {

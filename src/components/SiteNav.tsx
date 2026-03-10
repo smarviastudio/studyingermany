@@ -241,13 +241,14 @@ export function SiteNav() {
               { label: 'Guides', href: '/#guides' },
               { label: 'Tools', href: '/#tools' },
               { label: 'Course Finder', href: '/#hero' },
+              { label: 'Pricing', href: '/pricing' },
             ].map(({ label, href }) => (
               <a
                 key={label}
                 href={href}
-                style={{ fontSize: 14, fontWeight: 600, color: '#404040', textDecoration: 'none', letterSpacing: '0.01em', transition: 'color 0.2s' }}
+                style={{ fontSize: 14, fontWeight: 600, color: label === 'Pricing' ? RED : '#404040', textDecoration: 'none', letterSpacing: '0.01em', transition: 'color 0.2s' }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = RED)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#404040')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = label === 'Pricing' ? RED : '#404040')}
               >
                 {label}
               </a>

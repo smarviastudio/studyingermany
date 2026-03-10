@@ -1,10 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { checkUsageLimit, incrementUsage } from '@/lib/usage-tracker';
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'openai/gpt-4o-mini';
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
+    if (session?.user?.id) {
+      const { allowed, current, limit } = await checkUsageLimit(session.user.id, 'cv');
+      if (!allowed) {
+        return NextResponse.json({
+          error: 'Usage limit reached',
+          upgradeRequired: true,
+          current,
+          limit,
+          message: `You've used ${current}/${limit} free CV AI generations this month.`,
+        }, { status: 402 });
+      }
+    }
+
     const { name, jobTitle, years, skills, background, hobbies } = await request.json();
     
     if (!name || !jobTitle) {
@@ -101,6 +117,10 @@ Make the content professional, achievement-focused, and tailored to the job titl
       
       const cvData = JSON.parse(jsonMatch[0]);
       console.log('[CV AI] Successfully parsed CV data');
+      const session2 = await auth();
+      if (session2?.user?.id) {
+        await incrementUsage(session2.user.id, 'cv');
+      }
       return NextResponse.json(cvData);
     } finally {
       delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;

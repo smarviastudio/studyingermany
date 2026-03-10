@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { auth } from '@/lib/auth';
+import { checkUsageLimit, incrementUsage } from '@/lib/usage-tracker';
 
 const MotivationLetterRequestSchema = z.object({
   program: z.object({
@@ -138,6 +140,21 @@ export async function POST(request: NextRequest) {
   
   try {
     console.log(`[Motivation Letter ${requestId}] Received request`);
+
+    const session = await auth();
+    if (session?.user?.id) {
+      const { allowed, current, limit } = await checkUsageLimit(session.user.id, 'motivation');
+      if (!allowed) {
+        return NextResponse.json({
+          error: 'Usage limit reached',
+          upgradeRequired: true,
+          current,
+          limit,
+          message: `You've used ${current}/${limit} free motivation letter generations this month.`,
+        }, { status: 402 });
+      }
+    }
+
     const body = await request.json();
     
     const { program, userInput, cvText } = MotivationLetterRequestSchema.parse(body);
@@ -147,6 +164,11 @@ export async function POST(request: NextRequest) {
     const letter = await callOpenRouter(program, userInput, cvText);
     
     console.log(`[Motivation Letter ${requestId}] Letter generated successfully`);
+
+    const session2 = await auth();
+    if (session2?.user?.id) {
+      await incrementUsage(session2.user.id, 'motivation');
+    }
     
     return NextResponse.json({
       letter,

@@ -10,6 +10,7 @@ import {
   Heart, RefreshCw, CheckCircle2, Upload, X, Edit3
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
+import { PaywallModal } from '@/components/PaywallModal';
 import type { Program } from '@/lib/types';
 
 interface ShortlistItem {
@@ -244,6 +245,8 @@ function MotivationLetterContent() {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallData, setPaywallData] = useState<{ current: number; limit: number } | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showProgramExtras, setShowProgramExtras] = useState(false);
   const [showOptionalDetails, setShowOptionalDetails] = useState(false);
@@ -394,6 +397,12 @@ function MotivationLetterContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ program: programPayload, userInput, cvText: cvText || undefined })
       });
+      if (response.status === 402) {
+        const errData = await response.json().catch(() => ({}));
+        setPaywallData({ current: errData.current ?? 0, limit: errData.limit ?? 3 });
+        setPaywallOpen(true);
+        return;
+      }
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
         throw new Error(errData.message || errData.error || 'Failed to generate motivation letter');
@@ -443,6 +452,13 @@ function MotivationLetterContent() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+      <PaywallModal
+        isOpen={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        feature="motivation letter generations"
+        currentUsage={paywallData?.current}
+        limit={paywallData?.limit}
+      />
       <SiteNav />
 
       <main style={{ maxWidth: 1000, margin: '0 auto', padding: '48px 24px 80px' }}>
