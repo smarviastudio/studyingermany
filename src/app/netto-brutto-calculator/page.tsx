@@ -16,6 +16,9 @@ export default function NettoBruttoCalculatorPage() {
   const [hasChildren, setHasChildren] = useState(false);
   const [churchTax, setChurchTax] = useState(false);
   const [healthInsuranceRate, setHealthInsuranceRate] = useState('2.5');
+  const [calculated, setCalculated] = useState(false);
+  const [calcResult, setCalcResult] = useState<ReturnType<typeof calculateNetFromGross> | null>(null);
+  const [calcGross, setCalcGross] = useState(0);
 
   // Calculate income tax based on German tax formula (2025)
   const calculateIncomeTax = (taxableIncome: number): number => {
@@ -136,19 +139,26 @@ export default function NettoBruttoCalculatorPage() {
   };
 
   const handleCalculate = () => {
+    let gross: number;
     if (mode === 'brutto-to-netto') {
-      const gross = parseFloat(bruttoSalary) || 0;
+      gross = parseFloat(bruttoSalary) || 0;
       const result = calculateNetFromGross(gross);
       setNettoSalary(result.netto.toFixed(2));
+      setCalcResult(result);
+      setCalcGross(gross);
     } else {
       const net = parseFloat(nettoSalary) || 0;
-      const gross = calculateGrossFromNet(net);
+      gross = calculateGrossFromNet(net);
       setBruttoSalary(gross.toFixed(2));
+      const result = calculateNetFromGross(gross);
+      setCalcResult(result);
+      setCalcGross(gross);
     }
+    setCalculated(true);
   };
 
-  const gross = parseFloat(bruttoSalary) || 0;
-  const result = calculateNetFromGross(gross);
+  const gross = calcGross;
+  const result = calcResult ?? calculateNetFromGross(0);
   const monthlyGross = gross / 12;
   const monthlyNet = result.netto / 12;
 
@@ -346,6 +356,14 @@ export default function NettoBruttoCalculatorPage() {
 
           {/* Right Panel - Results */}
           <div>
+            {!calculated && (
+              <div style={{ background: '#fff', border: '2px dashed #e5e5e5', borderRadius: 20, padding: '48px 24px', textAlign: 'center', color: '#aaa' }}>
+                <Calculator className="w-12 h-12" style={{ color: '#e5e5e5', margin: '0 auto 16px' }} />
+                <p style={{ fontSize: 16, fontWeight: 600, color: '#bbb', margin: '0 0 8px' }}>Results will appear here</p>
+                <p style={{ fontSize: 13, color: '#ccc', margin: 0 }}>Fill in your salary and click Calculate</p>
+              </div>
+            )}
+            {calculated && (<>
             {/* Summary Cards */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
               <div style={{ background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: 20, color: '#fff' }}>
@@ -431,6 +449,7 @@ export default function NettoBruttoCalculatorPage() {
                 </div>
               </div>
             </div>
+            </>)}
           </div>
         </div>
       </main>

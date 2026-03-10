@@ -6,9 +6,10 @@ import Link from 'next/link';
 import {
   ArrowLeft, Download, Sparkles, Plus, Trash2,
   GraduationCap, Loader2, Check, Palette, Camera,
-  ChevronRight, X, Wand2, Printer, Save, Type, AArrowUp, User, LogIn, FolderOpen
+  ChevronRight, X, Wand2, Printer, Save, Type, AArrowUp, User, LogIn, FolderOpen, Crown
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
+import { PaywallModal } from '@/components/PaywallModal';
 import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
 import { templates as TEMPLATE_LIBRARY } from '@/lib/cv-maker/templates';
 
@@ -609,6 +610,7 @@ export default function CVMakerPage() {
   const [fontSize, setFontSize] = useState<'small' | 'normal' | 'large'>('normal');
   const [textColor, setTextColor] = useState('#111827');
   const [showTemplatesModal, setShowTemplatesModal] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
   const [skillLevels, setSkillLevels] = useState<number[]>([]);
   const [cv, setCv] = useState<CVData>({ ...SAMPLE });
   const [editingSkillIndex, setEditingSkillIndex] = useState<number | null>(null);
@@ -873,27 +875,43 @@ export default function CVMakerPage() {
 
           {/* Template Grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16, paddingBottom: 100 }}>
-            {TEMPLATES.map(t => (
-              <button key={t.id} onClick={() => { setTplId(t.id); setAccent(t.accent); }} className="cv-template-card" style={{ position: 'relative', textAlign: 'left', borderRadius: 16, overflow: 'hidden', border: `2px solid ${tplId === t.id ? '#dd0000' : '#ebebeb'}`, background: '#fff', cursor: 'pointer', transition: 'all 0.3s', boxShadow: tplId === t.id ? '0 8px 24px rgba(221,0,0,0.15)' : 'none' }}>
-                <div style={{ background: '#fff', overflow: 'hidden', display: 'flex', justifyContent: 'center', height: 180 }}>
-                  <MiniCV tpl={t} />
-                </div>
-                <div style={{ padding: '12px 14px', background: '#fafafa', borderTop: '1px solid #ebebeb' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                    <div style={{ minWidth: 0, flex: 1 }}>
-                      <p style={{ fontSize: 13, fontWeight: 700, color: '#111', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</p>
-                      <p style={{ fontSize: 11, color: '#999', margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.description}</p>
-                    </div>
-                    {t.hasPhoto && (
-                      <span style={{ padding: '3px 8px', borderRadius: 6, background: 'rgba(221,0,0,0.1)', color: '#dd0000', fontSize: 10, fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <Camera className="w-3 h-3" />Photo
-                      </span>
+            {TEMPLATES.map((t, idx) => {
+              const isPremium = idx >= 3;
+              return (
+                <button key={t.id} onClick={() => {
+                  if (isPremium) { setPaywallOpen(true); return; }
+                  setTplId(t.id); setAccent(t.accent);
+                }} className="cv-template-card" style={{ position: 'relative', textAlign: 'left', borderRadius: 16, overflow: 'hidden', border: `2px solid ${isPremium ? 'rgba(234,179,8,0.4)' : tplId === t.id ? '#dd0000' : '#ebebeb'}`, background: '#fff', cursor: 'pointer', transition: 'all 0.3s', boxShadow: tplId === t.id && !isPremium ? '0 8px 24px rgba(221,0,0,0.15)' : 'none' }}>
+                  <div style={{ background: '#fff', overflow: 'hidden', display: 'flex', justifyContent: 'center', height: 180, position: 'relative' }}>
+                    <MiniCV tpl={t} />
+                    {isPremium && (
+                      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(2px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(234,179,8,0.2)', border: '1.5px solid rgba(234,179,8,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Crown size={18} color="#fbbf24" />
+                        </div>
+                        <span style={{ fontSize: 11, fontWeight: 800, color: '#fde68a', letterSpacing: '0.05em' }}>PREMIUM</span>
+                      </div>
                     )}
                   </div>
-                </div>
-                {tplId === t.id && <div style={{ position: 'absolute', top: 12, right: 12, width: 28, height: 28, borderRadius: 999, background: '#dd0000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(221,0,0,0.3)' }}><Check className="w-4 h-4" style={{ color: '#fff' }} /></div>}
-              </button>
-            ))}
+                  <div style={{ padding: '12px 14px', background: isPremium ? '#fefce8' : '#fafafa', borderTop: `1px solid ${isPremium ? 'rgba(234,179,8,0.3)' : '#ebebeb'}` }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <p style={{ fontSize: 13, fontWeight: 700, color: '#111', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</p>
+                        <p style={{ fontSize: 11, color: isPremium ? '#a16207' : '#999', margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{isPremium ? '✦ Student / Pro plan' : t.description}</p>
+                      </div>
+                      {isPremium
+                        ? <Crown size={14} color="#f59e0b" style={{ flexShrink: 0 }} />
+                        : t.hasPhoto && (
+                          <span style={{ padding: '3px 8px', borderRadius: 6, background: 'rgba(221,0,0,0.1)', color: '#dd0000', fontSize: 10, fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <Camera className="w-3 h-3" />Photo
+                          </span>
+                        )}
+                    </div>
+                  </div>
+                  {tplId === t.id && !isPremium && <div style={{ position: 'absolute', top: 12, right: 12, width: 28, height: 28, borderRadius: 999, background: '#dd0000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(221,0,0,0.3)' }}><Check className="w-4 h-4" style={{ color: '#fff' }} /></div>}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -2021,6 +2039,12 @@ export default function CVMakerPage() {
         </div>
       )}
 
+      <PaywallModal
+        isOpen={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        feature="premium CV templates"
+      />
+
       {/* Templates Popup Modal */}
       {showTemplatesModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-6" onClick={() => setShowTemplatesModal(false)}>
@@ -2034,19 +2058,39 @@ export default function CVMakerPage() {
             </div>
             <div className="flex-1 overflow-y-auto p-6">
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {TEMPLATES.map(t => (
-                  <button key={t.id} onClick={() => { setTplId(t.id); setAccent(t.accent); setShowTemplatesModal(false); }}
-                    className={`group relative text-left rounded-lg overflow-hidden border-2 transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/10 ${tplId === t.id ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-white/[0.08] hover:border-white/20'}`}>
-                    <div className="bg-white overflow-hidden flex justify-center" style={{ height: 130 }}>
-                      <MiniCV tpl={t} />
-                    </div>
-                    <div className="px-2.5 py-2 bg-[#0f0f23] border-t border-white/[0.06]">
-                      <p className="text-white font-medium text-[11px] truncate">{t.name}</p>
-                      <p className="text-white/30 text-[9px] mt-0.5 truncate">{t.description}</p>
-                    </div>
-                    {tplId === t.id && <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center shadow-lg"><Check className="w-3 h-3 text-white" /></div>}
-                  </button>
-                ))}
+                {TEMPLATES.map((t, idx) => {
+                  const isPremium = idx >= 3;
+                  return (
+                    <button key={t.id} onClick={() => {
+                      if (isPremium) { setShowTemplatesModal(false); setPaywallOpen(true); return; }
+                      setTplId(t.id); setAccent(t.accent); setShowTemplatesModal(false);
+                    }}
+                      className={`group relative text-left rounded-lg overflow-hidden border-2 transition-all hover:scale-[1.02] hover:shadow-lg ${
+                        isPremium ? 'border-yellow-500/40 hover:border-yellow-400/60 hover:shadow-yellow-500/10'
+                        : tplId === t.id ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-white/[0.08] hover:border-white/20 hover:shadow-blue-500/10'
+                      }`}>
+                      <div className="bg-white overflow-hidden flex justify-center relative" style={{ height: 130 }}>
+                        <MiniCV tpl={t} />
+                        {isPremium && (
+                          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] flex flex-col items-center justify-center gap-1">
+                            <div className="w-8 h-8 rounded-full bg-yellow-500/20 border border-yellow-400/40 flex items-center justify-center">
+                              <Crown className="w-4 h-4 text-yellow-400" />
+                            </div>
+                            <span className="text-yellow-300 text-[10px] font-bold">Premium</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="px-2.5 py-2 bg-[#0f0f23] border-t border-white/[0.06]">
+                        <div className="flex items-center gap-1">
+                          <p className="text-white font-medium text-[11px] truncate flex-1">{t.name}</p>
+                          {isPremium && <Crown className="w-3 h-3 text-yellow-400 flex-shrink-0" />}
+                        </div>
+                        <p className="text-white/30 text-[9px] mt-0.5 truncate">{isPremium ? '✦ Student / Pro plan' : t.description}</p>
+                      </div>
+                      {tplId === t.id && !isPremium && <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center shadow-lg"><Check className="w-3 h-3 text-white" /></div>}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>

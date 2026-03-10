@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import {
   GraduationCap, Bookmark, Calendar, FileText, Target, TrendingUp, Award,
   Briefcase, Star, ChevronRight, Calculator, Search, ArrowRight, Crown, Zap, Loader2
@@ -41,7 +42,15 @@ type UserProfile = {
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const isAuthenticated = status === 'authenticated';
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/auth/signin?callbackUrl=/dashboard');
+    }
+  }, [status, router]);
+
   const [shortlistEntries, setShortlistEntries] = useState<ShortlistEntry[]>([]);
   const [planProgress, setPlanProgress] = useState<PlanProgress[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -126,6 +135,17 @@ export default function DashboardPage() {
 
   // Helper: get plan progress for a program
   const getPlanFor = (programId: string) => planProgress.find((p) => p.programId === programId);
+
+  if (status === 'loading' || status === 'unauthenticated') {
+    return (
+      <div style={{ minHeight: '100vh', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ width: 48, height: 48, borderRadius: '50%', border: '3px solid #dd0000', borderTopColor: 'transparent', margin: '0 auto 16px' }} />
+          <p style={{ color: '#737373', fontSize: 14 }}>Redirecting...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>

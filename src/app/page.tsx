@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import {
   Search, Loader2, Bookmark, X, ArrowRight, BookOpen, Newspaper, Calendar,
   GraduationCap, FileText, Languages, Home, Briefcase, CreditCard, Shield,
-  Plane, Star, Zap, TrendingUp, Users, Globe, Clock
+  Plane, Star, Zap, TrendingUp, Users, Globe, Clock, Calculator
 } from 'lucide-react';
 import { ProgramModal } from '@/components/ProgramModal';
 import type { ProgramSummary } from '@/lib/types';
@@ -22,11 +22,12 @@ const HERO_SUGGESTIONS = [
 ];
 
 const TOOLS = [
-  { href: '/cv-maker',          label: 'AI CV Maker',       desc: 'Build a German-format CV in minutes with AI assistance',  icon: FileText,    gradient: 'from-red-500 to-rose-600' },
-  { href: '/cover-letter',      label: 'Cover Letter',      desc: 'Draft professional cover letters tailored to German employers',  icon: Briefcase,   gradient: 'from-amber-500 to-orange-600' },
-  { href: '/motivation-letter', label: 'Motivation Letter', desc: 'Create compelling motivation letters for university applications',  icon: Star,        gradient: 'from-violet-500 to-purple-600' },
-  { href: '/gpa-converter',     label: 'GPA Converter',     desc: 'Convert your grades to the German grading scale instantly',  icon: TrendingUp,  gradient: 'from-emerald-500 to-green-600' },
-  { href: '/dashboard',         label: 'My Dashboard',      desc: 'Track your applications, shortlists and study plans',  icon: Zap,         gradient: 'from-blue-500 to-indigo-600' },
+  { href: '/cv-maker',                  label: 'AI CV Maker',            desc: 'Build a German-format CV in minutes with AI assistance',              icon: FileText,    gradient: 'from-red-500 to-rose-600' },
+  { href: '/cover-letter',              label: 'Cover Letter',           desc: 'Draft professional cover letters tailored to German employers',        icon: Briefcase,   gradient: 'from-amber-500 to-orange-600' },
+  { href: '/motivation-letter',         label: 'Motivation Letter',      desc: 'Create compelling motivation letters for university applications',     icon: Star,        gradient: 'from-violet-500 to-purple-600' },
+  { href: '/gpa-converter',             label: 'GPA Converter',          desc: 'Convert your grades to the German grading scale instantly',           icon: TrendingUp,  gradient: 'from-emerald-500 to-green-600' },
+  { href: '/netto-brutto-calculator',   label: 'Salary Calculator',      desc: 'Calculate your net salary after German taxes and deductions',         icon: Calculator,  gradient: 'from-teal-500 to-cyan-600' },
+  { href: '/dashboard',                 label: 'My Dashboard',           desc: 'Track your applications, shortlists and study plans',                 icon: Zap,         gradient: 'from-blue-500 to-indigo-600' },
 ];
 
 const JOURNEY_CATEGORIES = [

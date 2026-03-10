@@ -225,7 +225,7 @@ const E = ({
 function MotivationLetterContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const initialProgramId = searchParams.get('programId');
 
   const [shortlist, setShortlist] = useState<ShortlistItem[]>([]);
@@ -247,6 +247,7 @@ function MotivationLetterContent() {
   const [error, setError] = useState<string | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallData, setPaywallData] = useState<{ current: number; limit: number } | null>(null);
+  const [signInPrompt, setSignInPrompt] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showProgramExtras, setShowProgramExtras] = useState(false);
   const [showOptionalDetails, setShowOptionalDetails] = useState(false);
@@ -389,6 +390,7 @@ function MotivationLetterContent() {
   const generateLetter = async () => {
     const programPayload = resolvedProgram();
     if (!programPayload) return;
+    if (!session) { setSignInPrompt(true); return; }
     try {
       setLoading(true);
       setError(null);
@@ -459,6 +461,29 @@ function MotivationLetterContent() {
         currentUsage={paywallData?.current}
         limit={paywallData?.limit}
       />
+
+      {/* Sign-in prompt */}
+      {signInPrompt && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', zIndex: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }} onClick={() => setSignInPrompt(false)}>
+          <div style={{ background: '#fff', borderRadius: 24, padding: '40px 36px', maxWidth: 420, width: '100%', textAlign: 'center', boxShadow: '0 30px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+            <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+              <FileText size={28} style={{ color: '#fff' }} />
+            </div>
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#111', margin: '0 0 10px' }}>Sign in to generate</h2>
+            <p style={{ fontSize: 15, color: '#666', lineHeight: 1.6, margin: '0 0 28px' }}>Create a free account to generate your AI motivation letter. Free users get 3 generations per month.</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <a href="/auth/signin?callbackUrl=/motivation-letter" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px', borderRadius: 12, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', color: '#fff', fontWeight: 700, fontSize: 15, textDecoration: 'none' }}>
+                Sign in
+              </a>
+              <a href="/auth/register?callbackUrl=/motivation-letter" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px', borderRadius: 12, background: '#f5f5f5', color: '#111', fontWeight: 700, fontSize: 15, textDecoration: 'none' }}>
+                Create free account
+              </a>
+            </div>
+            <button onClick={() => setSignInPrompt(false)} style={{ marginTop: 16, background: 'none', border: 'none', color: '#999', fontSize: 13, cursor: 'pointer' }}>Maybe later</button>
+          </div>
+        </div>
+      )}
+
       <SiteNav />
 
       <main style={{ maxWidth: 1000, margin: '0 auto', padding: '48px 24px 80px' }}>
