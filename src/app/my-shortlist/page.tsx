@@ -405,10 +405,10 @@ export default function MyShortlistPage() {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 'auto' }}>
-                      <button onClick={() => handleNavigate(item.programId, `/course-finder/${item.programId}?source=shortlist`)} disabled={navigatingId === item.programId + `/course-finder/${item.programId}?source=shortlist`} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 20px', background: '#dd0000', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: 'pointer', transition: 'all 0.2s' }}
+                      <button onClick={() => handleNavigate(item.programId, `/my-applications?programId=${item.programId}`)} disabled={navigatingId === item.programId + `/my-applications?programId=${item.programId}`} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 20px', background: '#dd0000', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: 'pointer', transition: 'all 0.2s' }}
                         onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
-                        {navigatingId === item.programId + `/course-finder/${item.programId}?source=shortlist` ? <Loader2 className="w-4 h-4 animate-spin" /> : <>{plan ? 'Continue Application' : 'Start Application'}</>}
+                        {navigatingId === item.programId + `/my-applications?programId=${item.programId}` ? <Loader2 className="w-4 h-4 animate-spin" /> : <>{plan ? 'Continue Application' : 'Start Application'}</>}
                       </button>
 
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>

@@ -26,6 +26,7 @@ export default function ProfilePage() {
   const [profileCompletion, setProfileCompletion] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   // Calculate profile completion percentage
   const calculateProfileCompletion = (profile: UserProfile | null) => {
@@ -55,7 +56,7 @@ export default function ProfilePage() {
     
     const loadProfile = async () => {
       try {
-        const res = await fetch('/api/user/profile');
+        const res = await fetch('/api/profile');
         if (res.ok) {
           const data = await res.json();
           setUserProfile(data.profile || null);
@@ -76,24 +77,33 @@ export default function ProfilePage() {
     
     setSaving(true);
     try {
-      const res = await fetch('/api/user/profile', {
+      const res = await fetch('/api/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile: userProfile })
+        body: JSON.stringify(userProfile)
       });
       
       if (res.ok) {
         setProfileCompletion(calculateProfileCompletion(userProfile));
+        setSaveStatus('success');
+      } else {
+        setSaveStatus('error');
       }
     } catch (error) {
       console.warn('Failed to save profile', error);
+      setSaveStatus('error');
     } finally {
       setSaving(false);
+      setTimeout(() => setSaveStatus('idle'), 3000);
     }
   };
 
   const updateProfile = (field: keyof UserProfile, value: any) => {
-    setUserProfile(prev => prev ? { ...prev, [field]: value } : { [field]: value });
+    setUserProfile(prev => {
+      const updated = prev ? { ...prev, [field]: value } : { [field]: value };
+      setProfileCompletion(calculateProfileCompletion(updated));
+      return updated;
+    });
   };
 
   const profileSections = [
@@ -265,7 +275,18 @@ export default function ProfilePage() {
             {saving ? 'Saving...' : 'Save Profile'}
           </button>
           
-          {profileCompletion === 100 && (
+          {saveStatus === 'success' && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 16, color: '#22c55e', fontSize: 14, fontWeight: 600 }}>
+              <CheckCircle className="w-5 h-5" />
+              Profile saved successfully!
+            </div>
+          )}
+          {saveStatus === 'error' && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 16, color: '#dd0000', fontSize: 14, fontWeight: 600 }}>
+              Failed to save profile. Please try again.
+            </div>
+          )}
+          {saveStatus === 'idle' && profileCompletion === 100 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 16, color: '#22c55e', fontSize: 14, fontWeight: 600 }}>
               <CheckCircle className="w-5 h-5" />
               Profile complete! You'll get better program recommendations.

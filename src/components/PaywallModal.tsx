@@ -14,20 +14,18 @@ interface PaywallModalProps {
 const STUDENT_BENEFITS = [
   'Unlimited AI document generations',
   'All 20+ professional CV templates',
-  'Advanced AI quality (GPT-4 class)',
   'Unlimited program saves',
   'Unlimited application tracking',
-  'Export to PDF & DOCX',
-  'Email support',
+  'Email support (24h response)',
+  'Priority program recommendations',
+  'AI Chat Consultant (limited)',
 ];
 
 const PRO_BENEFITS = [
   'Everything in Student Plan',
   'AI Chat Consultant (unlimited)',
-  'Priority support (12h response)',
-  'Live chat support',
-  'Monthly document review',
-  'Advanced analytics',
+  'Priority email support (12h)',
+  'Dedicated application guidance',
   'Early access to new features',
 ];
 
@@ -363,7 +361,7 @@ export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: 
         {/* Footer note */}
         <div style={{ textAlign: 'center', padding: '0 40px 28px' }}>
           <p style={{ fontSize: 12, color: '#999', margin: 0 }}>
-            Cancel anytime · Secure payment via Stripe · 30-day refund guarantee
+            Cancel anytime · No hidden fees · Secure payment via Stripe
           </p>
         </div>
       </div>

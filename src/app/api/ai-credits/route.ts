@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
-const FREE_LIMIT = 9; // 3 cv + 3 motivation + 3 cover letter per month
+const FREE_LIMIT = 5; // 5 AI generations per month on free plan
 
 export async function GET() {
   try {

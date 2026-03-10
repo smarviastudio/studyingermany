@@ -23,7 +23,7 @@ const FAQS = [
   },
   {
     q: 'Is there a free trial?',
-    a: 'Every account starts on the Free plan so you can try all tools before upgrading. Free users get 3 AI generations per tool per month.',
+    a: 'Every account starts on the Free plan so you can try all tools before upgrading. Free users get 5 AI generations per month across all tools.',
   },
   {
     q: 'Can I switch plans?',
@@ -43,7 +43,7 @@ const FEATURES = [
   {
     icon: FileText,
     label: 'AI Document Generation',
-    free: '3/month per tool',
+    free: '5/month total',
     student: 'Unlimited',
     pro: 'Unlimited',
     color: RED,
@@ -85,7 +85,7 @@ const FEATURES = [
     label: 'Support',
     free: 'Community',
     student: 'Email (24h)',
-    pro: 'Priority + Live Chat',
+    pro: 'Priority email (12h)',
     color: '#be185d',
   },
 ];
@@ -212,7 +212,7 @@ export default function PricingPage() {
             <div style={{ padding: '24px 28px 32px' }}>
               <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#aaa', margin: '0 0 16px' }}>Includes</p>
               {[
-                '3 AI generations per tool / month',
+                '5 AI generations per month total',
                 '3 basic CV templates',
                 'Save up to 20 programs',
                 'Track up to 5 applications',
@@ -284,12 +284,11 @@ export default function PricingPage() {
               {[
                 'Unlimited AI generations',
                 'All 20+ CV templates',
-                'Advanced AI model (GPT-4)',
                 'Unlimited program saves',
                 'Unlimited application tracking',
-                'Export to PDF & DOCX',
                 'Email support (24h response)',
-                'Program comparison tool',
+                'Priority program recommendations',
+                'AI Chat Consultant (limited)',
               ].map((f, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
                   <div style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(221,0,0,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
@@ -343,12 +342,10 @@ export default function PricingPage() {
               <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.4)', margin: '0 0 16px' }}>Everything in Student, plus</p>
               {[
                 'AI Chat Consultant (unlimited)',
-                'Priority support (12h response)',
-                'Live chat support',
-                'Monthly document review',
-                'Advanced analytics & insights',
-                'Custom CV branding',
+                'Priority email support (12h)',
+                'All Student plan features',
                 'Early access to new features',
+                'Dedicated application guidance',
               ].map((f, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
                   <div style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(167,139,250,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
@@ -404,7 +401,7 @@ export default function PricingPage() {
           {[
             { icon: Shield, label: 'Secure payments', sub: 'via Stripe' },
             { icon: ArrowRight, label: 'Cancel anytime', sub: 'No lock-in' },
-            { icon: Check, label: '30-day refund', sub: 'Guaranteed' },
+            { icon: Check, label: 'No hidden fees', sub: 'Transparent pricing' },
           ].map((item, i) => {
             const Icon = item.icon;
             return (
