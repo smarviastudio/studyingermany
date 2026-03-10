@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { stripe, PLANS, PlanKey } from '@/lib/stripe';
+import { stripe, getPlans, PlanKey } from '@/lib/stripe';
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
     const { planKey } = await req.json();
 
-    const plan = PLANS[planKey as PlanKey];
+    const plan = getPlans()[planKey as PlanKey];
     if (!plan) {
       return NextResponse.json({ error: 'Invalid plan' }, { status: 400 });
     }
