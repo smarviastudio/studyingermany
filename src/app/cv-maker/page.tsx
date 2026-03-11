@@ -852,14 +852,14 @@ export default function CVMakerPage() {
       <div style={{ minHeight: '100vh', background: '#fafafa' }}>
         <SiteNav />
 
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
+        <div className="cvmaker-page-wrap" style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 12px' }}>Create your CV</h1>
             <p style={{ fontSize: 16, color: '#737373', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 }}>Choose a template designed for German universities and employers. Click any text to edit directly.</p>
           </div>
 
           {/* AI Banner */}
-          <div style={{ marginBottom: 40, borderRadius: 20, border: '2px solid rgba(221,0,0,0.15)', background: 'linear-gradient(135deg, rgba(221,0,0,0.05), rgba(124,58,237,0.05))', padding: 24, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+          <div className="cvmaker-ai-banner" style={{ marginBottom: 40, borderRadius: 20, border: '2px solid rgba(221,0,0,0.15)', background: 'linear-gradient(135deg, rgba(221,0,0,0.05), rgba(124,58,237,0.05))', padding: 24, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
             <div style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
               <Wand2 className="w-7 h-7" style={{ color: '#fff' }} />
             </div>
@@ -875,7 +875,7 @@ export default function CVMakerPage() {
           </div>
 
           {/* Template Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16, paddingBottom: 100 }}>
+          <div className="cvmaker-template-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16, paddingBottom: 100 }}>
             {TEMPLATES.map((t, idx) => {
               const isPremium = idx >= 3;
               return (
@@ -1835,8 +1835,8 @@ export default function CVMakerPage() {
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: '#fafafa' }}>
       {/* Top bar */}
-      <nav style={{ flexShrink: 0, borderBottom: '1px solid #e5e5e5', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)', zIndex: 30 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', height: 56 }}>
+      <nav className="cvmaker-topbar" style={{ flexShrink: 0, borderBottom: '1px solid #e5e5e5', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)', zIndex: 30 }}>
+        <div className="cvmaker-topbar-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', height: 56 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <button onClick={() => setPhase('templates')} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, color: '#666', background: 'transparent', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'color 0.2s' }}
               onMouseEnter={e => e.currentTarget.style.color = '#dd0000'}
@@ -1861,9 +1861,9 @@ export default function CVMakerPage() {
         </div>
       </nav>
 
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+      <div className="cvmaker-editor-body" style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* Design Panel */}
-        <div style={{ width: 280, flexShrink: 0, borderRight: '1px solid #e5e5e5', background: '#fff', overflowY: 'auto' }}>
+        <div className="cvmaker-design-panel" style={{ width: 280, flexShrink: 0, borderRight: '1px solid #e5e5e5', background: '#fff', overflowY: 'auto' }}>
           {/* Header with save status */}
           <div style={{ padding: 16, borderBottom: '1px solid #f5f5f5' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>

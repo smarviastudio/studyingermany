@@ -1072,8 +1072,10 @@ details[open] summary .chevron { transform: rotate(180deg); }
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
-  .profile-header h1 {
-    font-size: 24px !important;
+  .profile-header-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
   }
   .profile-form-section {
     padding: 20px 16px !important;
@@ -1094,6 +1096,55 @@ details[open] summary .chevron { transform: rotate(180deg); }
 
 /* ── CV MAKER PAGE ── */
 .cv-template-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08) !important; border-color: #dd0000 !important; }
+
+@media (max-width: 768px) {
+  /* Template picker phase */
+  .cvmaker-page-wrap {
+    padding: 24px 16px 100px !important;
+  }
+  .cvmaker-template-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .cvmaker-ai-banner {
+    flex-direction: column !important;
+    gap: 14px !important;
+    padding: 18px !important;
+  }
+
+  /* Editor phase — hide design panel by default, show CV canvas full-width scrollable */
+  .cvmaker-topbar-inner {
+    padding: 0 12px !important;
+    gap: 8px !important;
+  }
+  .cvmaker-topbar-inner > div:first-child span {
+    display: none !important;
+  }
+  .cvmaker-topbar-inner button,
+  .cvmaker-topbar-inner a {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    gap: 4px !important;
+  }
+  .cvmaker-editor-body {
+    flex-direction: column !important;
+    overflow: auto !important;
+  }
+  .cvmaker-design-panel {
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    max-height: 320px !important;
+    overflow-y: auto !important;
+  }
+  /* CV canvas: allow horizontal scroll */
+  .cvmaker-editor-body > div:last-child {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 16px !important;
+  }
+}
 
 .program-detail-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 40px 20px; overflow-y: auto; }
 .program-detail-modal { background: #fafafa; border-radius: 24px; max-width: 800px; width: 100%; max-height: calc(100vh - 80px); overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.3); position: relative; }

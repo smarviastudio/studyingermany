@@ -483,21 +483,21 @@ function MotivationLetterContent() {
       <SiteNav />
 
       {/* Hero bar */}
-      <div style={{ background: 'linear-gradient(135deg,#0f0c29,#302b63,#24243e)', padding: '40px 24px 32px' }}>
+      <div className="tool-hero-bar" style={{ background: 'linear-gradient(135deg,#0f0c29,#302b63,#24243e)', padding: '40px 24px 32px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.5)', fontSize: 13, textDecoration: 'none', marginBottom: 20 }}>
             <ArrowLeft size={14} /> Back
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-            <div style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg,#7c3aed,#dd0000)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(124,58,237,0.4)', flexShrink: 0 }}>
+            <div className="tool-hero-icon" style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg,#7c3aed,#dd0000)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(124,58,237,0.4)', flexShrink: 0 }}>
               <FileText size={26} color="#fff" />
             </div>
             <div>
-              <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 'clamp(22px,3vw,30px)', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>Motivation Letter Generator</h1>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: 0 }}>AI-crafted motivation letters for German university applications</p>
+              <h1 className="tool-hero-title" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 'clamp(22px,3vw,30px)', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>Motivation Letter Generator</h1>
+              <p className="tool-hero-subtitle" style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: 0 }}>AI-crafted motivation letters for German university applications</p>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginTop: 28, maxWidth: 380 }}>
+          <div className="tool-progress-steps" style={{ display: 'flex', alignItems: 'center', gap: 0, marginTop: 28, maxWidth: 380 }}>
             {mlSteps.map((s, i) => (
               <div key={s.id} style={{ display: 'flex', alignItems: 'center', flex: i < mlSteps.length - 1 ? 1 : undefined }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -513,8 +513,8 @@ function MotivationLetterContent() {
         </div>
       </div>
 
-      <main style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
+      <main className="tool-main" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
+        <div className="tool-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
 
           {/* LEFT */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -578,7 +578,7 @@ function MotivationLetterContent() {
                 )
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div className="tool-form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                       <label style={{ fontSize: 11, fontWeight: 700, color: '#374151', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Program name <span style={{ color: '#dd0000' }}>*</span></label>
                       <input style={iStyle} value={manualProgram.program_name} onChange={e => setManualProgram(p => ({ ...p, program_name: e.target.value }))} placeholder="e.g. M.Sc. Data Science" />
@@ -687,7 +687,7 @@ function MotivationLetterContent() {
           </div>
 
           {/* RIGHT — Preview */}
-          <div ref={letterRef} style={{ position: 'sticky', top: 24 }}>
+          <div ref={letterRef} className="tool-result-col" style={{ position: 'sticky', top: 24 }}>
             {!letter ? (
               <div style={{ background: '#fff', borderRadius: 20, padding: '60px 32px', textAlign: 'center', border: '2px dashed #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
                 <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg,rgba(124,58,237,0.08),rgba(221,0,0,0.08))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>

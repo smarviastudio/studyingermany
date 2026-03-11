@@ -176,7 +176,7 @@ export default function ProfilePage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
       
-      <main style={{ maxWidth: 800, margin: '0 auto', padding: '48px 24px 80px' }}>
+      <main className="profile-main" style={{ maxWidth: 800, margin: '0 auto', padding: '48px 24px 80px' }}>
         {/* Header */}
         <header style={{ marginBottom: 40 }}>
           <Link href="/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#666', textDecoration: 'none', fontSize: 14, marginBottom: 16 }}>
@@ -184,7 +184,7 @@ export default function ProfilePage() {
             Back to Dashboard
           </Link>
           
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+          <div className="profile-header-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
             <div>
               <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>Complete Your Profile</h1>
               <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>Fill in your information for better program recommendations</p>
@@ -204,7 +204,7 @@ export default function ProfilePage() {
         {/* Profile Sections */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
           {profileSections.map((section, sectionIndex) => (
-            <section key={sectionIndex} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
+            <section key={sectionIndex} className="profile-form-section" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {section.icon}
