@@ -140,7 +140,7 @@ export default function MyApplicationsPage() {
                     </div>
 
                     <Link
-                      href={`/course-finder/${app.programId}`}
+                      href={`/my-applications/${app.programId}`}
                       className="inline-flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-colors"
                     >
                       Continue
