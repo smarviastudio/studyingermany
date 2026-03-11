@@ -214,7 +214,7 @@ export default async function BlogPostPage({ params }: Props) {
       <div className="min-h-screen bg-[#0a0a1a]">
       <SiteNav />
 
-      <article className="max-w-3xl mx-auto px-6 py-10">
+      <article className="blog-static-article max-w-3xl mx-auto px-6 py-10">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-white/30 text-xs mb-6">
           <Link href="/" className="hover:text-white/60 transition-colors">Home</Link>
@@ -268,7 +268,7 @@ export default async function BlogPostPage({ params }: Props) {
         {related.length > 0 && (
           <section className="mt-10">
             <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-4">More articles</h2>
-            <div className="grid sm:grid-cols-3 gap-3">
+            <div className="blog-static-related-grid grid sm:grid-cols-3 gap-3">
               {related.map(p => {
                 const rCat = CATEGORIES[p.category];
                 return (
@@ -316,7 +316,7 @@ export default async function BlogPostPage({ params }: Props) {
       <SiteNav />
 
       {/* Header */}
-      <header className="max-w-[1100px] mx-auto px-6 pt-8 pb-7 border-b-2 border-[#ffce00]">
+      <header className="blog-wp-header max-w-[1100px] mx-auto px-6 pt-8 pb-7 border-b-2 border-[#ffce00]">
         <h1 className="text-[clamp(28px,4vw,46px)] font-bold text-gray-900 leading-[1.15] tracking-tight mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }} dangerouslySetInnerHTML={{ __html: title }} />
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <span>{publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
@@ -327,7 +327,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* Hero Image */}
       {wpPost.featuredImage && (
-        <figure className="max-w-[1100px] mx-auto px-6">
+        <figure className="blog-wp-hero-img max-w-[1100px] mx-auto px-6">
           <img
             src={wpPost.featuredImage}
             alt={stripHtml(title)}
@@ -338,11 +338,11 @@ export default async function BlogPostPage({ params }: Props) {
       )}
 
       {/* Body Grid */}
-      <div className="max-w-[1100px] mx-auto px-6 py-9">
+      <div className="blog-wp-body-grid max-w-[1100px] mx-auto px-6 py-9">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10 items-start">
 
           {/* Main Prose */}
-          <article className="bg-white rounded-2xl p-10 shadow-sm" style={{ fontSize: '17px', lineHeight: '1.8', color: '#262626' }}>
+          <article className="blog-wp-article bg-white rounded-2xl p-10 shadow-sm" style={{ fontSize: '17px', lineHeight: '1.8', color: '#262626' }}>
             <div
               className="wp-prose"
               dangerouslySetInnerHTML={{ __html: content }}
@@ -365,7 +365,7 @@ export default async function BlogPostPage({ params }: Props) {
           </article>
 
           {/* Sidebar */}
-          <aside className="flex flex-col gap-5 lg:sticky lg:top-6">
+          <aside className="blog-wp-sidebar flex flex-col gap-5 lg:sticky lg:top-6">
             {/* Meta Widget */}
             <div className="bg-gradient-to-br from-white to-[#f8f8ff] rounded-2xl p-5 shadow-lg border border-gray-100">
               <p className="text-[11px] font-bold uppercase tracking-wider text-[#dd0000] mb-3">Snapshot</p>

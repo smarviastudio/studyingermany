@@ -4,10 +4,10 @@ import { useState, useEffect, useMemo, FormEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import {
+import { 
   Search, Loader2, Bookmark, X, ArrowRight, BookOpen, Newspaper, Calendar,
   GraduationCap, FileText, Languages, Home, Briefcase, CreditCard, Shield,
-  Plane, Star, Zap, TrendingUp, Users, Globe, Clock, Calculator
+  Plane, Star, Zap, TrendingUp, Users, Globe, Clock, Calculator, LayoutDashboard
 } from 'lucide-react';
 import { ProgramModal } from '@/components/ProgramModal';
 import type { ProgramSummary } from '@/lib/types';
@@ -513,6 +513,16 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ══ MOBILE BOTTOM TAB BAR ══ */}
+      <nav className="mobile-tab-bar">
+        <a href="#hero"><Search className="w-5 h-5" /><span>Search</span></a>
+        <a href="#guides"><BookOpen className="w-5 h-5" /><span>Guides</span></a>
+        <a href="#tools"><Zap className="w-5 h-5" /><span>Tools</span></a>
+        <Link href={isAuthenticated ? '/dashboard' : '/auth/signin'}>
+          <LayoutDashboard className="w-5 h-5" /><span>{isAuthenticated ? 'Dashboard' : 'Sign in'}</span>
+        </Link>
+      </nav>
 
       {/* ══ FOOTER ══ */}
       <footer className="site-footer">

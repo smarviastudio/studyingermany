@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
-import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap } from 'lucide-react';
+import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard } from 'lucide-react';
 
 const RED = '#dd0000';
 
@@ -80,6 +80,7 @@ export function SiteNav() {
   const [navAllOpen, setNavAllOpen] = useState(false);
   const [navAllLoading, setNavAllLoading] = useState(false);
   const [navAllResults, setNavAllResults] = useState<SiteNavPost[]>([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const navDropdownRef = useRef<HTMLDivElement>(null);
   const navInputRef = useRef<HTMLInputElement>(null);
@@ -247,13 +248,51 @@ export function SiteNav() {
         </div>
       )}
 
+      {/* Mobile drawer overlay */}
+      <div className={`sitenav-drawer-overlay${drawerOpen ? ' open' : ''}`} onClick={() => setDrawerOpen(false)} />
+
+      {/* Mobile slide-out drawer */}
+      <div className={`sitenav-drawer${drawerOpen ? ' open' : ''}`}>
+        <div className="sitenav-drawer-head">
+          <Image src="/logo_wp.png" alt="Students in Germany" width={120} height={38} style={{ objectFit: 'contain' }} />
+          <button className="sitenav-drawer-close" onClick={() => setDrawerOpen(false)}>✕</button>
+        </div>
+        <div className="sitenav-drawer-links">
+          <a href="/#hero" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><GraduationCap size={20} />Course Finder</a>
+          <a href="/#guides" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><BookOpen size={20} />Study Guides</a>
+          <a href="/#tools" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Wrench size={20} />Free AI Tools</a>
+          <a href="/pricing" className="sitenav-drawer-link red" onClick={() => setDrawerOpen(false)}><Tag size={20} />Pricing</a>
+          {isAuthenticated && <Link href="/dashboard" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><LayoutDashboard size={20} />Dashboard</Link>}
+        </div>
+        <div className="sitenav-drawer-auth">
+          {isAuthenticated ? (
+            <>
+              {aiUsage !== null && (
+                <div className="sitenav-drawer-credits">
+                  <span>AI credits this month</span>
+                  <strong>{Math.max(0, aiUsage.limit - aiUsage.used)} / {aiUsage.limit}</strong>
+                </div>
+              )}
+              <button onClick={() => { signOut(); setDrawerOpen(false); }} className="sitenav-drawer-btn secondary" style={{ border: 'none', cursor: 'pointer' }}>
+                <LogOut size={16} /> Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/auth/signin" className="sitenav-drawer-btn secondary" onClick={() => setDrawerOpen(false)}>Sign in</Link>
+              <Link href="/cv-maker" className="sitenav-drawer-btn primary" onClick={() => setDrawerOpen(false)}>Free CV Maker</Link>
+            </>
+          )}
+        </div>
+      </div>
+
       <header style={{ background: '#fff', borderBottom: '1px solid #e5e5e5' }}>
-        <div style={{ maxWidth: 1140, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 72 }}>
+        <div className="sitenav-header" style={{ maxWidth: 1140, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 72 }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
             <Image src="/logo_wp.png" alt="Students in Germany" width={140} height={44} style={{ objectFit: 'contain' }} priority />
           </Link>
 
-          <nav className="hidden md:flex" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+          <nav className="sitenav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
             {[
               { label: 'Guides', href: '/#guides' },
               { label: 'Tools', href: '/#tools' },
@@ -331,7 +370,12 @@ export function SiteNav() {
             </form>
           </nav>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          {/* Mobile hamburger */}
+          <button className="sitenav-hamburger" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
+            <Menu size={20} />
+          </button>
+
+          <div className="sitenav-desktop-auth" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuthenticated ? (
               <>
                 {aiUsage !== null && (

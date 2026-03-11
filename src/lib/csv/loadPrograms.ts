@@ -4,6 +4,53 @@ import csv from 'csv-parser';
 import crypto from 'crypto';
 import { Program, ProgramSchema, AICourseSummarySchema } from '../types';
 
+const CURRENT_YEAR = new Date().getFullYear();
+
+function normalizeIsoDeadline(year: number, month: number, day: number): string {
+  let targetYear = year < CURRENT_YEAR ? CURRENT_YEAR : year;
+  const today = new Date();
+  let candidate = new Date(Date.UTC(targetYear, month - 1, day));
+  if (candidate < today) {
+    targetYear += 1;
+    candidate = new Date(Date.UTC(targetYear, month - 1, day));
+  }
+  const mm = month.toString().padStart(2, '0');
+  const dd = day.toString().padStart(2, '0');
+  return `${targetYear}-${mm}-${dd}`;
+}
+
+function normalizeDeadline(value?: string | null): string | undefined {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+
+  // Try ISO-style parsing first (e.g. 2025-07-15)
+  const isoMatch = trimmed.match(/^\s*(\d{4})-(\d{2})-(\d{2})\s*$/);
+  if (isoMatch) {
+    const [, y, m, d] = isoMatch;
+    return normalizeIsoDeadline(parseInt(y, 10), parseInt(m, 10), parseInt(d, 10));
+  }
+
+  // Fallback: try to parse generic date strings
+  const timestamp = Date.parse(trimmed);
+  if (!Number.isNaN(timestamp)) {
+    const parsed = new Date(timestamp);
+    const normalized = normalizeIsoDeadline(parsed.getUTCFullYear(), parsed.getUTCMonth() + 1, parsed.getUTCDate());
+    return normalized;
+  }
+
+  // If we only have text, replace the first outdated year token with the current cycle
+  const matches = Array.from(trimmed.matchAll(/\b(19|20)\d{2}\b/g)).map((m) => parseInt(m[0], 10));
+  if (matches.length > 0) {
+    const outdated = matches.find((year) => year < CURRENT_YEAR);
+    if (outdated) {
+      const nextCycleYear = CURRENT_YEAR;
+      return trimmed.replace(outdated.toString(), nextCycleYear.toString());
+    }
+  }
+  return trimmed;
+}
+
 interface RawCSVRow {
   [key: string]: string;
 }
@@ -178,7 +225,7 @@ export class CSVLoader {
       city: row.city,
       state: row.state,
       country: 'Germany',
-      application_deadline: row.application_deadline || null,
+      application_deadline: sanitizeDeadline(row.application_deadline) ?? null,
       requirements: row.requirements || row.requirements_text_clean || null,
       description: row.description || row.program_name || null,
       quality_warnings: parseJsonArray(row.quality_warnings || ''),
@@ -218,7 +265,7 @@ export class CSVLoader {
       living_expenses_notes: row.living_expenses_notes || undefined,
       min_ects_required: row.min_ects_required || undefined,
       academic_notes: row.academic_notes || undefined,
-      registration_deadline_date: row.registration_deadline_date || undefined,
+      registration_deadline_date: sanitizeDeadline(row.registration_deadline_date) ?? undefined,
       registration_deadline_text: row.registration_deadline_text || undefined,
       application_channel: row.application_channel || undefined,
       application_channel_notes: row.application_channel_notes || undefined,
