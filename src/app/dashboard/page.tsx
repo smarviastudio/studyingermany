@@ -151,22 +151,22 @@ export default function DashboardPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
 
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
+      <main className="dash-main" style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
         {/* Header */}
         <header style={{ marginBottom: 40 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24 }}>
-            <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
+          <div className="dash-header-row" style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24 }}>
+            <div className="dash-header-icon" style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
               <GraduationCap className="w-8 h-8" style={{ color: '#fff' }} />
             </div>
             <div>
-              <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>Your Dashboard</h1>
+              <h1 className="dash-header-title" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>Your Dashboard</h1>
               <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>Track your study in Germany journey</p>
             </div>
           </div>
           
           {/* Subscription Banner */}
           {subscription?.planType === 'free' || !subscription ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: '20px 24px', boxShadow: '0 4px 20px rgba(221,0,0,0.25)', flexWrap: 'wrap', gap: 16 }}>
+            <div className="dash-banner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: '20px 24px', boxShadow: '0 4px 20px rgba(221,0,0,0.25)', flexWrap: 'wrap', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                 <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Zap className="w-6 h-6" style={{ color: '#fff' }} />
@@ -179,7 +179,7 @@ export default function DashboardPage() {
                   </p>
                 </div>
               </div>
-              <Link href="/pricing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 22px', borderRadius: 12, background: '#fff', color: '#dd0000', fontSize: 14, fontWeight: 800, textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+              <Link href="/pricing" className="dash-banner-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 22px', borderRadius: 12, background: '#fff', color: '#dd0000', fontSize: 14, fontWeight: 800, textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
                 <Crown size={15} /> Upgrade Plan
               </Link>
             </div>
@@ -219,8 +219,8 @@ export default function DashboardPage() {
         </header>
 
         {/* Stats Cards - Fixed Height for Uniformity */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, marginBottom: 40 }}>
-          <Link href="/my-shortlist" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '200px', boxSizing: 'border-box' }}
+        <div className="dash-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, marginBottom: 40 }}>
+          <Link href="/my-shortlist" className="dash-stat-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '200px', boxSizing: 'border-box' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -239,7 +239,7 @@ export default function DashboardPage() {
             </div>
           </Link>
 
-          <Link href="/profile" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '200px', boxSizing: 'border-box' }}
+          <Link href="/profile" className="dash-stat-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '200px', boxSizing: 'border-box' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -261,10 +261,10 @@ export default function DashboardPage() {
 
         {/* Application Tools */}
         <section style={{ marginBottom: 40 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: '0 0 20px' }}>Application Tools</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+          <h2 className="dash-section-title" style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: '0 0 20px' }}>Application Tools</h2>
+          <div className="dash-tools-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
 
-            <Link href="/cv-maker" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
+            <Link href="/cv-maker" className="dash-tool-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
@@ -282,7 +282,7 @@ export default function DashboardPage() {
               </div>
             </Link>
 
-            <Link href="/motivation-letter" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
+            <Link href="/motivation-letter" className="dash-tool-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
@@ -300,7 +300,7 @@ export default function DashboardPage() {
               </div>
             </Link>
 
-            <Link href="/cover-letter" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
+            <Link href="/cover-letter" className="dash-tool-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
@@ -318,7 +318,7 @@ export default function DashboardPage() {
               </div>
             </Link>
 
-            <Link href="/gpa-converter" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
+            <Link href="/gpa-converter" className="dash-tool-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
@@ -336,7 +336,7 @@ export default function DashboardPage() {
               </div>
             </Link>
 
-            <Link href="/netto-brutto-calculator" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
+            <Link href="/netto-brutto-calculator" className="dash-tool-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
@@ -367,7 +367,7 @@ export default function DashboardPage() {
                 <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+            <div className="dash-activity-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
               {shortlistEntries.slice(0, 3).map((entry) => {
                 const plan = getPlanFor(entry.programId);
                 const pct = plan ? Math.round((plan.completed / plan.total) * 100) : 0;

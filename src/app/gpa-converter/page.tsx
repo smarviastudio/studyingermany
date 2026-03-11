@@ -138,9 +138,9 @@ export default function GPAConverterPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '48px 24px 80px' }}>
+      <div className="gpa-page-main" style={{ maxWidth: 900, margin: '0 auto', padding: '48px 24px 80px' }}>
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+        <div className="gpa-header" style={{ textAlign: 'center', marginBottom: 48 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #10b981, #059669)', marginBottom: 16, boxShadow: '0 8px 24px rgba(16,185,129,0.2)' }}>
             <Calculator className="w-8 h-8" style={{ color: '#fff' }} />
           </div>
@@ -149,7 +149,7 @@ export default function GPAConverterPage() {
         </div>
 
         {/* Main card */}
-        <div style={{ borderRadius: 20, border: '1px solid #ebebeb', background: '#fff' }}>
+        <div className="gpa-main-card" style={{ borderRadius: 20, border: '1px solid #ebebeb', background: '#fff' }}>
           {/* Country / system selector */}
           <div style={{ padding: '24px 28px', borderBottom: '1px solid #f5f5f5', position: 'relative' }}>
             <label style={{ fontSize: 13, fontWeight: 600, color: '#999', marginBottom: 8, display: 'block' }}>Your grading system</label>
@@ -194,7 +194,7 @@ export default function GPAConverterPage() {
 
           {/* Input fields */}
           {selectedPreset && (
-            <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="gpa-inputs-section" style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 16 }}>
               {/* Your grade */}
               <div>
                 <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: '#666', marginBottom: 6 }}>
@@ -213,7 +213,7 @@ export default function GPAConverterPage() {
               </div>
 
               {/* Max & Min in 2 cols */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="gpa-max-min-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ fontSize: 13, fontWeight: 600, color: '#666', marginBottom: 6, display: 'block' }}>Max grade in your system</label>
                   <input
@@ -271,10 +271,10 @@ export default function GPAConverterPage() {
           {/* Result — inline */}
           {result && gradeInfo && (
             <div ref={resultRef} style={{ borderTop: '1px solid #f5f5f5' }}>
-              <div style={{ padding: '24px 28px' }}>
+              <div className="gpa-result-display" style={{ padding: '24px 28px' }}>
                 {/* Big number + classification */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 20 }}>
-                  <div style={{ width: 80, height: 80, borderRadius: 16, background: gradeInfo.bg, border: `2px solid ${gradeInfo.border}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div className="gpa-result-hero" style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 20 }}>
+                  <div className="gpa-result-big" style={{ width: 80, height: 80, borderRadius: 16, background: gradeInfo.bg, border: `2px solid ${gradeInfo.border}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <span style={{ fontSize: 28, fontWeight: 800, color: gradeInfo.color }}>{result.gpa.toFixed(1)}</span>
                     <span style={{ fontSize: 10, color: '#999' }}>/ 5.0</span>
                   </div>

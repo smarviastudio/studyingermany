@@ -133,23 +133,23 @@ export default function CoverLetterPage() {
       <SiteNav />
 
       {/* Hero bar */}
-      <div style={{ background: 'linear-gradient(135deg,#0f0c29,#302b63,#24243e)', padding: '40px 24px 32px' }}>
+      <div className="tool-hero-bar" style={{ background: 'linear-gradient(135deg,#0f0c29,#302b63,#24243e)', padding: '40px 24px 32px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.5)', fontSize: 13, textDecoration: 'none', marginBottom: 20 }}>
             <ArrowLeft size={14} /> Back
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-            <div style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.35)', flexShrink: 0 }}>
+            <div className="tool-hero-icon" style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.35)', flexShrink: 0 }}>
               <NotebookPen size={26} color="#fff" />
             </div>
             <div>
-              <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 'clamp(22px,3vw,30px)', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>Cover Letter Studio</h1>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: 0 }}>AI-powered cover letters tailored to German employers — ready in 60 seconds</p>
+              <h1 className="tool-hero-title" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 'clamp(22px,3vw,30px)', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>Cover Letter Studio</h1>
+              <p className="tool-hero-subtitle" style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: 0 }}>AI-powered cover letters tailored to German employers — ready in 60 seconds</p>
             </div>
           </div>
 
           {/* Progress steps */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginTop: 28, maxWidth: 420 }}>
+          <div className="tool-progress-steps" style={{ display: 'flex', alignItems: 'center', gap: 0, marginTop: 28, maxWidth: 420 }}>
             {steps.map((s, i) => (
               <div key={s.id} style={{ display: 'flex', alignItems: 'center', flex: i < steps.length - 1 ? 1 : undefined }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -165,8 +165,8 @@ export default function CoverLetterPage() {
         </div>
       </div>
 
-      <main style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
+      <main className="tool-main" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
+        <div className="tool-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
 
           {/* LEFT — Form */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -183,7 +183,7 @@ export default function CoverLetterPage() {
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="tool-form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <Field label="Role title" required>
                     <input style={inputStyle} value={role} onChange={e => setRole(e.target.value)} placeholder="e.g. Data Analyst Intern" />
                   </Field>
@@ -276,7 +276,7 @@ export default function CoverLetterPage() {
           </div>
 
           {/* RIGHT — Preview / Result */}
-          <div ref={resultRef} style={{ position: 'sticky', top: 24 }}>
+          <div ref={resultRef} className="tool-result-col" style={{ position: 'sticky', top: 24 }}>
             {!letter ? (
               <div style={{ background: '#fff', borderRadius: 20, padding: '60px 32px', textAlign: 'center', border: '2px dashed #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
                 <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg,rgba(221,0,0,0.08),rgba(124,58,237,0.08))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>

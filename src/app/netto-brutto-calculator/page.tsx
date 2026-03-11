@@ -184,15 +184,15 @@ export default function NettoBruttoCalculatorPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
 
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
+      <main className="salary-main" style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
         {/* Header */}
         <header style={{ marginBottom: 40 }}>
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#666', textDecoration: 'none', fontSize: 14, marginBottom: 16 }}>
             <Home className="w-4 h-4" />
             Back to Home
           </Link>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
+          <div className="salary-header" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <div className="salary-header-icon" style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
               <Calculator className="w-8 h-8" style={{ color: '#fff' }} />
             </div>
             <div>
@@ -202,13 +202,13 @@ export default function NettoBruttoCalculatorPage() {
           </div>
         </header>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, marginBottom: 40 }}>
+        <div className="salary-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, marginBottom: 40 }}>
           {/* Left Panel - Input */}
           <div>
             {/* Mode Selection */}
             <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, marginBottom: 24 }}>
               <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: '0 0 16px' }}>Calculation Mode</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="salary-mode-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <button
                   onClick={() => setMode('brutto-to-netto')}
                   style={{
@@ -406,7 +406,7 @@ export default function NettoBruttoCalculatorPage() {
             )}
             {calculated && (<>
             {/* Summary Cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
+            <div className="salary-results-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
               <div style={{ background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: 20, color: '#fff' }}>
                 <div style={{ fontSize: 12, opacity: 0.9, marginBottom: 8 }}>{salaryPeriod === 'monthly' ? 'Monthly' : 'Annual'} Gross</div>
                 <div style={{ fontSize: 28, fontWeight: 800 }}>€{(salaryPeriod === 'monthly' ? monthlyGross : gross).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>

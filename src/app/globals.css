@@ -810,6 +810,281 @@ details[open] summary .chevron { transform: rotate(180deg); }
   }
 }
 
+/* ═══════════════════════════════════════════
+   INNER PAGES — MOBILE RESPONSIVE
+   Dashboard, Tools, Shortlist, Pricing, etc.
+   ═══════════════════════════════════════════ */
+
+/* ── DASHBOARD PAGE ── */
+@media (max-width: 768px) {
+  .dash-main {
+    padding: 24px 16px 100px !important;
+  }
+  .dash-header-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+  }
+  .dash-header-icon {
+    width: 52px !important;
+    height: 52px !important;
+  }
+  .dash-header-title {
+    font-size: 22px !important;
+  }
+  .dash-banner {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    padding: 16px !important;
+    border-radius: 14px !important;
+  }
+  .dash-banner-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+  .dash-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 28px !important;
+  }
+  .dash-stat-card {
+    height: auto !important;
+    padding: 16px !important;
+    border-radius: 16px !important;
+  }
+  .dash-tools-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .dash-tool-card {
+    padding: 16px !important;
+    border-radius: 16px !important;
+  }
+  .dash-activity-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .dash-section-title {
+    font-size: 17px !important;
+  }
+}
+
+/* ── SHORTLIST PAGE ── */
+@media (max-width: 768px) {
+  .shortlist-page-main {
+    padding: 24px 16px 100px !important;
+  }
+  .shortlist-page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+  }
+  .shortlist-page-header h1 {
+    font-size: 24px !important;
+  }
+  .shortlist-find-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .shortlist-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+}
+
+/* ── TOOL PAGES (Cover Letter, Motivation Letter, GPA, Salary) — shared hero bar ── */
+@media (max-width: 768px) {
+  /* Dark hero bar */
+  .tool-hero-bar {
+    padding: 24px 16px 20px !important;
+  }
+  .tool-hero-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+  }
+  .tool-hero-title {
+    font-size: 20px !important;
+  }
+  .tool-hero-subtitle {
+    font-size: 13px !important;
+  }
+  .tool-progress-steps {
+    margin-top: 18px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Two-column form + preview → single column */
+  .tool-two-col {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  /* On mobile the sticky result column becomes static */
+  .tool-result-col {
+    position: static !important;
+  }
+
+  /* Tool main content area */
+  .tool-main {
+    padding: 20px 16px 100px !important;
+  }
+
+  /* Inner 2-col grid inside cards (role + company) */
+  .tool-form-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── GPA CONVERTER SPECIFIC ── */
+@media (max-width: 768px) {
+  .gpa-page-main {
+    padding: 24px 16px 100px !important;
+  }
+  .gpa-header {
+    margin-bottom: 28px !important;
+  }
+  .gpa-header h1 {
+    font-size: 26px !important;
+  }
+  .gpa-main-card {
+    border-radius: 16px !important;
+  }
+  .gpa-inputs-section {
+    padding: 18px 16px !important;
+  }
+  .gpa-max-min-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .gpa-result-display {
+    padding: 18px 16px !important;
+  }
+  .gpa-result-hero {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .gpa-result-big {
+    width: 70px !important;
+    height: 70px !important;
+  }
+}
+
+/* ── SALARY CALCULATOR SPECIFIC ── */
+@media (max-width: 768px) {
+  .salary-main {
+    padding: 20px 16px 100px !important;
+  }
+  .salary-header {
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin-bottom: 24px !important;
+  }
+  .salary-header-icon {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .salary-header h1 {
+    font-size: 22px !important;
+  }
+  .salary-two-col {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .salary-mode-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .salary-results-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+  .salary-breakdown-row {
+    font-size: 13px !important;
+  }
+}
+
+/* ── PRICING PAGE ── */
+@media (max-width: 768px) {
+  .pricing-main {
+    padding: 24px 16px 100px !important;
+  }
+  .pricing-hero {
+    padding: 40px 16px 32px !important;
+  }
+  .pricing-hero h1 {
+    font-size: clamp(26px, 7vw, 36px) !important;
+  }
+  .pricing-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .pricing-card {
+    border-radius: 20px !important;
+  }
+  /* Feature comparison table → hide on mobile, show cards instead */
+  .pricing-features-table {
+    display: none !important;
+  }
+  .pricing-features-mobile {
+    display: block !important;
+  }
+  .pricing-faq-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .pricing-toggle {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+}
+
+/* ── MY APPLICATIONS PAGE ── */
+@media (max-width: 768px) {
+  .apps-main {
+    padding: 24px 16px 100px !important;
+  }
+  .apps-header {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .apps-header h1 {
+    font-size: 24px !important;
+  }
+  .apps-steps-list {
+    gap: 12px !important;
+  }
+  .apps-step-card {
+    padding: 16px !important;
+    border-radius: 14px !important;
+  }
+}
+
+/* ── PROFILE PAGE ── */
+@media (max-width: 768px) {
+  .profile-main {
+    padding: 24px 16px 100px !important;
+  }
+  .profile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .profile-header h1 {
+    font-size: 24px !important;
+  }
+  .profile-form-section {
+    padding: 20px 16px !important;
+    border-radius: 16px !important;
+  }
+  .profile-field-row {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
+
 /* ── SHORTLIST PAGE ── */
 .shortlist-card { background: #fff; border: 1px solid #ebebeb; border-radius: 20px; overflow: hidden; transition: all 0.3s cubic-bezier(0.22,1,0.36,1); }
 .shortlist-card:hover { border-color: #dd0000; transform: translateY(-4px); box-shadow: 0 16px 40px rgba(221,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04); }

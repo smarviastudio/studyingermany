@@ -127,7 +127,7 @@ export default function PricingPage() {
 
       <main>
         {/* ── HERO ── */}
-        <section style={{ textAlign: 'center', padding: '72px 24px 56px', position: 'relative', overflow: 'hidden' }}>
+        <section className="pricing-hero" style={{ textAlign: 'center', padding: '72px 24px 56px', position: 'relative', overflow: 'hidden' }}>
           {/* Background blobs */}
           <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-60%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(221,0,0,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', top: 40, right: '10%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -185,10 +185,10 @@ export default function PricingPage() {
         </section>
 
         {/* ── PRICING CARDS ── */}
-        <section style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 80px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, alignItems: 'start' }}>
+        <section className="pricing-cards-grid" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 80px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, alignItems: 'start' }}>
 
           {/* Free */}
-          <div style={{ background: '#fff', border: '1.5px solid #e5e5e5', borderRadius: 24, overflow: 'hidden' }}>
+          <div className="pricing-card" style={{ background: '#fff', border: '1.5px solid #e5e5e5', borderRadius: 24, overflow: 'hidden' }}>
             <div style={{ padding: '32px 28px 24px', borderBottom: '1px solid #f0f0f0' }}>
               <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', margin: '0 0 12px' }}>Free</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
@@ -359,7 +359,7 @@ export default function PricingPage() {
         </section>
 
         {/* ── COMPARISON TABLE ── */}
-        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 80px' }}>
+        <section className="pricing-features-table" style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 80px' }}>
           <h2 style={{ textAlign: 'center', fontSize: 28, fontWeight: 800, color: '#111', margin: '0 0 40px' }}>Full Feature Comparison</h2>
 
           <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 20, overflow: 'hidden' }}>
