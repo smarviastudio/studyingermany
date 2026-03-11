@@ -174,7 +174,7 @@ export default function DashboardPage() {
                 <div>
                   <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>You're on the Free Plan</h3>
                   <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', margin: 0 }}>
-                    {usage ? `${usage.cv + usage.motivation + usage.cover} / 9 AI generations used this month · ` : ''}
+                    {usage ? `${usage.cv + usage.motivation + usage.cover} / 5 AI generations used this month · ` : ''}
                     Upgrade for unlimited AI documents &amp; all templates.
                   </p>
                 </div>

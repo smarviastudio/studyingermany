@@ -605,6 +605,7 @@ function MiniCV({ tpl }: { tpl: CVTemplate }) {
 export default function CVMakerPage() {
   const [phase, setPhase] = useState<'templates' | 'editor'>('templates');
   const [tplId, setTplId] = useState('professional');
+  const [isPremiumTemplate, setIsPremiumTemplate] = useState(false);
   const [accent, setAccent] = useState('#2563EB');
   const [fontFamily, setFontFamily] = useState('Inter');
   const [fontSize, setFontSize] = useState<'small' | 'normal' | 'large'>('normal');
@@ -879,8 +880,7 @@ export default function CVMakerPage() {
               const isPremium = idx >= 3;
               return (
                 <button key={t.id} onClick={() => {
-                  if (isPremium) { setPaywallOpen(true); return; }
-                  setTplId(t.id); setAccent(t.accent);
+                  setTplId(t.id); setAccent(t.accent); setIsPremiumTemplate(isPremium);
                 }} className="cv-template-card" style={{ position: 'relative', textAlign: 'left', borderRadius: 16, overflow: 'hidden', border: `2px solid ${isPremium ? 'rgba(234,179,8,0.4)' : tplId === t.id ? '#dd0000' : '#ebebeb'}`, background: '#fff', cursor: 'pointer', transition: 'all 0.3s', boxShadow: tplId === t.id && !isPremium ? '0 8px 24px rgba(221,0,0,0.15)' : 'none' }}>
                   <div style={{ background: '#fff', overflow: 'hidden', display: 'flex', justifyContent: 'center', height: 180, position: 'relative' }}>
                     <MiniCV tpl={t} />
@@ -1852,10 +1852,10 @@ export default function CVMakerPage() {
               onMouseLeave={e => e.currentTarget.style.transform = 'none'}>
               <Sparkles className="w-4 h-4" /> Generate with AI
             </button>
-            <button onClick={handleDownload} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 10, background: '#dd0000', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(221,0,0,0.15)' }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
-              <Download className="w-4 h-4" /> Download PDF
+            <button onClick={isPremiumTemplate ? () => setPaywallOpen(true) : handleDownload} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 10, background: isPremiumTemplate ? 'linear-gradient(135deg,#f59e0b,#d97706)' : '#dd0000', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: isPremiumTemplate ? '0 4px 12px rgba(245,158,11,0.3)' : '0 4px 12px rgba(221,0,0,0.15)' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; }}>
+              {isPremiumTemplate ? <><Crown className="w-4 h-4" /> Upgrade to Download</> : <><Download className="w-4 h-4" /> Download PDF</>}
             </button>
           </div>
         </div>
@@ -1975,9 +1975,9 @@ export default function CVMakerPage() {
                   <button
                     key={t.id}
                     onClick={() => {
-                      if (isSidebarPremium) { setPaywallOpen(true); return; }
                       setTplId(t.id);
                       setAccent(t.accent);
+                      setIsPremiumTemplate(isSidebarPremium);
                     }}
                     style={{ textAlign: 'left', padding: 8, borderRadius: 8, border: `1px solid ${isSidebarPremium ? 'rgba(234,179,8,0.4)' : tplId === t.id ? '#dd0000' : '#e5e5e5'}`, background: isSidebarPremium ? '#fefce8' : tplId === t.id ? 'rgba(221,0,0,0.05)' : '#fff', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}
                   >
@@ -2016,10 +2016,21 @@ export default function CVMakerPage() {
         <div style={{ flex: 1, overflowY: 'auto', background: '#f5f5f5', display: 'flex', justifyContent: 'center', padding: '24px 16px' }}>
           <div style={{ display: 'inline-block' }}>
             <div style={{ textAlign: 'center', marginBottom: 12 }}>
-              <span style={{ fontSize: 12, color: '#999', fontWeight: 500 }}>Click on any text to edit it directly</span>
+              {isPremiumTemplate ? (
+                <span style={{ fontSize: 12, color: '#d97706', fontWeight: 600 }}>
+                  ✦ Premium template — upgrade to download without watermark
+                </span>
+              ) : (
+                <span style={{ fontSize: 12, color: '#999', fontWeight: 500 }}>Click on any text to edit it directly</span>
+              )}
             </div>
-            <div className="cv-preview-container" style={{ transform: 'scale(0.78)', transformOrigin: 'top center' }}>
+            <div className="cv-preview-container" style={{ transform: 'scale(0.78)', transformOrigin: 'top center', position: 'relative' }}>
               {renderCV(false)}
+              {isPremiumTemplate && (
+                <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                  <span style={{ transform: 'rotate(-35deg)', fontSize: 72, fontWeight: 900, color: 'rgba(234,179,8,0.18)', letterSpacing: '0.1em', whiteSpace: 'nowrap', userSelect: 'none', textTransform: 'uppercase' }}>PREMIUM</span>
+                </div>
+              )}
             </div>
           </div>
           <input id="photo-upload" type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
@@ -2035,9 +2046,15 @@ export default function CVMakerPage() {
               <p className="text-white/40 text-xs mt-0.5">Review your CV before downloading as PDF</p>
             </div>
             <div className="flex items-center gap-3">
-              <button data-pdf-btn onClick={handlePrint} className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all">
-                <Download className="w-4 h-4" /> Download PDF
-              </button>
+              {isPremiumTemplate ? (
+                <button onClick={() => { setShowPrintPreview(false); setPaywallOpen(true); }} className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-500 to-amber-600 text-white text-sm font-medium hover:from-yellow-600 hover:to-amber-700 transition-all">
+                  <Crown className="w-4 h-4" /> Upgrade to Download
+                </button>
+              ) : (
+                <button data-pdf-btn onClick={handlePrint} className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all">
+                  <Download className="w-4 h-4" /> Download PDF
+                </button>
+              )}
               <button onClick={() => setShowPrintPreview(false)} className="text-white/40 hover:text-white/70 p-2"><X className="w-5 h-5" /></button>
             </div>
           </div>
@@ -2072,8 +2089,7 @@ export default function CVMakerPage() {
                   const isPremium = idx >= 3;
                   return (
                     <button key={t.id} onClick={() => {
-                      if (isPremium) { setShowTemplatesModal(false); setPaywallOpen(true); return; }
-                      setTplId(t.id); setAccent(t.accent); setShowTemplatesModal(false);
+                      setTplId(t.id); setAccent(t.accent); setIsPremiumTemplate(isPremium); setShowTemplatesModal(false);
                     }}
                       className={`group relative text-left rounded-lg overflow-hidden border-2 transition-all hover:scale-[1.02] hover:shadow-lg ${
                         isPremium ? 'border-yellow-500/40 hover:border-yellow-400/60 hover:shadow-yellow-500/10'

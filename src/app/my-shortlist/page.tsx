@@ -346,63 +346,65 @@ export default function MyShortlistPage() {
               const isRemoving = removingId === item.programId;
 
               return (
-                <div key={item.id} className="shortlist-card" style={{ opacity: isRemoving ? 0.5 : 1, pointerEvents: isRemoving ? 'none' : 'auto', display: 'flex', flexDirection: 'column', height: '580px', background: '#fff', borderRadius: 20, overflow: 'hidden', border: '1px solid #e5e5e5' }}>
-                  <div style={{ position: 'relative', height: 180, overflow: 'hidden', background: 'linear-gradient(135deg, #f5f5f0, #eee)', flexShrink: 0 }}>
+                <div key={item.id} className="shortlist-card" style={{ opacity: isRemoving ? 0.5 : 1, pointerEvents: isRemoving ? 'none' : 'auto', display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: 20, overflow: 'hidden', border: '1px solid #e5e5e5' }}>
+                  {/* Image or gradient header */}
+                  <div style={{ position: 'relative', height: prog?.image_url ? 160 : 80, overflow: 'hidden', background: prog?.image_url ? '#eee' : 'linear-gradient(135deg, #dd0000 0%, #7c3aed 100%)', flexShrink: 0 }}>
                     {prog?.image_url ? (
                       <Image src={prog.image_url} alt={item.programName} fill style={{ objectFit: 'cover' }} sizes="340px" unoptimized />
                     ) : (
                       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <GraduationCap className="w-12 h-12" style={{ color: '#d4d4d4' }} />
+                        <GraduationCap className="w-8 h-8" style={{ color: 'rgba(255,255,255,0.5)' }} />
                       </div>
                     )}
                     {prog?.is_free && (
-                      <span style={{ position: 'absolute', top: 12, left: 12, background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      <span style={{ position: 'absolute', top: 10, left: 10, background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         No Tuition
                       </span>
                     )}
-                    <button onClick={() => removeFromShortlist(item.programId)} disabled={isRemoving} style={{ position: 'absolute', top: 12, right: 12, width: 36, height: 36, borderRadius: 999, background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
+                    <button onClick={() => removeFromShortlist(item.programId)} disabled={isRemoving} style={{ position: 'absolute', top: 10, right: 10, width: 32, height: 32, borderRadius: 999, background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
                       onMouseEnter={e => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.borderColor = '#dc2626'; }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.95)'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; }}>
-                      {isRemoving ? <Loader2 className="w-4 h-4 animate-spin" style={{ color: '#dc2626' }} /> : <Trash2 className="w-4 h-4" style={{ color: '#dc2626' }} />}
+                      {isRemoving ? <Loader2 className="w-3.5 h-3.5 animate-spin" style={{ color: '#dc2626' }} /> : <Trash2 className="w-3.5 h-3.5" style={{ color: '#dc2626' }} />}
                     </button>
                   </div>
 
-                  <div style={{ padding: 20, display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
-                    <div style={{ marginBottom: 16 }}>
-                      <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, fontWeight: 700, color: '#111', margin: '0 0 6px', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '2.6em' }}>
+                  <div style={{ padding: 18, display: 'flex', flexDirection: 'column', flex: 1, gap: 12 }}>
+                    {/* Title + university */}
+                    <div>
+                      <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {item.programName}
                       </h3>
-                      <p style={{ fontSize: 14, color: '#666', margin: '0 0 14px', lineHeight: 1.4, height: '1.4em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.university}</p>
-
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, height: '24px', overflow: 'hidden' }}>
-                        {prog?.city && (
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#888', fontWeight: 500 }}>
-                            <MapPin className="w-3 h-3" /> {prog.city}
-                          </span>
-                        )}
-                        {prog?.degree_level && (
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#888', fontWeight: 500 }}>
-                            <Award className="w-3 h-3" /> {prog.degree_level}
-                          </span>
-                        )}
-                      </div>
+                      <p style={{ fontSize: 13, color: '#666', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.university}</p>
                     </div>
 
-                    <div style={{ height: '70px', marginBottom: 16, flexShrink: 0 }}>
-                      {plan && (
-                        <div style={{ padding: 12, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                            <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', gap: 4 }}>
-                              <CheckCircle2 className="w-3.5 h-3.5" /> Application Progress
-                            </span>
-                            <span style={{ fontSize: 11, color: '#16a34a', fontWeight: 600 }}>{plan.completed}/{plan.total} steps</span>
-                          </div>
-                          <div style={{ height: 6, background: '#dcfce7', borderRadius: 99, overflow: 'hidden' }}>
-                            <div style={{ height: '100%', background: 'linear-gradient(90deg, #16a34a, #22c55e)', borderRadius: 99, transition: 'width 0.3s ease', width: `${progressPct(plan)}%` }} />
-                          </div>
-                        </div>
+                    {/* Tags row */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {prog?.city && (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#666', background: '#f5f5f5', padding: '3px 8px', borderRadius: 6, fontWeight: 500 }}>
+                          <MapPin className="w-3 h-3" /> {prog.city}
+                        </span>
+                      )}
+                      {prog?.degree_level && (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#666', background: '#f5f5f5', padding: '3px 8px', borderRadius: 6, fontWeight: 500 }}>
+                          <Award className="w-3 h-3" /> {prog.degree_level}
+                        </span>
                       )}
                     </div>
+
+                    {/* Progress bar (only if plan exists) */}
+                    {plan && (
+                      <div style={{ padding: '10px 12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <CheckCircle2 className="w-3.5 h-3.5" /> Application Progress
+                          </span>
+                          <span style={{ fontSize: 11, color: '#16a34a', fontWeight: 600 }}>{plan.completed}/{plan.total} steps</span>
+                        </div>
+                        <div style={{ height: 5, background: '#dcfce7', borderRadius: 99, overflow: 'hidden' }}>
+                          <div style={{ height: '100%', background: 'linear-gradient(90deg, #16a34a, #22c55e)', borderRadius: 99, transition: 'width 0.3s ease', width: `${progressPct(plan)}%` }} />
+                        </div>
+                      </div>
+                    )}
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 'auto' }}>
                       <button onClick={() => handleNavigate(item.programId, `/my-applications/${item.programId}`)} disabled={navigatingId === item.programId + `/my-applications/${item.programId}`} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 20px', background: '#dd0000', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: 'pointer', transition: 'all 0.2s' }}

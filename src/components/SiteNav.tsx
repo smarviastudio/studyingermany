@@ -341,7 +341,7 @@ export function SiteNav() {
                     style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 20, background: aiUsage.used >= aiUsage.limit ? 'rgba(239,68,68,0.08)' : 'rgba(221,0,0,0.07)', border: `1px solid ${aiUsage.used >= aiUsage.limit ? 'rgba(239,68,68,0.2)' : 'rgba(221,0,0,0.15)'}`, textDecoration: 'none' }}
                   >
                     <Zap className="w-3 h-3" style={{ color: aiUsage.used >= aiUsage.limit ? '#ef4444' : RED }} />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: aiUsage.used >= aiUsage.limit ? '#ef4444' : RED }}>{aiUsage.limit - aiUsage.used}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: aiUsage.used >= aiUsage.limit ? '#ef4444' : RED }}>{Math.max(0, aiUsage.limit - aiUsage.used)}</span>
                     <span style={{ fontSize: 11, color: '#737373' }}>credits</span>
                   </Link>
                 )}

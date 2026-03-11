@@ -8,11 +8,42 @@ import { SiteNav } from '@/components/SiteNav';
 type TaxClass = '1' | '2' | '3' | '4' | '5' | '6';
 type CalculationMode = 'brutto-to-netto' | 'netto-to-brutto';
 
+// Church tax rates by Bundesland (most states 9%, Bavaria/Baden-Württemberg 8%)
+const BUNDESLAENDER = [
+  { value: 'BY', label: 'Bayern (Bavaria)', churchTaxRate: 0.08 },
+  { value: 'BW', label: 'Baden-Württemberg', churchTaxRate: 0.08 },
+  { value: 'BE', label: 'Berlin', churchTaxRate: 0.09 },
+  { value: 'BB', label: 'Brandenburg', churchTaxRate: 0.09 },
+  { value: 'HB', label: 'Bremen', churchTaxRate: 0.09 },
+  { value: 'HH', label: 'Hamburg', churchTaxRate: 0.09 },
+  { value: 'HE', label: 'Hessen', churchTaxRate: 0.09 },
+  { value: 'MV', label: 'Mecklenburg-Vorpommern', churchTaxRate: 0.09 },
+  { value: 'NI', label: 'Niedersachsen', churchTaxRate: 0.09 },
+  { value: 'NW', label: 'Nordrhein-Westfalen', churchTaxRate: 0.09 },
+  { value: 'RP', label: 'Rheinland-Pfalz', churchTaxRate: 0.09 },
+  { value: 'SL', label: 'Saarland', churchTaxRate: 0.09 },
+  { value: 'SN', label: 'Sachsen', churchTaxRate: 0.09 },
+  { value: 'ST', label: 'Sachsen-Anhalt', churchTaxRate: 0.09 },
+  { value: 'SH', label: 'Schleswig-Holstein', churchTaxRate: 0.09 },
+  { value: 'TH', label: 'Thüringen', churchTaxRate: 0.09 },
+];
+
+// Tax-free allowances by class (annual, 2025)
+const TAX_ALLOWANCES: Record<TaxClass, number> = {
+  '1': 11784,
+  '2': 11784 + 4260, // single parent allowance (Entlastungsbetrag)
+  '3': 11784 * 2,    // double allowance for married higher earner
+  '4': 11784,
+  '5': 0,            // no allowance, all taxed from first euro
+  '6': 0,            // second job, no allowance
+};
+
 export default function NettoBruttoCalculatorPage() {
   const [mode, setMode] = useState<CalculationMode>('brutto-to-netto');
   const [bruttoSalary, setBruttoSalary] = useState<string>('50000');
   const [nettoSalary, setNettoSalary] = useState<string>('');
   const [taxClass, setTaxClass] = useState<TaxClass>('1');
+  const [bundesland, setBundesland] = useState<string>('NW');
   const [hasChildren, setHasChildren] = useState(false);
   const [churchTax, setChurchTax] = useState(false);
   const [healthInsuranceRate, setHealthInsuranceRate] = useState('2.5');
@@ -21,36 +52,38 @@ export default function NettoBruttoCalculatorPage() {
   const [calcResult, setCalcResult] = useState<ReturnType<typeof calculateNetFromGross> | null>(null);
   const [calcGross, setCalcGross] = useState(0);
 
-  // Calculate income tax based on German tax formula (2025)
-  const calculateIncomeTax = (taxableIncome: number): number => {
-    if (taxableIncome <= 11784) return 0; // Tax-free allowance 2025
-    
-    if (taxableIncome <= 17005) {
-      const y = (taxableIncome - 11784) / 10000;
+  const getChurchTaxRate = () => BUNDESLAENDER.find(b => b.value === bundesland)?.churchTaxRate ?? 0.09;
+
+  // Calculate income tax based on German tax formula (2025), respecting tax class allowances
+  const calculateIncomeTax = (taxableIncome: number, tc: TaxClass): number => {
+    const allowance = TAX_ALLOWANCES[tc];
+    const income = Math.max(0, taxableIncome - allowance);
+
+    // Class 5 & 6: flat withholding approximation (no allowance, higher effective rate)
+    if (tc === '5') return income * 0.30;
+    if (tc === '6') return income * 0.42;
+
+    // Standard progressive formula (classes 1, 2, 3, 4)
+    if (income <= 0) return 0;
+
+    if (income <= 17005) {
+      const y = income / 10000;
       return (922.98 * y + 1400) * y;
     }
-    
-    if (taxableIncome <= 66760) {
-      const z = (taxableIncome - 17005) / 10000;
+    if (income <= 66760) {
+      const z = (income - 17005) / 10000;
       return (181.19 * z + 2397) * z + 1025.38;
     }
-    
-    if (taxableIncome <= 277825) {
-      return 0.42 * taxableIncome - 10602.13;
+    if (income <= 277825) {
+      return 0.42 * income - 10602.13;
     }
-    
-    return 0.45 * taxableIncome - 18936.88;
+    return 0.45 * income - 18936.88;
   };
 
   // Calculate solidarity surcharge (5.5% only for high earners)
-  const calculateSolidaritySurcharge = (incomeTax: number, taxableIncome: number): number => {
-    const threshold = taxClass === '3' ? 39900 : 19950;
+  const calculateSolidaritySurcharge = (incomeTax: number, tc: TaxClass): number => {
+    const threshold = tc === '3' ? 39900 : 19950;
     if (incomeTax <= threshold) return 0;
-    
-    const maxThreshold = taxClass === '3' ? 211000 : 105500;
-    if (taxableIncome >= maxThreshold) return incomeTax * 0.055;
-    
-    // Sliding scale
     const excess = incomeTax - threshold;
     return Math.min(excess * 0.119, incomeTax * 0.055);
   };
@@ -66,49 +99,31 @@ export default function NettoBruttoCalculatorPage() {
     healthInsurance: number;
     careInsurance: number;
     totalDeductions: number;
+    effectiveRate: number;
   } => {
-    // Social security contributions (employee share)
     const pensionCeiling = 96600;
     const healthCeiling = 66150;
-    
     const pensionBase = Math.min(gross, pensionCeiling);
     const healthBase = Math.min(gross, healthCeiling);
-    
-    const pensionInsurance = pensionBase * 0.093; // 9.3% employee share
-    const unemploymentInsurance = pensionBase * 0.013; // 1.3% employee share
-    const healthInsurance = healthBase * (0.073 + parseFloat(healthInsuranceRate) / 200); // 7.3% + half of additional rate
-    const careInsurance = healthBase * (hasChildren ? 0.017 : 0.021); // 1.7% or 2.1% for childless
-    
+
+    const pensionInsurance = pensionBase * 0.093;
+    const unemploymentInsurance = pensionBase * 0.013;
+    const healthInsurance = healthBase * (0.073 + parseFloat(healthInsuranceRate || '2.5') / 200);
+    const careInsurance = healthBase * (hasChildren ? 0.017 : 0.021);
     const socialContributions = pensionInsurance + unemploymentInsurance + healthInsurance + careInsurance;
-    
-    // Taxable income
+
     const taxableIncome = gross - socialContributions;
-    
-    // Income tax
-    const incomeTax = calculateIncomeTax(taxableIncome);
-    
-    // Solidarity surcharge
-    const solidaritySurcharge = calculateSolidaritySurcharge(incomeTax, taxableIncome);
-    
-    // Church tax (8% or 9% of income tax)
-    const churchTaxAmount = churchTax ? incomeTax * 0.09 : 0;
-    
-    // Total deductions
+    const incomeTax = calculateIncomeTax(taxableIncome, taxClass);
+    const solidaritySurcharge = calculateSolidaritySurcharge(incomeTax, taxClass);
+    const churchTaxAmount = churchTax ? incomeTax * getChurchTaxRate() : 0;
     const totalDeductions = socialContributions + incomeTax + solidaritySurcharge + churchTaxAmount;
-    
-    // Net salary
     const netto = gross - totalDeductions;
-    
+    const effectiveRate = gross > 0 ? (totalDeductions / gross) * 100 : 0;
+
     return {
-      netto,
-      incomeTax,
-      solidaritySurcharge,
-      churchTaxAmount,
-      pensionInsurance,
-      unemploymentInsurance,
-      healthInsurance,
-      careInsurance,
-      totalDeductions
+      netto, incomeTax, solidaritySurcharge, churchTaxAmount,
+      pensionInsurance, unemploymentInsurance, healthInsurance, careInsurance,
+      totalDeductions, effectiveRate,
     };
   };
 
@@ -289,13 +304,30 @@ export default function NettoBruttoCalculatorPage() {
                     onChange={(e) => setTaxClass(e.target.value as TaxClass)}
                     style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 14, color: '#111', outline: 'none', cursor: 'pointer', background: '#fff' }}
                   >
-                    <option value="1">Class 1 - Single, no children</option>
-                    <option value="2">Class 2 - Single parent</option>
-                    <option value="3">Class 3 - Married, higher earner</option>
-                    <option value="4">Class 4 - Married, equal earners</option>
-                    <option value="5">Class 5 - Married, lower earner</option>
-                    <option value="6">Class 6 - Second job</option>
+                    <option value="1">Class 1 – Single, no children</option>
+                    <option value="2">Class 2 – Single parent</option>
+                    <option value="3">Class 3 – Married, higher earner</option>
+                    <option value="4">Class 4 – Married, equal earners</option>
+                    <option value="5">Class 5 – Married, lower earner</option>
+                    <option value="6">Class 6 – Second job</option>
                   </select>
+                </div>
+
+                {/* Bundesland */}
+                <div>
+                  <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>
+                    Federal State (Bundesland)
+                  </label>
+                  <select
+                    value={bundesland}
+                    onChange={(e) => setBundesland(e.target.value)}
+                    style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 14, color: '#111', outline: 'none', cursor: 'pointer', background: '#fff' }}
+                  >
+                    {BUNDESLAENDER.map(b => (
+                      <option key={b.value} value={b.value}>{b.label}</option>
+                    ))}
+                  </select>
+                  <p style={{ fontSize: 11, color: '#999', marginTop: 4 }}>Affects church tax rate (8% or 9%)</p>
                 </div>
 
                 {/* Health Insurance Rate */}

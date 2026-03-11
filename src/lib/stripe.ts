@@ -64,8 +64,10 @@ export function getPlanTypeFromPriceId(priceId: string): 'student' | 'pro' | 'fr
 }
 
 export const FREE_LIMITS = {
-  cvGenerations: 3,
-  motivationLetterGenerations: 3,
-  coverLetterGenerations: 3,
+  cvGenerations: 5,
+  motivationLetterGenerations: 5,
+  coverLetterGenerations: 5,
   programSearches: 30,
 };
+
+export const FREE_MONTHLY_TOTAL = 5; // shared pool across all AI tools

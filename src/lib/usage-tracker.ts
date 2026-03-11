@@ -1,5 +1,5 @@
 import { prisma } from './prisma';
-import { FREE_LIMITS } from './stripe';
+import { FREE_MONTHLY_TOTAL } from './stripe';
 
 type FeatureType = 'cv' | 'motivation' | 'cover' | 'search';
 
@@ -8,13 +8,6 @@ const fieldMap: Record<FeatureType, string> = {
   motivation: 'motivationLetterGenerations',
   cover: 'coverLetterGenerations',
   search: 'programSearches',
-};
-
-const limitMap: Record<FeatureType, number> = {
-  cv: FREE_LIMITS.cvGenerations,
-  motivation: FREE_LIMITS.motivationLetterGenerations,
-  cover: FREE_LIMITS.coverLetterGenerations,
-  search: FREE_LIMITS.programSearches,
 };
 
 function getCurrentMonth(): string {
@@ -44,10 +37,13 @@ export async function checkUsageLimit(
     where: { userId_month: { userId, month } },
   });
 
-  const current = (usage as any)?.[fieldMap[feature]] ?? 0;
-  const limit = limitMap[feature];
+  // Use shared monthly pool across all AI tools
+  const totalUsed = usage
+    ? (usage.cvGenerations ?? 0) + (usage.motivationLetterGenerations ?? 0) + (usage.coverLetterGenerations ?? 0)
+    : 0;
+  const limit = FREE_MONTHLY_TOTAL;
 
-  return { allowed: current < limit, current, limit, planType };
+  return { allowed: totalUsed < limit, current: totalUsed, limit, planType };
 }
 
 export async function incrementUsage(userId: string, feature: FeatureType): Promise<void> {
