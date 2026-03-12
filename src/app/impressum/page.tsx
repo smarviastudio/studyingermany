@@ -26,22 +26,19 @@ export default function ImpressumPage() {
           </Section>
 
           <Section title="Contact / Kontakt">
-            <Row label="Email" value={<a href="mailto:smarviastudio@gmail.com" style={{ color: '#dd0000' }}>smarviastudio@gmail.com</a>} />
-            <Row label="Phone" value="Provided upon request via email" />
-          </Section>
-
-          <Section title="Commercial Register / Handelsregister">
-            <Row label="Register court" value="Not yet registered" />
-            <Row label="Register number" value="n/a" />
-          </Section>
-
-          <Section title="VAT Identification / Umsatzsteuer-ID">
-            <Row label="VAT ID (§27a UStG)" value="Not available" />
+            <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, margin: 0 }}>
+              Email:&nbsp;
+              <a href="mailto:smarviastudio@gmail.com" style={{ color: '#dd0000' }}>smarviastudio@gmail.com</a>
+              <br />
+              Phone available on request via email.
+            </p>
           </Section>
 
           <Section title="Responsible for content / Inhaltlich Verantwortlicher">
-            <Row label="Name" value="Salman Shahid" />
-            <Row label="Address" value="Schoeneggstrasse 45, 8953 Dietikon, Switzerland" />
+            <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, margin: 0 }}>
+              Salman Shahid<br />
+              Schoeneggstrasse 45, 8953 Dietikon, Switzerland
+            </p>
           </Section>
 
           <Section title="Platform for Online Dispute Resolution">
