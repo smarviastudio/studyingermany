@@ -28,14 +28,16 @@ const BUNDESLAENDER = [
   { value: 'TH', label: 'Thüringen', churchTaxRate: 0.09 },
 ];
 
-// Tax-free allowances by class (annual, 2025)
+// Additional allowances by class (annual, 2025)
+// NOTE: Grundfreibetrag is already built into the progressive tax formula,
+// so we only apply class-specific extras (e.g. single parent relief, splitting).
 const TAX_ALLOWANCES: Record<TaxClass, number> = {
-  '1': 11784,
-  '2': 11784 + 4260, // single parent allowance (Entlastungsbetrag)
-  '3': 11784 * 2,    // double allowance for married higher earner
-  '4': 11784,
-  '5': 0,            // no allowance, all taxed from first euro
-  '6': 0,            // second job, no allowance
+  '1': 0,
+  '2': 4260,        // single parent allowance (Entlastungsbetrag)
+  '3': 11784,       // approximate extra allowance for splitting advantage
+  '4': 0,
+  '5': 0,           // no allowance, all taxed from first euro
+  '6': 0,           // second job, no allowance
 };
 
 export default function NettoBruttoCalculatorPage() {
