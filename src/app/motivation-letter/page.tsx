@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
+import { ProfileWarningBanner } from '@/components/ProfileWarningBanner';
 import type { Program } from '@/lib/types';
 
 interface ShortlistItem {
@@ -514,6 +515,7 @@ function MotivationLetterContent() {
       </div>
 
       <main className="tool-main" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
+        <ProfileWarningBanner requiredFields={['fullName', 'phone', 'nationality', 'backgroundSummary', 'skills', 'careerGoals']} />
         <div className="tool-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
 
           {/* LEFT */}

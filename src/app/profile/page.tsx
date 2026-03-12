@@ -3,15 +3,23 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { ArrowLeft, CheckCircle, Circle, User, GraduationCap, Target, Globe, Briefcase, Award } from 'lucide-react';
+import { ArrowLeft, CheckCircle, User, GraduationCap, Target, Globe, Phone, MapPin, Calendar, Flag, AlertCircle } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
 type UserProfile = {
+  // Personal info
+  fullName?: string;
+  phone?: string;
+  nationality?: string;
+  dateOfBirth?: string;
+  address?: string;
+  // Academic goals
   targetDegreeLevel?: string;
   targetSubjects?: string[];
   preferredLanguage?: string;
   germanLevel?: string;
   englishLevel?: string;
+  // Background
   academicBackground?: string;
   backgroundSummary?: string;
   skills?: string;
@@ -32,6 +40,9 @@ export default function ProfilePage() {
   const calculateProfileCompletion = (profile: UserProfile | null) => {
     if (!profile) return 0;
     const fields = [
+      profile.fullName,
+      profile.phone,
+      profile.nationality,
       profile.targetDegreeLevel,
       profile.targetSubjects && profile.targetSubjects.length > 0,
       profile.preferredLanguage,
@@ -46,6 +57,8 @@ export default function ProfilePage() {
     const completed = fields.filter(Boolean).length;
     return Math.round((completed / fields.length) * 100);
   };
+
+  const isPersonalInfoComplete = !!(userProfile?.fullName && userProfile?.phone && userProfile?.nationality);
 
   // Load user profile
   useEffect(() => {
@@ -106,14 +119,16 @@ export default function ProfilePage() {
     });
   };
 
+  const iStyle: React.CSSProperties = { width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 14, color: '#111', outline: 'none', background: '#fff', boxSizing: 'border-box' };
+
   const profileSections = [
     {
       title: 'Academic Goals',
       icon: <GraduationCap className="w-5 h-5" />,
       fields: [
         { key: 'targetDegreeLevel', label: 'Target Degree Level', type: 'select', options: ['Bachelor', 'Master', 'PhD', 'Other'] },
-        { key: 'targetSubjects', label: 'Target Subjects', type: 'tags' },
-        { key: 'preferredLanguage', label: 'Preferred Language', type: 'select', options: ['English', 'German', 'Both'] }
+        { key: 'targetSubjects', label: 'Target Subjects / Fields', type: 'tags', placeholder: 'e.g. Computer Science, Data Science, Engineering' },
+        { key: 'preferredLanguage', label: 'Preferred Study Language', type: 'select', options: ['English', 'German', 'Both'] }
       ]
     },
     {
@@ -125,20 +140,20 @@ export default function ProfilePage() {
       ]
     },
     {
-      title: 'Background',
+      title: 'Academic Background',
       icon: <User className="w-5 h-5" />,
       fields: [
-        { key: 'academicBackground', label: 'Academic Background', type: 'textarea' },
-        { key: 'backgroundSummary', label: 'Background Summary', type: 'textarea' },
-        { key: 'skills', label: 'Skills', type: 'textarea' }
+        { key: 'academicBackground', label: 'Academic Background', type: 'textarea', placeholder: 'e.g. B.Sc. Computer Science from XYZ University, GPA 3.8' },
+        { key: 'backgroundSummary', label: 'Personal Summary', type: 'textarea', placeholder: 'A short summary about yourself for AI tools to use...' },
+        { key: 'skills', label: 'Key Skills', type: 'textarea', placeholder: 'e.g. Python, Machine Learning, Data Analysis, Research...' }
       ]
     },
     {
       title: 'Career Goals',
       icon: <Target className="w-5 h-5" />,
       fields: [
-        { key: 'careerGoals', label: 'Career Goals', type: 'textarea' },
-        { key: 'preferredCities', label: 'Preferred Cities', type: 'tags' }
+        { key: 'careerGoals', label: 'Career Goals', type: 'textarea', placeholder: 'What do you want to achieve after graduation?' },
+        { key: 'preferredCities', label: 'Preferred Cities in Germany', type: 'tags', placeholder: 'e.g. Berlin, Munich, Hamburg' }
       ]
     }
   ];
@@ -201,8 +216,68 @@ export default function ProfilePage() {
           </div>
         </header>
 
-        {/* Profile Sections */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+
+        {/* ── PERSONAL INFO SECTION ── */}
+        <section className="profile-form-section" style={{ background: '#fff', border: `1px solid ${isPersonalInfoComplete ? '#d1fae5' : '#fde68a'}`, borderRadius: 20, padding: 24, marginBottom: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <User size={20} color="#fff" />
+              </div>
+              <div>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: 0 }}>Personal Information</h2>
+                <p style={{ fontSize: 12, color: '#737373', margin: '2px 0 0' }}>Used to auto-fill CV, Cover Letter & Motivation Letter</p>
+              </div>
+            </div>
+            {!isPersonalInfoComplete && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: '6px 10px' }}>
+                <AlertCircle size={14} color="#d97706" />
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#d97706' }}>Required</span>
+              </div>
+            )}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }} className="profile-field-row">
+            <div>
+              <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>Full Name <span style={{ color: '#dd0000' }}>*</span></label>
+              <div style={{ position: 'relative' }}>
+                <User size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#bbb' }} />
+                <input style={{ ...iStyle, paddingLeft: 38 }} value={userProfile?.fullName || ''} onChange={e => updateProfile('fullName', e.target.value)} placeholder="Your full name" />
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>Phone Number <span style={{ color: '#dd0000' }}>*</span></label>
+              <div style={{ position: 'relative' }}>
+                <Phone size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#bbb' }} />
+                <input style={{ ...iStyle, paddingLeft: 38 }} value={userProfile?.phone || ''} onChange={e => updateProfile('phone', e.target.value)} placeholder="+49 176 000 0000" />
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>Nationality <span style={{ color: '#dd0000' }}>*</span></label>
+              <div style={{ position: 'relative' }}>
+                <Flag size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#bbb' }} />
+                <input style={{ ...iStyle, paddingLeft: 38 }} value={userProfile?.nationality || ''} onChange={e => updateProfile('nationality', e.target.value)} placeholder="e.g. Pakistani, Indian, Nigerian" />
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>Date of Birth</label>
+              <div style={{ position: 'relative' }}>
+                <Calendar size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#bbb' }} />
+                <input type="date" style={{ ...iStyle, paddingLeft: 38 }} value={userProfile?.dateOfBirth || ''} onChange={e => updateProfile('dateOfBirth', e.target.value)} />
+              </div>
+            </div>
+            <div style={{ gridColumn: '1 / -1' }}>
+              <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>Address / City</label>
+              <div style={{ position: 'relative' }}>
+                <MapPin size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#bbb' }} />
+                <input style={{ ...iStyle, paddingLeft: 38 }} value={userProfile?.address || ''} onChange={e => updateProfile('address', e.target.value)} placeholder="e.g. Berlin, Germany" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── OTHER SECTIONS ── */}
           {profileSections.map((section, sectionIndex) => (
             <section key={sectionIndex} className="profile-form-section" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
@@ -213,37 +288,36 @@ export default function ProfilePage() {
               </div>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {section.fields.map((field, fieldIndex) => (
+                {section.fields.map((field: any, fieldIndex: number) => (
                   <div key={fieldIndex}>
-                    <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>
+                    <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>
                       {field.label}
                     </label>
-                    
                     {field.type === 'select' ? (
                       <select
-                        value={userProfile?.[field.key as keyof UserProfile] || ''}
+                        value={userProfile?.[field.key as keyof UserProfile] as string || ''}
                         onChange={(e) => updateProfile(field.key as keyof UserProfile, e.target.value)}
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 14, color: '#111', outline: 'none', cursor: 'pointer', background: '#fff' }}
+                        style={{ ...iStyle, cursor: 'pointer' }}
                       >
                         <option value="">Select an option</option>
-                        {field.options?.map((option) => (
+                        {field.options?.map((option: string) => (
                           <option key={option} value={option}>{option}</option>
                         ))}
                       </select>
                     ) : field.type === 'textarea' ? (
                       <textarea
-                        value={userProfile?.[field.key as keyof UserProfile] || ''}
+                        value={userProfile?.[field.key as keyof UserProfile] as string || ''}
                         onChange={(e) => updateProfile(field.key as keyof UserProfile, e.target.value)}
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 14, color: '#111', outline: 'none', minHeight: '100px', resize: 'vertical' }}
-                        placeholder={`Enter your ${field.label.toLowerCase()}...`}
+                        style={{ ...iStyle, minHeight: 100, resize: 'vertical' }}
+                        placeholder={field.placeholder || `Enter your ${field.label.toLowerCase()}...`}
                       />
                     ) : field.type === 'tags' ? (
                       <input
                         type="text"
-                        value={Array.isArray(userProfile?.[field.key as keyof UserProfile]) ? (userProfile[field.key as keyof UserProfile] as string[]).join(', ') : ''}
-                        onChange={(e) => updateProfile(field.key as keyof UserProfile, e.target.value.split(',').map(item => item.trim()).filter(Boolean))}
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 14, color: '#111', outline: 'none' }}
-                        placeholder={`Enter ${field.label.toLowerCase()} separated by commas...`}
+                        value={Array.isArray(userProfile?.[field.key as keyof UserProfile]) ? (userProfile![field.key as keyof UserProfile] as string[]).join(', ') : ''}
+                        onChange={(e) => updateProfile(field.key as keyof UserProfile, e.target.value.split(',').map((item: string) => item.trim()).filter(Boolean))}
+                        style={iStyle}
+                        placeholder={field.placeholder || `Enter ${field.label.toLowerCase()} separated by commas...`}
                       />
                     ) : null}
                   </div>
@@ -251,7 +325,8 @@ export default function ProfilePage() {
               </div>
             </section>
           ))}
-        </div>
+
+        </div>{/* end gap container */}
 
         {/* Save Button */}
         <div style={{ marginTop: 40, textAlign: 'center' }}>

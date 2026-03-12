@@ -6,7 +6,8 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import {
   GraduationCap, Bookmark, Calendar, FileText, Target, TrendingUp, Award,
-  Briefcase, Star, ChevronRight, Calculator, Search, ArrowRight, Crown, Zap, Loader2
+  Briefcase, Star, ChevronRight, Calculator, Search, ArrowRight, Crown, Zap, Loader2,
+  Sparkles, ExternalLink, AlertCircle
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
@@ -28,6 +29,9 @@ type PlanProgress = {
 };
 
 type UserProfile = {
+  fullName?: string;
+  phone?: string;
+  nationality?: string;
   targetDegreeLevel?: string;
   targetSubjects?: string[];
   preferredLanguage?: string;
@@ -38,6 +42,17 @@ type UserProfile = {
   skills?: string;
   careerGoals?: string;
   preferredCities?: string[];
+};
+
+type RecommendedProgram = {
+  id: string;
+  name: string;
+  university: string;
+  city: string;
+  language: string;
+  matchScore: number;
+  matchReason: string;
+  degreeLevel: string;
 };
 
 export default function DashboardPage() {
@@ -58,11 +73,16 @@ export default function DashboardPage() {
   const [subscription, setSubscription] = useState<{ planType: string; status: string; currentPeriodEnd?: string } | null>(null);
   const [usage, setUsage] = useState<{ cv: number; motivation: number; cover: number } | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [recommendedPrograms, setRecommendedPrograms] = useState<RecommendedProgram[]>([]);
+  const [recommendLoading, setRecommendLoading] = useState(false);
 
   // Calculate profile completion percentage
   const calculateProfileCompletion = (profile: UserProfile | null) => {
     if (!profile) return 0;
     const fields = [
+      profile.fullName,
+      profile.phone,
+      profile.nationality,
       profile.targetDegreeLevel,
       profile.targetSubjects && profile.targetSubjects.length > 0,
       profile.preferredLanguage,
@@ -76,6 +96,23 @@ export default function DashboardPage() {
     ];
     const completed = fields.filter(Boolean).length;
     return Math.round((completed / fields.length) * 100);
+  };
+
+  const loadRecommendations = async (profile: UserProfile) => {
+    if (!profile.targetDegreeLevel && !profile.targetSubjects?.length) return;
+    setRecommendLoading(true);
+    try {
+      const res = await fetch('/api/recommendations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setRecommendedPrograms(data.programs || []);
+      }
+    } catch { /* silent */ }
+    finally { setRecommendLoading(false); }
   };
 
   // Load user's shortlist, progress, and profile
@@ -106,8 +143,11 @@ export default function DashboardPage() {
         const res = await fetch('/api/profile');
         if (res.ok && !cancelled) {
           const data = await res.json();
-          setUserProfile(data.profile || null);
-          setProfileCompletion(calculateProfileCompletion(data.profile || null));
+          const p = data.profile || null;
+          setUserProfile(p);
+          const pct = calculateProfileCompletion(p);
+          setProfileCompletion(pct);
+          if (p && pct >= 40) loadRecommendations(p);
         }
       } catch (error) {
         console.warn('Failed to load profile', error);
@@ -258,6 +298,73 @@ export default function DashboardPage() {
             </div>
           </Link>
         </div>
+
+        {/* ── RECOMMENDED PROGRAMS ── */}
+        {profileCompletion >= 40 && (
+          <section style={{ marginBottom: 40 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Sparkles size={18} color="#fff" />
+                </div>
+                <div>
+                  <h2 className="dash-section-title" style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: 0 }}>AI Recommended Programs</h2>
+                  <p style={{ fontSize: 12, color: '#737373', margin: '2px 0 0' }}>Based on your profile — updated as you complete it</p>
+                </div>
+              </div>
+              <Link href="/course-finder" style={{ color: '#dd0000', fontSize: 13, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
+                Browse all <ChevronRight size={14} />
+              </Link>
+            </div>
+
+            {recommendLoading ? (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 20px', background: '#fff', borderRadius: 20, border: '1px solid #ebebeb' }}>
+                <Loader2 size={28} style={{ color: '#dd0000', animation: 'spin 1s linear infinite' }} />
+                <span style={{ marginLeft: 12, fontSize: 14, color: '#737373' }}>Finding best matching programs...</span>
+              </div>
+            ) : recommendedPrograms.length > 0 ? (
+              <div className="dash-activity-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+                {recommendedPrograms.slice(0, 3).map((prog) => (
+                  <div key={prog.id} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 20, transition: 'all 0.2s', cursor: 'pointer' }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(221,0,0,0.08)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg,rgba(221,0,0,0.1),rgba(124,58,237,0.1))', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <GraduationCap size={20} style={{ color: '#dd0000' }} />
+                        </div>
+                        <div style={{ minWidth: 0 }}>
+                          <h3 style={{ fontSize: 13, fontWeight: 700, color: '#111', margin: '0 0 2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 180 }}>{prog.name}</h3>
+                          <p style={{ fontSize: 12, color: '#737373', margin: 0 }}>{prog.university}</p>
+                        </div>
+                      </div>
+                      <div style={{ flexShrink: 0, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', borderRadius: 8, padding: '4px 8px', fontSize: 11, fontWeight: 700, color: '#fff' }}>
+                        {prog.matchScore}%
+                      </div>
+                    </div>
+                    <p style={{ fontSize: 12, color: '#555', lineHeight: 1.5, margin: '0 0 12px' }}>{prog.matchReason}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 11, background: '#f5f5f5', color: '#555', padding: '3px 8px', borderRadius: 6, fontWeight: 600 }}>{prog.city}</span>
+                      <span style={{ fontSize: 11, background: '#f5f5f5', color: '#555', padding: '3px 8px', borderRadius: 6, fontWeight: 600 }}>{prog.language}</span>
+                      <span style={{ fontSize: 11, background: '#f5f5f5', color: '#555', padding: '3px 8px', borderRadius: 6, fontWeight: 600 }}>{prog.degreeLevel}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 20, padding: 24, display: 'flex', alignItems: 'center', gap: 16 }}>
+                <AlertCircle size={22} color="#d97706" style={{ flexShrink: 0 }} />
+                <div>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: '#92400e', margin: '0 0 4px' }}>Complete more of your profile to get recommendations</p>
+                  <p style={{ fontSize: 13, color: '#a16207', margin: 0 }}>Add your target subjects, degree level, and language skills for AI to find matching programs.</p>
+                </div>
+                <Link href="/profile" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, background: '#dd0000', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                  Complete <ArrowRight size={13} />
+                </Link>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* Application Tools */}
         <section style={{ marginBottom: 40 }}>

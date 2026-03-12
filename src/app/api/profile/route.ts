@@ -4,6 +4,11 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 
 const ProfileSchema = z.object({
+  fullName: z.string().optional(),
+  phone: z.string().optional(),
+  nationality: z.string().optional(),
+  dateOfBirth: z.string().optional(),
+  address: z.string().optional(),
   targetDegreeLevel: z.string().optional(),
   targetSubjects: z.array(z.string()).optional(),
   preferredLanguage: z.string().optional(),

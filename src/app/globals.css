@@ -1097,7 +1097,19 @@ details[open] summary .chevron { transform: rotate(180deg); }
 /* ── CV MAKER PAGE ── */
 .cv-template-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08) !important; border-color: #dd0000 !important; }
 
+/* ── CV MAKER MOBILE: bottom tab switcher (Design / Preview) ── */
+
+/* Mobile tab bar — hidden on desktop */
+.cvmaker-mobile-tabs {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  /* Profile page personal info grid */
+  .profile-field-row {
+    grid-template-columns: 1fr !important;
+  }
+
   /* Template picker phase */
   .cvmaker-page-wrap {
     padding: 24px 16px 100px !important;
@@ -1112,13 +1124,16 @@ details[open] summary .chevron { transform: rotate(180deg); }
     padding: 18px !important;
   }
 
-  /* Editor phase — hide design panel by default, show CV canvas full-width scrollable */
+  /* Editor topbar: compact on mobile */
   .cvmaker-topbar-inner {
     padding: 0 12px !important;
-    gap: 8px !important;
+    height: 52px !important;
+  }
+  .cvmaker-topbar-inner > div:first-child > div {
+    display: none !important; /* hide separator */
   }
   .cvmaker-topbar-inner > div:first-child span {
-    display: none !important;
+    font-size: 13px !important;
   }
   .cvmaker-topbar-inner button,
   .cvmaker-topbar-inner a {
@@ -1126,23 +1141,83 @@ details[open] summary .chevron { transform: rotate(180deg); }
     font-size: 12px !important;
     gap: 4px !important;
   }
+
+  /* Editor body: stack but show only active tab */
   .cvmaker-editor-body {
     flex-direction: column !important;
-    overflow: auto !important;
+    overflow: hidden !important;
+    padding-bottom: 64px !important; /* space for tab bar */
   }
+
+  /* Design panel: full-width, takes full height when active */
   .cvmaker-design-panel {
     width: 100% !important;
     border-right: none !important;
-    border-bottom: 1px solid #e5e5e5 !important;
-    max-height: 320px !important;
+    flex: 1 !important;
+    max-height: none !important;
     overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
-  /* CV canvas: allow horizontal scroll */
-  .cvmaker-editor-body > div:last-child {
+
+  /* Preview pane: full-width, takes full height when active */
+  .cvmaker-preview-pane {
+    width: 100% !important;
+    flex: 1 !important;
     overflow-x: auto !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
-    padding: 16px !important;
+    padding: 16px 8px !important;
+  }
+
+  /* Scale down CV canvas to fit mobile screen */
+  .cvmaker-preview-pane .cv-preview-container {
+    transform: scale(0.5) !important;
+    transform-origin: top center !important;
+    margin-bottom: -420px !important; /* compensate for scale */
+  }
+
+  /* Hidden panel utility */
+  .cvmaker-panel-hidden {
+    display: none !important;
+  }
+
+  /* Mobile bottom tab bar */
+  .cvmaker-mobile-tabs {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 64px !important;
+    background: #fff !important;
+    border-top: 1px solid #e5e5e5 !important;
+    z-index: 40 !important;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08) !important;
+  }
+
+  .cvmaker-mobile-tab {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    background: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #999 !important;
+    transition: color 0.2s !important;
+    padding: 8px 0 !important;
+  }
+
+  .cvmaker-mobile-tab-active {
+    color: #dd0000 !important;
+  }
+
+  .cvmaker-mobile-tab-active svg {
+    stroke: #dd0000 !important;
   }
 }
 

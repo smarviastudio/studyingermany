@@ -32,6 +32,13 @@ model UserProfile {
   userId               String   @unique
   user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // Personal info (used for auto-filling tools)
+  fullName             String?
+  phone                String?
+  nationality          String?
+  dateOfBirth          String?
+  address              String?
+
   targetDegreeLevel    String?
   targetSubjects       String?  // JSON array
   preferredLanguage    String?

@@ -6,10 +6,11 @@ import Link from 'next/link';
 import {
   ArrowLeft, Download, Sparkles, Plus, Trash2,
   GraduationCap, Loader2, Check, Palette, Camera,
-  ChevronRight, X, Wand2, Printer, Save, Type, AArrowUp, User, LogIn, FolderOpen, Crown
+  ChevronRight, X, Wand2, Printer, Save, Type, AArrowUp, User, LogIn, FolderOpen, Crown, FileText
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
+import { ProfileWarningBanner } from '@/components/ProfileWarningBanner';
 import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
 import { templates as TEMPLATE_LIBRARY } from '@/lib/cv-maker/templates';
 
@@ -625,6 +626,7 @@ export default function CVMakerPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
   const [user, setUser] = useState<any>(null);
+  const [mobileTab, setMobileTab] = useState<'design' | 'preview'>('design');
   const cvRef = useRef<HTMLDivElement>(null);
   const tpl = TEMPLATES.find(t => t.id === tplId) || TEMPLATES[0];
 
@@ -853,6 +855,7 @@ export default function CVMakerPage() {
         <SiteNav />
 
         <div className="cvmaker-page-wrap" style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
+          <ProfileWarningBanner requiredFields={['fullName', 'phone', 'nationality', 'backgroundSummary', 'skills']} />
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 12px' }}>Create your CV</h1>
             <p style={{ fontSize: 16, color: '#737373', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 }}>Choose a template designed for German universities and employers. Click any text to edit directly.</p>
@@ -1863,7 +1866,7 @@ export default function CVMakerPage() {
 
       <div className="cvmaker-editor-body" style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* Design Panel */}
-        <div className="cvmaker-design-panel" style={{ width: 280, flexShrink: 0, borderRight: '1px solid #e5e5e5', background: '#fff', overflowY: 'auto' }}>
+        <div className={`cvmaker-design-panel ${mobileTab === 'preview' ? 'cvmaker-panel-hidden' : ''}`} style={{ width: 280, flexShrink: 0, borderRight: '1px solid #e5e5e5', background: '#fff', overflowY: 'auto' }}>
           {/* Header with save status */}
           <div style={{ padding: 16, borderBottom: '1px solid #f5f5f5' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
@@ -2013,7 +2016,7 @@ export default function CVMakerPage() {
         </div>
 
         {/* CV Preview */}
-        <div style={{ flex: 1, overflowY: 'auto', background: '#f5f5f5', display: 'flex', justifyContent: 'center', padding: '24px 16px' }}>
+        <div className={`cvmaker-preview-pane ${mobileTab === 'design' ? 'cvmaker-panel-hidden' : ''}`} style={{ flex: 1, overflowY: 'auto', background: '#f5f5f5', display: 'flex', justifyContent: 'center', padding: '24px 16px' }}>
           <div style={{ display: 'inline-block' }}>
             <div style={{ textAlign: 'center', marginBottom: 12 }}>
               {isPremiumTemplate ? (
@@ -2035,6 +2038,24 @@ export default function CVMakerPage() {
           </div>
           <input id="photo-upload" type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
         </div>
+      </div>
+
+      {/* Mobile bottom tab bar */}
+      <div className="cvmaker-mobile-tabs">
+        <button
+          onClick={() => setMobileTab('design')}
+          className={`cvmaker-mobile-tab ${mobileTab === 'design' ? 'cvmaker-mobile-tab-active' : ''}`}
+        >
+          <Palette size={20} />
+          <span>Design</span>
+        </button>
+        <button
+          onClick={() => setMobileTab('preview')}
+          className={`cvmaker-mobile-tab ${mobileTab === 'preview' ? 'cvmaker-mobile-tab-active' : ''}`}
+        >
+          <FileText size={20} />
+          <span>Preview</span>
+        </button>
       </div>
 
       {/* Print Preview Modal */}
