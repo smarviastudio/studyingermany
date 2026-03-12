@@ -1124,32 +1124,39 @@ details[open] summary .chevron { transform: rotate(180deg); }
     padding: 18px !important;
   }
 
-  /* Editor topbar: compact on mobile */
+  /* ── Topbar: compact + hide button text labels ── */
   .cvmaker-topbar-inner {
     padding: 0 12px !important;
     height: 52px !important;
+    gap: 8px !important;
   }
+  /* Hide separator line & template name */
   .cvmaker-topbar-inner > div:first-child > div {
-    display: none !important; /* hide separator */
+    display: none !important;
   }
   .cvmaker-topbar-inner > div:first-child span {
-    font-size: 13px !important;
+    display: none !important;
   }
-  .cvmaker-topbar-inner button,
-  .cvmaker-topbar-inner a {
+  /* Make action buttons compact icon-only pills */
+  .cvmaker-topbar-btn {
     padding: 8px 12px !important;
+    border-radius: 10px !important;
     font-size: 12px !important;
     gap: 4px !important;
   }
+  /* Hide button text labels on mobile — icon only */
+  .cvmaker-topbar-btn-label {
+    display: none !important;
+  }
 
-  /* Editor body: stack but show only active tab */
+  /* ── Editor body ── */
   .cvmaker-editor-body {
     flex-direction: column !important;
     overflow: hidden !important;
-    padding-bottom: 64px !important; /* space for tab bar */
+    padding-bottom: 64px !important;
   }
 
-  /* Design panel: full-width, takes full height when active */
+  /* ── Design panel: full-width when active ── */
   .cvmaker-design-panel {
     width: 100% !important;
     border-right: none !important;
@@ -1159,29 +1166,43 @@ details[open] summary .chevron { transform: rotate(180deg); }
     -webkit-overflow-scrolling: touch !important;
   }
 
-  /* Preview pane: full-width, takes full height when active */
+  /* ── Preview pane: scroll vertically ── */
   .cvmaker-preview-pane {
     width: 100% !important;
     flex: 1 !important;
-    overflow-x: auto !important;
+    overflow-x: hidden !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
-    padding: 16px 8px !important;
+    padding: 12px 8px 80px !important;
+    align-items: center !important;
   }
 
-  /* Scale down CV canvas to fit mobile screen */
+  /* Show mobile disclaimer */
+  .cvmaker-mobile-disclaimer {
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  /*
+   * CV canvas is 595px wide (A4).
+   * On a ~390px phone, scale = 390/595 ≈ 0.655.
+   * The canvas height ≈ 842px; scaled height ≈ 551px.
+   * Height gap to compensate = 842 * (1 - 0.655) = ~291px → use negative margin.
+   * We use a CSS custom property so it works across screen widths.
+   */
   .cvmaker-preview-pane .cv-preview-container {
-    transform: scale(0.5) !important;
+    transform: scale(0.62) !important;
     transform-origin: top center !important;
-    margin-bottom: -420px !important; /* compensate for scale */
+    /* Pull the space below the scaled canvas back up */
+    margin-bottom: calc((842px * (1 - 0.62)) * -1) !important;
   }
 
-  /* Hidden panel utility */
+  /* ── Hidden panel utility ── */
   .cvmaker-panel-hidden {
     display: none !important;
   }
 
-  /* Mobile bottom tab bar */
+  /* ── Mobile bottom tab bar ── */
   .cvmaker-mobile-tabs {
     display: flex !important;
     position: fixed !important;

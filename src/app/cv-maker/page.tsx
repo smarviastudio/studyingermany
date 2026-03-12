@@ -1850,15 +1850,20 @@ export default function CVMakerPage() {
             <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{tpl.name}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button onClick={() => setShowAI(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 10, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(221,0,0,0.2)' }}
+            {/* AI Button — full label on desktop, icon-only on mobile */}
+            <button onClick={() => setShowAI(true)} className="cvmaker-topbar-btn cvmaker-topbar-btn-ai"
+              style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 16px', borderRadius: 10, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(221,0,0,0.2)', whiteSpace: 'nowrap' }}
               onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
               onMouseLeave={e => e.currentTarget.style.transform = 'none'}>
-              <Sparkles className="w-4 h-4" /> Generate with AI
+              <Sparkles size={15} />
+              <span className="cvmaker-topbar-btn-label">Generate with AI</span>
             </button>
-            <button onClick={isPremiumTemplate ? () => setPaywallOpen(true) : handleDownload} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 10, background: isPremiumTemplate ? 'linear-gradient(135deg,#f59e0b,#d97706)' : '#dd0000', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: isPremiumTemplate ? '0 4px 12px rgba(245,158,11,0.3)' : '0 4px 12px rgba(221,0,0,0.15)' }}
+            {/* Download Button */}
+            <button onClick={isPremiumTemplate ? () => setPaywallOpen(true) : handleDownload} className="cvmaker-topbar-btn"
+              style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 16px', borderRadius: 10, background: isPremiumTemplate ? 'linear-gradient(135deg,#f59e0b,#d97706)' : '#dd0000', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: isPremiumTemplate ? '0 4px 12px rgba(245,158,11,0.3)' : '0 4px 12px rgba(221,0,0,0.15)', whiteSpace: 'nowrap' }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'none'; }}>
-              {isPremiumTemplate ? <><Crown className="w-4 h-4" /> Upgrade to Download</> : <><Download className="w-4 h-4" /> Download PDF</>}
+              {isPremiumTemplate ? <><Crown size={15} /><span className="cvmaker-topbar-btn-label">Upgrade</span></> : <><Download size={15} /><span className="cvmaker-topbar-btn-label">Download PDF</span></>}
             </button>
           </div>
         </div>
@@ -2016,7 +2021,17 @@ export default function CVMakerPage() {
         </div>
 
         {/* CV Preview */}
-        <div className={`cvmaker-preview-pane ${mobileTab === 'design' ? 'cvmaker-panel-hidden' : ''}`} style={{ flex: 1, overflowY: 'auto', background: '#f5f5f5', display: 'flex', justifyContent: 'center', padding: '24px 16px' }}>
+        <div className={`cvmaker-preview-pane ${mobileTab === 'design' ? 'cvmaker-panel-hidden' : ''}`} style={{ flex: 1, overflowY: 'auto', background: '#f5f5f5', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 16px' }}>
+          {/* Mobile disclaimer */}
+          <div className="cvmaker-mobile-disclaimer" style={{ display: 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 12, padding: '12px 14px', marginBottom: 16, maxWidth: 340, width: '100%' }}>
+              <span style={{ fontSize: 18, flexShrink: 0 }}>💻</span>
+              <div>
+                <p style={{ fontSize: 12, fontWeight: 700, color: '#92400e', margin: '0 0 2px' }}>Best viewed on desktop</p>
+                <p style={{ fontSize: 11, color: '#a16207', margin: 0, lineHeight: 1.4 }}>For the best editing experience, open this page on a desktop or laptop computer. You can still preview and download on mobile.</p>
+              </div>
+            </div>
+          </div>
           <div style={{ display: 'inline-block' }}>
             <div style={{ textAlign: 'center', marginBottom: 12 }}>
               {isPremiumTemplate ? (

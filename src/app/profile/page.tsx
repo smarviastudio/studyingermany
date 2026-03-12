@@ -90,10 +90,12 @@ export default function ProfilePage() {
     
     setSaving(true);
     try {
+      // Strip DB-only fields that Zod schema doesn't accept
+      const { id: _id, userId: _uid, createdAt: _ca, updatedAt: _ua, ...profilePayload } = (userProfile || {}) as any;
       const res = await fetch('/api/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userProfile)
+        body: JSON.stringify(profilePayload)
       });
       
       if (res.ok) {
