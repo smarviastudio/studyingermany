@@ -84,6 +84,14 @@ function SignInPageContent() {
 
         <div className="bg-white border border-[#e5e5e5] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] p-8">
           <h2 className="text-xl font-semibold mb-6">Sign in</h2>
+          <button
+            type="button"
+            onClick={() => signIn('google', { callbackUrl })}
+            className="w-full border border-[#e0e0e0] bg-white text-[#111] font-semibold py-3 rounded-2xl transition-all flex items-center justify-center gap-2 mb-5 hover:border-[#dd0000]/60"
+          >
+            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" className="w-5 h-5" />
+            Continue with Google
+          </button>
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div className="bg-[#fff5f5] border border-[#f4cece] text-[#b42318] px-4 py-3 rounded-xl text-sm">
