@@ -92,10 +92,17 @@ export default function ProfilePage() {
     try {
       // Strip DB-only fields that Zod schema doesn't accept
       const { id: _id, userId: _uid, createdAt: _ca, updatedAt: _ua, ...profilePayload } = (userProfile || {}) as any;
+      // Remove null/undefined values because Zod string optional does not accept null
+      const cleanedPayload = Object.entries(profilePayload).reduce<Record<string, any>>((acc, [key, value]) => {
+        if (value !== null && value !== undefined) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
       const res = await fetch('/api/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(profilePayload)
+        body: JSON.stringify(cleanedPayload)
       });
       
       if (res.ok) {
