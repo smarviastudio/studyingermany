@@ -25,9 +25,27 @@ export function SiteFooter() {
             <p style={{ fontSize: 13, color: '#9ca3af', lineHeight: 1.7, margin: '0 0 16px' }}>
               AI-powered tools for international students planning to study in Germany and beyond.
             </p>
-            <a href="mailto:smarviastudio@gmail.com" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#dd0000', textDecoration: 'none', fontWeight: 600 }}>
-              <Mail size={13} /> smarviastudio@gmail.com
-            </a>
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.location.href = 'mailto:smarviastudio@gmail.com';
+                }
+              }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                fontSize: 13,
+                color: '#dd0000',
+                fontWeight: 600,
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+              }}
+            >
+              <Mail size={13} /> Contact support
+            </button>
           </div>
 
           {/* Tools */}
