@@ -13,6 +13,7 @@ import { PaywallModal } from '@/components/PaywallModal';
 import { ProfileWarningBanner } from '@/components/ProfileWarningBanner';
 import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
 import { templates as TEMPLATE_LIBRARY } from '@/lib/cv-maker/templates';
+import { useProfileData } from '@/hooks/useProfileData';
 
 /* ── SAMPLE DATA ── */
 const SAMPLE: CVData = {
@@ -651,12 +652,59 @@ export default function CVMakerPage() {
   }, [up]);
 
   // Check auth status on mount
+  const { profile: profileData } = useProfileData(true);
+  const autoFillDoneRef = useRef(false);
+
   useEffect(() => {
     fetch('/api/profile')
       .then(res => res.ok ? res.json() : null)
       .then(data => setUser(data))
       .catch(() => setUser(null));
   }, []);
+
+  useEffect(() => {
+    if (!profileData || autoFillDoneRef.current) return;
+
+    let didChange = false;
+    setCv(prev => {
+      const next = { ...prev };
+
+      const assign = (field: keyof CVData, value?: string, sampleValue?: string) => {
+        if (!value) return;
+        const current = prev[field];
+        if (typeof current === 'string') {
+          if (!current.trim() || (sampleValue && current === sampleValue)) {
+            (next[field] as string) = value;
+            didChange = true;
+          }
+        }
+      };
+
+      assign('name', profileData.fullName, SAMPLE.name);
+      const titleFromProfile = profileData.targetDegreeLevel ? `${profileData.targetDegreeLevel} Applicant` : profileData.careerGoals;
+      assign('title', titleFromProfile, SAMPLE.title);
+      assign('phone', profileData.phone, SAMPLE.phone);
+      assign('location', profileData.address || profileData.nationality ? `${profileData.address || ''}`.trim() || `${profileData.nationality}, Germany` : undefined, SAMPLE.location);
+      const summaryFromProfile = profileData.backgroundSummary || profileData.academicBackground || profileData.careerGoals;
+      assign('summary', summaryFromProfile, SAMPLE.summary);
+
+      if (profileData.skills) {
+        const parsed = profileData.skills
+          .split(/[,\n]/)
+          .map(s => s.trim())
+          .filter(Boolean);
+        const isSampleSkills = JSON.stringify(prev.skills) === JSON.stringify(SAMPLE.skills);
+        if (parsed.length && (isSampleSkills || prev.skills.length === 0)) {
+          next.skills = parsed;
+          didChange = true;
+        }
+      }
+
+      return didChange ? next : prev;
+    });
+
+    if (didChange) autoFillDoneRef.current = true;
+  }, [profileData]);
 
   const handleSave = async () => {
     if (!user) {

@@ -13,6 +13,7 @@ import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import { ProfileWarningBanner } from '@/components/ProfileWarningBanner';
 import type { Program } from '@/lib/types';
+import { useProfileData } from '@/hooks/useProfileData';
 
 interface ShortlistItem {
   id: string;
@@ -269,6 +270,39 @@ function MotivationLetterContent() {
     relevantExperience: '',
   });
   const [lastProgramName, setLastProgramName] = useState('letter');
+
+  const profileEnabled = status === 'authenticated';
+  const { profile: profileData } = useProfileData(profileEnabled);
+
+  useEffect(() => {
+    if (!profileData) return;
+    setUserInput((prev) => {
+      let changed = false;
+      const next = { ...prev };
+      if (!next.fullName && profileData.fullName) {
+        next.fullName = profileData.fullName;
+        changed = true;
+      }
+      const profileBackground = profileData.backgroundSummary || profileData.academicBackground;
+      if (!next.background && profileBackground) {
+        next.background = profileBackground;
+        changed = true;
+      }
+      if (!next.motivation && profileData.experienceHighlights) {
+        next.motivation = profileData.experienceHighlights;
+        changed = true;
+      }
+      if (!next.careerGoals && profileData.careerGoals) {
+        next.careerGoals = profileData.careerGoals;
+        changed = true;
+      }
+      if (!next.relevantExperience && profileData.skills) {
+        next.relevantExperience = profileData.skills;
+        changed = true;
+      }
+      return changed ? next : prev;
+    });
+  }, [profileData]);
 
   // Fetch shortlist
   useEffect(() => {

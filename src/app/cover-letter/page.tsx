@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {
@@ -11,6 +11,7 @@ import {
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import { ProfileWarningBanner } from '@/components/ProfileWarningBanner';
+import { useProfileData } from '@/hooks/useProfileData';
 
 const Field = ({
   label, required, hint, children,
@@ -61,6 +62,18 @@ export default function CoverLetterPage() {
   const resultRef = useRef<HTMLDivElement>(null);
 
   const requiredReady2 = role.trim() && company.trim() && fullName.trim() && background.trim();
+
+  const profileEnabled = !!session?.user;
+  const { profile: profileData } = useProfileData(profileEnabled);
+
+  useEffect(() => {
+    if (!profileData) return;
+    if (!fullName && profileData.fullName) setFullName(profileData.fullName);
+    const profileBackground = profileData.backgroundSummary || profileData.academicBackground;
+    if (!background && profileBackground) setBackground(profileBackground);
+    if (!strengths && profileData.skills) setStrengths(profileData.skills);
+    if (!achievements && profileData.experienceHighlights) setAchievements(profileData.experienceHighlights);
+  }, [profileData, fullName, background, strengths, achievements]);
 
   const parseCv = async (file: File) => {
     if (file.type !== 'application/pdf') { setCvError('Please upload a PDF file.'); return; }
