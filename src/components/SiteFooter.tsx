@@ -2,17 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
 import { Shield, Mail, ExternalLink } from 'lucide-react';
-import { CookieConsentBanner } from './CookieConsentBanner';
 
 export function SiteFooter() {
-  const [cookiePanelOpen, setCookiePanelOpen] = useState(false);
-
   const handleCookiePreferences = () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('gp_cookie_consent');
-      setCookiePanelOpen(false);
       window.location.reload();
     }
   };
@@ -26,12 +21,12 @@ export function SiteFooter() {
 
           {/* Brand */}
           <div>
-            <Image src="/logo_wp.png" alt="StudyGermany" width={130} height={40} style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)', marginBottom: 14 }} />
+            <Image src="/logo_wp.png" alt="StudyGermany" width={150} height={44} style={{ objectFit: 'contain', marginBottom: 18 }} />
             <p style={{ fontSize: 13, color: '#9ca3af', lineHeight: 1.7, margin: '0 0 16px' }}>
-              AI-powered tools for international students planning to study in Germany.
+              AI-powered tools for international students planning to study in Germany and beyond.
             </p>
-            <a href="mailto:hello@germanpath.com" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#dd0000', textDecoration: 'none', fontWeight: 600 }}>
-              <Mail size={13} /> hello@germanpath.com
+            <a href="mailto:smarviastudio@gmail.com" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#dd0000', textDecoration: 'none', fontWeight: 600 }}>
+              <Mail size={13} /> smarviastudio@gmail.com
             </a>
           </div>
 
@@ -55,6 +50,16 @@ export function SiteFooter() {
               { href: '/#guides', label: 'Study Guides' },
               { href: '/blog', label: 'Blog' },
               { href: '/pricing', label: 'Pricing' },
+            ]} />
+          </div>
+
+          {/* Account */}
+          <div>
+            <h4 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 14 }}>Account</h4>
+            <FooterLinks links={[
+              { href: '/dashboard', label: 'Dashboard' },
+              { href: '/auth/signin', label: 'Sign in' },
+              { href: '/auth/signup', label: 'Create account' },
             ]} />
           </div>
 

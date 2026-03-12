@@ -524,39 +524,6 @@ export default function HomePage() {
         </Link>
       </nav>
 
-      {/* ══ FOOTER ══ */}
-      <footer className="site-footer">
-        <div className="footer-flag" />
-        <div className="section-container">
-          <div className="footer-grid">
-            <div className="footer-brand">
-              <Image src="/logo_wp.png" alt="Students in Germany" width={140} height={44} style={{ objectFit: 'contain' }} priority />
-              <p className="footer-brand-desc">Your AI-powered guide to studying and living in Germany. Free tools, expert guides, and 20,000+ programs.</p>
-            </div>
-            <div className="footer-col">
-              <h4 className="footer-col-title">Resources</h4>
-              {[{ label: 'Study Guides', href: '#guides' }, { label: 'Course Finder', href: '#hero' }, { label: 'All Articles', href: '#guides' }].map(({ label, href }) => (
-                <a key={label} href={href} className="footer-link">{label}</a>
-              ))}
-            </div>
-            <div className="footer-col">
-              <h4 className="footer-col-title">Tools</h4>
-              {[{ label: 'CV Maker', href: '/cv-maker' }, { label: 'Cover Letter', href: '/cover-letter' }, { label: 'Motivation Letter', href: '/motivation-letter' }, { label: 'GPA Converter', href: '/gpa-converter' }].map(({ label, href }) => (
-                <a key={label} href={href} className="footer-link">{label}</a>
-              ))}
-            </div>
-            <div className="footer-col">
-              <h4 className="footer-col-title">Account</h4>
-              {[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Sign in', href: '/auth/signin' }, { label: 'Privacy', href: '/privacy' }].map(({ label, href }) => (
-                <a key={label} href={href} className="footer-link">{label}</a>
-              ))}
-            </div>
-          </div>
-          <div className="footer-bottom">
-            <p>© 2026 Students in Germany. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
