@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const LAST_UPDATED = '12 March 2025';
+const LAST_UPDATED = '13 March 2026';
 
 export default function PrivacyPolicyPage() {
   return (
@@ -22,11 +22,11 @@ export default function PrivacyPolicyPage() {
           <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 40 }}>Last updated: {LAST_UPDATED}</p>
 
           <P>
-            GermanPath UG ("we", "us", "our") operates the website <strong>germanpath.com</strong> (the "Service"). This Privacy Policy explains how we collect, use, store, and protect your personal data in accordance with the EU General Data Protection Regulation (GDPR – Regulation (EU) 2016/679) and the German Federal Data Protection Act (BDSG).
+            Smarvia Studio ("we", "us", "our") operates the website <strong>germanpath.com</strong> (the "Service"). This Privacy Policy explains how we collect, use, store, and protect your personal data in accordance with the EU General Data Protection Regulation (GDPR – Regulation (EU) 2016/679) and the German Federal Data Protection Act (BDSG).
           </P>
 
           <Section title="1. Data Controller">
-            <P>GermanPath UG (haftungsbeschränkt), [Address], Germany — <a href="mailto:privacy@germanpath.com" style={{ color: '#dd0000' }}>privacy@germanpath.com</a></P>
+            <P>Smarvia Studio, Schoeneggstrasse 45, 8953 Dietikon, Switzerland — <a href="mailto:smarviastudio@gmail.com" style={{ color: '#dd0000' }}>smarviastudio@gmail.com</a></P>
           </Section>
 
           <Section title="2. Data We Collect">
@@ -105,7 +105,7 @@ export default function PrivacyPolicyPage() {
               'Withdraw consent — at any time, without affecting prior processing.',
               'Lodge a complaint — with your national supervisory authority (Germany: BfDI — www.bfdi.bund.de).',
             ]} />
-            <P>To exercise your rights, email us at <a href="mailto:privacy@germanpath.com" style={{ color: '#dd0000' }}>privacy@germanpath.com</a>. We respond within 30 days.</P>
+            <P>To exercise your rights, email us at <a href="mailto:smarviastudio@gmail.com" style={{ color: '#dd0000' }}>smarviastudio@gmail.com</a>. We respond within 30 days.</P>
           </Section>
 
           <Section title="9. Account & Data Deletion">
@@ -126,8 +126,8 @@ export default function PrivacyPolicyPage() {
 
           <Section title="13. Contact">
             <P>
-              Data Protection inquiries: <a href="mailto:privacy@germanpath.com" style={{ color: '#dd0000' }}>privacy@germanpath.com</a><br />
-              GermanPath UG, [Address], Germany
+              Data Protection inquiries: <a href="mailto:smarviastudio@gmail.com" style={{ color: '#dd0000' }}>smarviastudio@gmail.com</a><br />
+              Smarvia Studio, Schoeneggstrasse 45, 8953 Dietikon, Switzerland
             </P>
           </Section>
 

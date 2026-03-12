@@ -20,28 +20,28 @@ export default function ImpressumPage() {
           <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 40 }}>Pflichtangaben gemäß § 5 Digitale-Dienste-Gesetz (DDG)</p>
 
           <Section title="Service Provider / Dienstanbieter">
-            <Row label="Company name" value="GermanPath UG (haftungsbeschränkt)" />
-            <Row label="Address" value="[Street & Number], [ZIP] [City], Germany" />
-            <Row label="Country" value="Germany" />
+            <Row label="Company name" value="Smarvia Studio" />
+            <Row label="Address" value="Schoeneggstrasse 45, 8953 Dietikon" />
+            <Row label="Country" value="Switzerland" />
           </Section>
 
           <Section title="Contact / Kontakt">
-            <Row label="Email" value={<a href="mailto:legal@germanpath.com" style={{ color: '#dd0000' }}>legal@germanpath.com</a>} />
-            <Row label="Phone" value="[+49 XXX XXXXXXXX]" />
+            <Row label="Email" value={<a href="mailto:smarviastudio@gmail.com" style={{ color: '#dd0000' }}>smarviastudio@gmail.com</a>} />
+            <Row label="Phone" value="Provided upon request via email" />
           </Section>
 
           <Section title="Commercial Register / Handelsregister">
-            <Row label="Register court" value="Amtsgericht [City]" />
-            <Row label="Register number" value="HRB XXXXXX" />
+            <Row label="Register court" value="Not yet registered" />
+            <Row label="Register number" value="n/a" />
           </Section>
 
           <Section title="VAT Identification / Umsatzsteuer-ID">
-            <Row label="VAT ID (§27a UStG)" value="DE XXXXXXXXX" />
+            <Row label="VAT ID (§27a UStG)" value="Not available" />
           </Section>
 
           <Section title="Responsible for content / Inhaltlich Verantwortlicher">
-            <Row label="Name" value="[Full name of managing director]" />
-            <Row label="Address" value="[Same as above or different address]" />
+            <Row label="Name" value="Salman Shahid" />
+            <Row label="Address" value="Schoeneggstrasse 45, 8953 Dietikon, Switzerland" />
           </Section>
 
           <Section title="Platform for Online Dispute Resolution">

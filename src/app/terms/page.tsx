@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const LAST_UPDATED = '12 March 2025';
+const LAST_UPDATED = '13 March 2026';
 
 export default function TermsPage() {
   return (
@@ -22,7 +22,7 @@ export default function TermsPage() {
           <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 40 }}>Last updated: {LAST_UPDATED}</p>
 
           <P>
-            These Terms of Service ("Terms") govern your access to and use of <strong>germanpath.com</strong> and all related services (the "Service") provided by GermanPath UG (haftungsbeschränkt) ("we", "us"). By using the Service, you agree to these Terms. If you do not agree, do not use the Service.
+            These Terms of Service ("Terms") govern your access to and use of <strong>germanpath.com</strong> and all related services (the "Service") provided by Smarvia Studio ("we", "us"). By using the Service, you agree to these Terms. If you do not agree, do not use the Service.
           </P>
 
           <Section title="1. About the Service">
@@ -51,11 +51,11 @@ export default function TermsPage() {
           </Section>
 
           <Section title="5. Cancellation">
-            <P>You may cancel your subscription at any time from your account settings or by contacting support. Cancellation takes effect at the end of the current billing period — you retain access until then. No partial refunds are provided for unused time, except where required by law.</P>
+            <P>Outside of the statutory 14-day withdrawal right described above, subscriptions are non-cancellable for the active billing period. You may disable auto-renewal from your account settings, in which case the plan expires at the end of the prepaid term. We comply with all mandatory EU consumer rights.</P>
           </Section>
 
           <Section title="6. Refunds">
-            <P>Refunds are issued at our discretion, except where required under applicable law. If you experience a billing error or technical issue preventing access, contact <a href="mailto:billing@germanpath.com" style={{ color: '#dd0000' }}>billing@germanpath.com</a> within 30 days.</P>
+            <P>Our plans are non-refundable. We only issue refunds where required by applicable consumer law (for example, if you exercise the 14-day withdrawal right before using premium features or if there is a proven billing error). For statutory claims, contact <a href="mailto:smarviastudio@gmail.com" style={{ color: '#dd0000' }}>smarviastudio@gmail.com</a>.</P>
           </Section>
 
           <Section title="7. Acceptable Use">
@@ -91,8 +91,8 @@ export default function TermsPage() {
 
           <Section title="13. Contact">
             <P>
-              GermanPath UG, [Address], Germany<br />
-              <a href="mailto:legal@germanpath.com" style={{ color: '#dd0000' }}>legal@germanpath.com</a>
+              Smarvia Studio, Schoeneggstrasse 45, 8953 Dietikon, Switzerland<br />
+              <a href="mailto:smarviastudio@gmail.com" style={{ color: '#dd0000' }}>smarviastudio@gmail.com</a>
             </P>
           </Section>
 
