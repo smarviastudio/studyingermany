@@ -76,14 +76,38 @@ export class CSVLoader {
 
     const csvPath = path.join(process.cwd(), 'data', 'programs.csv');
     
+    console.log(`[CSVLoader] Attempting to load CSV from: ${csvPath}`);
+    console.log(`[CSVLoader] Current working directory: ${process.cwd()}`);
+    
+    let finalPath = csvPath;
+    
     if (!fs.existsSync(csvPath)) {
-      throw new Error(`CSV file not found at ${csvPath}`);
+      console.error(`[CSVLoader] CSV file not found at ${csvPath}`);
+      // Try alternative paths for Vercel serverless
+      const altPaths = [
+        path.join(__dirname, '../../../../data/programs.csv'),
+        path.join(process.cwd(), '../data/programs.csv'),
+        '/var/task/data/programs.csv',
+      ];
+      let found = false;
+      for (const altPath of altPaths) {
+        console.log(`[CSVLoader] Trying alternative path: ${altPath}`);
+        if (fs.existsSync(altPath)) {
+          console.log(`[CSVLoader] Found CSV at alternative path: ${altPath}`);
+          finalPath = altPath;
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        throw new Error(`CSV file not found at ${csvPath} or any alternative paths`);
+      }
     }
 
     const rawRows: RawCSVRow[] = [];
     
     return new Promise((resolve, reject) => {
-      fs.createReadStream(csvPath)
+      fs.createReadStream(finalPath)
         .pipe(csv())
         .on('data', (row: RawCSVRow) => {
           rawRows.push(row);

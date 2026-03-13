@@ -445,41 +445,32 @@ export function SiteNav() {
 
       <div style={{ background: '#fff', borderBottom: '1px solid #e5e5e5' }}>
         <div className="news-ticker-shell" onMouseEnter={() => setTickerPaused(true)} onMouseLeave={() => setTickerPaused(false)}>
-          <span className="news-ticker-label">Updates</span>
-          <div className="news-ticker-content">
+          <span className="news-ticker-label">News</span>
+          <button className="news-ticker-nav" aria-label="Previous" onClick={() => goToSlide(tickerIndex - 1)}>
+            <ChevronLeft size={14} />
+          </button>
+          <div className="news-ticker-track">
             {wpPosts.length > 0 ? (
-              <>
-                <button className="news-ticker-nav" aria-label="Previous update" onClick={() => goToSlide(tickerIndex - 1)}>
-                  <ChevronLeft size={16} />
-                </button>
-                <div className="news-ticker-slide">
-                  <div className="news-ticker-meta">
-                    <span>{timeAgo(wpPosts[tickerIndex].date)}</span>
-                    {wpPosts[tickerIndex].categories?.[0] && <span>{decodeHtmlEntities(wpPosts[tickerIndex].categories?.[0].name)}</span>}
+              <div 
+                className="news-ticker-slider" 
+                style={{ transform: `translateX(-${tickerIndex * 100}%)` }}
+              >
+                {wpPosts.map((post) => (
+                  <div key={post.id} className="news-ticker-item">
+                    <span className="news-ticker-date">{timeAgo(post.date)}</span>
+                    <Link href={`/blog/${post.slug}`} className="news-ticker-title">
+                      {stripHtml(post.title)}
+                    </Link>
                   </div>
-                  <Link href={`/blog/${wpPosts[tickerIndex].slug}`} className="news-ticker-title">
-                    {stripHtml(wpPosts[tickerIndex].title)}
-                    <ArrowRight size={14} />
-                  </Link>
-                </div>
-                <button className="news-ticker-nav" aria-label="Next update" onClick={() => goToSlide(tickerIndex + 1)}>
-                  <ChevronRight size={16} />
-                </button>
-                <div className="news-ticker-dots" aria-label="Ticker pagination">
-                  {wpPosts.map((post, idx) => (
-                    <button
-                      key={post.id}
-                      className={idx === tickerIndex ? 'active' : ''}
-                      onClick={() => goToSlide(idx)}
-                      aria-label={`Show update ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-              </>
+                ))}
+              </div>
             ) : (
-              <span className="news-ticker-empty">Stay tuned for the latest guides on studying in Germany.</span>
+              <span className="news-ticker-empty">Latest updates coming soon...</span>
             )}
           </div>
+          <button className="news-ticker-nav" aria-label="Next" onClick={() => goToSlide(tickerIndex + 1)}>
+            <ChevronRight size={14} />
+          </button>
         </div>
       </div>
     </>

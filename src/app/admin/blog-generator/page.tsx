@@ -110,8 +110,18 @@ const TOPIC_IDEAS = [
   'How to find a WG (shared apartment) in Germany',
 ];
 
+const NEWS_IDEAS = [
+  'Germany announces new student visa processing times for 2025',
+  'TU Munich ranked among top 10 universities in Europe',
+  'New scholarship program for international STEM students',
+  'Changes to German blocked account requirements',
+  'Berlin introduces new student housing initiative',
+  'German universities extend application deadlines',
+];
+
 export default function BlogGeneratorPage() {
   // Form state
+  const [contentType, setContentType] = useState<'blog' | 'news'>('blog');
   const [topic, setTopic] = useState('');
   const [tone, setTone] = useState('informative and friendly');
   const [length, setLength] = useState('medium');
@@ -365,23 +375,68 @@ export default function BlogGeneratorPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '400px 1fr', gap: 32, alignItems: 'start' }}>
           {/* LEFT PANEL: Controls */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            {/* Content Type Toggle */}
+            <div style={{ display: 'flex', background: '#f4f4f5', borderRadius: 12, padding: 4 }}>
+              <button
+                onClick={() => { setContentType('blog'); setCategory('Guides'); setLength('medium'); setTone('informative and friendly'); }}
+                style={{
+                  flex: 1,
+                  padding: '12px 16px',
+                  borderRadius: 10,
+                  border: 'none',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  background: contentType === 'blog' ? '#fff' : 'transparent',
+                  color: contentType === 'blog' ? '#111' : '#737373',
+                  boxShadow: contentType === 'blog' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none'
+                }}
+              >
+                📝 Blog Post
+              </button>
+              <button
+                onClick={() => { setContentType('news'); setCategory('News'); setLength('short'); setTone('professional'); setShowInTicker(true); }}
+                style={{
+                  flex: 1,
+                  padding: '12px 16px',
+                  borderRadius: 10,
+                  border: 'none',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  background: contentType === 'news' ? '#fff' : 'transparent',
+                  color: contentType === 'news' ? '#dd0000' : '#737373',
+                  boxShadow: contentType === 'news' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none'
+                }}
+              >
+                📰 News Article
+              </button>
+            </div>
+
             {/* Topic Input */}
             <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
                 <FileText className="w-5 h-5" style={{ color: '#dd0000' }} />
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Blog Topic</h2>
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>{contentType === 'news' ? 'News Headline' : 'Blog Topic'}</h2>
               </div>
               <textarea
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                placeholder="e.g. How to apply for a student visa in Germany"
+                placeholder={contentType === 'news' ? 'e.g. Germany announces new visa rules for international students' : 'e.g. How to apply for a student visa in Germany'}
                 rows={3}
                 style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical', fontFamily: 'inherit', transition: 'all 0.2s' }}
               />
+              {contentType === 'news' && (
+                <p style={{ fontSize: 12, color: '#dd0000', marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  📰 News articles are shorter and will automatically appear in the news ticker
+                </p>
+              )}
               <div style={{ marginTop: 16 }}>
                 <p style={{ fontSize: 13, color: '#737373', marginBottom: 8 }}>Quick ideas:</p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                  {TOPIC_IDEAS.map((idea) => (
+                  {(contentType === 'news' ? NEWS_IDEAS : TOPIC_IDEAS).map((idea) => (
                     <button
                       key={idea}
                       onClick={() => setTopic(idea)}
