@@ -6,7 +6,7 @@ import {
   Sparkles, Send, Loader2, ExternalLink,
   FileText, Tag, Globe, Eye, EyeOff,
   ChevronDown, Copy, Check, Pencil,
-  Home
+  Home, Image as ImageIcon
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
@@ -119,6 +119,16 @@ const NEWS_IDEAS = [
   'German universities extend application deadlines',
 ];
 
+function stripHtmlTags(html: string) {
+  if (!html) return '';
+  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+const formatPhotographer = (image: UnsplashImage | null) => {
+  if (!image?.user?.name) return null;
+  return `Photo by ${image.user.name}${image.user.username ? ` (@${image.user.username})` : ''}`;
+};
+
 export default function BlogGeneratorPage() {
   // Form state
   const [contentType, setContentType] = useState<'blog' | 'news'>('blog');
@@ -229,6 +239,16 @@ export default function BlogGeneratorPage() {
     } finally {
       setImageLoading(false);
     }
+  };
+
+  const handleSelectImage = (image: UnsplashImage) => {
+    setSelectedImage(image);
+    setFeaturedMediaId(null);
+  };
+
+  const clearSelectedImage = () => {
+    setSelectedImage(null);
+    setFeaturedMediaId(null);
   };
 
   const handleGenerate = async () => {
@@ -378,7 +398,13 @@ export default function BlogGeneratorPage() {
             {/* Content Type Toggle */}
             <div style={{ display: 'flex', background: '#f4f4f5', borderRadius: 12, padding: 4 }}>
               <button
-                onClick={() => { setContentType('blog'); setCategory('Guides'); setLength('medium'); setTone('informative and friendly'); }}
+                onClick={() => {
+                  setContentType('blog');
+                  setCategory('Guides');
+                  setLength('medium');
+                  setTone('informative and friendly');
+                  setPreviewHtml(false);
+                }}
                 style={{
                   flex: 1,
                   padding: '12px 16px',
@@ -396,7 +422,14 @@ export default function BlogGeneratorPage() {
                 📝 Blog Post
               </button>
               <button
-                onClick={() => { setContentType('news'); setCategory('News'); setLength('short'); setTone('professional'); setShowInTicker(true); }}
+                onClick={() => {
+                  setContentType('news');
+                  setCategory('News');
+                  setLength('short');
+                  setTone('professional');
+                  setShowInTicker(true);
+                  setPreviewHtml(true);
+                }}
                 style={{
                   flex: 1,
                   padding: '12px 16px',
@@ -659,19 +692,123 @@ export default function BlogGeneratorPage() {
                           style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                         />
                       </div>
+                      <div style={{ border: '1px solid #f5f5f5', borderRadius: 16, padding: 16, background: '#fff' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <ImageIcon className="w-4 h-4" style={{ color: '#dd0000' }} />
+                            <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#737373' }}>Featured Image</span>
+                          </div>
+                          {selectedImage && (
+                            <button
+                              onClick={clearSelectedImage}
+                              style={{ fontSize: 12, color: '#dd0000', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
+                        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                          <div style={{ flex: 1, minWidth: 220 }}>
+                            <div style={{ display: 'flex', gap: 8 }}>
+                              <input
+                                type="text"
+                                value={imageQuery}
+                                onChange={(e) => setImageQuery(e.target.value)}
+                                placeholder="Search Unsplash (e.g. German campus)"
+                                style={{ flex: 1, padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 13 }}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleUnsplashSearch()}
+                                disabled={imageLoading}
+                                style={{ padding: '10px 16px', borderRadius: 10, border: 'none', background: '#111', color: '#fff', fontWeight: 600, cursor: imageLoading ? 'not-allowed' : 'pointer' }}
+                              >
+                                {imageLoading ? 'Searching…' : 'Search'}
+                              </button>
+                            </div>
+                            {imageError && <p style={{ color: '#dc2626', fontSize: 12, marginTop: 8 }}>{imageError}</p>}
+                            {selectedImage && (
+                              <div style={{ marginTop: 12, border: '1px solid #e5e5e5', borderRadius: 12, overflow: 'hidden' }}>
+                                <img src={selectedImage.urls.small} alt={selectedImage.alt_description || ''} style={{ width: '100%', display: 'block' }} />
+                                {formatPhotographer(selectedImage) && (
+                                  <p style={{ fontSize: 11, color: '#71717a', margin: 0, padding: '6px 10px', background: '#fafafa' }}>
+                                    {formatPhotographer(selectedImage)} · Unsplash
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          <div style={{ flex: 1, minWidth: 220, maxHeight: 220, overflowY: 'auto', border: '1px solid #f4f4f5', borderRadius: 12, padding: 10, background: '#fafafa' }}>
+                            {imageResults.length === 0 && !imageLoading ? (
+                              <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>Search Unsplash to pick a hero image.</p>
+                            ) : (
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 8 }}>
+                                {imageResults.map((img) => (
+                                  <button
+                                    key={img.id}
+                                    onClick={() => handleSelectImage(img)}
+                                    style={{
+                                      border: selectedImage?.id === img.id ? '2px solid #dd0000' : '2px solid transparent',
+                                      borderRadius: 10,
+                                      padding: 0,
+                                      background: 'none',
+                                      cursor: 'pointer'
+                                    }}
+                                  >
+                                    <img src={img.urls.small} alt={img.alt_description || ''} style={{ width: '100%', height: 70, objectFit: 'cover', borderRadius: 8 }} />
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
                   <div style={{ padding: 24 }}>
                     <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Content</label>
-                    <div style={{ position: 'relative' }}>
-                      <textarea
-                        value={editContent}
-                        onChange={(e) => setEditContent(e.target.value)}
-                        rows={12}
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical', fontFamily: 'monospace', lineHeight: 1.6 }}
-                      />
-                    </div>
+                    {previewHtml ? (
+                      <div style={{ border: '1px solid #e5e5e5', borderRadius: 16, overflow: 'hidden', background: '#fff' }}>
+                        <div style={{ padding: 20, background: '#fdf2f2', borderBottom: '1px solid #ffe4e6' }}>
+                          <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#dd0000' }}>
+                            {contentType === 'news' ? 'News Article Preview' : 'Blog Preview'}
+                          </span>
+                        </div>
+                        <article style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                          {selectedImage && (
+                            <img
+                              src={selectedImage.urls.small}
+                              alt={selectedImage.alt_description || 'Preview image'}
+                              style={{ width: '100%', borderRadius: 12, objectFit: 'cover', maxHeight: 220 }}
+                            />
+                          )}
+                          <div>
+                            <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 8px' }}>
+                              {contentType === 'news' ? 'Breaking Update · Germany' : category}
+                            </p>
+                            <h3 style={{ fontSize: 22, fontWeight: 700, color: '#111', margin: '0 0 10px' }}>
+                              {editTitle || post.title}
+                            </h3>
+                            <p style={{ fontSize: 14, color: '#4b5563', margin: 0 }}>
+                              {stripHtmlTags(editExcerpt || post.excerpt).slice(0, 200)}{(editExcerpt || post.excerpt).length > 200 ? '…' : ''}
+                            </p>
+                          </div>
+                          <div style={{ borderTop: '1px solid #f4f4f5', paddingTop: 12, color: '#374151', fontSize: 14, lineHeight: 1.7 }}
+                            dangerouslySetInnerHTML={{ __html: editContent || post.content }}
+                          />
+                        </article>
+                      </div>
+                    ) : (
+                      <div style={{ position: 'relative' }}>
+                        <textarea
+                          value={editContent}
+                          onChange={(e) => setEditContent(e.target.value)}
+                          rows={12}
+                          style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical', fontFamily: 'monospace', lineHeight: 1.6 }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </section>
 
