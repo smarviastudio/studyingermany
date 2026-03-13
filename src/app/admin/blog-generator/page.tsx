@@ -223,7 +223,11 @@ export default function BlogGeneratorPage() {
     if (!window.confirm('Delete this WordPress post? This cannot be undone.')) return;
     setDeletingPostId(id);
     try {
-      const res = await fetch(`/api/wp-blog/delete?postId=${id}`, { method: 'DELETE' });
+      const res = await fetch('/api/wp-blog/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId: id }),
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to delete post');
       setExistingPosts((prev) => prev.filter((p) => p.id !== id));

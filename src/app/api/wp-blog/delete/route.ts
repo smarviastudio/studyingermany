@@ -3,22 +3,17 @@ export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdminApi } from '@/lib/admin';
 
-export async function DELETE(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const unauthorized = await requireAdminApi();
   if (unauthorized) {
     return unauthorized;
   }
 
-  const { searchParams } = new URL(request.url);
-  const idParam = searchParams.get('postId');
+  const body = await request.json().catch(() => null);
+  const { postId } = body || {};
 
-  if (!idParam) {
-    return NextResponse.json({ error: 'postId query param required' }, { status: 400 });
-  }
-
-  const postId = Number(idParam);
-  if (!Number.isFinite(postId)) {
-    return NextResponse.json({ error: 'Invalid postId' }, { status: 400 });
+  if (!postId) {
+    return NextResponse.json({ error: 'postId required' }, { status: 400 });
   }
 
   const wpUrl = process.env.WP_URL || 'https://cms.germanpath.com';
@@ -29,11 +24,15 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts/${postId}?force=true`, {
-      method: 'DELETE',
+    const res = await fetch(`${wpUrl}/wp-json/custom/v1/delete-post`, {
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${wpToken}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        api_token: wpToken,
+        post_id: postId,
+      }),
     });
 
     if (!res.ok) {
@@ -42,7 +41,8 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: `WordPress returned ${res.status}` }, { status: 502 });
     }
 
-    return NextResponse.json({ success: true });
+    const data = await res.json().catch(() => ({}));
+    return NextResponse.json({ success: true, data });
   } catch (error) {
     console.error('WP delete error:', error);
     return NextResponse.json({ error: 'Failed to delete post' }, { status: 500 });
