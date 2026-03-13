@@ -15,10 +15,13 @@ export function ContactFormModal({ open, onClose }: ContactFormModalProps) {
 
   useEffect(() => {
     if (!open) {
-      setName('');
-      setEmail('');
-      setMessage('');
-      setStatus('idle');
+      const timer = setTimeout(() => {
+        setName('');
+        setEmail('');
+        setMessage('');
+        setStatus('idle');
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [open]);
 

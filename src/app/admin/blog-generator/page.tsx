@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
-  Sparkles, Send, Loader2, CheckCircle, ExternalLink,
-  FileText, Tag, Globe, RefreshCw, Eye, EyeOff,
-  ChevronDown, AlertCircle, Copy, Check, Pencil,
-  Image as ImageIcon, Home, ArrowLeft
+  Sparkles, Send, Loader2, ExternalLink,
+  FileText, Tag, Globe, Eye, EyeOff,
+  ChevronDown, Copy, Check, Pencil,
+  Home
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
@@ -117,10 +117,10 @@ export default function BlogGeneratorPage() {
   const [length, setLength] = useState('medium');
   const [keywords, setKeywords] = useState('');
   const [category, setCategory] = useState('Guides');
-  const [selectedModel, setSelectedModel] = useState('google/gemini-2.0-flash-001');
+  const [selectedModel] = useState('google/gemini-2.0-flash-001');
   const [wpCategories, setWpCategories] = useState<string[]>(CATEGORIES);
   const [newCategoryName, setNewCategoryName] = useState('');
-  const [publishStatus, setPublishStatus] = useState<'draft' | 'publish'>('draft');
+  const [publishStatus] = useState<'draft' | 'publish'>('draft');
   const [showInTicker, setShowInTicker] = useState(false);
 
   // Process state
@@ -173,7 +173,7 @@ export default function BlogGeneratorPage() {
       }
     };
     loadCategories();
-  }, []);
+  }, [category]);
 
   const handleAddCategory = () => {
     const next = newCategoryName.trim();
@@ -727,7 +727,7 @@ export default function BlogGeneratorPage() {
                 </div>
                 <h3 style={{ fontSize: 18, fontWeight: 600, color: '#111', marginBottom: 8 }}>No content generated yet</h3>
                 <p style={{ fontSize: 14, color: '#737373', marginBottom: 24 }}>
-                  Enter a topic and click "Generate Post" to create your blog content
+                  Enter a topic and click &quot;Generate Post&quot; to create your blog content
                 </p>
               </section>
             )}

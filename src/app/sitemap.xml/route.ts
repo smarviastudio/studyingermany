@@ -24,8 +24,8 @@ async function fetchWPPosts() {
       return [];
     }
 
-    const posts = await response.json();
-    return posts.map((post: any) => ({
+    const posts = await response.json() as Array<{ slug: string; modified: string }>;
+    return posts.map((post) => ({
       slug: post.slug,
       modified: post.modified,
     }));
@@ -68,7 +68,7 @@ ${staticPages
   .join('\n')}
 ${wpPosts
   .map(
-    (post: any) => `  <url>
+    (post) => `  <url>
     <loc>${BASE_URL}/blog/${post.slug}</loc>
     <lastmod>${new Date(post.modified).toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
