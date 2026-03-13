@@ -389,7 +389,7 @@ export default function HomePage() {
             <Link href={`/blog/${featuredPost.slug}`} className="featured-card scroll-reveal">
               <div className="featured-card-image">
                 {featuredPost.featuredImage ? (
-                  <img src={featuredPost.featuredImage} alt={stripHtml(featuredPost.title)} className="featured-img" />
+                  <Image src={featuredPost.featuredImage} alt={stripHtml(featuredPost.title)} className="featured-img" width={800} height={450} loading="lazy" />
                 ) : (
                   <div className="featured-img-placeholder">
                     <BookOpen className="w-16 h-16" style={{ color: 'rgba(255,255,255,0.3)' }} />
@@ -438,7 +438,7 @@ export default function HomePage() {
                 <Link key={post.id} href={`/blog/${post.slug}`} className="article-card scroll-reveal" style={{ transitionDelay: `${idx * 0.06}s` }}>
                   <div className="article-card-image">
                     {post.featuredImage ? (
-                      <img src={post.featuredImage} alt={stripHtml(post.title)} loading="lazy" className="article-img" />
+                      <Image src={post.featuredImage} alt={stripHtml(post.title)} loading="lazy" className="article-img" width={400} height={225} />
                     ) : (
                       <div className="article-img-placeholder"><BookOpen className="w-8 h-8" style={{ color: '#d4d4d4' }} /></div>
                     )}

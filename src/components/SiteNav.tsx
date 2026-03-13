@@ -4,7 +4,8 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
-import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard } from 'lucide-react';
+import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useContactModal } from './ContactModalProvider';
 
 const RED = '#dd0000';
 
@@ -68,11 +69,14 @@ export type SiteNavPost = {
 
 export function SiteNav() {
   const { status } = useSession();
+  const { openContactModal } = useContactModal();
   const isAuthenticated = status === 'authenticated';
 
   const [aiUsage, setAiUsage] = useState<{ used: number; limit: number } | null>(null);
 
   const [wpPosts, setWpPosts] = useState<SiteNavPost[]>([]);
+  const [tickerIndex, setTickerIndex] = useState(0);
+  const [tickerPaused, setTickerPaused] = useState(false);
   const [navQuery, setNavQuery] = useState('');
   const [navResults, setNavResults] = useState<SiteNavPost[]>([]);
   const [navDropdownOpen, setNavDropdownOpen] = useState(false);
@@ -88,7 +92,7 @@ export function SiteNav() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('/api/wp-posts?per_page=6');
+        const res = await fetch('/api/wp-posts?per_page=8&ticker_only=1');
         if (res.ok) {
           const data = await res.json();
           setWpPosts(data.posts || []);
@@ -98,6 +102,21 @@ export function SiteNav() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (!wpPosts.length) return;
+    const interval = setInterval(() => {
+      if (tickerPaused) return;
+      setTickerIndex((prev) => (prev + 1) % wpPosts.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [wpPosts, tickerPaused]);
+
+  const goToSlide = (index: number) => {
+    if (!wpPosts.length) return;
+    const next = (index + wpPosts.length) % wpPosts.length;
+    setTickerIndex(next);
+  };
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -309,6 +328,15 @@ export function SiteNav() {
                 {label}
               </a>
             ))}
+            <button
+              type="button"
+              onClick={openContactModal}
+              style={{ fontSize: 14, fontWeight: 600, color: '#404040', border: '1px solid #e5e5e5', borderRadius: 999, padding: '8px 16px', background: 'none', cursor: 'pointer' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = RED)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#404040')}
+            >
+              Contact
+            </button>
             <form onSubmit={handleNavSearchSubmit} style={{ position: 'relative', marginLeft: 8 }}>
               <Search className="w-4 h-4" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#a3a3a3', pointerEvents: 'none' }} />
               <input
@@ -415,34 +443,42 @@ export function SiteNav() {
 
       <div style={{ height: 6, background: 'linear-gradient(90deg, #000 0%, #000 33.33%, #dd0000 33.33%, #dd0000 66.66%, #ffce00 66.66%, #ffce00 100%)' }} />
 
-      <div style={{ background: '#fff', borderBottom: '1px solid #e5e5e5', overflow: 'hidden' }}>
-        <div style={{ maxWidth: 1140, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', height: 44 }}>
-          <span
-            style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff', background: RED, padding: '3px 10px', borderRadius: 4, flexShrink: 0, marginRight: 16 }}
-          >
-            Updates
-          </span>
-          <div style={{ overflow: 'hidden', flex: 1 }}>
-            <div className="news-ticker-track" style={{ display: 'flex', gap: 40, whiteSpace: 'nowrap' }}>
-              {wpPosts.length > 0 ? (
-                <>
-                  {wpPosts.slice(0, 5).map((p) => (
-                    <Link key={`a-${p.id}`} href={`/blog/${p.slug}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: RED }}>{timeAgo(p.date)}</span>
-                      <span style={{ fontSize: 13, color: '#404040' }}>{stripHtml(p.title)}</span>
-                    </Link>
+      <div style={{ background: '#fff', borderBottom: '1px solid #e5e5e5' }}>
+        <div className="news-ticker-shell" onMouseEnter={() => setTickerPaused(true)} onMouseLeave={() => setTickerPaused(false)}>
+          <span className="news-ticker-label">Updates</span>
+          <div className="news-ticker-content">
+            {wpPosts.length > 0 ? (
+              <>
+                <button className="news-ticker-nav" aria-label="Previous update" onClick={() => goToSlide(tickerIndex - 1)}>
+                  <ChevronLeft size={16} />
+                </button>
+                <div className="news-ticker-slide">
+                  <div className="news-ticker-meta">
+                    <span>{timeAgo(wpPosts[tickerIndex].date)}</span>
+                    {wpPosts[tickerIndex].categories?.[0] && <span>{decodeHtmlEntities(wpPosts[tickerIndex].categories?.[0].name)}</span>}
+                  </div>
+                  <Link href={`/blog/${wpPosts[tickerIndex].slug}`} className="news-ticker-title">
+                    {stripHtml(wpPosts[tickerIndex].title)}
+                    <ArrowRight size={14} />
+                  </Link>
+                </div>
+                <button className="news-ticker-nav" aria-label="Next update" onClick={() => goToSlide(tickerIndex + 1)}>
+                  <ChevronRight size={16} />
+                </button>
+                <div className="news-ticker-dots" aria-label="Ticker pagination">
+                  {wpPosts.map((post, idx) => (
+                    <button
+                      key={post.id}
+                      className={idx === tickerIndex ? 'active' : ''}
+                      onClick={() => goToSlide(idx)}
+                      aria-label={`Show update ${idx + 1}`}
+                    />
                   ))}
-                  {wpPosts.slice(0, 5).map((p) => (
-                    <Link key={`b-${p.id}`} href={`/blog/${p.slug}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: RED }}>{timeAgo(p.date)}</span>
-                      <span style={{ fontSize: 13, color: '#404040' }}>{stripHtml(p.title)}</span>
-                    </Link>
-                  ))}
-                </>
-              ) : (
-                <span style={{ fontSize: 13, color: '#737373' }}>Stay tuned for the latest guides on studying in Germany.</span>
-              )}
-            </div>
+                </div>
+              </>
+            ) : (
+              <span className="news-ticker-empty">Stay tuned for the latest guides on studying in Germany.</span>
+            )}
           </div>
         </div>
       </div>

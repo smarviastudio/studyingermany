@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const perPage = searchParams.get('per_page') || '6';
+  const tickerOnly = searchParams.get('ticker_only') === '1';
+  const perPage = tickerOnly ? (searchParams.get('per_page') || '8') : (searchParams.get('per_page') || '6');
   const category = searchParams.get('category') || '';
   const search = searchParams.get('search') || '';
 
@@ -16,6 +17,9 @@ export async function GET(request: Request) {
     let url = `${wpUrl}/wp-json/wp/v2/posts?per_page=${perPage}&_embed=1&status=publish`;
     if (category) url += `&categories=${category}`;
     if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (tickerOnly) {
+      url += '&meta_key=show_in_ticker&meta_value=1&orderby=date&order=desc';
+    }
 
     const res = await fetch(url, {
       next: { revalidate: 60 },

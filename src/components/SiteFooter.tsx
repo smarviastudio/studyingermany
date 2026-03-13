@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Shield, Mail, ExternalLink } from 'lucide-react';
+import { useContactModal } from './ContactModalProvider';
 
 export function SiteFooter() {
+  const { openContactModal } = useContactModal();
   const handleCookiePreferences = () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('gp_cookie_consent');
@@ -26,22 +28,19 @@ export function SiteFooter() {
               AI-powered tools for international students planning to study in Germany and beyond.
             </p>
             <button
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  window.location.href = 'mailto:smarviastudio@gmail.com';
-                }
-              }}
+              onClick={openContactModal}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: 6,
+                gap: 8,
                 fontSize: 13,
                 color: '#dd0000',
                 fontWeight: 600,
-                background: 'none',
-                border: 'none',
+                background: '#fff',
+                borderRadius: 999,
+                border: '1px solid rgba(221,0,0,0.18)',
+                padding: '6px 14px',
                 cursor: 'pointer',
-                padding: 0,
               }}
             >
               <Mail size={13} /> Contact support

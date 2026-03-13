@@ -313,6 +313,38 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <div className="min-h-screen" style={{ background: '#f8f8f6' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: stripHtml(title),
+            description: stripHtml(wpPost.excerpt.rendered),
+            image: wpPost.featuredImage || 'https://germanpath.com/og-image.jpg',
+            datePublished: wpPost.date,
+            dateModified: wpPost.modified,
+            author: {
+              '@type': 'Organization',
+              name: 'Smarvia Studio',
+              url: 'https://germanpath.com',
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: 'Smarvia Studio',
+              url: 'https://germanpath.com',
+              logo: {
+                '@type': 'ImageObject',
+                url: 'https://germanpath.com/logo.png',
+              },
+            },
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': `https://germanpath.com/blog/${slug}`,
+            },
+          }),
+        }}
+      />
       <SiteNav />
 
       {/* Header */}
