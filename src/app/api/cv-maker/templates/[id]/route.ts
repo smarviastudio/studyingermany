@@ -3,9 +3,10 @@ import { templates } from '@/lib/cv-maker/templates';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const template = templates.find((tpl) => tpl.id === params.id);
+  const { id } = await params;
+  const template = templates.find((tpl) => tpl.id === id);
   
   if (!template) {
     return NextResponse.json({ message: 'Template not found' }, { status: 404 });

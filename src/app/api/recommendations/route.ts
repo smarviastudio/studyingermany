@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     // Filter by subjects (if any match)
     if (subjects.length > 0) {
       programs = programs.filter(p => {
-        const text = `${p.name} ${p.subject || ''} ${p.description || ''}`.toLowerCase();
+        const text = `${p.program_name} ${p.subject_tags?.join(' ') || ''} ${p.description || ''}`.toLowerCase();
         return subjects.some(s => text.includes(s.toLowerCase()));
       });
     }
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     // Score each program
     const scored = programs.slice(0, 100).map(p => {
       let score = 50;
-      const text = `${p.name} ${p.subject || ''} ${p.description || ''}`.toLowerCase();
+      const text = `${p.program_name} ${p.subject_tags?.join(' ') || ''} ${p.description || ''}`.toLowerCase();
 
       // Subject match bonus
       subjects.forEach(s => {
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       // Language match bonus
       if (lang) {
         const langLower = lang.toLowerCase();
-        const pLang = (p.language || '').toLowerCase();
+        const pLang = (p.languages_array?.[0] || '').toLowerCase();
         if (langLower === 'english' && pLang.includes('english')) score += 10;
         if (langLower === 'german' && pLang.includes('german')) score += 10;
         if (langLower === 'both') score += 5;
@@ -75,10 +75,10 @@ export async function POST(request: NextRequest) {
 
       return {
         id: p.id,
-        name: p.name,
+        name: p.program_name,
         university: p.university || '',
         city: p.city || 'Germany',
-        language: p.language || 'English',
+        language: p.languages_array?.[0] || 'English',
         degreeLevel: p.degree_level || degree,
         matchScore: score,
         matchReason: matchReasons.length > 0

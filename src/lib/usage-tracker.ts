@@ -1,5 +1,5 @@
 import { prisma } from './prisma';
-import { FREE_MONTHLY_TOTAL } from './stripe';
+import { FREE_LIMITS, FREE_MONTHLY_TOTAL } from './stripe';
 
 type FeatureType = 'cv' | 'motivation' | 'cover' | 'search';
 

@@ -18,12 +18,17 @@ export const authConfig: NextAuthConfig = {
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        const email =
+          typeof credentials?.email === 'string' ? credentials.email : '';
+        const password =
+          typeof credentials?.password === 'string' ? credentials.password : '';
+
+        if (!email || !password) {
           throw new Error('Email and password required');
         }
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email },
           include: { profile: true }
         });
 
@@ -32,7 +37,7 @@ export const authConfig: NextAuthConfig = {
         }
 
         const isPasswordValid = await bcrypt.compare(
-          credentials.password,
+          password,
           user.password
         );
 

@@ -256,7 +256,7 @@ export default function MyShortlistPage() {
                     <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#999' }}>Duration</span>
                   </div>
                   <p style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: 0 }}>
-                    {selectedProgram.duration || 'N/A'}
+                    {selectedProgram.programme_duration || (selectedProgram.duration_months ? `${selectedProgram.duration_months} months` : 'N/A')}
                   </p>
                 </div>
 
@@ -266,7 +266,7 @@ export default function MyShortlistPage() {
                     <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#999' }}>Language</span>
                   </div>
                   <p style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: 0 }}>
-                    {selectedProgram.languages || 'N/A'}
+                    {selectedProgram.languages_array?.join(', ') || 'N/A'}
                   </p>
                 </div>
 

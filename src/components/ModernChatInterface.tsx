@@ -152,8 +152,14 @@ Please search for relevant programs and provide detailed recommendations with ex
           subject_area: response.program.subject_area,
           tuition_fee_number: response.program.tuition_fee_number,
           tuition_fee_currency: response.program.tuition_fee_currency,
+          tuition_eur_min: response.program.tuition_eur_min,
+          tuition_eur_max: response.program.tuition_eur_max,
+          tuition_exact_eur: response.program.tuition_exact_eur,
+          is_free: response.program.is_free,
           beginning_normalized: response.program.beginning_normalized,
           quality_warnings: response.program.quality_warnings,
+          image_url: response.program.image_url,
+          detail_url: response.program.detail_url,
         }));
       
       setPrograms(fetchedPrograms);
