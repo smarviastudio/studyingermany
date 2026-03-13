@@ -73,6 +73,8 @@ export function SiteNav() {
   const isAuthenticated = status === 'authenticated';
 
   const [aiUsage, setAiUsage] = useState<{ used: number; limit: number } | null>(null);
+  const [aiCredits, setAiCredits] = useState<number | null>(null);
+  const [hasUnlimited, setHasUnlimited] = useState(false);
 
   const [wpPosts, setWpPosts] = useState<SiteNavPost[]>([]);
   const [tickerIndex, setTickerIndex] = useState(0);
@@ -122,10 +124,20 @@ export function SiteNav() {
     if (!isAuthenticated) return;
     (async () => {
       try {
-        const res = await fetch('/api/ai-credits');
-        if (res.ok) {
-          const data = await res.json();
+        const [usageRes, creditsRes] = await Promise.all([
+          fetch('/api/ai-credits'),
+          fetch('/api/credits/balance'),
+        ]);
+        if (usageRes.ok) {
+          const data = await usageRes.json();
           setAiUsage(data);
+        }
+        if (creditsRes.ok) {
+          const data = await creditsRes.json();
+          setHasUnlimited(data.hasUnlimited);
+          if (!data.hasUnlimited) {
+            setAiCredits(data.credits);
+          }
         }
       } catch {
         // silent
@@ -286,11 +298,11 @@ export function SiteNav() {
         <div className="sitenav-drawer-auth">
           {isAuthenticated ? (
             <>
-              {aiUsage !== null && (
-                <div className="sitenav-drawer-credits">
-                  <span>AI credits this month</span>
-                  <strong>{Math.max(0, aiUsage.limit - aiUsage.used)} / {aiUsage.limit}</strong>
-                </div>
+              {!hasUnlimited && aiCredits !== null && (
+                <Link href="/credits" className="sitenav-drawer-credits" onClick={() => setDrawerOpen(false)} style={{ textDecoration: 'none', display: 'block' }}>
+                  <span>AI Credits Available</span>
+                  <strong style={{ color: aiCredits === 0 ? '#ef4444' : '#7c3aed' }}>{aiCredits} credits</strong>
+                </Link>
               )}
               <button onClick={() => { signOut(); setDrawerOpen(false); }} className="sitenav-drawer-btn secondary" style={{ border: 'none', cursor: 'pointer' }}>
                 <LogOut size={16} /> Sign out
@@ -406,14 +418,20 @@ export function SiteNav() {
           <div className="sitenav-desktop-auth" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuthenticated ? (
               <>
-                {aiUsage !== null && (
+                {!hasUnlimited && aiCredits !== null && (
                   <Link
-                    href="/dashboard"
-                    title={`${aiUsage.limit - aiUsage.used} AI generations remaining this month`}
-                    style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 20, background: aiUsage.used >= aiUsage.limit ? 'rgba(239,68,68,0.08)' : 'rgba(221,0,0,0.07)', border: `1px solid ${aiUsage.used >= aiUsage.limit ? 'rgba(239,68,68,0.2)' : 'rgba(221,0,0,0.15)'}`, textDecoration: 'none' }}
+                    href="/credits"
+                    title={`${aiCredits} AI credits available. Click to buy more.`}
+                    style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 20, background: aiCredits === 0 ? 'rgba(239,68,68,0.08)' : 'rgba(124,58,237,0.07)', border: `1px solid ${aiCredits === 0 ? 'rgba(239,68,68,0.2)' : 'rgba(124,58,237,0.15)'}`, textDecoration: 'none', transition: 'all 0.2s' }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = aiCredits === 0 ? 'rgba(239,68,68,0.12)' : 'rgba(124,58,237,0.12)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = aiCredits === 0 ? 'rgba(239,68,68,0.08)' : 'rgba(124,58,237,0.07)';
+                    }}
                   >
-                    <Zap className="w-3 h-3" style={{ color: aiUsage.used >= aiUsage.limit ? '#ef4444' : RED }} />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: aiUsage.used >= aiUsage.limit ? '#ef4444' : RED }}>{Math.max(0, aiUsage.limit - aiUsage.used)}</span>
+                    <Zap className="w-3 h-3" style={{ color: aiCredits === 0 ? '#ef4444' : '#7c3aed' }} />
+                    <span style={{ fontSize: 12, fontWeight: 700, color: aiCredits === 0 ? '#ef4444' : '#7c3aed' }}>{aiCredits}</span>
                     <span style={{ fontSize: 11, color: '#737373' }}>credits</span>
                   </Link>
                 )}

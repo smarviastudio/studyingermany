@@ -396,6 +396,95 @@ export default function PricingPage() {
           </div>
         </section>
 
+        {/* ── AI CREDITS ── */}
+        <section style={{ maxWidth: 1000, margin: '0 auto 80px', padding: '0 24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, rgba(124,58,237,0.08), rgba(221,0,0,0.08))', border: '1px solid rgba(124,58,237,0.15)', borderRadius: 50, padding: '6px 18px', marginBottom: 20 }}>
+              <Zap size={14} color={PURPLE} />
+              <span style={{ fontSize: 13, fontWeight: 600, color: PURPLE }}>Pay as you go</span>
+            </div>
+            <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 900, color: '#0a0a0a', margin: '0 0 16px' }}>
+              Or Buy AI Credits
+            </h2>
+            <p style={{ fontSize: 17, color: '#555', maxWidth: 600, margin: '0 auto' }}>
+              Not ready for a subscription? Purchase AI credits and use them whenever you need. Credits never expire.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, maxWidth: 700, margin: '0 auto' }}>
+            {[
+              { credits: 50, price: '€5.00', priceValue: 5 },
+              { credits: 200, price: '€15.00', priceValue: 15, popular: true },
+            ].map((bundle) => (
+              <div
+                key={bundle.credits}
+                style={{
+                  background: '#fff',
+                  border: bundle.popular ? '2px solid #7c3aed' : '1px solid #e5e5e5',
+                  borderRadius: 20,
+                  padding: 28,
+                  position: 'relative',
+                  boxShadow: bundle.popular ? '0 8px 32px rgba(124,58,237,0.15)' : 'none',
+                }}
+              >
+                {bundle.popular && (
+                  <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #7c3aed, #dd0000)', borderRadius: 999, padding: '5px 14px', boxShadow: '0 4px 12px rgba(124,58,237,0.3)' }}>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: '#fff', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Best Value</span>
+                  </div>
+                )}
+                
+                <div style={{ textAlign: 'center', marginBottom: 20 }}>
+                  <div style={{ width: 56, height: 56, margin: '0 auto 14px', borderRadius: 16, background: 'linear-gradient(135deg, rgba(124,58,237,0.1), rgba(221,0,0,0.1))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Zap size={28} color="#7c3aed" />
+                  </div>
+                  <h3 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>{bundle.credits} Credits</h3>
+                  <div style={{ fontSize: 36, fontWeight: 900, color: '#7c3aed', margin: '0 0 6px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{bundle.price}</div>
+                  <p style={{ fontSize: 13, color: '#737373', margin: 0 }}>€{(bundle.priceValue / bundle.credits).toFixed(2)} per credit</p>
+                </div>
+
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#404040' }}>
+                    <Check size={16} color="#10b981" style={{ flexShrink: 0 }} />
+                    <span>{bundle.credits} AI generations</span>
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#404040' }}>
+                    <Check size={16} color="#10b981" style={{ flexShrink: 0 }} />
+                    <span>Never expires</span>
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#404040' }}>
+                    <Check size={16} color="#10b981" style={{ flexShrink: 0 }} />
+                    <span>All AI tools included</span>
+                  </li>
+                </ul>
+
+                <Link
+                  href="/credits"
+                  style={{
+                    width: '100%',
+                    padding: '12px 24px',
+                    borderRadius: 12,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: '#fff',
+                    background: bundle.popular ? 'linear-gradient(135deg, #7c3aed, #dd0000)' : '#7c3aed',
+                    border: 'none',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    transition: 'all 0.2s',
+                    boxShadow: '0 4px 16px rgba(124,58,237,0.2)',
+                  }}
+                >
+                  Buy Credits
+                  <ArrowRight size={16} />
+                </Link>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* ── TRUST BADGES ── */}
         <section style={{ maxWidth: 800, margin: '0 auto 80px', padding: '0 24px', display: 'flex', justifyContent: 'center', gap: 48, flexWrap: 'wrap' }}>
           {[
