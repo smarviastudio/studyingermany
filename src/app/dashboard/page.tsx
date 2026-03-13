@@ -75,6 +75,7 @@ export default function DashboardPage() {
   const [portalLoading, setPortalLoading] = useState(false);
   const [recommendedPrograms, setRecommendedPrograms] = useState<RecommendedProgram[]>([]);
   const [recommendLoading, setRecommendLoading] = useState(false);
+  const [aiCredits, setAiCredits] = useState<number | null>(null);
 
   // Calculate profile completion percentage
   const calculateProfileCompletion = (profile: UserProfile | null) => {
@@ -163,10 +164,22 @@ export default function DashboardPage() {
         }
       } catch { /* silent */ }
     };
+    const loadCredits = async () => {
+      try {
+        const res = await fetch('/api/credits/balance');
+        if (res.ok && !cancelled) {
+          const data = await res.json();
+          if (!data.hasUnlimited) {
+            setAiCredits(data.credits);
+          }
+        }
+      } catch { /* silent */ }
+    };
     loadShortlist();
     loadProgress();
     loadProfile();
     loadSubscription();
+    loadCredits();
     return () => { cancelled = true; };
   }, [isAuthenticated]);
 
@@ -297,6 +310,27 @@ export default function DashboardPage() {
               <ChevronRight className="w-4 h-4" />
             </div>
           </Link>
+
+          {aiCredits !== null && (
+            <Link href="/credits" className="dash-stat-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '200px', boxSizing: 'border-box' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(124,58,237,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Zap className="w-6 h-6" style={{ color: '#7c3aed' }} />
+                </div>
+                <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{aiCredits}</span>
+              </div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>AI Credits</h3>
+                <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Available for AI generations</p>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#7c3aed', fontSize: 13, fontWeight: 600 }}>
+                {aiCredits === 0 ? 'Buy credits' : 'Manage credits'}
+                <ChevronRight className="w-4 h-4" />
+              </div>
+            </Link>
+          )}
         </div>
 
         {/* ── RECOMMENDED PROGRAMS ── */}

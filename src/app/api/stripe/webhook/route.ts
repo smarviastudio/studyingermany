@@ -64,13 +64,40 @@ export async function POST(req: NextRequest) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.metadata?.userId;
-        if (!userId || session.mode !== 'subscription') break;
+        if (!userId) break;
 
-        const subscription = await stripe.subscriptions.retrieve(
-          session.subscription as string
-        );
-        await upsertSubscription(userId, subscription);
-        console.log(`[Webhook] Subscription created for user ${userId}`);
+        // Handle credit purchases (one-time payments)
+        if (session.mode === 'payment' && session.metadata?.credits) {
+          const credits = parseInt(session.metadata.credits, 10);
+          if (credits > 0) {
+            await prisma.$transaction(async (tx) => {
+              await tx.user.update({
+                where: { id: userId },
+                data: { aiCredits: { increment: credits } },
+              });
+              await tx.creditTransaction.create({
+                data: {
+                  userId,
+                  amount: credits,
+                  type: 'purchase',
+                  description: `Purchased ${credits} AI credits`,
+                  stripeSessionId: session.id,
+                },
+              });
+            });
+            console.log(`[Webhook] Added ${credits} credits to user ${userId}`);
+          }
+          break;
+        }
+
+        // Handle subscription purchases
+        if (session.mode === 'subscription') {
+          const subscription = await stripe.subscriptions.retrieve(
+            session.subscription as string
+          );
+          await upsertSubscription(userId, subscription);
+          console.log(`[Webhook] Subscription created for user ${userId}`);
+        }
         break;
       }
 

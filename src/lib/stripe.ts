@@ -71,3 +71,32 @@ export const FREE_LIMITS = {
 };
 
 export const FREE_MONTHLY_TOTAL = 5; // shared pool across all AI tools
+
+export type CreditBundleKey = 'credits_50' | 'credits_200';
+
+export function getCreditBundles() {
+  return {
+    credits_50: {
+      priceId: 'price_1TAez6BhIRngoSRXGt4fAgNN',
+      credits: 50,
+      amount: 500,
+      label: '50 AI Credits',
+      description: '50 credits for AI generations',
+    },
+    credits_200: {
+      priceId: 'price_1TAf0dBhIRngoSRX3VguFhEk',
+      credits: 200,
+      amount: 1500,
+      label: '200 AI Credits',
+      description: '200 credits for AI generations',
+    },
+  } as const;
+}
+
+export function getCreditAmountFromPriceId(priceId: string): number {
+  const bundles = getCreditBundles();
+  for (const bundle of Object.values(bundles)) {
+    if (bundle.priceId === priceId) return bundle.credits;
+  }
+  return 0;
+}

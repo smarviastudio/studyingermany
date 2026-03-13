@@ -25,11 +25,21 @@ async function getUserPlanType(userId: string): Promise<'free' | 'student' | 'pr
 export async function checkUsageLimit(
   userId: string,
   feature: FeatureType
-): Promise<{ allowed: boolean; current: number; limit: number; planType: string }> {
+): Promise<{ allowed: boolean; current: number; limit: number; planType: string; credits?: number }> {
   const planType = await getUserPlanType(userId);
 
   if (planType !== 'free') {
     return { allowed: true, current: 0, limit: -1, planType };
+  }
+
+  // Check AI credits first
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { aiCredits: true },
+  });
+
+  if (user && user.aiCredits > 0) {
+    return { allowed: true, current: 0, limit: -1, planType, credits: user.aiCredits };
   }
 
   const month = getCurrentMonth();
@@ -43,10 +53,36 @@ export async function checkUsageLimit(
     : 0;
   const limit = FREE_MONTHLY_TOTAL;
 
-  return { allowed: totalUsed < limit, current: totalUsed, limit, planType };
+  return { allowed: totalUsed < limit, current: totalUsed, limit, planType, credits: 0 };
 }
 
 export async function incrementUsage(userId: string, feature: FeatureType): Promise<void> {
+  // Check if user has AI credits first
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { aiCredits: true },
+  });
+
+  if (user && user.aiCredits > 0) {
+    // Deduct 1 credit and log transaction
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: userId },
+        data: { aiCredits: { decrement: 1 } },
+      });
+      await tx.creditTransaction.create({
+        data: {
+          userId,
+          amount: -1,
+          type: 'use',
+          description: `Used 1 credit for ${feature} generation`,
+        },
+      });
+    });
+    return;
+  }
+
+  // Otherwise use monthly free limit
   const month = getCurrentMonth();
   await prisma.usageLimits.upsert({
     where: { userId_month: { userId, month } },

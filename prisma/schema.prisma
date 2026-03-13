@@ -25,6 +25,8 @@ model User {
   cvDocuments      CvDocument[] @relation("UserCvDocuments")
   subscription     Subscription?
   usageLimits      UsageLimits[]
+  aiCredits        Int              @default(0)
+  creditTransactions CreditTransaction[]
 }
 
 model UserProfile {
@@ -154,6 +156,19 @@ model CvDocument {
   isDefault   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model CreditTransaction {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount          Int
+  type            String
+  description     String?
+  stripeSessionId String?  @unique
+  createdAt       DateTime @default(now())
 
   @@index([userId])
 }
