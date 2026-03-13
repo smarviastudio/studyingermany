@@ -445,10 +445,17 @@ export function SiteNav() {
 
       <div style={{ background: '#fff', borderBottom: '1px solid #e5e5e5' }}>
         <div className="news-ticker-shell" onMouseEnter={() => setTickerPaused(true)} onMouseLeave={() => setTickerPaused(false)}>
-          <span className="news-ticker-label">News</span>
-          <button className="news-ticker-nav" aria-label="Previous" onClick={() => goToSlide(tickerIndex - 1)}>
-            <ChevronLeft size={14} />
-          </button>
+          <div className="news-ticker-controls">
+            <span className="news-ticker-label">News</span>
+            <div className="news-ticker-nav-group">
+              <button className="news-ticker-nav" aria-label="Previous" onClick={() => goToSlide(tickerIndex - 1)}>
+                <ChevronLeft size={14} />
+              </button>
+              <button className="news-ticker-nav" aria-label="Next" onClick={() => goToSlide(tickerIndex + 1)}>
+                <ChevronRight size={14} />
+              </button>
+            </div>
+          </div>
           <div className="news-ticker-track">
             {wpPosts.length > 0 ? (
               <div 
@@ -468,9 +475,6 @@ export function SiteNav() {
               <span className="news-ticker-empty">Latest updates coming soon...</span>
             )}
           </div>
-          <button className="news-ticker-nav" aria-label="Next" onClick={() => goToSlide(tickerIndex + 1)}>
-            <ChevronRight size={14} />
-          </button>
         </div>
       </div>
     </>

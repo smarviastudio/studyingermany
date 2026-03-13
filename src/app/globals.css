@@ -340,8 +340,19 @@ details[open] summary .chevron { transform: rotate(180deg); }
   padding: 0 24px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   height: 44px;
+}
+.news-ticker-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.news-ticker-nav-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 .news-ticker-label {
   font-size: 10px;
