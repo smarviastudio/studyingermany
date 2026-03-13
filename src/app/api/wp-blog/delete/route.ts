@@ -24,15 +24,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const res = await fetch(`${wpUrl}/wp-json/custom/v1/delete-post`, {
-      method: 'POST',
+    // Use standard WP REST API with Bearer token
+    const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts/${postId}`, {
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${wpToken}`,
       },
-      body: JSON.stringify({
-        api_token: wpToken,
-        post_id: postId,
-      }),
     });
 
     if (!res.ok) {
