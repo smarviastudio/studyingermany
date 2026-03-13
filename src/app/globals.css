@@ -340,8 +340,10 @@ details[open] summary .chevron { transform: rotate(180deg); }
   padding: 0 24px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   height: 44px;
+  flex-wrap: wrap;
 }
 .news-ticker-controls {
   display: flex;
@@ -385,10 +387,11 @@ details[open] summary .chevron { transform: rotate(180deg); }
   background: rgba(221,0,0,0.04);
 }
 .news-ticker-track {
-  flex: 1;
+  flex: 0 1 720px;
   overflow: hidden;
   position: relative;
   min-width: 0;
+  max-width: 100%;
 }
 .news-ticker-slider {
   display: flex;
