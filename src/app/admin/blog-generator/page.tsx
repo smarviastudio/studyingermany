@@ -6,7 +6,8 @@ import {
   Sparkles, Send, Loader2, ExternalLink,
   FileText, Tag, Globe, Eye, EyeOff,
   ChevronDown, Copy, Check, Pencil,
-  Home, Image as ImageIcon
+  Home, Image as ImageIcon, Trash2,
+  RefreshCcw
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
@@ -22,6 +23,15 @@ type GeneratedPost = {
   tags: string[];
   seo_slug: string;
   faqs?: FAQItem[];
+};
+
+type WPPostSummary = {
+  id: number;
+  title: string;
+  excerpt: string;
+  slug: string;
+  date: string;
+  link?: string;
 };
 
 type PublishResult = {
@@ -129,6 +139,13 @@ const formatPhotographer = (image: UnsplashImage | null) => {
   return `Photo by ${image.user.name}${image.user.username ? ` (@${image.user.username})` : ''}`;
 };
 
+const formatPostDate = (value?: string) => {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+};
+
 export default function BlogGeneratorPage() {
   // Form state
   const [contentType, setContentType] = useState<'blog' | 'news'>('blog');
@@ -164,12 +181,58 @@ export default function BlogGeneratorPage() {
   const [featuredMediaId, setFeaturedMediaId] = useState<number | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
 
+  // Existing posts state
+  const [existingPosts, setExistingPosts] = useState<WPPostSummary[]>([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [postsError, setPostsError] = useState<string | null>(null);
+  const [postsSearch, setPostsSearch] = useState('');
+  const [deletingPostId, setDeletingPostId] = useState<number | null>(null);
+
   // Editable fields after generation
   const [editTitle, setEditTitle] = useState('');
   const [editExcerpt, setEditExcerpt] = useState('');
   const [editContent, setEditContent] = useState('');
   const [editTags, setEditTags] = useState('');
   const [faqs, setFaqs] = useState<FAQItem[]>([]);
+
+  const loadExistingPosts = async (query?: string) => {
+    setPostsLoading(true);
+    setPostsError(null);
+    try {
+      const params = new URLSearchParams({ per_page: '15' });
+      if (query?.trim()) {
+        params.set('search', query.trim());
+      }
+      const res = await fetch(`/api/wp-posts?${params.toString()}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to fetch posts');
+      setExistingPosts(data.posts || []);
+    } catch (err) {
+      setPostsError(err instanceof Error ? err.message : 'Unable to load posts');
+      setExistingPosts([]);
+    } finally {
+      setPostsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadExistingPosts();
+  }, []);
+
+  const handleDeletePost = async (id: number) => {
+    if (!window.confirm('Delete this WordPress post? This cannot be undone.')) return;
+    setDeletingPostId(id);
+    try {
+      const res = await fetch(`/api/wp-blog/delete?postId=${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to delete post');
+      setExistingPosts((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to delete post');
+    } finally {
+      setDeletingPostId(null);
+    }
+  };
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -634,6 +697,73 @@ export default function BlogGeneratorPage() {
 
           {/* RIGHT PANEL: Results */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Recent WordPress Posts</h2>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    onClick={() => loadExistingPosts(postsSearch)}
+                    style={{ border: '1px solid #e5e5e5', background: '#fff', borderRadius: 10, padding: '6px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#555' }}
+                  >
+                    <RefreshCcw size={14} /> Refresh
+                  </button>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                <input
+                  type="text"
+                  value={postsSearch}
+                  onChange={(e) => setPostsSearch(e.target.value)}
+                  placeholder="Search WP posts"
+                  style={{ flex: 1, padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 13 }}
+                />
+                <button
+                  onClick={() => loadExistingPosts(postsSearch)}
+                  style={{ padding: '10px 16px', borderRadius: 10, border: 'none', background: '#111', color: '#fff', fontWeight: 600, cursor: 'pointer' }}
+                >
+                  Search
+                </button>
+              </div>
+              {postsError && <p style={{ color: '#dc2626', fontSize: 13 }}>{postsError}</p>}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {postsLoading ? (
+                  <p style={{ fontSize: 13, color: '#737373' }}>Loading posts…</p>
+                ) : existingPosts.length === 0 ? (
+                  <p style={{ fontSize: 13, color: '#737373' }}>No posts found.</p>
+                ) : (
+                  existingPosts.map((wp) => {
+                    const plainTitle = stripHtmlTags(wp.title);
+                    const plainExcerpt = stripHtmlTags(wp.excerpt).slice(0, 140);
+                    return (
+                      <div key={wp.id} style={{ border: '1px solid #f0f0f0', borderRadius: 14, padding: 16, display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+                        <div style={{ flex: 1 }}>
+                          <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 4px' }}>{formatPostDate(wp.date)}</p>
+                          <p style={{ fontSize: 15, fontWeight: 600, color: '#111', margin: '0 0 6px' }}>{plainTitle || 'Untitled Post'}</p>
+                          <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>{plainExcerpt}{plainExcerpt.length === 140 ? '…' : ''}</p>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                          <a
+                            href={wp.link || `https://cms.germanpath.com/${wp.slug}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ textDecoration: 'none', fontSize: 12, fontWeight: 600, color: '#2563eb', textAlign: 'center' }}
+                          >
+                            View
+                          </a>
+                          <button
+                            onClick={() => handleDeletePost(wp.id)}
+                            disabled={deletingPostId === wp.id}
+                            style={{ border: '1px solid #ffe4e6', background: '#fff1f2', color: '#dc2626', borderRadius: 10, padding: '6px 10px', fontSize: 12, fontWeight: 600, cursor: deletingPostId === wp.id ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
+                          >
+                            <Trash2 size={12} /> {deletingPostId === wp.id ? 'Deleting…' : 'Delete'}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </section>
             {post && (
               <>
                 {/* Generated Content */}
