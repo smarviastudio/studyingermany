@@ -23,21 +23,21 @@ export default function StudyFromPakistanPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
       {/* Hero */}
-      <section style={{ background: 'linear-gradient(135deg, #01411C 0%, #006400 100%)', padding: '100px 24px 80px', color: '#fff' }}>
+      <section style={{ background: 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)', padding: '100px 24px 80px', borderBottom: '1px solid #e5e5e5' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.15)', padding: '8px 16px', borderRadius: 99, marginBottom: 20 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(221,0,0,0.08)', padding: '8px 16px', borderRadius: 99, marginBottom: 20 }}>
             <span style={{ fontSize: 20 }}>🇵🇰</span>
-            <span style={{ fontSize: 13, fontWeight: 600 }}>Guide for Pakistani Students</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#dd0000' }}>Guide for Pakistani Students</span>
           </div>
-          <h1 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 800, margin: '0 0 20px', lineHeight: 1.15 }}>
+          <h1 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 800, margin: '0 0 20px', lineHeight: 1.15, color: '#171717' }}>
             Study in Germany from Pakistan<br />
-            <span style={{ opacity: 0.9 }}>2026 Complete Guide</span>
+            <span style={{ color: '#737373' }}>2026 Complete Guide</span>
           </h1>
-          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.85)', maxWidth: 700, margin: '0 auto 32px', lineHeight: 1.7 }}>
+          <p style={{ fontSize: 18, color: '#525252', maxWidth: 700, margin: '0 auto 32px', lineHeight: 1.7 }}>
             Everything Pakistani students need to know — from HEC attestation to blocked accounts, 
             visa interviews, and finding tuition-free programs.
           </p>
-          <Link href="/#hero" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#fff', color: '#01411C', padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 700, textDecoration: 'none' }}>
+          <Link href="/#hero" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#dd0000', color: '#fff', padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 700, textDecoration: 'none' }}>
             <Search style={{ width: 18, height: 18 }} /> Search Programs
           </Link>
         </div>
@@ -53,7 +53,7 @@ export default function StudyFromPakistanPage() {
             { label: 'Work Rights', value: '140 days/year' },
           ].map((stat) => (
             <div key={stat.label} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: 20, textAlign: 'center' }}>
-              <p style={{ fontSize: 24, fontWeight: 700, color: '#01411C', margin: '0 0 4px' }}>{stat.value}</p>
+              <p style={{ fontSize: 24, fontWeight: 700, color: '#dd0000', margin: '0 0 4px' }}>{stat.value}</p>
               <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>{stat.label}</p>
             </div>
           ))}
@@ -91,7 +91,7 @@ export default function StudyFromPakistanPage() {
               { step: 7, title: 'Arrive & Register', desc: 'Complete Anmeldung (city registration) within 14 days of arrival. Open a German bank account and enroll at your university.' },
             ].map((item) => (
               <div key={item.step} style={{ display: 'flex', gap: 20, padding: 20, background: '#f9fafb', borderRadius: 12 }}>
-                <div style={{ width: 40, height: 40, borderRadius: 99, background: '#01411C', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 99, background: '#dd0000', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>
                   {item.step}
                 </div>
                 <div>
@@ -119,7 +119,7 @@ export default function StudyFromPakistanPage() {
               'Passport-size photos (biometric)',
             ].map((doc) => (
               <div key={doc} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <CheckCircle style={{ width: 20, height: 20, color: '#01411C', flexShrink: 0 }} />
+                <CheckCircle style={{ width: 20, height: 20, color: '#dd0000', flexShrink: 0 }} />
                 <span style={{ fontSize: 15, color: '#374151' }}>{doc}</span>
               </div>
             ))}
@@ -143,7 +143,7 @@ export default function StudyFromPakistanPage() {
                 ].map(([item, cost]) => (
                   <tr key={item} style={{ borderBottom: '1px solid #e5e7eb' }}>
                     <td style={{ padding: '12px 0', fontSize: 15, color: '#374151' }}>{item}</td>
-                    <td style={{ padding: '12px 0', fontSize: 15, fontWeight: 600, color: '#01411C', textAlign: 'right' }}>{cost}</td>
+                    <td style={{ padding: '12px 0', fontSize: 15, fontWeight: 600, color: '#dd0000', textAlign: 'right' }}>{cost}</td>
                   </tr>
                 ))}
               </tbody>
@@ -162,14 +162,14 @@ export default function StudyFromPakistanPage() {
             <li>Economics & Finance</li>
           </ul>
 
-          <div style={{ marginTop: 48, padding: 24, background: '#01411C', borderRadius: 16, textAlign: 'center' }}>
+          <div style={{ marginTop: 48, padding: 24, background: 'linear-gradient(135deg, #dd0000 0%, #b91c1c 100%)', borderRadius: 16, textAlign: 'center' }}>
             <h3 style={{ fontSize: 22, fontWeight: 700, color: '#fff', margin: '0 0 12px' }}>Ready to find your program?</h3>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', margin: '0 0 20px' }}>Search 20,000+ programs and use our free AI tools.</p>
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.9)', margin: '0 0 20px' }}>Search 20,000+ programs and use our free AI tools.</p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/#hero" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', color: '#01411C', padding: '12px 24px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
+              <Link href="/#hero" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', color: '#dd0000', padding: '12px 24px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
                 <Search style={{ width: 16, height: 16 }} /> Search Programs
               </Link>
-              <Link href="/tools" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', color: '#fff', padding: '12px 24px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none', border: '2px solid rgba(255,255,255,0.3)' }}>
+              <Link href="/tools" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', color: '#fff', padding: '12px 24px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none', border: '2px solid rgba(255,255,255,0.4)' }}>
                 <FileText style={{ width: 16, height: 16 }} /> Free AI Tools
               </Link>
             </div>
