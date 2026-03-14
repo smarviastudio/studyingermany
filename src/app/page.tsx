@@ -335,8 +335,8 @@ export default function HomePage() {
             <span>AI-POWERED · 20,000+ PROGRAMS</span>
           </div>
           <h1 className="hero-title animate-fade-up-2">
-            Study in Germany:<br />
-            <span className="hero-title-gradient">20,000+ English-Taught Programs</span>
+            Study in Germany: 20,000+ Programs<br />
+            <span className="hero-title-gradient">for International Students</span>
           </h1>
           <p className="hero-subtitle animate-fade-up-3">
             Search bachelor & master programs, build your CV with AI, and get step-by-step guidance —
