@@ -58,6 +58,20 @@ export default function ApplicationPlanPage() {
   const fetchPlan = async () => {
     try {
       setLoading(true);
+      
+      // First, get program details from shortlist
+      const shortlistRes = await fetch('/api/shortlist');
+      
+      if (shortlistRes.ok) {
+        const shortlistData = await shortlistRes.json();
+        const shortlistItem = shortlistData.shortlists?.find((item: any) => item.programId === programId);
+        if (shortlistItem) {
+          setProgramName(shortlistItem.programName);
+          setUniversity(shortlistItem.university);
+        }
+      }
+      
+      // Try to fetch existing plan
       const response = await fetch(`/api/programs/${programId}/application-plan`);
       
       if (!response.ok) {
@@ -65,32 +79,37 @@ export default function ApplicationPlanPage() {
       }
 
       const data = await response.json();
-      if (data.plan) {
-        setPlan(data.plan);
-      }
-
-      // Fetch program details from shortlist or applications
-      const shortlistRes = await fetch('/api/shortlist');
-      if (shortlistRes.ok) {
-        const shortlistData = await shortlistRes.json();
-        const program = shortlistData.items?.find((item: any) => item.programId === programId);
-        if (program) {
-          setProgramName(program.programName);
-          setUniversity(program.university);
-        }
-      }
-
-      // Fallback: fetch from application plans
-      if (!programName) {
-        const appsRes = await fetch('/api/application-plans');
-        if (appsRes.ok) {
-          const appsData = await appsRes.json();
-          const app = appsData.plans?.find((p: any) => p.programId === programId);
-          if (app) {
-            setProgramName(app.programName);
-            setUniversity(app.university);
+      
+      // If no plan exists, generate one automatically
+      if (!data.plan) {
+        // Fetch full program details
+        const programRes = await fetch(`/api/programs/${programId}`);
+        if (programRes.ok) {
+          const programDataRes = await programRes.json();
+          const programData = programDataRes.program;
+          
+          // Fetch user profile
+          const profileRes = await fetch('/api/profile');
+          let userProfile = null;
+          if (profileRes.ok) {
+            const profileData = await profileRes.json();
+            userProfile = profileData.profile;
+          }
+          
+          // Generate plan
+          const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ program: programData, userProfile }),
+          });
+          
+          if (generateRes.ok) {
+            const generatedData = await generateRes.json();
+            setPlan(generatedData.plan);
           }
         }
+      } else {
+        setPlan(data.plan);
       }
     } catch (err) {
       console.error('Failed to load application plan:', err);

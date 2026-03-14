@@ -346,47 +346,47 @@ export default function MyShortlistPage() {
               const isRemoving = removingId === item.programId;
 
               return (
-                <div key={item.id} className="shortlist-card" style={{ opacity: isRemoving ? 0.5 : 1, pointerEvents: isRemoving ? 'none' : 'auto', display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: 20, overflow: 'hidden', border: '1px solid #e5e5e5' }}>
+                <div key={item.id} className="shortlist-card" style={{ opacity: isRemoving ? 0.5 : 1, pointerEvents: isRemoving ? 'none' : 'auto', display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: 20, overflow: 'hidden', border: '1px solid #e5e5e5', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                   {/* Image or gradient header */}
-                  <div style={{ position: 'relative', height: prog?.image_url ? 160 : 80, overflow: 'hidden', background: prog?.image_url ? '#eee' : 'linear-gradient(135deg, #dd0000 0%, #7c3aed 100%)', flexShrink: 0 }}>
+                  <div style={{ position: 'relative', height: prog?.image_url ? 180 : 100, overflow: 'hidden', background: prog?.image_url ? '#eee' : 'linear-gradient(135deg, #dd0000 0%, #7c3aed 100%)', flexShrink: 0 }}>
                     {prog?.image_url ? (
                       <Image src={prog.image_url} alt={item.programName} fill style={{ objectFit: 'cover' }} sizes="340px" unoptimized />
                     ) : (
                       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <GraduationCap className="w-8 h-8" style={{ color: 'rgba(255,255,255,0.5)' }} />
+                        <GraduationCap className="w-10 h-10" style={{ color: 'rgba(255,255,255,0.6)' }} />
                       </div>
                     )}
                     {prog?.is_free && (
-                      <span style={{ position: 'absolute', top: 10, left: 10, background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      <span style={{ position: 'absolute', top: 12, left: 12, background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 700, padding: '5px 12px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         No Tuition
                       </span>
                     )}
-                    <button onClick={() => removeFromShortlist(item.programId)} disabled={isRemoving} style={{ position: 'absolute', top: 10, right: 10, width: 32, height: 32, borderRadius: 999, background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
+                    <button onClick={() => removeFromShortlist(item.programId)} disabled={isRemoving} style={{ position: 'absolute', top: 12, right: 12, width: 36, height: 36, borderRadius: 999, background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
                       onMouseEnter={e => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.borderColor = '#dc2626'; }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.95)'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; }}>
-                      {isRemoving ? <Loader2 className="w-3.5 h-3.5 animate-spin" style={{ color: '#dc2626' }} /> : <Trash2 className="w-3.5 h-3.5" style={{ color: '#dc2626' }} />}
+                      {isRemoving ? <Loader2 className="w-4 h-4 animate-spin" style={{ color: '#dc2626' }} /> : <Trash2 className="w-4 h-4" style={{ color: '#dc2626' }} />}
                     </button>
                   </div>
 
-                  <div style={{ padding: 18, display: 'flex', flexDirection: 'column', flex: 1, gap: 12 }}>
+                  <div style={{ padding: 24, display: 'flex', flexDirection: 'column', flex: 1, gap: 16 }}>
                     {/* Title + university */}
                     <div>
-                      <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#111', margin: '0 0 6px', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {item.programName}
                       </h3>
-                      <p style={{ fontSize: 13, color: '#666', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.university}</p>
+                      <p style={{ fontSize: 14, color: '#666', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.university}</p>
                     </div>
 
                     {/* Tags row */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                       {prog?.city && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#666', background: '#f5f5f5', padding: '3px 8px', borderRadius: 6, fontWeight: 500 }}>
-                          <MapPin className="w-3 h-3" /> {prog.city}
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 13, color: '#666', background: '#f5f5f5', padding: '5px 10px', borderRadius: 8, fontWeight: 500 }}>
+                          <MapPin className="w-3.5 h-3.5" /> {prog.city}
                         </span>
                       )}
                       {prog?.degree_level && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#666', background: '#f5f5f5', padding: '3px 8px', borderRadius: 6, fontWeight: 500 }}>
-                          <Award className="w-3 h-3" /> {prog.degree_level}
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 13, color: '#666', background: '#f5f5f5', padding: '5px 10px', borderRadius: 8, fontWeight: 500 }}>
+                          <Award className="w-3.5 h-3.5" /> {prog.degree_level}
                         </span>
                       )}
                     </div>
