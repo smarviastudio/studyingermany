@@ -6,8 +6,10 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {
   Loader2, ArrowLeft, CheckCircle2, Circle, Clock, AlertCircle,
-  FileText, GraduationCap, Calendar, ExternalLink, Sparkles, ChevronRight
+  FileText, GraduationCap, Calendar, ExternalLink, Sparkles, ChevronRight,
+  MapPin, Euro, Globe, Award, BookOpen, Zap, Target, TrendingUp
 } from 'lucide-react';
+import Image from 'next/image';
 import { SiteNav } from '@/components/SiteNav';
 
 const RED = '#dd0000';
@@ -43,6 +45,8 @@ export default function ApplicationPlanPage() {
   const [programName, setProgramName] = useState('');
   const [university, setUniversity] = useState('');
   const [updatingStep, setUpdatingStep] = useState<string | null>(null);
+  const [programDetails, setProgramDetails] = useState<any>(null);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -59,9 +63,8 @@ export default function ApplicationPlanPage() {
     try {
       setLoading(true);
       
-      // First, get program details from shortlist
+      // Get program details from shortlist
       const shortlistRes = await fetch('/api/shortlist');
-      
       if (shortlistRes.ok) {
         const shortlistData = await shortlistRes.json();
         const shortlistItem = shortlistData.shortlists?.find((item: any) => item.programId === programId);
@@ -71,50 +74,55 @@ export default function ApplicationPlanPage() {
         }
       }
       
-      // Try to fetch existing plan
-      const response = await fetch(`/api/programs/${programId}/application-plan`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch application plan');
+      // Fetch full program details
+      const programRes = await fetch(`/api/programs/${programId}`);
+      if (programRes.ok) {
+        const programData = await programRes.json();
+        setProgramDetails(programData.program);
       }
-
-      const data = await response.json();
       
-      // If no plan exists, generate one automatically
-      if (!data.plan) {
-        // Fetch full program details
-        const programRes = await fetch(`/api/programs/${programId}`);
-        if (programRes.ok) {
-          const programDataRes = await programRes.json();
-          const programData = programDataRes.program;
-          
-          // Fetch user profile
-          const profileRes = await fetch('/api/profile');
-          let userProfile = null;
-          if (profileRes.ok) {
-            const profileData = await profileRes.json();
-            userProfile = profileData.profile;
-          }
-          
-          // Generate plan
-          const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ program: programData, userProfile }),
-          });
-          
-          if (generateRes.ok) {
-            const generatedData = await generateRes.json();
-            setPlan(generatedData.plan);
-          }
+      // Try to fetch existing plan (don't auto-generate)
+      const response = await fetch(`/api/programs/${programId}/application-plan`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.plan) {
+          setPlan(data.plan);
         }
-      } else {
-        setPlan(data.plan);
       }
     } catch (err) {
       console.error('Failed to load application plan:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const generatePlan = async () => {
+    try {
+      setGenerating(true);
+      
+      // Fetch user profile
+      const profileRes = await fetch('/api/profile');
+      let userProfile = null;
+      if (profileRes.ok) {
+        const profileData = await profileRes.json();
+        userProfile = profileData.profile;
+      }
+      
+      // Generate plan
+      const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ program: programDetails, userProfile }),
+      });
+      
+      if (generateRes.ok) {
+        const generatedData = await generateRes.json();
+        setPlan(generatedData.plan);
+      }
+    } catch (err) {
+      console.error('Failed to generate plan:', err);
+    } finally {
+      setGenerating(false);
     }
   };
 
@@ -158,17 +166,142 @@ export default function ApplicationPlanPage() {
 
   if (!plan) {
     return (
-      <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom, #fafafa, #fff)' }}>
         <SiteNav />
-        <main style={{ maxWidth: 800, margin: '0 auto', padding: '48px 24px' }}>
-          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <AlertCircle className="w-16 h-16" style={{ color: '#999', margin: '0 auto 24px' }} />
-            <h2 style={{ fontSize: 24, fontWeight: 600, color: '#111', marginBottom: 16 }}>No Application Plan Found</h2>
-            <p style={{ fontSize: 16, color: '#737373', marginBottom: 24 }}>Create an application plan from your shortlist.</p>
-            <Link href="/my-shortlist" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: RED, color: '#fff', borderRadius: 12, textDecoration: 'none', fontWeight: 700 }}>
-              Go to Shortlist
-            </Link>
+        <main style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
+          {/* Header */}
+          <Link href="/my-shortlist" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#666', textDecoration: 'none', fontSize: 14, marginBottom: 24 }}>
+            <ArrowLeft className="w-4 h-4" />
+            Back to Shortlist
+          </Link>
+
+          {/* Course Info Section */}
+          {programDetails && (
+            <div style={{ background: '#fff', borderRadius: 24, overflow: 'hidden', border: '1px solid #e5e5e5', marginBottom: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+              {/* Header with gradient */}
+              <div style={{ position: 'relative', height: 200, background: 'linear-gradient(135deg, #dd0000 0%, #7c3aed 100%)', padding: 32 }}>
+                {programDetails.image_url && (
+                  <Image src={programDetails.image_url} alt={programName} fill style={{ objectFit: 'cover', opacity: 0.15 }} sizes="1200px" unoptimized />
+                )}
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.2 }}>
+                    {programName}
+                  </h1>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: 'rgba(255,255,255,0.9)', fontSize: 16 }}>
+                    <GraduationCap className="w-5 h-5" />
+                    <span>{university}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Course Details Grid */}
+              <div style={{ padding: 32 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20, marginBottom: 24 }}>
+                  {programDetails.city && (
+                    <div style={{ padding: 16, background: '#fafafa', borderRadius: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                        <MapPin className="w-4 h-4" style={{ color: RED }} />
+                        <span style={{ fontSize: 12, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Location</span>
+                      </div>
+                      <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>{programDetails.city}</p>
+                    </div>
+                  )}
+                  {programDetails.degree_level && (
+                    <div style={{ padding: 16, background: '#fafafa', borderRadius: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                        <Award className="w-4 h-4" style={{ color: RED }} />
+                        <span style={{ fontSize: 12, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Degree</span>
+                      </div>
+                      <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>{programDetails.degree_level}</p>
+                    </div>
+                  )}
+                  {(programDetails.tuition_fee_number != null || programDetails.is_free) && (
+                    <div style={{ padding: 16, background: '#fafafa', borderRadius: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                        <Euro className="w-4 h-4" style={{ color: RED }} />
+                        <span style={{ fontSize: 12, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tuition</span>
+                      </div>
+                      <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>
+                        {programDetails.is_free ? 'Free' : `€${programDetails.tuition_fee_number?.toLocaleString()}`}
+                      </p>
+                    </div>
+                  )}
+                  {programDetails.languages_array && programDetails.languages_array.length > 0 && (
+                    <div style={{ padding: 16, background: '#fafafa', borderRadius: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                        <Globe className="w-4 h-4" style={{ color: RED }} />
+                        <span style={{ fontSize: 12, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Language</span>
+                      </div>
+                      <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>{programDetails.languages_array[0]}</p>
+                    </div>
+                  )}
+                </div>
+
+                {programDetails.subject_area && (
+                  <div style={{ padding: 16, background: 'rgba(221,0,0,0.05)', border: '1px solid rgba(221,0,0,0.1)', borderRadius: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                      <BookOpen className="w-4 h-4" style={{ color: RED }} />
+                      <span style={{ fontSize: 12, fontWeight: 600, color: RED, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Subject Area</span>
+                    </div>
+                    <p style={{ fontSize: 15, color: '#555', margin: 0 }}>{programDetails.subject_area}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Generate Plan CTA */}
+          <div style={{ background: 'linear-gradient(135deg, rgba(221,0,0,0.05), rgba(124,58,237,0.05))', border: '2px dashed #e5e5e5', borderRadius: 24, padding: '60px 32px', textAlign: 'center' }}>
+            <div style={{ maxWidth: 600, margin: '0 auto' }}>
+              <div style={{ width: 80, height: 80, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', animation: 'pulse 2s infinite' }}>
+                <Sparkles className="w-10 h-10" style={{ color: '#fff' }} />
+              </div>
+              <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 28, fontWeight: 800, color: '#111', marginBottom: 12 }}>Ready to Start Your Application?</h2>
+              <p style={{ fontSize: 16, color: '#666', lineHeight: 1.6, marginBottom: 32 }}>Generate a personalized AI-powered application plan tailored to this program's requirements and your profile.</p>
+              
+              <button
+                onClick={generatePlan}
+                disabled={generating}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 32px', background: 'linear-gradient(135deg, #dd0000, #b91c1c)', color: '#fff', border: 'none', borderRadius: 14, fontSize: 16, fontWeight: 700, cursor: generating ? 'not-allowed' : 'pointer', boxShadow: '0 8px 24px rgba(221,0,0,0.3)', transition: 'all 0.3s', opacity: generating ? 0.7 : 1 }}
+                onMouseEnter={e => !generating && (e.currentTarget.style.transform = 'translateY(-2px)', e.currentTarget.style.boxShadow = '0 12px 32px rgba(221,0,0,0.4)')}
+                onMouseLeave={e => (e.currentTarget.style.transform = 'none', e.currentTarget.style.boxShadow = '0 8px 24px rgba(221,0,0,0.3)')}
+              >
+                {generating ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Generating Your Plan...
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-5 h-5" />
+                    Generate Application Plan
+                  </>
+                )}
+              </button>
+
+              <div style={{ marginTop: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Target className="w-4 h-4" style={{ color: '#22c55e' }} />
+                  <span style={{ fontSize: 13, color: '#666' }}>Personalized Steps</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <TrendingUp className="w-4 h-4" style={{ color: '#22c55e' }} />
+                  <span style={{ fontSize: 13, color: '#666' }}>Timeline Tracking</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <AlertCircle className="w-4 h-4" style={{ color: '#22c55e' }} />
+                  <span style={{ fontSize: 13, color: '#666' }}>Blocker Detection</span>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <style jsx global>{`
+            @keyframes pulse {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.05); }
+            }
+          `}</style>
         </main>
       </div>
     );
