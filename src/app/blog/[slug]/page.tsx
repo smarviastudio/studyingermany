@@ -212,6 +212,38 @@ export default async function BlogPostPage({ params }: Props) {
 
     return (
       <div className="min-h-screen bg-[#0a0a1a]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: post.title,
+            description: post.excerpt,
+            image: 'https://germanpath.com/og-image.jpg',
+            datePublished: post.publishedAt,
+            dateModified: post.updatedAt || post.publishedAt,
+            author: {
+              '@type': 'Organization',
+              name: 'German Path',
+              url: 'https://germanpath.com',
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: 'German Path',
+              url: 'https://germanpath.com',
+              logo: {
+                '@type': 'ImageObject',
+                url: 'https://germanpath.com/logo.png',
+              },
+            },
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': `https://germanpath.com/blog/${post.slug}`,
+            },
+          }),
+        }}
+      />
       <SiteNav />
 
       <article className="blog-static-article max-w-3xl mx-auto px-6 py-10">
@@ -326,12 +358,12 @@ export default async function BlogPostPage({ params }: Props) {
             dateModified: wpPost.modified,
             author: {
               '@type': 'Organization',
-              name: 'Smarvia Studio',
+              name: 'German Path',
               url: 'https://germanpath.com',
             },
             publisher: {
               '@type': 'Organization',
-              name: 'Smarvia Studio',
+              name: 'German Path',
               url: 'https://germanpath.com',
               logo: {
                 '@type': 'ImageObject',
