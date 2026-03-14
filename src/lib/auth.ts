@@ -63,6 +63,37 @@ export const authConfig: NextAuthConfig = {
     error: '/auth/error',
   },
   callbacks: {
+    async signIn({ user, account }: any) {
+      // For OAuth providers (Google), create user in database if doesn't exist
+      if (account?.provider === 'google') {
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email },
+            include: { profile: true }
+          });
+
+          if (!existingUser) {
+            // Create new user for Google OAuth
+            const newUser = await prisma.user.create({
+              data: {
+                email: user.email,
+                name: user.name || user.email.split('@')[0],
+                password: '', // OAuth users don't have passwords
+              },
+            });
+            user.id = newUser.id;
+            user.hasProfile = false;
+          } else {
+            user.id = existingUser.id;
+            user.hasProfile = !!existingUser.profile;
+          }
+        } catch (error) {
+          console.error('Error creating OAuth user:', error);
+          return false;
+        }
+      }
+      return true;
+    },
     async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
