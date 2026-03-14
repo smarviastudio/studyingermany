@@ -1,15 +1,15 @@
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 
-// This catch-all route returns 404 for all legacy /detail/... URLs
-// These were spam/junk pages indexed by Google that need to be removed
-export default function DetailPage() {
-  notFound();
-}
-
-// Ensure these pages are not indexed
-export const metadata = {
+// Return 404 for all legacy /detail/... URLs (spam/junk pages)
+// Combined with robots noindex ensures Google deindexes these
+export const metadata: Metadata = {
   robots: {
     index: false,
     follow: false,
   },
 };
+
+export default function DetailPage() {
+  notFound();
+}

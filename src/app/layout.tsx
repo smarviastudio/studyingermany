@@ -124,6 +124,65 @@ export default function RootLayout({
             }),
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: [
+                {
+                  '@type': 'Question',
+                  name: 'Is studying in Germany really free?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Yes! Most public universities in Germany charge no tuition fees for bachelor and master programs — even for international students. You only pay a semester fee of €150-350 which includes public transport.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Do I need to speak German to study in Germany?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Not necessarily. There are 2,000+ English-taught programs in Germany. However, learning basic German helps with daily life and job opportunities after graduation.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'How much money do I need for a German student visa?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'You need to prove €11,904 per year (€992/month) in a blocked account. This is the minimum required for a German student visa as of 2024.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Can I work while studying in Germany?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Yes! International students can work 140 full days or 280 half days per year. Many students work part-time jobs to cover living expenses.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'What are the requirements for admission to German universities?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Requirements vary by program, but typically include: recognized school-leaving certificate, language proficiency (English/German), and sometimes entrance exams or portfolios.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Can I stay in Germany after graduation?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Yes! Graduates get an 18-month job-seeker visa to find employment in Germany. With a job, you can transition to a work permit and eventually permanent residency.',
+                  },
+                },
+              ],
+            }),
+          }}
+        />
       </head>
       <body className="antialiased" style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#ffffff', color: '#171717' }}>
         <Providers>
