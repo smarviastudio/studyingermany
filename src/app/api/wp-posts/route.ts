@@ -19,6 +19,9 @@ export async function GET(request: Request) {
     if (search) url += `&search=${encodeURIComponent(search)}`;
     if (tickerOnly) {
       url += '&meta_key=show_in_ticker&meta_value=1&orderby=date&order=desc';
+    } else {
+      // Exclude ticker-only posts from regular blog list
+      url += '&meta_query[0][key]=show_in_ticker&meta_query[0][compare]=NOT EXISTS';
     }
 
     const res = await fetch(url, {

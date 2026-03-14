@@ -228,9 +228,9 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
         )}
 
         <div className="relative">
-          <div className="relative h-56 overflow-hidden bg-gradient-to-br from-[#fee4d4] via-[#fff5ee] to-[#fefce8]">
+          <div className="relative h-56 overflow-hidden bg-gradient-to-br from-[#dd0000] via-[#b91c1c] to-[#991b1b]">
             <div className="absolute inset-0">
-              <div className="absolute -top-10 -left-6 w-64 h-64 rounded-full bg-[#dd0000]/15 blur-3xl" />
+              <div className="absolute -top-10 -left-6 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
               <div className="absolute -bottom-12 right-0 w-72 h-72 rounded-full bg-[#ffce00]/20 blur-3xl" />
             </div>
             {program.image_url && program.image_url.trim() !== '' && !program.image_url.includes('placeholder') && (
@@ -238,14 +238,14 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                 src={program.image_url}
                 alt={program.program_name}
                 fill
-                className="object-cover opacity-25 mix-blend-multiply"
+                className="object-cover opacity-20 mix-blend-overlay"
                 sizes="800px"
                 unoptimized
                 priority
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
             <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
               {program.detail_url && (
@@ -267,25 +267,25 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
             <div className="absolute inset-0 flex flex-col justify-end px-6 pb-6">
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 {program.degree_level && (
-                  <span className="px-2.5 py-0.5 rounded-md bg-white/90 text-[#b30000] text-[11px] font-bold tracking-wide">
+                  <span className="px-2.5 py-0.5 rounded-md bg-white text-[#dd0000] text-[11px] font-bold tracking-wide shadow-sm">
                     {capitalize(program.degree_level)}
                   </span>
                 )}
                 {program.subject_area && (
-                  <span className="px-2.5 py-0.5 rounded-md bg-[#111]/70 text-white text-[11px] font-semibold">
+                  <span className="px-2.5 py-0.5 rounded-md bg-black/80 text-white text-[11px] font-semibold shadow-sm">
                     {program.subject_area}
                   </span>
                 )}
               </div>
-              <h1 className="text-2xl leading-tight font-bold text-[#0d0d0d] mb-1">
+              <h1 className="text-2xl leading-tight font-bold text-white mb-1 drop-shadow-md">
                 {program.program_name}
               </h1>
-              <div className="flex flex-wrap items-center gap-1.5 text-sm text-[#494949]">
+              <div className="flex flex-wrap items-center gap-1.5 text-sm text-white/90">
                 <GraduationCap className="w-3.5 h-3.5" />
                 <span className="font-medium">{program.university}</span>
                 {program.city && (
                   <>
-                    <span className="text-[#d4d4d4]">·</span>
+                    <span className="text-white/60">·</span>
                     <MapPin className="w-3 h-3" />
                     <span>{program.city}</span>
                   </>
