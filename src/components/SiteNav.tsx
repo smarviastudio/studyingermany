@@ -73,7 +73,7 @@ export function SiteNav() {
   const isAuthenticated = status === 'authenticated';
 
   const [aiUsage, setAiUsage] = useState<{ used: number; limit: number } | null>(null);
-  const [aiCredits, setAiCredits] = useState<number | null>(null);
+  const [aiCredits, setAiCredits] = useState<number>(0);
   const [hasUnlimited, setHasUnlimited] = useState(false);
 
   const [wpPosts, setWpPosts] = useState<SiteNavPost[]>([]);
@@ -418,23 +418,31 @@ export function SiteNav() {
           <div className="sitenav-desktop-auth" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuthenticated ? (
               <>
-                {!hasUnlimited && aiCredits !== null && (
-                  <Link
-                    href="/credits"
-                    title={`${aiCredits} AI credits available. Click to buy more.`}
-                    style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 20, background: aiCredits === 0 ? 'rgba(239,68,68,0.08)' : 'rgba(124,58,237,0.07)', border: `1px solid ${aiCredits === 0 ? 'rgba(239,68,68,0.2)' : 'rgba(124,58,237,0.15)'}`, textDecoration: 'none', transition: 'all 0.2s' }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = aiCredits === 0 ? 'rgba(239,68,68,0.12)' : 'rgba(124,58,237,0.12)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = aiCredits === 0 ? 'rgba(239,68,68,0.08)' : 'rgba(124,58,237,0.07)';
-                    }}
-                  >
-                    <Zap className="w-3 h-3" style={{ color: aiCredits === 0 ? '#ef4444' : '#7c3aed' }} />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: aiCredits === 0 ? '#ef4444' : '#7c3aed' }}>{aiCredits}</span>
-                    <span style={{ fontSize: 11, color: '#737373' }}>credits</span>
-                  </Link>
-                )}
+                <Link
+                  href="/credits"
+                  title={hasUnlimited ? 'Unlimited AI generations included in your plan' : `${aiCredits} AI credits available. Click to buy more.`}
+                  style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 20, background: hasUnlimited ? 'rgba(34,197,94,0.08)' : aiCredits === 0 ? 'rgba(239,68,68,0.08)' : 'rgba(124,58,237,0.07)', border: `1px solid ${hasUnlimited ? 'rgba(34,197,94,0.2)' : aiCredits === 0 ? 'rgba(239,68,68,0.2)' : 'rgba(124,58,237,0.15)'}`, textDecoration: 'none', transition: 'all 0.2s' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = hasUnlimited
+                      ? 'rgba(34,197,94,0.12)'
+                      : aiCredits === 0
+                        ? 'rgba(239,68,68,0.12)'
+                        : 'rgba(124,58,237,0.12)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = hasUnlimited
+                      ? 'rgba(34,197,94,0.08)'
+                      : aiCredits === 0
+                        ? 'rgba(239,68,68,0.08)'
+                        : 'rgba(124,58,237,0.07)';
+                  }}
+                >
+                  <Zap className="w-3 h-3" style={{ color: hasUnlimited ? '#22c55e' : aiCredits === 0 ? '#ef4444' : '#7c3aed' }} />
+                  <span style={{ fontSize: 12, fontWeight: 700, color: hasUnlimited ? '#15803d' : aiCredits === 0 ? '#ef4444' : '#7c3aed' }}>
+                    {hasUnlimited ? 'Unlimited' : aiCredits}
+                  </span>
+                  <span style={{ fontSize: 11, color: '#737373' }}>credits</span>
+                </Link>
                 <Link href="/dashboard" style={{ fontSize: 14, fontWeight: 600, color: '#525252', textDecoration: 'none' }}>
                   Dashboard
                 </Link>
