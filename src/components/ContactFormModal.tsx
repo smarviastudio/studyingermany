@@ -11,7 +11,8 @@ export function ContactFormModal({ open, onClose }: ContactFormModalProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (!open) {
@@ -20,6 +21,7 @@ export function ContactFormModal({ open, onClose }: ContactFormModalProps) {
         setEmail('');
         setMessage('');
         setStatus('idle');
+        setErrorMessage('');
       }, 0);
       return () => clearTimeout(timer);
     }
@@ -27,17 +29,33 @@ export function ContactFormModal({ open, onClose }: ContactFormModalProps) {
 
   if (!open) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('sending');
+    setErrorMessage('');
 
-    const mailto = `mailto:smarviastudio@gmail.com?subject=${encodeURIComponent(
-      `Contact request from ${name || 'Website visitor'}`
-    )}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      });
 
-    window.location.href = mailto;
-    setStatus('sent');
-    setTimeout(onClose, 800);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setStatus('sent');
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } catch (error) {
+      setStatus('error');
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to send message');
+      setTimeout(() => setStatus('idle'), 3000);
+    }
   };
 
   return (
@@ -151,12 +169,18 @@ export function ContactFormModal({ open, onClose }: ContactFormModalProps) {
             />
           </label>
 
+          {errorMessage && (
+            <div style={{ padding: '10px 14px', background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 12, fontSize: 13, color: '#dc2626' }}>
+              {errorMessage}
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={status !== 'idle'}
             style={{
               marginTop: 6,
-              background: status === 'sent' ? '#16a34a' : '#dd0000',
+              background: status === 'sent' ? '#16a34a' : status === 'error' ? '#dc2626' : '#dd0000',
               color: '#fff',
               border: 'none',
               borderRadius: 14,
@@ -165,11 +189,13 @@ export function ContactFormModal({ open, onClose }: ContactFormModalProps) {
               fontWeight: 700,
               cursor: status === 'idle' ? 'pointer' : 'not-allowed',
               transition: 'background 0.2s',
+              opacity: status === 'sending' ? 0.7 : 1,
             }}
           >
             {status === 'idle' && 'Send message'}
-            {status === 'sending' && 'Redirecting to email…'}
-            {status === 'sent' && 'Opening mail client'}
+            {status === 'sending' && 'Sending…'}
+            {status === 'sent' && '✓ Message sent!'}
+            {status === 'error' && 'Failed to send'}
           </button>
         </form>
       </div>

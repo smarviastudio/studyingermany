@@ -270,29 +270,43 @@ export default function HomePage() {
               )}
               {!searching && results.length > 0 && (
                 <div className="search-results-grid">
-                  {results.map(program => (
-                    <div key={program.id} onClick={() => { setSelectedProgramId(program.id); setShowSearchResults(false); }} className="program-card">
-                      <div className="program-card-image">
-                        {program.image_url && (
-                          <Image src={program.image_url} alt={program.program_name} fill style={{ objectFit: 'cover' }} sizes="280px" unoptimized onError={e => { e.currentTarget.style.display = 'none'; }} />
-                        )}
-                        {program.is_free && <span className="program-badge-free">No Tuition</span>}
-                        <button onClick={e => { e.stopPropagation(); handleShortlist(program); }} disabled={shortlistingId === program.id} className="program-bookmark-btn" style={{ color: shortlistedPrograms.includes(program.id) ? '#d97706' : '#525252' }}>
-                          {shortlistingId === program.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" style={{ fill: shortlistedPrograms.includes(program.id) ? 'currentColor' : 'none' }} />}
-                        </button>
-                      </div>
-                      <div className="program-card-body">
-                        <h4 className="program-card-title">{program.program_name}</h4>
-                        <p className="program-card-uni">{program.university}{program.city ? ` · ${program.city}` : ''}</p>
-                        {program.match_reason && <p className="program-card-match">{program.match_reason}</p>}
-                        <div className="program-card-footer">
-                          {program.tuition_fee_number != null ? <span>€{program.tuition_fee_number.toLocaleString()}</span> : program.is_free ? <span className="text-emerald-600 font-semibold">Free</span> : null}
-                          {program.beginning_normalized && <span>{program.beginning_normalized}</span>}
-                          <span className="program-card-view">View →</span>
+                  {results.map(program => {
+                    const imageUrl = program.image_url || `https://source.unsplash.com/400x300/?${encodeURIComponent(program.subject_area || 'university')},germany,education`;
+                    const degreeLevel = program.degree_level?.toLowerCase();
+                    const isBachelor = degreeLevel?.includes('bachelor');
+                    const isMaster = degreeLevel?.includes('master');
+                    
+                    return (
+                      <div key={program.id} onClick={() => { setSelectedProgramId(program.id); setShowSearchResults(false); }} className="program-card">
+                        <div className="program-card-image">
+                          <Image src={imageUrl} alt={program.program_name} fill style={{ objectFit: 'cover' }} sizes="320px" unoptimized onError={e => { e.currentTarget.style.display = 'none'; }} />
+                          {program.is_free && <span className="program-badge-free">No Tuition</span>}
+                          {(isBachelor || isMaster) && (
+                            <span style={{ position: 'absolute', bottom: 10, left: 10, background: isBachelor ? '#3b82f6' : '#7c3aed', color: '#fff', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 99, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                              {isBachelor ? 'Bachelor' : 'Master'}
+                            </span>
+                          )}
+                          <button onClick={e => { e.stopPropagation(); handleShortlist(program); }} disabled={shortlistingId === program.id} className="program-bookmark-btn" style={{ color: shortlistedPrograms.includes(program.id) ? '#d97706' : '#525252' }}>
+                            {shortlistingId === program.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" style={{ fill: shortlistedPrograms.includes(program.id) ? 'currentColor' : 'none' }} />}
+                          </button>
+                        </div>
+                        <div className="program-card-body">
+                          <h4 className="program-card-title">{program.program_name}</h4>
+                          <p className="program-card-uni">{program.university}{program.city ? ` · ${program.city}` : ''}</p>
+                          {program.match_reason && (
+                            <p className="program-card-match" title={program.match_reason === 'General match' ? 'This program matches your general search criteria' : program.match_reason.includes('subject') ? 'This program matches specific subjects you searched for' : 'This program matches your specific requirements'}>
+                              {program.match_reason}
+                            </p>
+                          )}
+                          <div className="program-card-footer">
+                            {program.tuition_fee_number != null ? <span>€{program.tuition_fee_number.toLocaleString()}</span> : program.is_free ? <span className="text-emerald-600 font-semibold">Free</span> : null}
+                            {program.beginning_normalized && <span>{program.beginning_normalized}</span>}
+                            <span className="program-card-view">View →</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
               {!searching && !searchError && !nonCourseMessage && results.length === 0 && (

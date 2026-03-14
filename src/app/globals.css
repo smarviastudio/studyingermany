@@ -1336,8 +1336,8 @@ details[open] summary .chevron { transform: rotate(180deg); }
 .program-detail-close:hover { background: #fff; border-color: #dd0000; color: #dd0000; transform: rotate(90deg); }
 
 /* ── SEARCH MODAL ── */
-.search-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; display: flex; align-items: flex-start; justify-content: center; padding: 60px 20px; overflow-y: auto; }
-.search-modal-content { background: #fff; border-radius: 20px; max-width: 1000px; width: 100%; max-height: calc(100vh - 120px); overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.search-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; display: flex; align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto; }
+.search-modal-content { background: #fff; border-radius: 20px; max-width: 1400px; width: 100%; max-height: calc(100vh - 80px); overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
 .search-modal-header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #e5e5e5; padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; border-radius: 20px 20px 0 0; z-index: 10; }
 .search-modal-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 700; color: #171717; margin: 0; }
 .search-modal-subtitle { font-size: 13px; color: #737373; margin: 4px 0 0; max-width: 600px; }
@@ -1349,7 +1349,7 @@ details[open] summary .chevron { transform: rotate(180deg); }
 .search-modal-error .error-title { font-size: 15px; color: #dd0000; font-weight: 600; margin-bottom: 8px; }
 .search-modal-message { padding: 40px 20px; text-align: center; font-size: 15px; color: #737373; line-height: 1.65; }
 .search-modal-empty { padding: 60px 20px; text-align: center; font-size: 15px; color: #737373; }
-.search-results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.search-results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 .program-card { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 14px; overflow: hidden; cursor: pointer; transition: all 0.2s; }
 .program-card:hover { border-color: #dd0000; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
 .program-card-image { position: relative; height: 140px; background: #f0f0f0; }
