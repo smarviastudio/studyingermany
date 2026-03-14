@@ -335,12 +335,12 @@ export default function HomePage() {
             <span>AI-POWERED · 20,000+ PROGRAMS</span>
           </div>
           <h1 className="hero-title animate-fade-up-2">
-            Your journey to<br />
-            <span className="hero-title-gradient">Germany starts here</span>
+            Study in Germany:<br />
+            <span className="hero-title-gradient">20,000+ English-Taught Programs</span>
           </h1>
           <p className="hero-subtitle animate-fade-up-3">
-            Search 20,000+ university programs, read step-by-step guides, and use free AI tools —
-            everything international students need to study in Germany.
+            Search bachelor & master programs, build your CV with AI, and get step-by-step guidance —
+            free tools for international students from Pakistan, India, and worldwide.
           </p>
           <form onSubmit={handleSearch} className="hero-search-form animate-fade-up-4">
             <div className="hero-search-bar">
@@ -511,6 +511,128 @@ export default function HomePage() {
                 <div className="tool-arrow"><ArrowRight className="w-5 h-5" /></div>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══ WHO IS GERMAN PATH FOR ══ */}
+      <section className="about-section scroll-reveal" id="about">
+        <div className="section-container">
+          <div className="section-header">
+            <div className="section-label">About German Path</div>
+            <h2 className="section-title">Who is German Path for?</h2>
+            <p className="section-desc">
+              German Path (GermanPath UG) is an AI-powered platform helping international students study in Germany. 
+              Whether you&apos;re from Pakistan, India, Bangladesh, Nigeria, or anywhere else in the world — we&apos;re here to guide you.
+            </p>
+          </div>
+          <div className="about-grid">
+            <div className="about-card">
+              <div className="about-icon" style={{ background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)' }}>
+                <GraduationCap className="w-6 h-6 text-white" />
+              </div>
+              <h3>Bachelor & Master Students</h3>
+              <p>Search 20,000+ English-taught degree programs at German universities, from tuition-free public universities to top private institutions.</p>
+            </div>
+            <div className="about-card">
+              <div className="about-icon" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                <Globe className="w-6 h-6 text-white" />
+              </div>
+              <h3>Non-EU International Students</h3>
+              <p>Get guidance on student visas, blocked accounts, health insurance, and everything non-EU students need to study in Germany legally.</p>
+            </div>
+            <div className="about-card">
+              <div className="about-icon" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
+                <Zap className="w-6 h-6 text-white" />
+              </div>
+              <h3>Career-Focused Applicants</h3>
+              <p>Build German-style CVs, write motivation letters, and prepare applications that meet German university standards — all with AI assistance.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ HOW IT WORKS ══ */}
+      <section className="howto-section scroll-reveal">
+        <div className="section-container">
+          <div className="section-header">
+            <div className="section-label">Step-by-Step Process</div>
+            <h2 className="section-title">How studying in Germany works</h2>
+            <p className="section-desc">From finding your program to landing a job — here&apos;s the journey most international students follow.</p>
+          </div>
+          <div className="howto-timeline">
+            <div className="howto-step">
+              <div className="howto-number">1</div>
+              <div className="howto-content">
+                <h3>Search & Shortlist Programs</h3>
+                <p>Use our AI-powered search to find English-taught bachelor or master programs that match your interests, budget, and qualifications.</p>
+              </div>
+            </div>
+            <div className="howto-step">
+              <div className="howto-number">2</div>
+              <div className="howto-content">
+                <h3>Prepare Your Application</h3>
+                <p>Build your CV, write motivation letters, and gather required documents. Our AI tools help you create German-standard applications.</p>
+              </div>
+            </div>
+            <div className="howto-step">
+              <div className="howto-number">3</div>
+              <div className="howto-content">
+                <h3>Apply & Get Admitted</h3>
+                <p>Submit applications through uni-assist or directly to universities. Track deadlines and requirements for each program.</p>
+              </div>
+            </div>
+            <div className="howto-step">
+              <div className="howto-number">4</div>
+              <div className="howto-content">
+                <h3>Visa & Blocked Account</h3>
+                <p>Open a blocked account (€11,904/year), get health insurance, and apply for your German student visa at the embassy.</p>
+              </div>
+            </div>
+            <div className="howto-step">
+              <div className="howto-number">5</div>
+              <div className="howto-content">
+                <h3>Arrive & Register</h3>
+                <p>Complete Anmeldung (city registration), enroll at your university, and start your studies in Germany.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ FAQ ══ */}
+      <section className="faq-section scroll-reveal" id="faq">
+        <div className="section-container">
+          <div className="section-header">
+            <div className="section-label">Common Questions</div>
+            <h2 className="section-title">Frequently Asked Questions</h2>
+            <p className="section-desc">Quick answers to the most common questions about studying in Germany.</p>
+          </div>
+          <div className="faq-grid">
+            <div className="faq-item">
+              <h3>Is studying in Germany really free?</h3>
+              <p>Yes! Most public universities in Germany charge no tuition fees for bachelor and master programs — even for international students. You only pay a semester fee of €150-350 which includes public transport.</p>
+            </div>
+            <div className="faq-item">
+              <h3>Do I need to speak German?</h3>
+              <p>Not necessarily. There are 2,000+ English-taught programs in Germany. However, learning basic German helps with daily life and job opportunities after graduation.</p>
+            </div>
+            <div className="faq-item">
+              <h3>How much money do I need for a student visa?</h3>
+              <p>You need to prove €11,904 per year (€992/month) in a blocked account. This is the minimum required for a German student visa as of 2024.</p>
+            </div>
+            <div className="faq-item">
+              <h3>Can I work while studying?</h3>
+              <p>Yes! International students can work 140 full days or 280 half days per year. Many students work part-time jobs to cover living expenses.</p>
+            </div>
+            <div className="faq-item">
+              <h3>What are the requirements for admission?</h3>
+              <p>Requirements vary by program, but typically include: recognized school-leaving certificate, language proficiency (English/German), and sometimes entrance exams or portfolios.</p>
+            </div>
+            <div className="faq-item">
+              <h3>Can I stay in Germany after graduation?</h3>
+              <p>Yes! Graduates get an 18-month job-seeker visa to find employment in Germany. With a job, you can transition to a work permit and eventually permanent residency.</p>
+            </div>
           </div>
         </div>
       </section>

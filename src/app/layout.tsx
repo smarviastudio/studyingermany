@@ -6,35 +6,49 @@ import { ClientProviders } from "@/components/ClientProviders";
 
 export const metadata: Metadata = {
   title: {
-    default: 'StudyGermany — Study in Germany: AI Course Search, CV & Application Tools',
-    template: '%s | StudyGermany',
+    default: 'German Path – Study in Germany: 20,000+ Programs, AI Tools & Free Guides',
+    template: '%s | German Path',
   },
-  description: 'Search 20,000+ German university programs with AI, build your German CV, write cover & motivation letters — all free. Your complete guide to studying in Germany.',
+  description: 'Study in Germany with German Path. Search 20,000+ English-taught bachelor & master programs, build your CV with AI, and get step-by-step guidance for international students from Pakistan, India, and worldwide.',
   metadataBase: new URL('https://germanpath.com'),
-  keywords: ['study in Germany', 'German university programs', 'student visa Germany', 'DAAD scholarship', 'AI CV maker', 'study abroad Germany', 'master programs Germany'],
+  keywords: [
+    'study in Germany',
+    'study in Germany for international students',
+    'English-taught programs Germany',
+    'master programs Germany',
+    'bachelor programs Germany',
+    'German university programs',
+    'student visa Germany',
+    'DAAD scholarship',
+    'AI CV maker Germany',
+    'study abroad Germany',
+    'tuition-free universities Germany',
+    'study in Germany from Pakistan',
+    'study in Germany from India',
+  ],
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
   openGraph: {
-    siteName: 'StudyGermany',
+    siteName: 'German Path',
     type: 'website',
     locale: 'en_US',
-    title: 'StudyGermany — Your AI-Powered Guide to Studying in Germany',
-    description: 'Search 20,000+ German university programs, build your CV, write application letters — everything free.',
+    title: 'German Path – Study in Germany with AI Tools & 20,000+ Programs',
+    description: 'Your AI-powered guide to studying in Germany. Search English-taught bachelor & master programs, build your CV, and get free step-by-step guidance for international students.',
     url: 'https://germanpath.com',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'StudyGermany - Your Guide to Studying in Germany',
+        alt: 'German Path - Study in Germany for International Students',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'StudyGermany — AI Course Search & Application Tools',
-    description: 'Find German university programs, build your CV and write application letters — free AI tools for international students.',
+    title: 'German Path – Study in Germany with AI Tools',
+    description: 'Search 20,000+ German university programs, build your CV with AI, and get free guidance for international students.',
     images: ['/og-image.jpg'],
   },
   robots: {
@@ -69,16 +83,15 @@ export default function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'Organization',
-              name: 'Smarvia Studio',
+              name: 'German Path',
+              legalName: 'GermanPath UG (haftungsbeschränkt)',
               url: 'https://germanpath.com',
               logo: 'https://germanpath.com/logo.png',
-              description: 'AI-powered platform helping international students find German university programs, build CVs, and prepare application materials.',
+              description: 'German Path is an AI-powered platform helping international students study in Germany. Search 20,000+ English-taught bachelor and master programs, build your CV, and get step-by-step guidance.',
               address: {
                 '@type': 'PostalAddress',
-                streetAddress: 'Schoeneggstrasse 45',
-                addressLocality: 'Dietikon',
-                postalCode: '8953',
-                addressCountry: 'CH',
+                addressLocality: 'Berlin',
+                addressCountry: 'DE',
               },
               contactPoint: {
                 '@type': 'ContactPoint',
@@ -88,6 +101,26 @@ export default function RootLayout({
               sameAs: [
                 'https://germanpath.com',
               ],
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'German Path',
+              url: 'https://germanpath.com',
+              description: 'Study in Germany with AI-powered tools. Search 20,000+ programs, build your CV, and get free guidance.',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: 'https://germanpath.com/?q={search_term_string}',
+                },
+                'query-input': 'required name=search_term_string',
+              },
             }),
           }}
         />
