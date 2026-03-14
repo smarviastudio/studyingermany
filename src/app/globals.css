@@ -220,7 +220,6 @@ details[open] summary .chevron { transform: rotate(180deg); }
 .hero-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: #dd0000; animation: pulse-glow 2s ease-in-out infinite; box-shadow: 0 0 8px rgba(221,0,0,0.4); }
 
 .hero-title { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; font-size: clamp(40px, 5.5vw, 72px); font-weight: 800; color: #0a0a0a; line-height: 1.05; letter-spacing: -1.5px; margin: 0 0 24px; }
-.hero-title-line { display: block; text-align: center; }
 .hero-title-gradient { background: linear-gradient(135deg, #dd0000 0%, #b91c1c 40%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .hero-subtitle { font-size: 18px; color: #555; line-height: 1.7; max-width: 640px; margin: 0 auto 36px; font-weight: 400; }
 
