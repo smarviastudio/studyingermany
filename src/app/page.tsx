@@ -642,11 +642,8 @@ export default function HomePage() {
         <div className="cta-bg" />
         <div className="section-container cta-content">
           <h2 className="cta-title">Ready to start your Germany journey?</h2>
-          <p className="cta-desc">Search programs, build your CV, and get step-by-step guidance — all for free.</p>
-          <div className="cta-buttons">
-            <a href="#hero" className="cta-btn-primary"><Search className="w-5 h-5" />Search Programs</a>
-            <Link href="/cv-maker" className="cta-btn-secondary">Build Your CV <ArrowRight className="w-4 h-4" /></Link>
-          </div>
+          <p className="cta-desc">Search 20,000+ programs and use our free AI tools to prepare your application.</p>
+          <a href="#hero" className="cta-btn-primary"><Search className="w-5 h-5" />Search Programs Now</a>
         </div>
       </section>
 
