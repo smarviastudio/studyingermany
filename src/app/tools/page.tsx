@@ -153,6 +153,61 @@ export default function ToolsPage() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section style={{ padding: '80px 24px', background: '#fafafa' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <h2 style={{ fontSize: 32, fontWeight: 700, color: '#171717', margin: '0 0 12px' }}>Frequently Asked Questions</h2>
+            <p style={{ fontSize: 16, color: '#737373' }}>Common questions about our AI tools for German applications</p>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {[
+              {
+                q: 'Are these tools really free?',
+                a: 'Yes, all our AI tools are completely free to use. We believe every student should have access to quality application tools regardless of their financial situation.',
+              },
+              {
+                q: 'Do I need to create an account?',
+                a: 'For basic features, no account is needed. However, creating a free account lets you save your work, access your application history, and unlock additional features.',
+              },
+              {
+                q: 'Are the CVs and letters optimized for German standards?',
+                a: 'Absolutely. All our tools follow German business and academic standards. CVs use the German Lebenslauf format, and letters follow proper German business communication style.',
+              },
+              {
+                q: 'Can I use these tools for job applications too?',
+                a: 'Yes! While optimized for university applications, our CV maker and cover letter generator work perfectly for German job applications as well.',
+              },
+              {
+                q: 'How accurate is the GPA converter?',
+                a: 'Our GPA converter uses the modified Bavarian formula, which is the standard method used by German universities for grade conversion. Results are accurate for application purposes.',
+              },
+              {
+                q: 'Can I edit the AI-generated content?',
+                a: 'Yes, all AI-generated content is fully editable. We recommend reviewing and personalizing the output to match your specific situation and voice.',
+              },
+            ].map((faq, i) => (
+              <details
+                key={i}
+                style={{
+                  background: '#fff',
+                  border: '1px solid #e5e5e5',
+                  borderRadius: 12,
+                  padding: '20px 24px',
+                }}
+              >
+                <summary style={{ fontSize: 16, fontWeight: 600, color: '#171717', cursor: 'pointer', listStyle: 'none' }}>
+                  {faq.q}
+                </summary>
+                <p style={{ fontSize: 14, color: '#737373', lineHeight: 1.7, margin: '12px 0 0', paddingTop: 12, borderTop: '1px solid #f5f5f5' }}>
+                  {faq.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section style={{ background: 'linear-gradient(135deg, #dd0000 0%, #b91c1c 100%)', padding: '60px 24px', textAlign: 'center' }}>
         <div style={{ maxWidth: 700, margin: '0 auto' }}>
