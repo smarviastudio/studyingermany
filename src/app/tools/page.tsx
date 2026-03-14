@@ -1,22 +1,7 @@
-import { Metadata } from 'next';
+'use client';
+
 import Link from 'next/link';
 import { FileText, Mail, PenTool, Calculator, Briefcase, Search, ArrowRight, Sparkles, GraduationCap } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Free AI Tools for German Applications - German Path',
-  description: 'Free AI-powered tools for studying in Germany: CV Maker, Cover Letter Generator, Motivation Letter Writer, GPA Converter, and Salary Calculator. All aligned with German standards.',
-  keywords: [
-    'AI CV maker Germany',
-    'German cover letter generator',
-    'motivation letter for German university',
-    'GPA converter Germany',
-    'German salary calculator',
-    'study in Germany tools',
-  ],
-  alternates: {
-    canonical: 'https://germanpath.com/tools',
-  },
-};
 
 const TOOLS = [
   {
