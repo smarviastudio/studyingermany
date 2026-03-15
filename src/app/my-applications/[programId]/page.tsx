@@ -7,7 +7,8 @@ import Link from 'next/link';
 import {
   Loader2, ArrowLeft, CheckCircle2, Circle, AlertCircle,
   FileText, GraduationCap, Calendar, ExternalLink, Sparkles,
-  MapPin, Euro, Globe, Award, BookOpen, Zap, Clock, ChevronDown, ChevronUp
+  MapPin, Euro, Globe, Award, BookOpen, Zap, Clock, ChevronDown, ChevronUp,
+  X, FolderOpen, FileCheck, ClipboardList, ChevronRight
 } from 'lucide-react';
 import Image from 'next/image';
 import { SiteNav } from '@/components/SiteNav';
@@ -48,6 +49,8 @@ export default function ApplicationPlanPage() {
   const [programDetails, setProgramDetails] = useState<any>(null);
   const [generating, setGenerating] = useState(false);
   const [showCourseDetails, setShowCourseDetails] = useState(true);
+  const [docDrawerOpen, setDocDrawerOpen] = useState(false);
+  const [checkedDocs, setCheckedDocs] = useState<string[]>([]);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -162,6 +165,28 @@ export default function ApplicationPlanPage() {
     );
   }
 
+  const toggleDoc = (docId: string) => {
+    setCheckedDocs(prev => 
+      prev.includes(docId) ? prev.filter(id => id !== docId) : [...prev, docId]
+    );
+  };
+
+  const isDocumentStep = (title: string) => {
+    return title.toLowerCase().includes('document') || title.toLowerCase().includes('gather');
+  };
+
+  const documentList = [
+    { id: 'passport', label: 'Valid Passport', category: 'Personal' },
+    { id: 'photo', label: 'Passport-sized Photos', category: 'Personal' },
+    { id: 'diploma', label: 'High School Diploma / Bachelor Certificate', category: 'Academic' },
+    { id: 'transcript', label: 'Academic Transcripts', category: 'Academic' },
+    { id: 'language', label: 'Language Proficiency Certificate (IELTS/TOEFL/TestDaF)', category: 'Language' },
+    { id: 'cv', label: 'Curriculum Vitae (CV)', category: 'Personal' },
+    { id: 'motivation', label: 'Motivation Letter', category: 'Personal' },
+    { id: 'recommendation', label: 'Letters of Recommendation', category: 'Academic' },
+    { id: 'financial', label: 'Financial Proof / Blocked Account', category: 'Financial' },
+    { id: 'insurance', label: 'Health Insurance Proof', category: 'Health' },
+  ];
   const completedSteps = plan?.steps?.filter(s => s.completed).length || 0;
   const totalSteps = plan?.steps?.length || 0;
   const progressPercent = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
@@ -445,6 +470,42 @@ export default function ApplicationPlanPage() {
                           )}
                         </div>
                         <p>{step.description}</p>
+                        
+                        {/* Document List for Document Gathering step */}
+                        {isDocumentStep(step.title) && (
+                          <div className="app-plan-doc-preview">
+                            <div className="app-plan-doc-preview-header">
+                              <FolderOpen className="w-4 h-4" />
+                              <span>Required Documents ({documentList.length} items)</span>
+                            </div>
+                            <div className="app-plan-doc-preview-list">
+                              {documentList.slice(0, 4).map(doc => (
+                                <div key={doc.id} className="app-plan-doc-preview-item">
+                                  {checkedDocs.includes(doc.id) ? (
+                                    <CheckCircle2 className="w-4 h-4" style={{ color: '#22c55e' }} />
+                                  ) : (
+                                    <FileText className="w-4 h-4" style={{ color: '#999' }} />
+                                  )}
+                                  <span className={checkedDocs.includes(doc.id) ? 'checked' : ''}>{doc.label}</span>
+                                </div>
+                              ))}
+                              {documentList.length > 4 && (
+                                <div className="app-plan-doc-preview-more">
+                                  +{documentList.length - 4} more
+                                </div>
+                              )}
+                            </div>
+                            <button 
+                              className="app-plan-doc-preview-btn"
+                              onClick={() => setDocDrawerOpen(true)}
+                            >
+                              <ClipboardList className="w-4 h-4" />
+                              Open Document Checklist
+                              <ChevronRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        )}
+                        
                         {step.action && (
                           <Link
                             href={step.action.url}
@@ -477,6 +538,78 @@ export default function ApplicationPlanPage() {
           )}
         </div>
       </main>
+
+      {/* Document Drawer */}
+      {docDrawerOpen && (
+        <div className="app-plan-drawer-overlay" onClick={() => setDocDrawerOpen(false)}>
+          <div className="app-plan-drawer" onClick={e => e.stopPropagation()}>
+            <div className="app-plan-drawer-header">
+              <div className="app-plan-drawer-title">
+                <ClipboardList className="w-5 h-5" />
+                <h3>Required Documents</h3>
+                <span className="app-plan-drawer-count">{checkedDocs.length}/{documentList.length} completed</span>
+              </div>
+              <button 
+                className="app-plan-drawer-close"
+                onClick={() => setDocDrawerOpen(false)}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="app-plan-drawer-content">
+              <p className="app-plan-drawer-desc">
+                Check off documents as you gather them. These are typically required for German university applications.
+              </p>
+              
+              <div className="app-plan-drawer-progress">
+                <div className="app-plan-drawer-progress-bar">
+                  <div 
+                    className="app-plan-drawer-progress-fill"
+                    style={{ width: `${(checkedDocs.length / documentList.length) * 100}%` }}
+                  />
+                </div>
+                <span>{Math.round((checkedDocs.length / documentList.length) * 100)}%</span>
+              </div>
+              
+              <div className="app-plan-doc-list">
+                {documentList.map(doc => (
+                  <label 
+                    key={doc.id} 
+                    className={`app-plan-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}
+                  >
+                    <div className="app-plan-doc-checkbox">
+                      {checkedDocs.includes(doc.id) ? (
+                        <CheckCircle2 className="w-5 h-5" />
+                      ) : (
+                        <Circle className="w-5 h-5" />
+                      )}
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={checkedDocs.includes(doc.id)}
+                      onChange={() => toggleDoc(doc.id)}
+                    />
+                    <div className="app-plan-doc-info">
+                      <span className="app-plan-doc-name">{doc.label}</span>
+                      <span className="app-plan-doc-category">{doc.category}</span>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            <div className="app-plan-drawer-footer">
+              <button 
+                className="app-plan-drawer-done"
+                onClick={() => setDocDrawerOpen(false)}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style jsx global>{styles}</style>
     </div>
@@ -1034,6 +1167,303 @@ const styles = `
   
   .app-plan-step-action-outline:hover {
     background: rgba(221,0,0,0.05);
+  }
+  
+  /* Document Preview in Step */
+  .app-plan-doc-preview {
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0;
+  }
+  
+  .app-plan-doc-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #dd0000;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .app-plan-doc-preview-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  
+  .app-plan-doc-preview-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+  }
+  
+  .app-plan-doc-preview-item .checked {
+    text-decoration: line-through;
+    color: #22c55e;
+  }
+  
+  .app-plan-doc-preview-more {
+    font-size: 12px;
+    color: #999;
+    padding-left: 24px;
+    font-style: italic;
+  }
+  
+  .app-plan-doc-preview-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #dd0000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-doc-preview-btn:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+  }
+  
+  /* Document Drawer */
+  .app-plan-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .app-plan-drawer {
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    max-height: 90vh;
+    background: #fff;
+    border-radius: 24px 24px 0 0;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.15);
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  
+  .app-plan-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .app-plan-drawer-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #dd0000;
+  }
+  
+  .app-plan-drawer-title h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+  }
+  
+  .app-plan-drawer-count {
+    font-size: 12px;
+    color: #22c55e;
+    font-weight: 600;
+    background: rgba(34,197,94,0.1);
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+  
+  .app-plan-drawer-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-drawer-close:hover {
+    background: #e5e5e5;
+    color: #111;
+  }
+  
+  .app-plan-drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+  }
+  
+  .app-plan-drawer-desc {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin: 0 0 16px;
+  }
+  
+  .app-plan-drawer-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .app-plan-drawer-progress-bar {
+    flex: 1;
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .app-plan-drawer-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #dd0000, #7c3aed);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  
+  .app-plan-drawer-progress span {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    min-width: 40px;
+    text-align: right;
+  }
+  
+  .app-plan-doc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .app-plan-doc-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-doc-item:hover {
+    background: #f5f5f5;
+    border-color: #d0d0d0;
+  }
+  
+  .app-plan-doc-item.checked {
+    background: rgba(34,197,94,0.05);
+    border-color: #22c55e;
+  }
+  
+  .app-plan-doc-item input[type="checkbox"] {
+    display: none;
+  }
+  
+  .app-plan-doc-checkbox {
+    color: #d4d4d4;
+    flex-shrink: 0;
+  }
+  
+  .app-plan-doc-item.checked .app-plan-doc-checkbox {
+    color: #22c55e;
+  }
+  
+  .app-plan-doc-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .app-plan-doc-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+  }
+  
+  .app-plan-doc-item.checked .app-plan-doc-name {
+    text-decoration: line-through;
+    color: #22c55e;
+  }
+  
+  .app-plan-doc-category {
+    font-size: 12px;
+    color: #999;
+  }
+  
+  .app-plan-drawer-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .app-plan-drawer-done {
+    width: 100%;
+    padding: 14px 24px;
+    background: #dd0000;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-drawer-done:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+  }
+  
+  @media (min-width: 769px) {
+    .app-plan-drawer-overlay {
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    
+    .app-plan-drawer {
+      max-height: 85vh;
+      border-radius: 24px;
+      animation: fadeIn 0.2s ease;
+    }
   }
   
   /* Complete */
