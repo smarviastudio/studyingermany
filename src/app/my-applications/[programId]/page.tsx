@@ -5,9 +5,9 @@ import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {
-  Loader2, ArrowLeft, CheckCircle2, Circle, Clock, AlertCircle,
-  FileText, GraduationCap, Calendar, ExternalLink, Sparkles, ChevronRight,
-  MapPin, Euro, Globe, Award, BookOpen, Zap, Target, TrendingUp
+  Loader2, ArrowLeft, CheckCircle2, Circle, AlertCircle,
+  FileText, GraduationCap, Calendar, ExternalLink, Sparkles,
+  MapPin, Euro, Globe, Award, BookOpen, Zap, Clock, ChevronDown, ChevronUp
 } from 'lucide-react';
 import Image from 'next/image';
 import { SiteNav } from '@/components/SiteNav';
@@ -47,13 +47,13 @@ export default function ApplicationPlanPage() {
   const [updatingStep, setUpdatingStep] = useState<string | null>(null);
   const [programDetails, setProgramDetails] = useState<any>(null);
   const [generating, setGenerating] = useState(false);
+  const [showCourseDetails, setShowCourseDetails] = useState(true);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/signin?callbackUrl=/my-applications');
       return;
     }
-
     if (status === 'authenticated' && programId) {
       fetchPlan();
     }
@@ -62,8 +62,6 @@ export default function ApplicationPlanPage() {
   const fetchPlan = async () => {
     try {
       setLoading(true);
-      
-      // Get program details from shortlist
       const shortlistRes = await fetch('/api/shortlist');
       if (shortlistRes.ok) {
         const shortlistData = await shortlistRes.json();
@@ -73,15 +71,17 @@ export default function ApplicationPlanPage() {
           setUniversity(shortlistItem.university);
         }
       }
-      
-      // Fetch full program details
       const programRes = await fetch(`/api/programs/${programId}`);
       if (programRes.ok) {
         const programData = await programRes.json();
         setProgramDetails(programData.program);
+        if (!programName && programData.program?.program_name) {
+          setProgramName(programData.program.program_name);
+        }
+        if (!university && programData.program?.university) {
+          setUniversity(programData.program.university);
+        }
       }
-      
-      // Try to fetch existing plan (don't auto-generate)
       const response = await fetch(`/api/programs/${programId}/application-plan`);
       if (response.ok) {
         const data = await response.json();
@@ -99,22 +99,17 @@ export default function ApplicationPlanPage() {
   const generatePlan = async () => {
     try {
       setGenerating(true);
-      
-      // Fetch user profile
       const profileRes = await fetch('/api/profile');
       let userProfile = null;
       if (profileRes.ok) {
         const profileData = await profileRes.json();
         userProfile = profileData.profile;
       }
-      
-      // Generate plan
       const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ program: programDetails, userProfile }),
       });
-      
       if (generateRes.ok) {
         const generatedData = await generateRes.json();
         setPlan(generatedData.plan);
@@ -134,7 +129,6 @@ export default function ApplicationPlanPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ stepId, completed: !currentStatus }),
       });
-
       if (response.ok) {
         setPlan(prev => {
           if (!prev) return prev;
@@ -155,116 +149,185 @@ export default function ApplicationPlanPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+      <div className="app-plan-page">
         <SiteNav />
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-          <Loader2 className="w-12 h-12 animate-spin" style={{ color: RED }} />
+        <div className="app-plan-loading">
+          <div className="app-plan-loader">
+            <Loader2 className="w-10 h-10 animate-spin" />
+            <p>Loading your application...</p>
+          </div>
         </div>
+        <style jsx global>{styles}</style>
       </div>
     );
   }
 
-  if (!plan) {
-    return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom, #fafafa, #fff)' }}>
-        <SiteNav />
-        <main style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
-          {/* Header */}
-          <Link href="/my-shortlist" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#666', textDecoration: 'none', fontSize: 14, marginBottom: 24 }}>
-            <ArrowLeft className="w-4 h-4" />
-            Back to Shortlist
-          </Link>
+  const completedSteps = plan?.steps?.filter(s => s.completed).length || 0;
+  const totalSteps = plan?.steps?.length || 0;
+  const progressPercent = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
 
-          {/* Course Info Section */}
-          {programDetails && (
-            <div style={{ background: '#fff', borderRadius: 24, overflow: 'hidden', border: '1px solid #e5e5e5', marginBottom: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
-              {/* Header with gradient */}
-              <div style={{ position: 'relative', height: 200, background: 'linear-gradient(135deg, #dd0000 0%, #7c3aed 100%)', padding: 32 }}>
-                {programDetails.image_url && (
-                  <Image src={programDetails.image_url} alt={programName} fill style={{ objectFit: 'cover', opacity: 0.15 }} sizes="1200px" unoptimized />
-                )}
-                <div style={{ position: 'relative', zIndex: 1 }}>
-                  <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 32, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.2 }}>
-                    {programName}
-                  </h1>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: 'rgba(255,255,255,0.9)', fontSize: 16 }}>
-                    <GraduationCap className="w-5 h-5" />
-                    <span>{university}</span>
-                  </div>
-                </div>
-              </div>
+  return (
+    <div className="app-plan-page">
+      <SiteNav />
+      
+      <main className="app-plan-main">
+        {/* Back Button */}
+        <Link href="/my-shortlist" className="app-plan-back">
+          <ArrowLeft className="w-4 h-4" />
+          Back to Shortlist
+        </Link>
 
-              {/* Course Details Grid */}
-              <div style={{ padding: 32 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20, marginBottom: 24 }}>
-                  {programDetails.city && (
-                    <div style={{ padding: 16, background: '#fafafa', borderRadius: 12 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                        <MapPin className="w-4 h-4" style={{ color: RED }} />
-                        <span style={{ fontSize: 12, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Location</span>
-                      </div>
-                      <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>{programDetails.city}</p>
-                    </div>
-                  )}
-                  {programDetails.degree_level && (
-                    <div style={{ padding: 16, background: '#fafafa', borderRadius: 12 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                        <Award className="w-4 h-4" style={{ color: RED }} />
-                        <span style={{ fontSize: 12, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Degree</span>
-                      </div>
-                      <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>{programDetails.degree_level}</p>
-                    </div>
-                  )}
-                  {(programDetails.tuition_fee_number != null || programDetails.is_free) && (
-                    <div style={{ padding: 16, background: '#fafafa', borderRadius: 12 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                        <Euro className="w-4 h-4" style={{ color: RED }} />
-                        <span style={{ fontSize: 12, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tuition</span>
-                      </div>
-                      <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>
-                        {programDetails.is_free ? 'Free' : `€${programDetails.tuition_fee_number?.toLocaleString()}`}
-                      </p>
-                    </div>
-                  )}
-                  {programDetails.languages_array && programDetails.languages_array.length > 0 && (
-                    <div style={{ padding: 16, background: '#fafafa', borderRadius: 12 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                        <Globe className="w-4 h-4" style={{ color: RED }} />
-                        <span style={{ fontSize: 12, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Language</span>
-                      </div>
-                      <p style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>{programDetails.languages_array[0]}</p>
-                    </div>
-                  )}
-                </div>
-
-                {programDetails.subject_area && (
-                  <div style={{ padding: 16, background: 'rgba(221,0,0,0.05)', border: '1px solid rgba(221,0,0,0.1)', borderRadius: 12 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                      <BookOpen className="w-4 h-4" style={{ color: RED }} />
-                      <span style={{ fontSize: 12, fontWeight: 600, color: RED, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Subject Area</span>
-                    </div>
-                    <p style={{ fontSize: 15, color: '#555', margin: 0 }}>{programDetails.subject_area}</p>
-                  </div>
-                )}
-              </div>
+        {/* Hero Section with Course Info */}
+        <div className="app-plan-hero">
+          <div className="app-plan-hero-bg">
+            {programDetails?.image_url && (
+              <Image 
+                src={programDetails.image_url} 
+                alt={programName} 
+                fill 
+                style={{ objectFit: 'cover', opacity: 0.15 }} 
+                sizes="1400px" 
+                unoptimized 
+              />
+            )}
+            <div className="app-plan-hero-overlay" />
+          </div>
+          
+          <div className="app-plan-hero-content">
+            <div className="app-plan-hero-badges">
+              {programDetails?.degree_level && (
+                <span className="app-plan-badge app-plan-badge-white">
+                  <Award className="w-3.5 h-3.5" />
+                  {programDetails.degree_level}
+                </span>
+              )}
+              {programDetails?.is_free && (
+                <span className="app-plan-badge app-plan-badge-green">
+                  <Euro className="w-3.5 h-3.5" />
+                  No Tuition
+                </span>
+              )}
             </div>
-          )}
+            
+            <h1 className="app-plan-title">{programName || 'Your Application'}</h1>
+            
+            <div className="app-plan-university">
+              <GraduationCap className="w-5 h-5" />
+              <span>{university}</span>
+              {programDetails?.city && (
+                <>
+                  <span className="app-plan-dot">•</span>
+                  <MapPin className="w-4 h-4" />
+                  <span>{programDetails.city}</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
 
-          {/* Generate Plan CTA */}
-          <div style={{ background: 'linear-gradient(135deg, rgba(221,0,0,0.05), rgba(124,58,237,0.05))', border: '2px dashed #e5e5e5', borderRadius: 24, padding: '60px 32px', textAlign: 'center' }}>
-            <div style={{ maxWidth: 600, margin: '0 auto' }}>
-              <div style={{ width: 80, height: 80, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', animation: 'pulse 2s infinite' }}>
-                <Sparkles className="w-10 h-10" style={{ color: '#fff' }} />
+        {/* Course Details Expandable */}
+        {programDetails && (
+          <div className="app-plan-details-card">
+            <button 
+              className="app-plan-details-toggle"
+              onClick={() => setShowCourseDetails(!showCourseDetails)}
+            >
+              <div className="app-plan-details-toggle-left">
+                <BookOpen className="w-5 h-5" />
+                <span>Course Details</span>
               </div>
-              <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 28, fontWeight: 800, color: '#111', marginBottom: 12 }}>Ready to Start Your Application?</h2>
-              <p style={{ fontSize: 16, color: '#666', lineHeight: 1.6, marginBottom: 32 }}>Generate a personalized AI-powered application plan tailored to this program's requirements and your profile.</p>
+              {showCourseDetails ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </button>
+            
+            {showCourseDetails && (
+              <div className="app-plan-details-grid">
+                {programDetails.city && (
+                  <div className="app-plan-detail-item">
+                    <MapPin className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Location</span>
+                      <span className="app-plan-detail-value">{programDetails.city}</span>
+                    </div>
+                  </div>
+                )}
+                {programDetails.degree_level && (
+                  <div className="app-plan-detail-item">
+                    <Award className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Degree</span>
+                      <span className="app-plan-detail-value">{programDetails.degree_level}</span>
+                    </div>
+                  </div>
+                )}
+                {(programDetails.tuition_fee_number != null || programDetails.is_free) && (
+                  <div className="app-plan-detail-item">
+                    <Euro className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Tuition</span>
+                      <span className="app-plan-detail-value">
+                        {programDetails.is_free ? 'Free' : `€${programDetails.tuition_fee_number?.toLocaleString()}/semester`}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                {programDetails.languages_array?.length > 0 && (
+                  <div className="app-plan-detail-item">
+                    <Globe className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Language</span>
+                      <span className="app-plan-detail-value">{programDetails.languages_array.join(', ')}</span>
+                    </div>
+                  </div>
+                )}
+                {programDetails.programme_duration && (
+                  <div className="app-plan-detail-item">
+                    <Clock className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Duration</span>
+                      <span className="app-plan-detail-value">{programDetails.programme_duration}</span>
+                    </div>
+                  </div>
+                )}
+                {programDetails.subject_area && (
+                  <div className="app-plan-detail-item app-plan-detail-full">
+                    <BookOpen className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Subject Area</span>
+                      <span className="app-plan-detail-value">{programDetails.subject_area}</span>
+                    </div>
+                  </div>
+                )}
+                {programDetails.detail_url && (
+                  <a 
+                    href={programDetails.detail_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="app-plan-daad-link"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    View on DAAD
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Main Content Area */}
+        <div className="app-plan-content">
+          {!plan ? (
+            /* No Plan - Generate CTA */
+            <div className="app-plan-generate">
+              <div className="app-plan-generate-icon">
+                <Sparkles className="w-12 h-12" />
+              </div>
+              <h2>Ready to Start Your Application?</h2>
+              <p>Generate a personalized AI-powered application plan tailored to this program's requirements and your profile.</p>
               
               <button
                 onClick={generatePlan}
                 disabled={generating}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 32px', background: 'linear-gradient(135deg, #dd0000, #b91c1c)', color: '#fff', border: 'none', borderRadius: 14, fontSize: 16, fontWeight: 700, cursor: generating ? 'not-allowed' : 'pointer', boxShadow: '0 8px 24px rgba(221,0,0,0.3)', transition: 'all 0.3s', opacity: generating ? 0.7 : 1 }}
-                onMouseEnter={e => !generating && (e.currentTarget.style.transform = 'translateY(-2px)', e.currentTarget.style.boxShadow = '0 12px 32px rgba(221,0,0,0.4)')}
-                onMouseLeave={e => (e.currentTarget.style.transform = 'none', e.currentTarget.style.boxShadow = '0 8px 24px rgba(221,0,0,0.3)')}
+                className="app-plan-generate-btn"
               >
                 {generating ? (
                   <>
@@ -279,221 +342,776 @@ export default function ApplicationPlanPage() {
                 )}
               </button>
 
-              <div style={{ marginTop: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Target className="w-4 h-4" style={{ color: '#22c55e' }} />
-                  <span style={{ fontSize: 13, color: '#666' }}>Personalized Steps</span>
+              <div className="app-plan-features">
+                <div className="app-plan-feature">
+                  <CheckCircle2 className="w-5 h-5" />
+                  <span>Personalized Steps</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <TrendingUp className="w-4 h-4" style={{ color: '#22c55e' }} />
-                  <span style={{ fontSize: 13, color: '#666' }}>Timeline Tracking</span>
+                <div className="app-plan-feature">
+                  <Clock className="w-5 h-5" />
+                  <span>Timeline Tracking</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <AlertCircle className="w-4 h-4" style={{ color: '#22c55e' }} />
-                  <span style={{ fontSize: 13, color: '#666' }}>Blocker Detection</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <style jsx global>{`
-            @keyframes pulse {
-              0%, 100% { transform: scale(1); }
-              50% { transform: scale(1.05); }
-            }
-          `}</style>
-        </main>
-      </div>
-    );
-  }
-
-  const completedSteps = plan.steps.filter(s => s.completed).length;
-  const totalSteps = plan.steps.length;
-  const progressPercent = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
-
-  return (
-    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
-      <SiteNav />
-      
-      <main style={{ maxWidth: 1000, margin: '0 auto', padding: '48px 24px 80px' }}>
-        {/* Header */}
-        <header style={{ marginBottom: 40 }}>
-          <Link href="/my-applications" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#666', textDecoration: 'none', fontSize: 14, marginBottom: 16 }}>
-            <ArrowLeft className="w-4 h-4" />
-            Back to All Applications
-          </Link>
-          
-          <div style={{ marginBottom: 24 }}>
-            <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 8px' }}>
-              {programName || 'Application Plan'}
-            </h1>
-            <p style={{ fontSize: 16, color: '#737373', margin: 0 }}>{university}</p>
-          </div>
-
-          {/* Progress Overview */}
-          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <div>
-                <div style={{ fontSize: 14, color: '#737373', marginBottom: 4 }}>Application Progress</div>
-                <div style={{ fontSize: 28, fontWeight: 800, color: progressPercent === 100 ? '#22c55e' : RED }}>
-                  {progressPercent}%
+                <div className="app-plan-feature">
+                  <AlertCircle className="w-5 h-5" />
+                  <span>Blocker Detection</span>
                 </div>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: 14, color: '#737373', marginBottom: 4 }}>Timeline</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#111' }}>{plan.estimatedTimeline}</div>
-              </div>
             </div>
-            
-            <div style={{ height: 8, background: '#f5f5f5', borderRadius: 4, overflow: 'hidden', marginBottom: 12 }}>
-              <div style={{ width: `${progressPercent}%`, height: '100%', background: progressPercent === 100 ? '#22c55e' : `linear-gradient(90deg, ${RED}, #7c3aed)`, borderRadius: 4, transition: 'width 0.3s ease' }} />
-            </div>
-
-            <div style={{ fontSize: 13, color: '#737373' }}>
-              {completedSteps} of {totalSteps} steps completed
-            </div>
-          </div>
-        </header>
-
-        {/* Blockers */}
-        {plan.blockers && plan.blockers.length > 0 && (
-          <div style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 16, padding: 20, marginBottom: 32 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <AlertCircle className="w-5 h-5" style={{ color: '#dc2626' }} />
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: '#dc2626', margin: 0 }}>Potential Blockers</h3>
-            </div>
-            <ul style={{ margin: 0, paddingLeft: 20, color: '#991b1b' }}>
-              {plan.blockers.map((blocker, i) => (
-                <li key={i} style={{ fontSize: 14, marginBottom: 6 }}>{blocker}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Overview */}
-        <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, marginBottom: 32 }}>
-          <h3 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 12 }}>Overview</h3>
-          <p style={{ fontSize: 15, color: '#555', lineHeight: 1.6, margin: 0 }}>{plan.overview}</p>
-        </div>
-
-        {/* Steps */}
-        <div>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 20 }}>Application Steps</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {plan.steps.map((step, index) => (
-              <div
-                key={step.id}
-                style={{
-                  background: '#fff',
-                  border: step.completed ? '2px solid #22c55e' : '1px solid #ebebeb',
-                  borderRadius: 16,
-                  padding: 20,
-                  opacity: step.completed ? 0.7 : 1,
-                  transition: 'all 0.2s',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-                  {/* Checkbox */}
-                  <button
-                    onClick={() => toggleStep(step.id, step.completed)}
-                    disabled={updatingStep === step.id}
-                    style={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: '50%',
-                      border: step.completed ? '2px solid #22c55e' : '2px solid #d4d4d4',
-                      background: step.completed ? '#22c55e' : '#fff',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      flexShrink: 0,
-                      marginTop: 2,
-                    }}
-                  >
-                    {updatingStep === step.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" style={{ color: step.completed ? '#fff' : '#999' }} />
-                    ) : step.completed ? (
-                      <CheckCircle2 className="w-5 h-5" style={{ color: '#fff' }} />
-                    ) : (
-                      <Circle className="w-4 h-4" style={{ color: '#d4d4d4' }} />
-                    )}
-                  </button>
-
-                  {/* Content */}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 8 }}>
-                      <h4 style={{ fontSize: 16, fontWeight: 700, color: step.completed ? '#737373' : '#111', margin: 0, textDecoration: step.completed ? 'line-through' : 'none' }}>
-                        {index + 1}. {step.title}
-                      </h4>
-                      {step.deadline && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', background: '#fef3c7', border: '1px solid #fbbf24', borderRadius: 8, flexShrink: 0 }}>
-                          <Calendar className="w-3.5 h-3.5" style={{ color: '#d97706' }} />
-                          <span style={{ fontSize: 12, fontWeight: 600, color: '#d97706' }}>{step.deadline}</span>
-                        </div>
-                      )}
+          ) : (
+            /* Has Plan - Show Progress and Steps */
+            <>
+              {/* Progress Card */}
+              <div className="app-plan-progress-card">
+                <div className="app-plan-progress-header">
+                  <div>
+                    <span className="app-plan-progress-label">Application Progress</span>
+                    <div className="app-plan-progress-percent" style={{ color: progressPercent === 100 ? '#22c55e' : RED }}>
+                      {progressPercent}%
                     </div>
-
-                    <p style={{ fontSize: 14, color: '#555', lineHeight: 1.5, margin: '0 0 12px' }}>{step.description}</p>
-
-                    {/* Action Button */}
-                    {step.action && (
-                      <Link
-                        href={step.action.url}
-                        target={step.action.type === 'external' ? '_blank' : undefined}
-                        rel={step.action.type === 'external' ? 'noopener noreferrer' : undefined}
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 8,
-                          padding: '8px 16px',
-                          background: step.action.type === 'external' ? '#fff' : RED,
-                          color: step.action.type === 'external' ? RED : '#fff',
-                          border: step.action.type === 'external' ? `1px solid ${RED}` : 'none',
-                          borderRadius: 10,
-                          fontSize: 13,
-                          fontWeight: 600,
-                          textDecoration: 'none',
-                          transition: 'all 0.2s',
-                        }}
-                        onMouseEnter={(e) => {
-                          if (step.action?.type === 'external') {
-                            e.currentTarget.style.background = 'rgba(221,0,0,0.05)';
-                          } else {
-                            e.currentTarget.style.background = '#b91c1c';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (step.action?.type === 'external') {
-                            e.currentTarget.style.background = '#fff';
-                          } else {
-                            e.currentTarget.style.background = RED;
-                          }
-                        }}
-                      >
-                        {step.action.type === 'cv' && <FileText className="w-4 h-4" />}
-                        {step.action.type === 'letter' && <Sparkles className="w-4 h-4" />}
-                        {step.action.type === 'document' && <FileText className="w-4 h-4" />}
-                        {step.action.type === 'external' && <ExternalLink className="w-4 h-4" />}
-                        {step.action.label}
-                      </Link>
-                    )}
+                  </div>
+                  <div className="app-plan-progress-right">
+                    <span className="app-plan-progress-label">Timeline</span>
+                    <div className="app-plan-progress-timeline">{plan.estimatedTimeline}</div>
                   </div>
                 </div>
+                
+                <div className="app-plan-progress-bar">
+                  <div 
+                    className="app-plan-progress-fill" 
+                    style={{ 
+                      width: `${progressPercent}%`,
+                      background: progressPercent === 100 ? '#22c55e' : `linear-gradient(90deg, ${RED}, #7c3aed)`
+                    }} 
+                  />
+                </div>
+                
+                <div className="app-plan-progress-steps">
+                  {completedSteps} of {totalSteps} steps completed
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Bottom CTA */}
-        {progressPercent === 100 && (
-          <div style={{ marginTop: 40, textAlign: 'center', padding: '32px 24px', background: 'linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.04))', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 20 }}>
-            <CheckCircle2 className="w-12 h-12" style={{ color: '#22c55e', margin: '0 auto 16px' }} />
-            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#16a34a', marginBottom: 8 }}>Application Complete!</h3>
-            <p style={{ fontSize: 15, color: '#15803d', margin: 0 }}>You've completed all steps for this program. Good luck!</p>
-          </div>
-        )}
+              {/* Blockers */}
+              {plan.blockers?.length > 0 && (
+                <div className="app-plan-blockers">
+                  <div className="app-plan-blockers-header">
+                    <AlertCircle className="w-5 h-5" />
+                    <h3>Potential Blockers</h3>
+                  </div>
+                  <ul>
+                    {plan.blockers.map((blocker, i) => (
+                      <li key={i}>{blocker}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Overview */}
+              <div className="app-plan-overview">
+                <h3>Overview</h3>
+                <p>{plan.overview}</p>
+              </div>
+
+              {/* Steps */}
+              <div className="app-plan-steps">
+                <h2>Application Steps</h2>
+                <div className="app-plan-steps-list">
+                  {plan.steps.map((step, index) => (
+                    <div 
+                      key={step.id} 
+                      className={`app-plan-step ${step.completed ? 'app-plan-step-done' : ''}`}
+                    >
+                      <button
+                        onClick={() => toggleStep(step.id, step.completed)}
+                        disabled={updatingStep === step.id}
+                        className="app-plan-step-check"
+                      >
+                        {updatingStep === step.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : step.completed ? (
+                          <CheckCircle2 className="w-5 h-5" />
+                        ) : (
+                          <Circle className="w-5 h-5" />
+                        )}
+                      </button>
+                      
+                      <div className="app-plan-step-content">
+                        <div className="app-plan-step-header">
+                          <h4>{index + 1}. {step.title}</h4>
+                          {step.deadline && (
+                            <span className="app-plan-step-deadline">
+                              <Calendar className="w-3.5 h-3.5" />
+                              {step.deadline}
+                            </span>
+                          )}
+                        </div>
+                        <p>{step.description}</p>
+                        {step.action && (
+                          <Link
+                            href={step.action.url}
+                            target={step.action.type === 'external' ? '_blank' : undefined}
+                            rel={step.action.type === 'external' ? 'noopener noreferrer' : undefined}
+                            className={`app-plan-step-action ${step.action.type === 'external' ? 'app-plan-step-action-outline' : ''}`}
+                          >
+                            {step.action.type === 'cv' && <FileText className="w-4 h-4" />}
+                            {step.action.type === 'letter' && <Sparkles className="w-4 h-4" />}
+                            {step.action.type === 'document' && <FileText className="w-4 h-4" />}
+                            {step.action.type === 'external' && <ExternalLink className="w-4 h-4" />}
+                            {step.action.label}
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Completion */}
+              {progressPercent === 100 && (
+                <div className="app-plan-complete">
+                  <CheckCircle2 className="w-16 h-16" />
+                  <h3>Application Complete!</h3>
+                  <p>You've completed all steps for this program. Good luck!</p>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </main>
+
+      <style jsx global>{styles}</style>
     </div>
   );
 }
+
+const styles = `
+  .app-plan-page {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
+  }
+  
+  .app-plan-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+  }
+  
+  .app-plan-loader {
+    text-align: center;
+    color: ${RED};
+  }
+  
+  .app-plan-loader p {
+    margin-top: 16px;
+    color: #666;
+    font-size: 15px;
+  }
+  
+  .app-plan-main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px 24px 100px;
+  }
+  
+  .app-plan-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    transition: color 0.2s;
+  }
+  
+  .app-plan-back:hover {
+    color: ${RED};
+  }
+  
+  /* Hero Section */
+  .app-plan-hero {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  
+  .app-plan-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, ${RED} 0%, #7c3aed 100%);
+  }
+  
+  .app-plan-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+  }
+  
+  .app-plan-hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 48px 32px;
+  }
+  
+  .app-plan-hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .app-plan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .app-plan-badge-white {
+    background: rgba(255,255,255,0.95);
+    color: ${RED};
+  }
+  
+  .app-plan-badge-green {
+    background: #22c55e;
+    color: #fff;
+  }
+  
+  .app-plan-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 12px;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  
+  .app-plan-university {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+  }
+  
+  .app-plan-dot {
+    opacity: 0.5;
+  }
+  
+  /* Course Details Card */
+  .app-plan-details-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  
+  .app-plan-details-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .app-plan-details-toggle-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: ${RED};
+  }
+  
+  .app-plan-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    padding: 0 20px 20px;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 16px;
+  }
+  
+  .app-plan-detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: ${RED};
+  }
+  
+  .app-plan-detail-item > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .app-plan-detail-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .app-plan-detail-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+  }
+  
+  .app-plan-detail-full {
+    grid-column: 1 / -1;
+  }
+  
+  .app-plan-daad-link {
+    grid-column: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: ${RED};
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    width: fit-content;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-daad-link:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+  }
+  
+  /* Generate CTA */
+  .app-plan-generate {
+    background: linear-gradient(135deg, rgba(221,0,0,0.03), rgba(124,58,237,0.03));
+    border: 2px dashed #e0e0e0;
+    border-radius: 24px;
+    padding: 60px 32px;
+    text-align: center;
+  }
+  
+  .app-plan-generate-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, ${RED}, #7c3aed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    color: #fff;
+    animation: pulse 2s infinite;
+    box-shadow: 0 8px 32px rgba(221,0,0,0.25);
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  .app-plan-generate h2 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #111;
+    margin: 0 0 12px;
+  }
+  
+  .app-plan-generate > p {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto 32px;
+  }
+  
+  .app-plan-generate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 36px;
+    background: linear-gradient(135deg, ${RED}, #b91c1c);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 28px rgba(221,0,0,0.35);
+    transition: all 0.3s;
+  }
+  
+  .app-plan-generate-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 36px rgba(221,0,0,0.4);
+  }
+  
+  .app-plan-generate-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .app-plan-features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 36px;
+  }
+  
+  .app-plan-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #22c55e;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .app-plan-feature span {
+    color: #555;
+  }
+  
+  /* Progress Card */
+  .app-plan-progress-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  
+  .app-plan-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  
+  .app-plan-progress-label {
+    font-size: 13px;
+    color: #737373;
+    display: block;
+    margin-bottom: 4px;
+  }
+  
+  .app-plan-progress-percent {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  
+  .app-plan-progress-right {
+    text-align: right;
+  }
+  
+  .app-plan-progress-timeline {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+  }
+  
+  .app-plan-progress-bar {
+    height: 10px;
+    background: #f0f0f0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  
+  .app-plan-progress-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.4s ease;
+  }
+  
+  .app-plan-progress-steps {
+    font-size: 13px;
+    color: #737373;
+  }
+  
+  /* Blockers */
+  .app-plan-blockers {
+    background: rgba(239,68,68,0.05);
+    border: 1px solid rgba(239,68,68,0.15);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  
+  .app-plan-blockers-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #dc2626;
+    margin-bottom: 12px;
+  }
+  
+  .app-plan-blockers-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .app-plan-blockers ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #991b1b;
+  }
+  
+  .app-plan-blockers li {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  /* Overview */
+  .app-plan-overview {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  
+  .app-plan-overview h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 12px;
+  }
+  
+  .app-plan-overview p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  /* Steps */
+  .app-plan-steps h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 20px;
+  }
+  
+  .app-plan-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .app-plan-step {
+    display: flex;
+    gap: 16px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-step:hover {
+    border-color: #d0d0d0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+  
+  .app-plan-step-done {
+    border-color: #22c55e;
+    background: rgba(34,197,94,0.02);
+    opacity: 0.75;
+  }
+  
+  .app-plan-step-check {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #d4d4d4;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    color: #d4d4d4;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-step-done .app-plan-step-check {
+    border-color: #22c55e;
+    background: #22c55e;
+    color: #fff;
+  }
+  
+  .app-plan-step-content {
+    flex: 1;
+  }
+  
+  .app-plan-step-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .app-plan-step-header h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+  }
+  
+  .app-plan-step-done .app-plan-step-header h4 {
+    color: #737373;
+    text-decoration: line-through;
+  }
+  
+  .app-plan-step-deadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #d97706;
+  }
+  
+  .app-plan-step-content > p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin: 0 0 12px;
+  }
+  
+  .app-plan-step-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: ${RED};
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-step-action:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+  }
+  
+  .app-plan-step-action-outline {
+    background: #fff;
+    color: ${RED};
+    border: 1px solid ${RED};
+  }
+  
+  .app-plan-step-action-outline:hover {
+    background: rgba(221,0,0,0.05);
+  }
+  
+  /* Complete */
+  .app-plan-complete {
+    text-align: center;
+    padding: 48px 24px;
+    background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02));
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 24px;
+    margin-top: 40px;
+    color: #22c55e;
+  }
+  
+  .app-plan-complete h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #16a34a;
+    margin: 16px 0 8px;
+  }
+  
+  .app-plan-complete p {
+    font-size: 16px;
+    color: #15803d;
+    margin: 0;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .app-plan-main {
+      padding: 24px 16px 100px;
+    }
+    
+    .app-plan-hero-content {
+      padding: 32px 20px;
+    }
+    
+    .app-plan-title {
+      font-size: 24px;
+    }
+    
+    .app-plan-details-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .app-plan-generate {
+      padding: 40px 20px;
+    }
+    
+    .app-plan-generate h2 {
+      font-size: 22px;
+    }
+    
+    .app-plan-generate-btn {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .app-plan-features {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .app-plan-progress-header {
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .app-plan-progress-right {
+      text-align: left;
+    }
+    
+    .app-plan-step {
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .app-plan-step-header {
+      flex-direction: column;
+    }
+  }
+`;
