@@ -202,38 +202,36 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
       <style jsx>{`
         .critical-req-card {
           background: #fff;
-          border: 1px solid rgba(15, 23, 42, 0.08);
-          border-radius: 24px;
-          padding: 24px;
-          margin-bottom: 24px;
-          box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+          border: 1px solid #e5e7eb;
+          border-radius: 12px;
+          padding: 16px;
         }
 
         .critical-req-header {
           display: flex;
-          align-items: flex-start;
+          align-items: center;
           justify-content: space-between;
-          margin-bottom: 20px;
-          padding-bottom: 16px;
-          border-bottom: 1px solid rgba(0,0,0,0.06);
+          margin-bottom: 16px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid #f1f5f9;
         }
 
         .critical-req-title-row {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 10px;
         }
 
         .critical-req-title-row h3 {
-          font-size: 18px;
-          font-weight: 700;
-          color: #111;
+          font-size: 14px;
+          font-weight: 600;
+          color: #0f172a;
           margin: 0;
         }
 
         .critical-req-title-row span {
-          font-size: 13px;
-          color: #666;
+          font-size: 11px;
+          color: #94a3b8;
         }
 
         .critical-req-score {
@@ -241,220 +239,224 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          width: 88px;
-          height: 88px;
-          border-radius: 20px;
+          width: 48px;
+          height: 48px;
+          border-radius: 10px;
           color: #fff;
           flex-shrink: 0;
-          box-shadow: 0 15px 35px rgba(221,0,0,0.3);
         }
 
         .critical-req-score .score-value {
-          font-size: 26px;
-          font-weight: 800;
+          font-size: 18px;
+          font-weight: 700;
           line-height: 1;
         }
 
         .critical-req-score .score-label {
-          font-size: 11px;
+          font-size: 9px;
           font-weight: 600;
           opacity: 0.9;
-          margin-top: 4px;
+          margin-top: 2px;
         }
 
         .critical-req-list {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 8px;
         }
 
         .critical-req-item {
-          background: #fff;
-          border: 1px solid #f3f4f6;
-          border-left-width: 4px;
-          border-radius: 18px;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          border-left-width: 3px;
+          border-radius: 8px;
           overflow: hidden;
-          transition: all 0.25s ease;
+          transition: all 0.15s;
         }
 
         .critical-req-item-expanded {
-          box-shadow: 0 18px 35px rgba(15, 23, 42, 0.08);
-          transform: translateY(-2px);
+          background: #fff;
+          border-color: #cbd5e1;
         }
 
         .critical-req-item:hover {
-          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+          border-color: #cbd5e1;
         }
 
         .critical-req-item-header {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           justify-content: space-between;
-          padding: 16px 20px;
+          padding: 10px 12px;
           cursor: pointer;
+          gap: 8px;
         }
 
         .critical-req-item-left {
           display: flex;
           align-items: flex-start;
-          gap: 12px;
+          gap: 10px;
           flex: 1;
+          min-width: 0;
         }
 
         .critical-req-icon {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          width: 28px;
+          height: 28px;
+          border-radius: 6px;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
         }
 
+        .critical-req-icon svg {
+          width: 16px;
+          height: 16px;
+        }
+
         .critical-req-info {
           flex: 1;
+          min-width: 0;
         }
 
         .critical-req-info h4 {
-          font-size: 15px;
+          font-size: 13px;
           font-weight: 600;
-          color: #111;
-          margin: 0 0 8px;
+          color: #0f172a;
+          margin: 0 0 4px;
         }
 
         .critical-req-comparison {
           display: flex;
+          flex-wrap: wrap;
           align-items: baseline;
-          gap: 6px;
-          margin-bottom: 4px;
+          gap: 4px;
+          margin-bottom: 2px;
         }
 
         .req-label {
-          font-size: 12px;
-          color: #999;
+          font-size: 11px;
+          color: #94a3b8;
           font-weight: 500;
         }
 
         .req-value {
-          font-size: 13px;
-          color: #333;
+          font-size: 11px;
+          color: #475569;
           font-weight: 500;
         }
 
         .critical-req-item-right {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 6px;
+          flex-shrink: 0;
         }
 
         .critical-req-status {
-          padding: 4px 12px;
-          border-radius: 8px;
-          font-size: 11px;
-          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: 4px;
+          font-size: 10px;
+          font-weight: 600;
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.03em;
           border: 1px solid;
         }
 
         .critical-req-expanded {
-          padding: 18px 20px;
-          border-top: 1px solid #f0f0f0;
-          background: linear-gradient(180deg, rgba(248, 250, 252, 0.6), rgba(255, 255, 255, 0.9));
+          padding: 12px;
+          border-top: 1px solid #e2e8f0;
+          background: #fff;
         }
 
         .critical-req-notes {
-          margin: 12px 0;
-          font-size: 14px;
-          color: #555;
-          line-height: 1.6;
+          margin: 0 0 12px;
+          font-size: 12px;
+          color: #64748b;
+          line-height: 1.5;
         }
 
         .critical-req-questions {
-          margin-top: 16px;
-          padding: 16px;
-          background: #fff;
-          border: 1px solid rgba(59,130,246,0.12);
-          border-radius: 14px;
-          box-shadow: inset 0 0 0 1px rgba(15,23,42,0.02);
+          padding: 12px;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 10px;
         }
 
         .critical-req-questions-header {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
-          gap: 12px;
+          gap: 8px;
         }
 
         .critical-req-questions-header h5 {
-          font-size: 14px;
-          font-weight: 700;
+          font-size: 12px;
+          font-weight: 600;
           color: #0f172a;
           margin: 0;
         }
 
         .critical-req-questions-header span {
           display: block;
-          font-size: 12px;
+          font-size: 11px;
           color: #64748b;
-          margin-top: 4px;
+          margin-top: 2px;
         }
 
         .critical-req-required {
-          font-size: 11px;
-          letter-spacing: 0.08em;
+          font-size: 10px;
           text-transform: uppercase;
           color: #ef4444;
-          font-weight: 700;
+          font-weight: 600;
         }
 
         .critical-req-question-list {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 10px;
         }
 
         .critical-req-question-item {
           display: flex;
           flex-direction: column;
-          gap: 6px;
-          font-size: 13px;
-          color: #0f172a;
+          gap: 4px;
+          font-size: 12px;
+          color: #334155;
           font-weight: 500;
         }
 
         .critical-req-question-item textarea {
           border: 1px solid #e2e8f0;
-          border-radius: 10px;
-          padding: 10px 12px;
-          font-size: 13px;
+          border-radius: 6px;
+          padding: 8px 10px;
+          font-size: 12px;
           resize: none;
-          transition: border-color 0.2s, box-shadow 0.2s;
+          background: #fff;
         }
 
         .critical-req-question-item textarea:focus {
           outline: none;
           border-color: #dd0000;
-          box-shadow: 0 0 0 3px rgba(221,0,0,0.12);
         }
 
         .critical-req-answer-btn {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
+          gap: 6px;
           width: fit-content;
-          padding: 10px 18px;
+          padding: 8px 14px;
           background: #dd0000;
           color: #fff;
           border: none;
-          border-radius: 999px;
-          font-size: 13px;
+          border-radius: 6px;
+          font-size: 12px;
           font-weight: 600;
           cursor: pointer;
-          transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .critical-req-answer-btn:disabled {
@@ -462,26 +464,8 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
           cursor: not-allowed;
         }
 
-        .critical-req-answer-btn:not(:disabled):hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 22px rgba(221,0,0,0.3);
-        }
-
-        @media (max-width: 768px) {
-          .critical-req-card {
-            padding: 20px;
-          }
-
-          .critical-req-item-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-          }
-
-          .critical-req-score {
-            width: 72px;
-            height: 72px;
-          }
+        .critical-req-answer-btn:hover:not(:disabled) {
+          background: #b91c1c;
         }
       `}</style>
     </div>

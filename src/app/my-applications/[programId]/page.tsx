@@ -434,96 +434,51 @@ export default function ApplicationPlanPage() {
           </div>
         </div>
 
-        {/* Course Details Expandable */}
+        {/* Course Details - Simple inline pills */}
         {programDetails && (
-          <div className="app-plan-details-card">
-            <button 
-              className="app-plan-details-toggle"
-              onClick={() => setShowCourseDetails(!showCourseDetails)}
-            >
-              <div className="app-plan-details-toggle-left">
-                <BookOpen className="w-5 h-5" />
-                <span>Course Details</span>
-              </div>
-              {showCourseDetails ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-            </button>
-            
-            {showCourseDetails && (
-              <div className="app-plan-details-grid">
-                <div className="app-plan-details-grid-header">
-                  <div>
-                    <p className="app-plan-details-subtitle">At a glance</p>
-                    <h4>{programName || 'Program overview'}</h4>
-                  </div>
-                  {programDetails.detail_url && (
-                    <a 
-                      href={programDetails.detail_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="app-plan-daad-link"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      DAAD page
-                    </a>
-                  )}
-                </div>
-                {programDetails.city && (
-                  <div className="app-plan-detail-item">
-                    <MapPin className="w-4 h-4" />
-                    <div>
-                      <span className="app-plan-detail-label">Location</span>
-                      <span className="app-plan-detail-value">{programDetails.city}</span>
-                    </div>
-                  </div>
-                )}
-                {programDetails.degree_level && (
-                  <div className="app-plan-detail-item">
-                    <Award className="w-4 h-4" />
-                    <div>
-                      <span className="app-plan-detail-label">Degree</span>
-                      <span className="app-plan-detail-value">{programDetails.degree_level}</span>
-                    </div>
-                  </div>
-                )}
-                {(programDetails.tuition_fee_number != null || programDetails.is_free) && (
-                  <div className="app-plan-detail-item">
-                    <Euro className="w-4 h-4" />
-                    <div>
-                      <span className="app-plan-detail-label">Tuition</span>
-                      <span className="app-plan-detail-value">
-                        {programDetails.is_free ? 'Free' : `€${programDetails.tuition_fee_number?.toLocaleString()}/semester`}
-                      </span>
-                    </div>
-                  </div>
-                )}
-                {programDetails.languages_array?.length > 0 && (
-                  <div className="app-plan-detail-item">
-                    <Globe className="w-4 h-4" />
-                    <div>
-                      <span className="app-plan-detail-label">Language</span>
-                      <span className="app-plan-detail-value">{programDetails.languages_array.join(', ')}</span>
-                    </div>
-                  </div>
-                )}
-                {programDetails.programme_duration && (
-                  <div className="app-plan-detail-item">
-                    <Clock className="w-4 h-4" />
-                    <div>
-                      <span className="app-plan-detail-label">Duration</span>
-                      <span className="app-plan-detail-value">{programDetails.programme_duration}</span>
-                    </div>
-                  </div>
-                )}
-                {programDetails.subject_area && (
-                  <div className="app-plan-detail-item app-plan-detail-full">
-                    <BookOpen className="w-4 h-4" />
-                    <div>
-                      <span className="app-plan-detail-label">Subject Area</span>
-                      <span className="app-plan-detail-value">{programDetails.subject_area}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
+          <div className="app-plan-details-strip">
+            <div className="app-plan-details-pills">
+              {programDetails.city && (
+                <span className="app-plan-detail-pill">
+                  <MapPin className="w-3.5 h-3.5" />
+                  {programDetails.city}
+                </span>
+              )}
+              {programDetails.degree_level && (
+                <span className="app-plan-detail-pill">
+                  <Award className="w-3.5 h-3.5" />
+                  {programDetails.degree_level}
+                </span>
+              )}
+              {programDetails.languages_array?.length > 0 && (
+                <span className="app-plan-detail-pill">
+                  <Globe className="w-3.5 h-3.5" />
+                  {programDetails.languages_array.join(', ')}
+                </span>
+              )}
+              {programDetails.programme_duration && (
+                <span className="app-plan-detail-pill">
+                  <Clock className="w-3.5 h-3.5" />
+                  {programDetails.programme_duration}
+                </span>
+              )}
+              {programDetails.subject_area && (
+                <span className="app-plan-detail-pill">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  {programDetails.subject_area}
+                </span>
+              )}
+            </div>
+            {programDetails.detail_url && (
+              <a 
+                href={programDetails.detail_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="app-plan-daad-link"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                DAAD
+              </a>
             )}
           </div>
         )}
@@ -838,38 +793,34 @@ export default function ApplicationPlanPage() {
                           </div>
                         )}
                         
-                        {/* Document List for Document Gathering step */}
+                        {/* Document List for Document Gathering step - Inline Checkable */}
                         {isDocumentStep(step.title) && (
-                          <div className="app-plan-doc-preview">
-                            <div className="app-plan-doc-preview-header">
-                              <FolderOpen className="w-4 h-4" />
-                              <span>Required Documents ({documentList.length} items)</span>
+                          <div className="app-plan-doc-checklist">
+                            <div className="app-plan-doc-checklist-header">
+                              <FileCheck className="w-4 h-4" />
+                              <span>Document Checklist</span>
+                              <span className="app-plan-doc-checklist-count">{checkedDocs.length}/{documentList.length}</span>
                             </div>
-                            <div className="app-plan-doc-preview-list">
-                              {documentList.slice(0, 4).map(doc => (
-                                <div key={doc.id} className="app-plan-doc-preview-item">
-                                  {checkedDocs.includes(doc.id) ? (
-                                    <CheckCircle2 className="w-4 h-4" style={{ color: '#22c55e' }} />
-                                  ) : (
-                                    <FileText className="w-4 h-4" style={{ color: '#999' }} />
-                                  )}
-                                  <span className={checkedDocs.includes(doc.id) ? 'checked' : ''}>{doc.label}</span>
-                                </div>
+                            <div className="app-plan-doc-checklist-grid">
+                              {documentList.map(doc => (
+                                <label key={doc.id} className={`app-plan-doc-check-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
+                                  <input
+                                    type="checkbox"
+                                    checked={checkedDocs.includes(doc.id)}
+                                    onChange={() => toggleDoc(doc.id)}
+                                  />
+                                  <span className="app-plan-doc-check-box">
+                                    {checkedDocs.includes(doc.id) ? (
+                                      <CheckCircle2 className="w-4 h-4" />
+                                    ) : (
+                                      <Circle className="w-4 h-4" />
+                                    )}
+                                  </span>
+                                  <span className="app-plan-doc-check-label">{doc.label}</span>
+                                  <span className="app-plan-doc-check-category">{doc.category}</span>
+                                </label>
                               ))}
-                              {documentList.length > 4 && (
-                                <div className="app-plan-doc-preview-more">
-                                  +{documentList.length - 4} more
-                                </div>
-                              )}
                             </div>
-                            <button 
-                              className="app-plan-doc-preview-btn"
-                              onClick={() => setDocDrawerOpen(true)}
-                            >
-                              <ClipboardList className="w-4 h-4" />
-                              Open Document Checklist
-                              <ChevronRight className="w-4 h-4" />
-                            </button>
                           </div>
                         )}
                         
@@ -1145,98 +1096,62 @@ const styles = `
     opacity: 0.5;
   }
   
-  /* Course Details Card */
-  .app-plan-details-card {
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  }
-  
-  .app-plan-details-toggle {
-    width: 100%;
+  /* Course Details Strip */
+  .app-plan-details-strip {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .app-plan-details-toggle-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: ${RED};
-  }
-  
-  .app-plan-details-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px;
-    padding: 0 20px 20px;
-    border-top: 1px solid #f0f0f0;
-    padding-top: 16px;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 24px;
   }
   
-  .app-plan-detail-item {
+  .app-plan-details-pills {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    color: ${RED};
+    flex-wrap: wrap;
+    gap: 8px;
   }
   
-  .app-plan-detail-item > div {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+  .app-plan-detail-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
   }
   
-  .app-plan-detail-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: #999;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  
-  .app-plan-detail-value {
-    font-size: 14px;
-    font-weight: 600;
-    color: #111;
-  }
-  
-  .app-plan-detail-full {
-    grid-column: 1 / -1;
+  .app-plan-detail-pill svg {
+    color: #94a3b8;
   }
   
   .app-plan-daad-link {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(15,23,42,0.12);
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
     background: #fff;
-    color: #0f172a;
+    color: #64748b;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 12px;
     text-decoration: none;
     transition: all 0.2s;
     white-space: nowrap;
   }
 
   .app-plan-daad-link:hover {
-    border-color: rgba(221,0,0,0.4);
-    color: #dd0000;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(221,0,0,0.15);
+    border-color: ${RED};
+    color: ${RED};
+    background: rgba(221,0,0,0.04);
   }
   
   /* Generate CTA */
@@ -1342,34 +1257,31 @@ const styles = `
     color: #555;
   }
   
-  /* AI Profile Match Summary */
+  /* AI Profile Match Summary - Clean Design */
   .app-plan-ai-summary {
-    background: radial-gradient(circle at top left, rgba(221,0,0,0.08), rgba(15,23,42,0.02));
-    border: 1px solid rgba(15,23,42,0.08);
-    border-radius: 26px;
-    padding: 24px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 20px;
     margin-bottom: 24px;
-    box-shadow: 0 25px 45px rgba(15,23,42,0.08);
   }
 
   .app-plan-ai-summary-header {
     display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 16px;
+    align-items: center;
+    gap: 12px;
   }
   
   .app-plan-ai-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, #dd0000, #9333ea);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #f1f5f9;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: #64748b;
     flex-shrink: 0;
-    box-shadow: 0 10px 25px rgba(147,51,234,0.35);
   }
   
   .app-plan-ai-summary-header > div:nth-child(2) {
@@ -1377,15 +1289,15 @@ const styles = `
   }
   
   .app-plan-ai-summary-header h3 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #111;
-    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
   }
   
   .app-plan-ai-summary-header span {
-    font-size: 13px;
-    color: #666;
+    font-size: 12px;
+    color: #94a3b8;
   }
   
   .app-plan-match-score {
@@ -1393,88 +1305,94 @@ const styles = `
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 72px;
-    height: 72px;
-    border-radius: 16px;
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
     color: #fff;
     flex-shrink: 0;
   }
   
   .app-plan-match-score .score-value {
-    font-size: 24px;
-    font-weight: 800;
+    font-size: 20px;
+    font-weight: 700;
     line-height: 1;
   }
   
   .app-plan-match-score .score-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     opacity: 0.9;
     margin-top: 2px;
   }
-  
-  .app-plan-ai-summary-text {
-    font-size: 15px;
-    color: #444;
+
+  .app-plan-ai-summary-textbox {
+    margin: 16px 0;
+    padding: 14px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .app-plan-ai-summary-textbox p {
+    font-size: 14px;
+    color: #475569;
     line-height: 1.6;
-    margin: 0 0 20px;
-    padding: 16px;
-    background: rgba(255,255,255,0.7);
-    border-radius: 12px;
+    margin: 0;
   }
   
   .app-plan-ai-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 16px;
-    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
   
   .app-plan-ai-section {
-    background: rgba(255,255,255,0.9);
-    border: 1px solid rgba(15,23,42,0.06);
-    border-radius: 18px;
-    padding: 18px;
-    box-shadow: 0 12px 28px rgba(15,23,42,0.06);
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px;
   }
-  
-  .app-plan-ai-strengths {
-    background: rgba(34,197,94,0.08);
-    border: 1px solid rgba(34,197,94,0.2);
-  }
-  
-  .app-plan-ai-gaps {
-    background: rgba(239,68,68,0.08);
-    border: 1px solid rgba(239,68,68,0.2);
-  }
-  
-  .app-plan-ai-section h4 {
+
+  .app-plan-ai-section-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    margin: 0 0 12px;
+    margin-bottom: 10px;
+  }
+
+  .app-plan-ai-section-header h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
   }
   
-  .app-plan-ai-strengths h4 {
+  .app-plan-ai-strengths {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+  }
+  
+  .app-plan-ai-gaps {
+    background: #fef2f2;
+    border-color: #fecaca;
+  }
+  
+  .app-plan-ai-strengths .app-plan-ai-section-header {
     color: #16a34a;
   }
   
-  .app-plan-ai-gaps h4 {
+  .app-plan-ai-gaps .app-plan-ai-section-header {
     color: #dc2626;
   }
   
   .app-plan-ai-section ul {
     margin: 0;
-    padding-left: 18px;
+    padding-left: 16px;
     font-size: 13px;
-    line-height: 1.6;
-    color: #555;
+    line-height: 1.5;
   }
   
   .app-plan-ai-strengths ul {
-    color: #15803d;
+    color: #166534;
   }
   
   .app-plan-ai-gaps ul {
@@ -1482,82 +1400,40 @@ const styles = `
   }
   
   .app-plan-ai-section li {
-    margin-bottom: 6px;
-  }
-  
-  .app-plan-ai-recommendations {
-    padding: 16px;
-    background: rgba(59,130,246,0.08);
-    border: 1px solid rgba(59,130,246,0.2);
-    border-radius: 12px;
-  }
-  
-  .app-plan-ai-recommendations h4 {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #1d4ed8;
-    margin: 0 0 12px;
-  }
-  
-  .app-plan-ai-recommendations ul {
-    margin: 0;
-    padding-left: 18px;
-    font-size: 13px;
-    line-height: 1.6;
-    color: #1e40af;
-  }
-  
-  .app-plan-ai-recommendations li {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .app-plan-ai-callout {
-    padding: 18px;
-    border-radius: 20px;
-    border: 1px solid rgba(59,130,246,0.15);
-    background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(59,130,246,0));
-    box-shadow: 0 14px 30px rgba(59,130,246,0.12);
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
   }
 
   .app-plan-ai-callout-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
-    font-weight: 700;
     color: #1d4ed8;
-    margin: 0 0 10px;
+    margin-bottom: 10px;
+  }
+
+  .app-plan-ai-callout-header h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
   }
 
   .app-plan-ai-callout ul {
     margin: 0;
-    padding-left: 18px;
+    padding-left: 16px;
     font-size: 13px;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #1e40af;
   }
 
   .app-plan-ai-callout li {
-    margin-bottom: 6px;
-  }
-
-  .app-plan-ai-summary-textbox {
-    margin: 16px 0 20px;
-    padding: 16px 18px;
-    background: rgba(255,255,255,0.8);
-    border-radius: 18px;
-    border: 1px solid rgba(15,23,42,0.05);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
-  }
-
-  .app-plan-ai-summary-textbox p {
-    font-size: 15px;
-    color: #0f172a;
-    line-height: 1.6;
-    margin: 0;
+    margin-bottom: 4px;
   }
 
   /* Progress Card */
@@ -1961,72 +1837,95 @@ const styles = `
     background: rgba(221,0,0,0.05);
   }
   
-  /* Document Preview in Step */
-  .app-plan-doc-preview {
-    background: #fafafa;
-    border: 1px solid #e5e5e5;
+  /* Inline Document Checklist */
+  .app-plan-doc-checklist {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     border-radius: 12px;
     padding: 16px;
     margin: 12px 0;
   }
   
-  .app-plan-doc-preview-header {
+  .app-plan-doc-checklist-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #dd0000;
+    color: #475569;
     font-size: 13px;
     font-weight: 600;
-    margin-bottom: 10px;
-  }
-  
-  .app-plan-doc-preview-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
     margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
   }
   
-  .app-plan-doc-preview-item {
+  .app-plan-doc-checklist-count {
+    margin-left: auto;
+    background: #e2e8f0;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    color: #64748b;
+  }
+  
+  .app-plan-doc-checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  
+  .app-plan-doc-check-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: #555;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
   }
   
-  .app-plan-doc-preview-item .checked {
-    text-decoration: line-through;
+  .app-plan-doc-check-item:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+  }
+  
+  .app-plan-doc-check-item.checked {
+    background: #f0fdf4;
+    border-color: #86efac;
+  }
+  
+  .app-plan-doc-check-item input {
+    display: none;
+  }
+  
+  .app-plan-doc-check-box {
+    color: #cbd5e1;
+    flex-shrink: 0;
+  }
+  
+  .app-plan-doc-check-item.checked .app-plan-doc-check-box {
     color: #22c55e;
   }
   
-  .app-plan-doc-preview-more {
-    font-size: 12px;
-    color: #999;
-    padding-left: 24px;
-    font-style: italic;
-  }
-  
-  .app-plan-doc-preview-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 16px;
-    background: #dd0000;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
+  .app-plan-doc-check-label {
+    flex: 1;
     font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+    font-weight: 500;
+    color: #334155;
   }
   
-  .app-plan-doc-preview-btn:hover {
-    background: #b91c1c;
-    transform: translateY(-1px);
+  .app-plan-doc-check-item.checked .app-plan-doc-check-label {
+    color: #166534;
+    text-decoration: line-through;
+  }
+  
+  .app-plan-doc-check-category {
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
   
   /* Document Drawer */

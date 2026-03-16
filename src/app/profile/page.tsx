@@ -19,6 +19,9 @@ type UserProfile = {
   preferredLanguage?: string;
   germanLevel?: string;
   englishLevel?: string;
+  // Language test scores
+  ieltsScore?: number | null;
+  toeflScore?: number | null;
   // Background
   academicBackground?: string;
   backgroundSummary?: string;
@@ -145,7 +148,9 @@ export default function ProfilePage() {
       icon: <Globe className="w-5 h-5" />,
       fields: [
         { key: 'germanLevel', label: 'German Level', type: 'select', options: ['None', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Native'] },
-        { key: 'englishLevel', label: 'English Level', type: 'select', options: ['None', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Native'] }
+        { key: 'englishLevel', label: 'English Level', type: 'select', options: ['None', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Native'] },
+        { key: 'ieltsScore', label: 'IELTS Overall Score (if available)', type: 'number', placeholder: 'e.g. 7.0' },
+        { key: 'toeflScore', label: 'TOEFL iBT Score (if available)', type: 'number', placeholder: 'e.g. 100' }
       ]
     },
     {
@@ -319,6 +324,17 @@ export default function ProfilePage() {
                         onChange={(e) => updateProfile(field.key as keyof UserProfile, e.target.value)}
                         style={{ ...iStyle, minHeight: 100, resize: 'vertical' }}
                         placeholder={field.placeholder || `Enter your ${field.label.toLowerCase()}...`}
+                      />
+                    ) : field.type === 'number' ? (
+                      <input
+                        type="number"
+                        step="0.5"
+                        min="0"
+                        max={field.key === 'ieltsScore' ? '9' : '120'}
+                        value={(userProfile as any)?.[field.key] ?? ''}
+                        onChange={(e) => updateProfile(field.key as keyof UserProfile, e.target.value ? parseFloat(e.target.value) : null)}
+                        style={iStyle}
+                        placeholder={field.placeholder || ''}
                       />
                     ) : field.type === 'tags' ? (
                       <input
