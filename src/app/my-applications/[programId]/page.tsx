@@ -5,11 +5,19 @@ import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {
-  Loader2, ArrowLeft, ArrowRight, CheckCircle2, Circle, AlertCircle,
-  FileText, GraduationCap, ExternalLink, Sparkles, Globe, Zap, Clock,
-  ChevronRight, Wallet, Plane
+  Loader2, ArrowLeft, CheckCircle2, Circle, AlertCircle,
+  FileText, GraduationCap, Calendar, ExternalLink, Sparkles,
+  MapPin, Euro, Globe, Award, BookOpen, Zap, Clock, ChevronDown, ChevronUp,
+  X, FolderOpen, FileCheck, ClipboardList, ChevronRight, Info, TrendingUp,
+  Shield, Wallet, Plane, Heart, RefreshCw, User, Target, Star
 } from 'lucide-react';
+import Image from 'next/image';
+import { SiteNav } from '@/components/SiteNav';
+import { CourseAssistantChat } from '@/components/CourseAssistantChat';
 import { GermanPulseLoader } from '@/components/GermanPulseLoader';
+import { CriticalRequirementsCard } from '@/components/CriticalRequirementsCard';
+
+const RED = '#dd0000';
 
 interface StepResource {
   name: string;
@@ -44,6 +52,7 @@ interface CriticalRequirement {
   status: 'met' | 'partial' | 'missing' | 'unknown';
   statusScore: number;
   notes: string;
+  askUserQuestions?: string[];
 }
 
 interface ProfileMatch {
@@ -80,7 +89,7 @@ interface UserProfile {
 export default function ApplicationPlanPage() {
   const params = useParams();
   const router = useRouter();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const programId = params.programId as string;
 
   const [loading, setLoading] = useState(true);
@@ -90,12 +99,13 @@ export default function ApplicationPlanPage() {
   const [updatingStep, setUpdatingStep] = useState<string | null>(null);
   const [programDetails, setProgramDetails] = useState<any>(null);
   const [generating, setGenerating] = useState(false);
+  const [showCourseDetails, setShowCourseDetails] = useState(true);
+  const [docDrawerOpen, setDocDrawerOpen] = useState(false);
+  const [checkedDocs, setCheckedDocs] = useState<string[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [expandedStep, setExpandedStep] = useState<string | null>(null);
+  const [stepInfoDrawer, setStepInfoDrawer] = useState<ApplicationStep | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
-  
-  // Wizard state
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [showOverview, setShowOverview] = useState(true);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -138,6 +148,7 @@ export default function ApplicationPlanPage() {
     try {
       setLoading(true);
       
+      // Fetch user profile
       const profileRes = await fetch('/api/profile');
       if (profileRes.ok) {
         const profileData = await profileRes.json();
@@ -155,7 +166,6 @@ export default function ApplicationPlanPage() {
           setUniversity(shortlistItem.university);
         }
       }
-
       const programRes = await fetch(`/api/programs/${programId}`);
       if (programRes.ok) {
         const programData = await programRes.json();
@@ -167,11 +177,11 @@ export default function ApplicationPlanPage() {
           setUniversity(programData.program.university);
         }
       }
-
       const response = await fetch(`/api/programs/${programId}/application-plan`);
       if (response.ok) {
         const data = await response.json();
         if (data.plan && data.plan.steps && Array.isArray(data.plan.steps)) {
+          // Ensure criticalRequirements is valid array
           const validatedPlan = {
             ...data.plan,
             criticalRequirements: Array.isArray(data.plan.criticalRequirements) 
@@ -196,6 +206,7 @@ export default function ApplicationPlanPage() {
       setGenerating(true);
       setGenerationError(null);
       
+      // Ensure we have program details
       let programToUse = programDetails;
       if (!programToUse) {
         const programRes = await fetch(`/api/programs/${programId}`);
@@ -209,10 +220,11 @@ export default function ApplicationPlanPage() {
       }
       
       if (!programToUse) {
-        setGenerationError('Could not fetch program details');
+        console.error('Could not fetch program details');
         return;
       }
       
+      // Use already fetched profile or fetch fresh
       let profileToUse = userProfile;
       if (!profileToUse) {
         const profileRes = await fetch('/api/profile');
@@ -224,6 +236,7 @@ export default function ApplicationPlanPage() {
       }
       
       const sanitizedProgram = buildProgramPayload(programToUse);
+
       const payload = profileToUse
         ? { program: sanitizedProgram, userProfile: profileToUse }
         : { program: sanitizedProgram };
@@ -237,6 +250,7 @@ export default function ApplicationPlanPage() {
       if (generateRes.ok) {
         const generatedData = await generateRes.json();
         if (generatedData && generatedData.plan && generatedData.plan.steps && Array.isArray(generatedData.plan.steps)) {
+          // Ensure criticalRequirements is valid array
           const validatedPlan = {
             ...generatedData.plan,
             criticalRequirements: Array.isArray(generatedData.plan.criticalRequirements) 
@@ -250,15 +264,39 @@ export default function ApplicationPlanPage() {
           setGenerationError(null);
         } else {
           setGenerationError('Invalid response from server. Please try again.');
+          console.error('Invalid plan response:', generatedData);
         }
       } else {
         const errorData = await generateRes.json().catch(() => ({}));
-        setGenerationError(errorData?.message || errorData?.error || 'Failed to generate plan.');
+        const message = errorData?.message || errorData?.error || 'Failed to generate application plan. Please try again.';
+        setGenerationError(message);
+        console.error('Failed to generate plan:', errorData);
       }
     } catch (err) {
-      setGenerationError(err instanceof Error ? err.message : 'Unexpected error');
+      console.error('Failed to generate plan:', err);
+      setGenerationError(err instanceof Error ? err.message : 'Unexpected error generating plan');
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const getCategoryIcon = (category?: string) => {
+    switch (category) {
+      case 'language': return <Globe className="w-4 h-4" />;
+      case 'documents': return <FileText className="w-4 h-4" />;
+      case 'application': return <ClipboardList className="w-4 h-4" />;
+      case 'financial': return <Wallet className="w-4 h-4" />;
+      case 'visa': return <Plane className="w-4 h-4" />;
+      default: return <FileCheck className="w-4 h-4" />;
+    }
+  };
+
+  const getPriorityColor = (priority?: string) => {
+    switch (priority) {
+      case 'high': return '#dc2626';
+      case 'medium': return '#f59e0b';
+      case 'low': return '#22c55e';
+      default: return '#6b7280';
     }
   };
 
@@ -288,989 +326,1843 @@ export default function ApplicationPlanPage() {
     }
   };
 
-  const getCategoryIcon = (category?: string) => {
-    switch (category) {
-      case 'language': return <Globe className="w-6 h-6" />;
-      case 'documents': return <FileText className="w-6 h-6" />;
-      case 'financial': return <Wallet className="w-6 h-6" />;
-      case 'visa': return <Plane className="w-6 h-6" />;
-      default: return <FileText className="w-6 h-6" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'met': return '#22c55e';
-      case 'partial': return '#f59e0b';
-      case 'missing': return '#ef4444';
-      default: return '#6b7280';
-    }
-  };
-
-  // Loading state
   if (status === 'loading' || loading) {
     return (
-      <div className="wizard-loading">
-        <GermanPulseLoader
-          headline="Loading your application..."
-          progressLabel="Fetching plan data"
-          subline="Please wait"
-        />
-        <style jsx>{styles}</style>
+      <div className="app-plan-page">
+        <SiteNav />
+        <div className="app-plan-loading">
+          <GermanPulseLoader
+            headline="Crafting your German-ready roadmap…"
+            progressLabel="Syncing verified resources"
+            subline="Personalizing requirements and milestones"
+          />
+        </div>
+        <style jsx global>{styles}</style>
       </div>
     );
   }
 
-  // No plan - show generate screen
-  if (!plan) {
-    return (
-      <div className="wizard-container">
-        <div className="wizard-header">
-          <Link href="/my-shortlist" className="wizard-back">
-            <ArrowLeft className="w-5 h-5" />
-          </Link>
-          <div className="wizard-header-info">
-            <h1>{programName || 'Your Program'}</h1>
-            <p><GraduationCap className="w-4 h-4" /> {university}</p>
+  const toggleDoc = (docId: string) => {
+    setCheckedDocs(prev => 
+      prev.includes(docId) ? prev.filter(id => id !== docId) : [...prev, docId]
+    );
+  };
+
+  const isDocumentStep = (title: string) => {
+    return title.toLowerCase().includes('document') || title.toLowerCase().includes('gather');
+  };
+
+  const documentList = [
+    { id: 'passport', label: 'Valid Passport', category: 'Personal' },
+    { id: 'photo', label: 'Passport-sized Photos', category: 'Personal' },
+    { id: 'diploma', label: 'High School Diploma / Bachelor Certificate', category: 'Academic' },
+    { id: 'transcript', label: 'Academic Transcripts', category: 'Academic' },
+    { id: 'language', label: 'Language Proficiency Certificate (IELTS/TOEFL/TestDaF)', category: 'Language' },
+    { id: 'cv', label: 'Curriculum Vitae (CV)', category: 'Personal' },
+    { id: 'motivation', label: 'Motivation Letter', category: 'Personal' },
+    { id: 'recommendation', label: 'Letters of Recommendation', category: 'Academic' },
+    { id: 'financial', label: 'Financial Proof / Blocked Account', category: 'Financial' },
+    { id: 'insurance', label: 'Health Insurance Proof', category: 'Health' },
+  ];
+  const completedSteps = plan?.steps?.filter(s => s.completed).length || 0;
+  const totalSteps = plan?.steps?.length || 0;
+  const progressPercent = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
+
+  return (
+    <div className="app-plan-page">
+      <SiteNav />
+      
+      <main className="app-plan-main">
+        {/* Back Button */}
+        <Link href="/my-shortlist" className="app-plan-back">
+          <ArrowLeft className="w-4 h-4" />
+          Back to Shortlist
+        </Link>
+
+        {/* Hero Section with Course Info */}
+        <div className="app-plan-hero">
+          <div className="app-plan-hero-bg">
+            {programDetails?.image_url && (
+              <Image 
+                src={programDetails.image_url} 
+                alt={programName} 
+                fill 
+                style={{ objectFit: 'cover', opacity: 0.15 }} 
+                sizes="1400px" 
+                unoptimized 
+              />
+            )}
+            <div className="app-plan-hero-overlay" />
           </div>
-        </div>
-
-        <div className="wizard-content">
-          <div className="wizard-generate">
-            <div className="wizard-generate-icon">
-              <Sparkles className="w-12 h-12" />
+          
+          <div className="app-plan-hero-content">
+            <div className="app-plan-hero-badges">
+              {programDetails?.degree_level && (
+                <span className="app-plan-badge app-plan-badge-white">
+                  <Award className="w-3.5 h-3.5" />
+                  {programDetails.degree_level}
+                </span>
+              )}
+              {programDetails?.is_free && (
+                <span className="app-plan-badge app-plan-badge-green">
+                  <Euro className="w-3.5 h-3.5" />
+                  No Tuition
+                </span>
+              )}
             </div>
-            <h2>Create Your Application Plan</h2>
-            <p>Get a personalized step-by-step guide tailored to this program and your profile.</p>
-
-            <div className="wizard-features">
-              <div className="wizard-feature">
-                <CheckCircle2 className="w-5 h-5" />
-                <span>Personalized steps based on your profile</span>
-              </div>
-              <div className="wizard-feature">
-                <Clock className="w-5 h-5" />
-                <span>Timeline with deadlines</span>
-              </div>
-              <div className="wizard-feature">
-                <AlertCircle className="w-5 h-5" />
-                <span>Requirements check</span>
-              </div>
-            </div>
-
-            <button
-              onClick={generatePlan}
-              disabled={generating}
-              className="wizard-generate-btn"
-            >
-              {generating ? (
+            
+            <h1 className="app-plan-title">{programName || 'Your Application'}</h1>
+            
+            <div className="app-plan-university">
+              <GraduationCap className="w-5 h-5" />
+              <span>{university}</span>
+              {programDetails?.city && (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Creating Your Plan...
-                </>
-              ) : (
-                <>
-                  <Zap className="w-5 h-5" />
-                  Generate My Plan
+                  <span className="app-plan-dot">•</span>
+                  <MapPin className="w-4 h-4" />
+                  <span>{programDetails.city}</span>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* Course Details Expandable */}
+        {programDetails && (
+          <div className="app-plan-details-card">
+            <button 
+              className="app-plan-details-toggle"
+              onClick={() => setShowCourseDetails(!showCourseDetails)}
+            >
+              <div className="app-plan-details-toggle-left">
+                <BookOpen className="w-5 h-5" />
+                <span>Course Details</span>
+              </div>
+              {showCourseDetails ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </button>
-
-            {generationError && (
-              <div className="wizard-error">
-                <AlertCircle className="w-4 h-4" />
-                <span>{generationError}</span>
-              </div>
-            )}
-          </div>
-        </div>
-        <style jsx>{styles}</style>
-      </div>
-    );
-  }
-
-  // Has plan - wizard view
-  const steps = plan.steps || [];
-  const totalSteps = steps.length;
-  const completedSteps = steps.filter(s => s.completed || s.autoCompleted).length;
-  const progressPercent = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
-  const currentStep = steps[currentStepIndex];
-
-  const goNext = () => {
-    if (currentStepIndex < totalSteps - 1) {
-      setCurrentStepIndex(currentStepIndex + 1);
-      setShowOverview(false);
-    }
-  };
-
-  const goPrev = () => {
-    if (currentStepIndex > 0) {
-      setCurrentStepIndex(currentStepIndex - 1);
-    } else {
-      setShowOverview(true);
-    }
-  };
-
-  // Overview screen
-  if (showOverview) {
-    return (
-      <div className="wizard-container">
-        <div className="wizard-header">
-          <Link href="/my-shortlist" className="wizard-back">
-            <ArrowLeft className="w-5 h-5" />
-          </Link>
-          <div className="wizard-header-info">
-            <h1>{programName}</h1>
-            <p><GraduationCap className="w-4 h-4" /> {university}</p>
-          </div>
-        </div>
-
-        <div className="wizard-content">
-          <div className="wizard-overview">
-            <div className="wizard-overview-icon">
-              <Sparkles className="w-10 h-10" />
-            </div>
-            <h2>Your Application Plan</h2>
-            <p className="wizard-overview-summary">{plan.overview}</p>
-
-            <div className="wizard-stats">
-              <div className="wizard-stat">
-                <span className="wizard-stat-value">{totalSteps}</span>
-                <span className="wizard-stat-label">Steps</span>
-              </div>
-              <div className="wizard-stat">
-                <span className="wizard-stat-value">{completedSteps}</span>
-                <span className="wizard-stat-label">Done</span>
-              </div>
-              <div className="wizard-stat">
-                <span className="wizard-stat-value">{plan.estimatedTimeline}</span>
-                <span className="wizard-stat-label">Timeline</span>
-              </div>
-            </div>
-
-            <div className="wizard-progress-section">
-              <div className="wizard-progress-header">
-                <span>Progress</span>
-                <span>{progressPercent}%</span>
-              </div>
-              <div className="wizard-progress-bar">
-                <div className="wizard-progress-fill" style={{ width: `${progressPercent}%` }} />
-              </div>
-            </div>
-
-            {plan.criticalRequirements && plan.criticalRequirements.length > 0 && (
-              <div className="wizard-requirements">
-                <h3>Requirements Check</h3>
-                {plan.criticalRequirements.map((req, i) => (
-                  <div key={i} className="wizard-req-item">
-                    <div className="wizard-req-status" style={{ background: getStatusColor(req.status) }}>
-                      {req.status === 'met' ? <CheckCircle2 className="w-4 h-4" /> : 
-                       req.status === 'missing' ? <AlertCircle className="w-4 h-4" /> :
-                       <Circle className="w-4 h-4" />}
-                    </div>
-                    <div className="wizard-req-info">
-                      <span className="wizard-req-label">{req.label}</span>
-                      <span className="wizard-req-detail">{req.programRequirement}</span>
-                    </div>
-                    <span className="wizard-req-badge" style={{ 
-                      color: getStatusColor(req.status),
-                      background: `${getStatusColor(req.status)}15`
-                    }}>
-                      {req.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <button className="wizard-start-btn" onClick={() => setShowOverview(false)}>
-              {completedSteps > 0 ? 'Continue Your Journey' : 'Start Your Journey'}
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-        <style jsx>{styles}</style>
-      </div>
-    );
-  }
-
-  // Step view
-  return (
-    <div className="wizard-container">
-      <div className="wizard-header">
-        <button onClick={goPrev} className="wizard-back">
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-        <div className="wizard-header-progress">
-          <span>Step {currentStepIndex + 1} of {totalSteps}</span>
-          <div className="wizard-mini-progress">
-            <div className="wizard-mini-progress-fill" style={{ width: `${((currentStepIndex + 1) / totalSteps) * 100}%` }} />
-          </div>
-        </div>
-        <button onClick={() => setShowOverview(true)} className="wizard-overview-btn">
-          Overview
-        </button>
-      </div>
-
-      <div className="wizard-dots">
-        {steps.map((step, i) => (
-          <button
-            key={step.id}
-            onClick={() => { setCurrentStepIndex(i); setShowOverview(false); }}
-            className={`wizard-dot ${i === currentStepIndex ? 'active' : ''} ${step.completed || step.autoCompleted ? 'done' : ''}`}
-          />
-        ))}
-      </div>
-
-      <div className="wizard-content">
-        {currentStep && (
-          <div className="wizard-step">
-            <div className="wizard-step-icon" style={{ 
-              background: currentStep.completed || currentStep.autoCompleted ? '#22c55e' : '#dd0000' 
-            }}>
-              {getCategoryIcon(currentStep.category)}
-            </div>
-
-            <h2 className="wizard-step-title">{currentStep.title}</h2>
             
-            {currentStep.deadline && (
-              <div className="wizard-step-deadline">
-                <Clock className="w-4 h-4" />
-                {currentStep.deadline}
-              </div>
-            )}
-
-            <p className="wizard-step-description">{currentStep.description}</p>
-
-            {currentStep.detailedInfo && (
-              <div className="wizard-step-details">
-                <p>{currentStep.detailedInfo}</p>
-              </div>
-            )}
-
-            {currentStep.autoCompleted && currentStep.autoCompletedReason && (
-              <div className="wizard-step-auto">
-                <CheckCircle2 className="w-5 h-5" />
-                <span>Auto-verified: {currentStep.autoCompletedReason}</span>
-              </div>
-            )}
-
-            {currentStep.resources && currentStep.resources.length > 0 && (
-              <div className="wizard-step-resources">
-                <h4>Helpful Resources</h4>
-                {currentStep.resources.map((resource, i) => (
-                  <a key={i} href={resource.url} target="_blank" rel="noopener noreferrer" className="wizard-resource-link">
+            {showCourseDetails && (
+              <div className="app-plan-details-grid">
+                {programDetails.city && (
+                  <div className="app-plan-detail-item">
+                    <MapPin className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Location</span>
+                      <span className="app-plan-detail-value">{programDetails.city}</span>
+                    </div>
+                  </div>
+                )}
+                {programDetails.degree_level && (
+                  <div className="app-plan-detail-item">
+                    <Award className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Degree</span>
+                      <span className="app-plan-detail-value">{programDetails.degree_level}</span>
+                    </div>
+                  </div>
+                )}
+                {(programDetails.tuition_fee_number != null || programDetails.is_free) && (
+                  <div className="app-plan-detail-item">
+                    <Euro className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Tuition</span>
+                      <span className="app-plan-detail-value">
+                        {programDetails.is_free ? 'Free' : `€${programDetails.tuition_fee_number?.toLocaleString()}/semester`}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                {programDetails.languages_array?.length > 0 && (
+                  <div className="app-plan-detail-item">
+                    <Globe className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Language</span>
+                      <span className="app-plan-detail-value">{programDetails.languages_array.join(', ')}</span>
+                    </div>
+                  </div>
+                )}
+                {programDetails.programme_duration && (
+                  <div className="app-plan-detail-item">
+                    <Clock className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Duration</span>
+                      <span className="app-plan-detail-value">{programDetails.programme_duration}</span>
+                    </div>
+                  </div>
+                )}
+                {programDetails.subject_area && (
+                  <div className="app-plan-detail-item app-plan-detail-full">
+                    <BookOpen className="w-4 h-4" />
+                    <div>
+                      <span className="app-plan-detail-label">Subject Area</span>
+                      <span className="app-plan-detail-value">{programDetails.subject_area}</span>
+                    </div>
+                  </div>
+                )}
+                {programDetails.detail_url && (
+                  <a 
+                    href={programDetails.detail_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="app-plan-daad-link"
+                  >
                     <ExternalLink className="w-4 h-4" />
-                    <span>{resource.name}</span>
-                    <ChevronRight className="w-4 h-4" />
+                    View on DAAD
                   </a>
-                ))}
+                )}
               </div>
-            )}
-
-            {currentStep.action && (
-              <Link href={currentStep.action.url} className="wizard-action-btn">
-                {currentStep.action.label}
-                <ChevronRight className="w-5 h-5" />
-              </Link>
             )}
           </div>
         )}
-      </div>
 
-      <div className="wizard-footer">
-        {!currentStep?.autoCompleted && (
-          <button
-            onClick={() => currentStep && toggleStep(currentStep.id, currentStep.completed)}
-            disabled={updatingStep === currentStep?.id}
-            className={`wizard-complete-btn ${currentStep?.completed ? 'completed' : ''}`}
-          >
-            {updatingStep === currentStep?.id ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : currentStep?.completed ? (
-              <><CheckCircle2 className="w-5 h-5" /> Completed</>
-            ) : (
-              <><Circle className="w-5 h-5" /> Mark as Done</>
-            )}
-          </button>
-        )}
+        {/* Main Content Area */}
+        <div className="app-plan-content">
+          {!plan ? (
+            /* No Plan - Generate CTA */
+            <div className="app-plan-generate">
+              <div className="app-plan-generate-icon">
+                <Sparkles className="w-12 h-12" />
+              </div>
+              <h2>Ready to Start Your Application?</h2>
+              <p>Generate a personalized AI-powered application plan tailored to this program's requirements and your profile.</p>
+              
+              <button
+                onClick={generatePlan}
+                disabled={generating}
+                className="app-plan-generate-btn"
+              >
+                {generating ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Generating Your Plan...
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-5 h-5" />
+                    Generate Application Plan
+                  </>
+                )}
+              </button>
 
-        <button onClick={goNext} disabled={currentStepIndex >= totalSteps - 1} className="wizard-next-btn">
-          {currentStepIndex >= totalSteps - 1 ? 'Finish' : 'Next Step'}
-          <ArrowRight className="w-5 h-5" />
-        </button>
-      </div>
-      <style jsx>{styles}</style>
+              {generationError && (
+                <div className="app-plan-generate-error">
+                  <AlertCircle className="w-4 h-4" />
+                  <span>{generationError}</span>
+                  <button onClick={generatePlan} disabled={generating}>
+                    Try again
+                  </button>
+                </div>
+              )}
+
+              <div className="app-plan-features">
+                <div className="app-plan-feature">
+                  <CheckCircle2 className="w-5 h-5" />
+                  <span>Personalized Steps</span>
+                </div>
+                <div className="app-plan-feature">
+                  <Clock className="w-5 h-5" />
+                  <span>Timeline Tracking</span>
+                </div>
+                <div className="app-plan-feature">
+                  <AlertCircle className="w-5 h-5" />
+                  <span>Blocker Detection</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Has Plan - Show Progress and Steps */
+            <>
+              {/* Critical Requirements Card */}
+              {plan.criticalRequirements && plan.criticalRequirements.length > 0 && (
+                <CriticalRequirementsCard 
+                  requirements={plan.criticalRequirements}
+                  onAnswerQuestion={(type, answers) => {
+                    // TODO: Handle updating profile with answers
+                    console.log('Answer questions for', type, answers);
+                  }}
+                />
+              )}
+
+              {/* AI Profile Match Summary */}
+              {plan.profileMatch && (
+                <div className="app-plan-ai-summary">
+                  <div className="app-plan-ai-summary-header">
+                    <div className="app-plan-ai-icon">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3>AI Profile Analysis</h3>
+                      <span>How your profile matches this program</span>
+                    </div>
+                    <div className="app-plan-match-score" style={{ 
+                      background: plan.profileMatch.score >= 80 ? 'linear-gradient(135deg, #22c55e, #16a34a)' : 
+                                  plan.profileMatch.score >= 60 ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 
+                                  'linear-gradient(135deg, #ef4444, #dc2626)'
+                    }}>
+                      <span className="score-value">{plan.profileMatch.score}%</span>
+                      <span className="score-label">Match</span>
+                    </div>
+                  </div>
+                  
+                  <p className="app-plan-ai-summary-text">{plan.profileMatch.summary}</p>
+                  
+                  <div className="app-plan-ai-grid">
+                    {plan.profileMatch.strengths?.length > 0 && (
+                      <div className="app-plan-ai-section app-plan-ai-strengths">
+                        <h4><CheckCircle2 className="w-4 h-4" /> Your Strengths</h4>
+                        <ul>
+                          {plan.profileMatch.strengths.map((s, i) => (
+                            <li key={i}>{s}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {plan.profileMatch.gaps?.length > 0 && (
+                      <div className="app-plan-ai-section app-plan-ai-gaps">
+                        <h4><AlertCircle className="w-4 h-4" /> Areas to Address</h4>
+                        <ul>
+                          {plan.profileMatch.gaps.map((g, i) => (
+                            <li key={i}>{g}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {plan.profileMatch.recommendations?.length > 0 && (
+                    <div className="app-plan-ai-recommendations">
+                      <h4><Target className="w-4 h-4" /> Recommendations</h4>
+                      <ul>
+                        {plan.profileMatch.recommendations.map((r, i) => (
+                          <li key={i}>{r}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Progress Card */}
+              <div className="app-plan-progress-card">
+                <div className="app-plan-progress-header">
+                  <div>
+                    <span className="app-plan-progress-label">Application Progress</span>
+                    <div className="app-plan-progress-percent" style={{ color: progressPercent === 100 ? '#22c55e' : RED }}>
+                      {progressPercent}%
+                    </div>
+                  </div>
+                  <div className="app-plan-progress-right">
+                    <span className="app-plan-progress-label">Timeline</span>
+                    <div className="app-plan-progress-timeline">{plan.estimatedTimeline}</div>
+                  </div>
+                </div>
+                
+                <div className="app-plan-progress-bar">
+                  <div 
+                    className="app-plan-progress-fill" 
+                    style={{ 
+                      width: `${progressPercent}%`,
+                      background: progressPercent === 100 ? '#22c55e' : `linear-gradient(90deg, ${RED}, #7c3aed)`
+                    }} 
+                  />
+                </div>
+                
+                <div className="app-plan-progress-steps">
+                  {completedSteps} of {totalSteps} steps completed
+                </div>
+              </div>
+
+              {/* Blockers */}
+              {plan.blockers?.length > 0 && (
+                <div className="app-plan-blockers">
+                  <div className="app-plan-blockers-header">
+                    <AlertCircle className="w-5 h-5" />
+                    <h3>Potential Blockers</h3>
+                  </div>
+                  <ul>
+                    {plan.blockers.map((blocker, i) => (
+                      <li key={i}>{blocker}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Overview */}
+              <div className="app-plan-overview">
+                <h3>Overview</h3>
+                <p>{plan.overview}</p>
+              </div>
+
+              {/* Steps */}
+              <div className="app-plan-steps">
+                <h2>Application Steps</h2>
+                <div className="app-plan-steps-list">
+                  {plan.steps.map((step, index) => (
+                    <div 
+                      key={step.id} 
+                      className={`app-plan-step ${step.completed || step.autoCompleted ? 'app-plan-step-done' : ''} ${step.autoCompleted ? 'app-plan-step-auto' : ''}`}
+                    >
+                      <button
+                        onClick={() => !step.autoCompleted && toggleStep(step.id, step.completed)}
+                        disabled={updatingStep === step.id || step.autoCompleted}
+                        className="app-plan-step-check"
+                        title={step.autoCompleted ? 'Auto-completed based on your profile' : 'Mark as complete'}
+                      >
+                        {updatingStep === step.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : step.completed || step.autoCompleted ? (
+                          <CheckCircle2 className="w-5 h-5" />
+                        ) : (
+                          <Circle className="w-5 h-5" />
+                        )}
+                      </button>
+                      
+                      <div className="app-plan-step-content">
+                        <div className="app-plan-step-header">
+                          <div className="app-plan-step-title-row">
+                            <span className="app-plan-step-category" style={{ color: getPriorityColor(step.priority) }}>
+                              {getCategoryIcon(step.category)}
+                            </span>
+                            <h4>{index + 1}. {step.title}</h4>
+                            {step.priority && (
+                              <span className="app-plan-step-priority" style={{ 
+                                background: `${getPriorityColor(step.priority)}15`,
+                                color: getPriorityColor(step.priority),
+                                borderColor: getPriorityColor(step.priority)
+                              }}>
+                                {step.priority}
+                              </span>
+                            )}
+                          </div>
+                          {step.deadline && (
+                            <span className="app-plan-step-deadline">
+                              <Calendar className="w-3.5 h-3.5" />
+                              {step.deadline}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {step.autoCompleted && step.autoCompletedReason && (
+                          <div className="app-plan-step-auto-badge">
+                            <CheckCircle2 className="w-4 h-4" />
+                            <span>Auto-verified: {step.autoCompletedReason}</span>
+                          </div>
+                        )}
+                        
+                        <p>{step.description}</p>
+                        
+                        {/* Detailed Info Toggle */}
+                        {step.detailedInfo && (
+                          <button 
+                            className="app-plan-step-info-toggle"
+                            onClick={() => setExpandedStep(expandedStep === step.id ? null : step.id)}
+                          >
+                            <Info className="w-4 h-4" />
+                            {expandedStep === step.id ? 'Hide details' : 'Learn more about this step'}
+                            <ChevronDown className={`w-4 h-4 transition-transform ${expandedStep === step.id ? 'rotate-180' : ''}`} />
+                          </button>
+                        )}
+                        
+                        {expandedStep === step.id && step.detailedInfo && (
+                          <div className="app-plan-step-detailed">
+                            <p>{step.detailedInfo}</p>
+                          </div>
+                        )}
+                        
+                        {/* Resources */}
+                        {step.resources && step.resources.length > 0 && (
+                          <div className="app-plan-step-resources">
+                            <span className="app-plan-step-resources-label">Helpful Resources:</span>
+                            <div className="app-plan-step-resources-list">
+                              {step.resources.map((resource, ri) => (
+                                <a 
+                                  key={ri}
+                                  href={resource.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="app-plan-step-resource"
+                                  title={resource.description}
+                                >
+                                  <ExternalLink className="w-3.5 h-3.5" />
+                                  {resource.name}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Document List for Document Gathering step */}
+                        {isDocumentStep(step.title) && (
+                          <div className="app-plan-doc-preview">
+                            <div className="app-plan-doc-preview-header">
+                              <FolderOpen className="w-4 h-4" />
+                              <span>Required Documents ({documentList.length} items)</span>
+                            </div>
+                            <div className="app-plan-doc-preview-list">
+                              {documentList.slice(0, 4).map(doc => (
+                                <div key={doc.id} className="app-plan-doc-preview-item">
+                                  {checkedDocs.includes(doc.id) ? (
+                                    <CheckCircle2 className="w-4 h-4" style={{ color: '#22c55e' }} />
+                                  ) : (
+                                    <FileText className="w-4 h-4" style={{ color: '#999' }} />
+                                  )}
+                                  <span className={checkedDocs.includes(doc.id) ? 'checked' : ''}>{doc.label}</span>
+                                </div>
+                              ))}
+                              {documentList.length > 4 && (
+                                <div className="app-plan-doc-preview-more">
+                                  +{documentList.length - 4} more
+                                </div>
+                              )}
+                            </div>
+                            <button 
+                              className="app-plan-doc-preview-btn"
+                              onClick={() => setDocDrawerOpen(true)}
+                            >
+                              <ClipboardList className="w-4 h-4" />
+                              Open Document Checklist
+                              <ChevronRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        )}
+                        
+                        {step.action && (
+                          <Link
+                            href={step.action.url}
+                            target={step.action.type === 'external' ? '_blank' : undefined}
+                            rel={step.action.type === 'external' ? 'noopener noreferrer' : undefined}
+                            className={`app-plan-step-action ${step.action.type === 'external' ? 'app-plan-step-action-outline' : ''}`}
+                          >
+                            {step.action.type === 'cv' && <FileText className="w-4 h-4" />}
+                            {step.action.type === 'letter' && <Sparkles className="w-4 h-4" />}
+                            {step.action.type === 'document' && <FileText className="w-4 h-4" />}
+                            {step.action.type === 'external' && <ExternalLink className="w-4 h-4" />}
+                            {step.action.label}
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Completion */}
+              {progressPercent === 100 && (
+                <div className="app-plan-complete">
+                  <CheckCircle2 className="w-16 h-16" />
+                  <h3>Application Complete!</h3>
+                  <p>You've completed all steps for this program. Good luck!</p>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </main>
+
+      {/* AI Course Assistant Chatbot */}
+      {plan && programDetails && (
+        <CourseAssistantChat 
+          programId={programId}
+          programContext={programDetails}
+          userProfile={userProfile}
+        />
+      )}
+
+      {/* Document Drawer */}
+      {docDrawerOpen && (
+        <div className="app-plan-drawer-overlay" onClick={() => setDocDrawerOpen(false)}>
+          <div className="app-plan-drawer" onClick={e => e.stopPropagation()}>
+            <div className="app-plan-drawer-header">
+              <div className="app-plan-drawer-title">
+                <ClipboardList className="w-5 h-5" />
+                <h3>Required Documents</h3>
+                <span className="app-plan-drawer-count">{checkedDocs.length}/{documentList.length} completed</span>
+              </div>
+              <button 
+                className="app-plan-drawer-close"
+                onClick={() => setDocDrawerOpen(false)}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="app-plan-drawer-content">
+              <p className="app-plan-drawer-desc">
+                Check off documents as you gather them. These are typically required for German university applications.
+              </p>
+              
+              <div className="app-plan-drawer-progress">
+                <div className="app-plan-drawer-progress-bar">
+                  <div 
+                    className="app-plan-drawer-progress-fill"
+                    style={{ width: `${(checkedDocs.length / documentList.length) * 100}%` }}
+                  />
+                </div>
+                <span>{Math.round((checkedDocs.length / documentList.length) * 100)}%</span>
+              </div>
+              
+              <div className="app-plan-doc-list">
+                {documentList.map(doc => (
+                  <label 
+                    key={doc.id} 
+                    className={`app-plan-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}
+                  >
+                    <div className="app-plan-doc-checkbox">
+                      {checkedDocs.includes(doc.id) ? (
+                        <CheckCircle2 className="w-5 h-5" />
+                      ) : (
+                        <Circle className="w-5 h-5" />
+                      )}
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={checkedDocs.includes(doc.id)}
+                      onChange={() => toggleDoc(doc.id)}
+                    />
+                    <div className="app-plan-doc-info">
+                      <span className="app-plan-doc-name">{doc.label}</span>
+                      <span className="app-plan-doc-category">{doc.category}</span>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            <div className="app-plan-drawer-footer">
+              <button 
+                className="app-plan-drawer-done"
+                onClick={() => setDocDrawerOpen(false)}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx global>{styles}</style>
     </div>
   );
 }
 
 const styles = `
-  .wizard-loading {
+  .app-plan-page {
     min-height: 100vh;
+    background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
+  }
+  
+  .app-plan-loading {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fafafa;
+    min-height: 70vh;
   }
-
-  .wizard-container {
-    min-height: 100vh;
-    background: #fafafa;
-    display: flex;
-    flex-direction: column;
+  
+  
+  .app-plan-main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px 24px 100px;
   }
-
-  .wizard-header {
-    display: flex;
+  
+  .app-plan-back {
+    display: inline-flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    background: #fff;
-    border-bottom: 1px solid #eee;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
-  .wizard-back {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    border: 1px solid #e5e5e5;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-    color: #333;
-  }
-
-  .wizard-back:hover {
-    background: #f5f5f5;
-  }
-
-  .wizard-header-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .wizard-header-info h1 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #111;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .wizard-header-info p {
-    font-size: 13px;
+    gap: 8px;
     color: #666;
-    margin: 4px 0 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .wizard-header-progress {
-    flex: 1;
-    text-align: center;
-  }
-
-  .wizard-header-progress span {
+    text-decoration: none;
     font-size: 14px;
     font-weight: 500;
+    margin-bottom: 24px;
+    transition: color 0.2s;
+  }
+  
+  .app-plan-back:hover {
+    color: ${RED};
+  }
+  
+  /* Hero Section */
+  .app-plan-hero {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  
+  .app-plan-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, ${RED} 0%, #7c3aed 100%);
+  }
+  
+  .app-plan-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+  }
+  
+  .app-plan-hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 48px 32px;
+  }
+  
+  .app-plan-hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .app-plan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .app-plan-badge-white {
+    background: rgba(255,255,255,0.95);
+    color: ${RED};
+  }
+  
+  .app-plan-badge-green {
+    background: #22c55e;
+    color: #fff;
+  }
+  
+  .app-plan-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 12px;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  
+  .app-plan-university {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+  }
+  
+  .app-plan-dot {
+    opacity: 0.5;
+  }
+  
+  /* Course Details Card */
+  .app-plan-details-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  
+  .app-plan-details-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
     color: #333;
   }
-
-  .wizard-mini-progress {
-    height: 4px;
-    background: #e5e5e5;
-    border-radius: 2px;
-    margin-top: 6px;
-    overflow: hidden;
-  }
-
-  .wizard-mini-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #dd0000, #ff4444);
-    border-radius: 2px;
-    transition: width 0.3s ease;
-  }
-
-  .wizard-overview-btn {
-    padding: 10px 16px;
-    border-radius: 10px;
-    border: 1px solid #e5e5e5;
-    background: #fff;
-    font-size: 13px;
-    font-weight: 500;
-    color: #666;
-    cursor: pointer;
-  }
-
-  .wizard-dots {
+  
+  .app-plan-details-toggle-left {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: ${RED};
+  }
+  
+  .app-plan-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    padding: 0 20px 20px;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 16px;
+  }
+  
+  .app-plan-detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: ${RED};
+  }
+  
+  .app-plan-detail-item > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .app-plan-detail-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .app-plan-detail-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+  }
+  
+  .app-plan-detail-full {
+    grid-column: 1 / -1;
+  }
+  
+  .app-plan-daad-link {
+    grid-column: 1 / -1;
+    display: inline-flex;
+    align-items: center;
     gap: 8px;
-    padding: 16px;
-    background: #fff;
-    flex-wrap: wrap;
-  }
-
-  .wizard-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 2px solid #ddd;
-    background: #fff;
-    cursor: pointer;
+    padding: 10px 16px;
+    background: ${RED};
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    width: fit-content;
     transition: all 0.2s;
-    padding: 0;
   }
-
-  .wizard-dot.active {
-    border-color: #dd0000;
-    background: #dd0000;
-    transform: scale(1.3);
+  
+  .app-plan-daad-link:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
   }
-
-  .wizard-dot.done {
-    border-color: #22c55e;
-    background: #22c55e;
-  }
-
-  .wizard-content {
-    flex: 1;
-    padding: 24px 20px;
-    max-width: 560px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .wizard-generate {
+  
+  /* Generate CTA */
+  .app-plan-generate {
+    background: linear-gradient(135deg, rgba(221,0,0,0.03), rgba(124,58,237,0.03));
+    border: 2px dashed #e0e0e0;
+    border-radius: 24px;
+    padding: 60px 32px;
     text-align: center;
-    padding: 40px 0;
   }
-
-  .wizard-generate-icon {
+  
+  .app-plan-generate-icon {
     width: 100px;
     height: 100px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, #dd0000, #ff4444);
+    border-radius: 24px;
+    background: linear-gradient(135deg, ${RED}, #7c3aed);
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 28px;
     color: #fff;
+    animation: pulse 2s infinite;
+    box-shadow: 0 8px 32px rgba(221,0,0,0.25);
   }
-
-  .wizard-generate h2 {
-    font-size: 26px;
-    font-weight: 700;
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  .app-plan-generate h2 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
     color: #111;
     margin: 0 0 12px;
   }
-
-  .wizard-generate > p {
+  
+  .app-plan-generate > p {
     font-size: 16px;
     color: #666;
-    margin: 0 0 32px;
-    line-height: 1.5;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto 32px;
   }
-
-  .wizard-features {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-
-  .wizard-feature {
-    display: flex;
+  
+  .app-plan-generate-btn {
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    font-size: 15px;
-    color: #333;
-  }
-
-  .wizard-feature svg {
-    color: #22c55e;
-    flex-shrink: 0;
-  }
-
-  .wizard-generate-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 10px;
-    width: 100%;
-    padding: 18px 24px;
-    background: linear-gradient(135deg, #dd0000, #b91c1c);
+    padding: 18px 36px;
+    background: linear-gradient(135deg, ${RED}, #b91c1c);
     color: #fff;
     border: none;
     border-radius: 14px;
     font-size: 17px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    box-shadow: 0 8px 28px rgba(221,0,0,0.35);
+    transition: all 0.3s;
   }
-
-  .wizard-generate-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(221, 0, 0, 0.3);
+  
+  .app-plan-generate-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 36px rgba(221,0,0,0.4);
   }
-
-  .wizard-generate-btn:disabled {
+  
+  .app-plan-generate-btn:disabled {
     opacity: 0.7;
     cursor: not-allowed;
   }
-
-  .wizard-error {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+  
+  .app-plan-generate-error {
     margin-top: 16px;
     padding: 12px 16px;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 10px;
-    color: #dc2626;
-    font-size: 14px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #991b1b;
+    font-size: 13px;
   }
-
-  .wizard-overview {
-    text-align: center;
+  
+  .app-plan-generate-error button {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: #b91c1c;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
   }
-
-  .wizard-overview-icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 24px;
-    background: linear-gradient(135deg, #dd0000, #ff4444);
+  
+  .app-plan-features {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+  }
+  
+  .app-plan-feature span {
+    color: #555;
+  }
+  
+  /* AI Profile Match Summary */
+  .app-plan-ai-summary {
+    background: linear-gradient(135deg, rgba(221,0,0,0.03), rgba(124,58,237,0.03));
+    border: 1px solid rgba(221,0,0,0.15);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .app-plan-ai-summary-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .app-plan-ai-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, ${RED}, #7c3aed);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 24px;
     color: #fff;
+    flex-shrink: 0;
+  }
+  
+  .app-plan-ai-summary-header > div:nth-child(2) {
+    flex: 1;
+  }
+  
+  .app-plan-ai-summary-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 4px;
+  }
+  
+  .app-plan-ai-summary-header span {
+    font-size: 13px;
+    color: #666;
+  }
+  
+  .app-plan-match-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  
+  .app-plan-match-score .score-value {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  
+  .app-plan-match-score .score-label {
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-top: 2px;
+  }
+  
+  .app-plan-ai-summary-text {
+    font-size: 15px;
+    color: #444;
+    line-height: 1.6;
+    margin: 0 0 20px;
+    padding: 16px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 12px;
+  }
+  
+  .app-plan-ai-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .app-plan-ai-section {
+    padding: 16px;
+    border-radius: 12px;
+  }
+  
+  .app-plan-ai-strengths {
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.2);
+  }
+  
+  .app-plan-ai-gaps {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+  }
+  
+  .app-plan-ai-section h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 12px;
+  }
+  
+  .app-plan-ai-strengths h4 {
+    color: #16a34a;
+  }
+  
+  .app-plan-ai-gaps h4 {
+    color: #dc2626;
+  }
+  
+  .app-plan-ai-section ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  
+  .app-plan-ai-strengths ul {
+    color: #15803d;
+  }
+  
+  .app-plan-ai-gaps ul {
+    color: #991b1b;
+  }
+  
+  .app-plan-ai-section li {
+    margin-bottom: 6px;
+  }
+  
+  .app-plan-ai-recommendations {
+    padding: 16px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 12px;
+  }
+  
+  .app-plan-ai-recommendations h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin: 0 0 12px;
+  }
+  
+  .app-plan-ai-recommendations ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #1e40af;
+  }
+  
+  .app-plan-ai-recommendations li {
+    margin-bottom: 6px;
   }
 
-  .wizard-overview h2 {
-    font-size: 24px;
+  /* Progress Card */
+  .app-plan-progress-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  
+  .app-plan-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  
+  .app-plan-progress-label {
+    font-size: 13px;
+    color: #737373;
+    display: block;
+    margin-bottom: 4px;
+  }
+  
+  .app-plan-progress-percent {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  
+  .app-plan-progress-right {
+    text-align: right;
+  }
+  
+  .app-plan-progress-timeline {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+  }
+  
+  .app-plan-progress-bar {
+    height: 10px;
+    background: #f0f0f0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  
+  .app-plan-progress-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.4s ease;
+  }
+  
+  .app-plan-progress-steps {
+    font-size: 13px;
+    color: #737373;
+  }
+  
+  /* Blockers */
+  .app-plan-blockers {
+    background: rgba(239,68,68,0.05);
+    border: 1px solid rgba(239,68,68,0.15);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  
+  .app-plan-blockers-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #dc2626;
+    margin-bottom: 12px;
+  }
+  
+  .app-plan-blockers-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .app-plan-blockers ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #991b1b;
+  }
+  
+  .app-plan-blockers li {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  /* Overview */
+  .app-plan-overview {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  
+  .app-plan-overview h3 {
+    font-size: 18px;
     font-weight: 700;
     color: #111;
     margin: 0 0 12px;
   }
-
-  .wizard-overview-summary {
+  
+  .app-plan-overview p {
     font-size: 15px;
-    color: #666;
+    color: #555;
     line-height: 1.6;
-    margin: 0 0 32px;
+    margin: 0;
   }
-
-  .wizard-stats {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    margin-bottom: 32px;
-  }
-
-  .wizard-stat {
-    text-align: center;
-  }
-
-  .wizard-stat-value {
-    display: block;
-    font-size: 28px;
+  
+  /* Steps */
+  .app-plan-steps h2 {
+    font-size: 20px;
     font-weight: 700;
-    color: #dd0000;
-  }
-
-  .wizard-stat-label {
-    font-size: 13px;
-    color: #888;
-    margin-top: 4px;
-  }
-
-  .wizard-progress-section {
-    background: #fff;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 24px;
-    border: 1px solid #eee;
-  }
-
-  .wizard-progress-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-  }
-
-  .wizard-progress-bar {
-    height: 10px;
-    background: #e5e5e5;
-    border-radius: 5px;
-    overflow: hidden;
-  }
-
-  .wizard-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #dd0000, #22c55e);
-    border-radius: 5px;
-    transition: width 0.5s ease;
-  }
-
-  .wizard-requirements {
-    background: #fff;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 24px;
-    border: 1px solid #eee;
-    text-align: left;
-  }
-
-  .wizard-requirements h3 {
-    font-size: 16px;
-    font-weight: 600;
     color: #111;
-    margin: 0 0 16px;
+    margin: 0 0 20px;
   }
-
-  .wizard-req-item {
+  
+  .app-plan-steps-list {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 0;
-    border-bottom: 1px solid #f0f0f0;
+    flex-direction: column;
+    gap: 16px;
   }
-
-  .wizard-req-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
-  .wizard-req-status {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+  
+  .app-plan-step {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    flex-shrink: 0;
-  }
-
-  .wizard-req-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .wizard-req-label {
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-  }
-
-  .wizard-req-detail {
-    display: block;
-    font-size: 12px;
-    color: #888;
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .wizard-req-badge {
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    flex-shrink: 0;
-  }
-
-  .wizard-start-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    padding: 18px 24px;
-    background: linear-gradient(135deg, #dd0000, #b91c1c);
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    font-size: 17px;
-    font-weight: 600;
-    cursor: pointer;
+    gap: 16px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    padding: 20px;
     transition: all 0.2s;
   }
-
-  .wizard-start-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(221, 0, 0, 0.3);
+  
+  .app-plan-step:hover {
+    border-color: #d0d0d0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   }
-
-  .wizard-step {
-    text-align: center;
+  
+  .app-plan-step-done {
+    border-color: #22c55e;
+    background: rgba(34,197,94,0.02);
   }
-
-  .wizard-step-icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 24px;
+  
+  .app-plan-step-auto {
+    border-color: #3b82f6;
+    background: rgba(59,130,246,0.02);
+  }
+  
+  .app-plan-step-auto .app-plan-step-check {
+    border-color: #3b82f6;
+    background: #3b82f6;
+    color: #fff;
+    cursor: default;
+  }
+  
+  .app-plan-step-check {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #d4d4d4;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 24px;
+    cursor: pointer;
+    flex-shrink: 0;
+    color: #d4d4d4;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-step-done .app-plan-step-check {
+    border-color: #22c55e;
+    background: #22c55e;
     color: #fff;
   }
-
-  .wizard-step-title {
-    font-size: 22px;
+  
+  .app-plan-step-content {
+    flex: 1;
+  }
+  
+  .app-plan-step-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .app-plan-step-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .app-plan-step-category {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .app-plan-step-header h4 {
+    font-size: 16px;
     font-weight: 700;
     color: #111;
-    margin: 0 0 16px;
-    line-height: 1.3;
+    margin: 0;
   }
-
-  .wizard-step-deadline {
+  
+  .app-plan-step-priority {
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid;
+  }
+  
+  .app-plan-step-done .app-plan-step-header h4 {
+    color: #737373;
+    text-decoration: line-through;
+  }
+  
+  .app-plan-step-auto-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(59,130,246,0.1);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #1d4ed8;
+    margin-bottom: 10px;
+  }
+  
+  .app-plan-step-deadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #d97706;
+  }
+  
+  .app-plan-step-info-toggle {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 8px 14px;
-    background: #fff3cd;
-    color: #856404;
-    border-radius: 10px;
-    font-size: 14px;
+    background: #f5f5f5;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 13px;
     font-weight: 500;
-    margin-bottom: 20px;
-  }
-
-  .wizard-step-description {
-    font-size: 16px;
     color: #555;
-    line-height: 1.7;
-    margin: 0 0 24px;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: all 0.2s;
   }
-
-  .wizard-step-details {
-    background: #f8f9fa;
-    border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 24px;
-    text-align: left;
+  
+  .app-plan-step-info-toggle:hover {
+    background: #eee;
+    border-color: #d0d0d0;
+    color: #333;
   }
-
-  .wizard-step-details p {
+  
+  .app-plan-step-detailed {
+    padding: 16px;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    margin: 12px 0;
+  }
+  
+  .app-plan-step-detailed p {
     font-size: 14px;
-    color: #666;
-    line-height: 1.6;
+    color: #444;
+    line-height: 1.7;
     margin: 0;
   }
-
-  .wizard-step-auto {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 14px 18px;
-    background: #dcfce7;
-    color: #166534;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 24px;
+  
+  .app-plan-step-resources {
+    margin: 12px 0;
   }
-
-  .wizard-step-resources {
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 24px;
-    text-align: left;
-  }
-
-  .wizard-step-resources h4 {
-    font-size: 15px;
-    font-weight: 600;
-    color: #333;
-    margin: 0 0 14px;
-  }
-
-  .wizard-resource-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    text-decoration: none;
-    color: #333;
-    transition: all 0.2s;
-  }
-
-  .wizard-resource-link:last-child {
-    margin-bottom: 0;
-  }
-
-  .wizard-resource-link:hover {
-    background: #f0f0f0;
-  }
-
-  .wizard-resource-link span {
-    flex: 1;
-    font-size: 14px;
-  }
-
-  .wizard-action-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    padding: 16px 20px;
-    background: #fff;
-    border: 2px solid #dd0000;
-    color: #dd0000;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s;
-    margin-bottom: 16px;
-  }
-
-  .wizard-action-btn:hover {
-    background: #dd0000;
-    color: #fff;
-  }
-
-  .wizard-footer {
-    display: flex;
-    gap: 12px;
-    padding: 16px 20px;
-    background: #fff;
-    border-top: 1px solid #eee;
-    position: sticky;
-    bottom: 0;
-  }
-
-  .wizard-complete-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 16px 20px;
-    background: #fff;
-    border: 2px solid #ddd;
-    border-radius: 14px;
-    font-size: 16px;
+  
+  .app-plan-step-resources-label {
+    display: block;
+    font-size: 12px;
     font-weight: 600;
     color: #666;
-    cursor: pointer;
+    margin-bottom: 8px;
+  }
+  
+  .app-plan-step-resources-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .app-plan-step-resource {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #555;
+    text-decoration: none;
     transition: all 0.2s;
   }
-
-  .wizard-complete-btn:hover:not(:disabled) {
-    border-color: #22c55e;
+  
+  .app-plan-step-resource:hover {
+    border-color: ${RED};
+    color: ${RED};
+    background: rgba(221,0,0,0.03);
+  }
+  
+  .app-plan-step-content > p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin: 0 0 12px;
+  }
+  
+  .app-plan-step-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: ${RED};
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-step-action:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+  }
+  
+  .app-plan-step-action-outline {
+    background: #fff;
+    color: ${RED};
+    border: 1px solid ${RED};
+  }
+  
+  .app-plan-step-action-outline:hover {
+    background: rgba(221,0,0,0.05);
+  }
+  
+  /* Document Preview in Step */
+  .app-plan-doc-preview {
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0;
+  }
+  
+  .app-plan-doc-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #dd0000;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .app-plan-doc-preview-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  
+  .app-plan-doc-preview-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+  }
+  
+  .app-plan-doc-preview-item .checked {
+    text-decoration: line-through;
     color: #22c55e;
   }
-
-  .wizard-complete-btn.completed {
-    background: #dcfce7;
-    border-color: #22c55e;
-    color: #166534;
+  
+  .app-plan-doc-preview-more {
+    font-size: 12px;
+    color: #999;
+    padding-left: 24px;
+    font-style: italic;
   }
-
-  .wizard-complete-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .wizard-next-btn {
-    flex: 1;
+  
+  .app-plan-doc-preview-btn {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 16px 20px;
-    background: linear-gradient(135deg, #dd0000, #b91c1c);
-    border: none;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: 600;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #dd0000;
     color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
   }
-
-  .wizard-next-btn:hover:not(:disabled) {
+  
+  .app-plan-doc-preview-btn:hover {
+    background: #b91c1c;
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(221, 0, 0, 0.3);
   }
-
-  .wizard-next-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  
+  /* Document Drawer */
+  .app-plan-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
   }
-
-  @media (max-width: 480px) {
-    .wizard-header {
-      padding: 12px 16px;
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .app-plan-drawer {
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    max-height: 90vh;
+    background: #fff;
+    border-radius: 24px 24px 0 0;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.15);
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  
+  .app-plan-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .app-plan-drawer-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #dd0000;
+  }
+  
+  .app-plan-drawer-title h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+  }
+  
+  .app-plan-drawer-count {
+    font-size: 12px;
+    color: #22c55e;
+    font-weight: 600;
+    background: rgba(34,197,94,0.1);
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+  
+  .app-plan-drawer-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-drawer-close:hover {
+    background: #e5e5e5;
+    color: #111;
+  }
+  
+  .app-plan-drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+  }
+  
+  .app-plan-drawer-desc {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin: 0 0 16px;
+  }
+  
+  .app-plan-drawer-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .app-plan-drawer-progress-bar {
+    flex: 1;
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .app-plan-drawer-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #dd0000, #7c3aed);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  
+  .app-plan-drawer-progress span {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    min-width: 40px;
+    text-align: right;
+  }
+  
+  .app-plan-doc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .app-plan-doc-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-doc-item:hover {
+    background: #f5f5f5;
+    border-color: #d0d0d0;
+  }
+  
+  .app-plan-doc-item.checked {
+    background: rgba(34,197,94,0.05);
+    border-color: #22c55e;
+  }
+  
+  .app-plan-doc-item input[type="checkbox"] {
+    display: none;
+  }
+  
+  .app-plan-doc-checkbox {
+    color: #d4d4d4;
+    flex-shrink: 0;
+  }
+  
+  .app-plan-doc-item.checked .app-plan-doc-checkbox {
+    color: #22c55e;
+  }
+  
+  .app-plan-doc-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .app-plan-doc-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+  }
+  
+  .app-plan-doc-item.checked .app-plan-doc-name {
+    text-decoration: line-through;
+    color: #22c55e;
+  }
+  
+  .app-plan-doc-category {
+    font-size: 12px;
+    color: #999;
+  }
+  
+  .app-plan-drawer-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .app-plan-drawer-done {
+    width: 100%;
+    padding: 14px 24px;
+    background: #dd0000;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-drawer-done:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+  }
+  
+  @media (min-width: 769px) {
+    .app-plan-drawer-overlay {
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
     }
-
-    .wizard-content {
-      padding: 20px 16px;
+    
+    .app-plan-drawer {
+      max-height: 85vh;
+      border-radius: 24px;
+      animation: fadeIn 0.2s ease;
     }
-
-    .wizard-generate h2,
-    .wizard-overview h2 {
-      font-size: 22px;
+  }
+  
+  /* Complete */
+  .app-plan-complete {
+    text-align: center;
+    padding: 48px 24px;
+    background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02));
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 24px;
+    margin-top: 40px;
+    color: #22c55e;
+  }
+  
+  .app-plan-complete h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #16a34a;
+    margin: 16px 0 8px;
+  }
+  
+  .app-plan-complete p {
+    font-size: 16px;
+    color: #15803d;
+    margin: 0;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .app-plan-main {
+      padding: 24px 16px 100px;
     }
-
-    .wizard-stats {
-      gap: 20px;
+    
+    .app-plan-hero-content {
+      padding: 32px 20px;
     }
-
-    .wizard-stat-value {
+    
+    .app-plan-title {
       font-size: 24px;
     }
-
-    .wizard-step-title {
-      font-size: 20px;
+    
+    .app-plan-details-grid {
+      grid-template-columns: 1fr 1fr;
     }
-
-    .wizard-footer {
+    
+    .app-plan-generate {
+      padding: 40px 20px;
+    }
+    
+    .app-plan-generate h2 {
+      font-size: 22px;
+    }
+    
+    .app-plan-generate-btn {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .app-plan-features {
       flex-direction: column;
+      align-items: center;
     }
-
-    .wizard-dots {
-      padding: 12px;
-      gap: 6px;
+    
+    .app-plan-progress-header {
+      flex-direction: column;
+      gap: 16px;
     }
-
-    .wizard-dot {
-      width: 8px;
-      height: 8px;
+    
+    .app-plan-progress-right {
+      text-align: left;
+    }
+    
+    .app-plan-step {
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .app-plan-step-header {
+      flex-direction: column;
     }
   }
 `;
