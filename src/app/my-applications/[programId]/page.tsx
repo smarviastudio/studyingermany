@@ -239,8 +239,13 @@ export default function ApplicationPlanPage() {
       
       if (generateRes.ok) {
         const generatedData = await generateRes.json();
-        setPlan(generatedData.plan);
-        setGenerationError(null);
+        if (generatedData && generatedData.plan) {
+          setPlan(generatedData.plan);
+          setGenerationError(null);
+        } else {
+          setGenerationError('Invalid response from server. Please try again.');
+          console.error('Invalid plan response:', generatedData);
+        }
       } else {
         const errorData = await generateRes.json().catch(() => ({}));
         const message = errorData?.message || errorData?.error || 'Failed to generate application plan. Please try again.';
