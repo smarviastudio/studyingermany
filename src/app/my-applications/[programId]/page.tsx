@@ -8,31 +8,68 @@ import {
   Loader2, ArrowLeft, CheckCircle2, Circle, AlertCircle,
   FileText, GraduationCap, Calendar, ExternalLink, Sparkles,
   MapPin, Euro, Globe, Award, BookOpen, Zap, Clock, ChevronDown, ChevronUp,
-  X, FolderOpen, FileCheck, ClipboardList, ChevronRight
+  X, FolderOpen, FileCheck, ClipboardList, ChevronRight, Info, TrendingUp,
+  Shield, Wallet, Plane, Heart, RefreshCw, User, Target, Star
 } from 'lucide-react';
 import Image from 'next/image';
 import { SiteNav } from '@/components/SiteNav';
+import { CourseAssistantChat } from '@/components/CourseAssistantChat';
 
 const RED = '#dd0000';
+
+interface StepResource {
+  name: string;
+  url: string;
+  description: string;
+}
 
 interface ApplicationStep {
   id: string;
   title: string;
   description: string;
+  detailedInfo?: string;
   deadline?: string;
   completed: boolean;
+  autoCompleted?: boolean;
+  autoCompletedReason?: string;
+  priority?: 'high' | 'medium' | 'low';
+  category?: 'language' | 'documents' | 'application' | 'financial' | 'visa';
+  resources?: StepResource[];
   action?: {
-    type: 'cv' | 'letter' | 'document' | 'external';
+    type: 'cv' | 'letter' | 'document' | 'external' | 'info';
     label: string;
     url: string;
   };
 }
 
+interface ProfileMatch {
+  score: number;
+  summary: string;
+  strengths: string[];
+  gaps: string[];
+  recommendations: string[];
+}
+
 interface ApplicationPlan {
+  profileMatch?: ProfileMatch;
   overview: string;
   estimatedTimeline: string;
   blockers: string[];
   steps: ApplicationStep[];
+}
+
+interface UserProfile {
+  fullName?: string;
+  nationality?: string;
+  germanLevel?: string;
+  englishLevel?: string;
+  ieltsScore?: number | null;
+  toeflScore?: number | null;
+  academicBackground?: string;
+  backgroundSummary?: string;
+  targetDegreeLevel?: string;
+  hasScholarship?: boolean;
+  maxTuitionEur?: number | null;
 }
 
 export default function ApplicationPlanPage() {
@@ -51,6 +88,9 @@ export default function ApplicationPlanPage() {
   const [showCourseDetails, setShowCourseDetails] = useState(true);
   const [docDrawerOpen, setDocDrawerOpen] = useState(false);
   const [checkedDocs, setCheckedDocs] = useState<string[]>([]);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [expandedStep, setExpandedStep] = useState<string | null>(null);
+  const [stepInfoDrawer, setStepInfoDrawer] = useState<ApplicationStep | null>(null);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -65,6 +105,16 @@ export default function ApplicationPlanPage() {
   const fetchPlan = async () => {
     try {
       setLoading(true);
+      
+      // Fetch user profile
+      const profileRes = await fetch('/api/profile');
+      if (profileRes.ok) {
+        const profileData = await profileRes.json();
+        if (profileData.profile) {
+          setUserProfile(profileData.profile);
+        }
+      }
+      
       const shortlistRes = await fetch('/api/shortlist');
       if (shortlistRes.ok) {
         const shortlistData = await shortlistRes.json();
@@ -102,16 +152,20 @@ export default function ApplicationPlanPage() {
   const generatePlan = async () => {
     try {
       setGenerating(true);
-      const profileRes = await fetch('/api/profile');
-      let userProfile = null;
-      if (profileRes.ok) {
-        const profileData = await profileRes.json();
-        userProfile = profileData.profile;
+      // Use already fetched profile or fetch fresh
+      let profileToUse = userProfile;
+      if (!profileToUse) {
+        const profileRes = await fetch('/api/profile');
+        if (profileRes.ok) {
+          const profileData = await profileRes.json();
+          profileToUse = profileData.profile;
+          setUserProfile(profileData.profile);
+        }
       }
       const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ program: programDetails, userProfile }),
+        body: JSON.stringify({ program: programDetails, userProfile: profileToUse }),
       });
       if (generateRes.ok) {
         const generatedData = await generateRes.json();
@@ -121,6 +175,26 @@ export default function ApplicationPlanPage() {
       console.error('Failed to generate plan:', err);
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const getCategoryIcon = (category?: string) => {
+    switch (category) {
+      case 'language': return <Globe className="w-4 h-4" />;
+      case 'documents': return <FileText className="w-4 h-4" />;
+      case 'application': return <ClipboardList className="w-4 h-4" />;
+      case 'financial': return <Wallet className="w-4 h-4" />;
+      case 'visa': return <Plane className="w-4 h-4" />;
+      default: return <FileCheck className="w-4 h-4" />;
+    }
+  };
+
+  const getPriorityColor = (priority?: string) => {
+    switch (priority) {
+      case 'high': return '#dc2626';
+      case 'medium': return '#f59e0b';
+      case 'low': return '#22c55e';
+      default: return '#6b7280';
     }
   };
 
@@ -385,6 +459,66 @@ export default function ApplicationPlanPage() {
           ) : (
             /* Has Plan - Show Progress and Steps */
             <>
+              {/* AI Profile Match Summary */}
+              {plan.profileMatch && (
+                <div className="app-plan-ai-summary">
+                  <div className="app-plan-ai-summary-header">
+                    <div className="app-plan-ai-icon">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3>AI Profile Analysis</h3>
+                      <span>How your profile matches this program</span>
+                    </div>
+                    <div className="app-plan-match-score" style={{ 
+                      background: plan.profileMatch.score >= 80 ? 'linear-gradient(135deg, #22c55e, #16a34a)' : 
+                                  plan.profileMatch.score >= 60 ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 
+                                  'linear-gradient(135deg, #ef4444, #dc2626)'
+                    }}>
+                      <span className="score-value">{plan.profileMatch.score}%</span>
+                      <span className="score-label">Match</span>
+                    </div>
+                  </div>
+                  
+                  <p className="app-plan-ai-summary-text">{plan.profileMatch.summary}</p>
+                  
+                  <div className="app-plan-ai-grid">
+                    {plan.profileMatch.strengths?.length > 0 && (
+                      <div className="app-plan-ai-section app-plan-ai-strengths">
+                        <h4><CheckCircle2 className="w-4 h-4" /> Your Strengths</h4>
+                        <ul>
+                          {plan.profileMatch.strengths.map((s, i) => (
+                            <li key={i}>{s}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {plan.profileMatch.gaps?.length > 0 && (
+                      <div className="app-plan-ai-section app-plan-ai-gaps">
+                        <h4><AlertCircle className="w-4 h-4" /> Areas to Address</h4>
+                        <ul>
+                          {plan.profileMatch.gaps.map((g, i) => (
+                            <li key={i}>{g}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {plan.profileMatch.recommendations?.length > 0 && (
+                    <div className="app-plan-ai-recommendations">
+                      <h4><Target className="w-4 h-4" /> Recommendations</h4>
+                      <ul>
+                        {plan.profileMatch.recommendations.map((r, i) => (
+                          <li key={i}>{r}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Progress Card */}
               <div className="app-plan-progress-card">
                 <div className="app-plan-progress-header">
@@ -443,16 +577,17 @@ export default function ApplicationPlanPage() {
                   {plan.steps.map((step, index) => (
                     <div 
                       key={step.id} 
-                      className={`app-plan-step ${step.completed ? 'app-plan-step-done' : ''}`}
+                      className={`app-plan-step ${step.completed || step.autoCompleted ? 'app-plan-step-done' : ''} ${step.autoCompleted ? 'app-plan-step-auto' : ''}`}
                     >
                       <button
-                        onClick={() => toggleStep(step.id, step.completed)}
-                        disabled={updatingStep === step.id}
+                        onClick={() => !step.autoCompleted && toggleStep(step.id, step.completed)}
+                        disabled={updatingStep === step.id || step.autoCompleted}
                         className="app-plan-step-check"
+                        title={step.autoCompleted ? 'Auto-completed based on your profile' : 'Mark as complete'}
                       >
                         {updatingStep === step.id ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : step.completed ? (
+                        ) : step.completed || step.autoCompleted ? (
                           <CheckCircle2 className="w-5 h-5" />
                         ) : (
                           <Circle className="w-5 h-5" />
@@ -461,7 +596,21 @@ export default function ApplicationPlanPage() {
                       
                       <div className="app-plan-step-content">
                         <div className="app-plan-step-header">
-                          <h4>{index + 1}. {step.title}</h4>
+                          <div className="app-plan-step-title-row">
+                            <span className="app-plan-step-category" style={{ color: getPriorityColor(step.priority) }}>
+                              {getCategoryIcon(step.category)}
+                            </span>
+                            <h4>{index + 1}. {step.title}</h4>
+                            {step.priority && (
+                              <span className="app-plan-step-priority" style={{ 
+                                background: `${getPriorityColor(step.priority)}15`,
+                                color: getPriorityColor(step.priority),
+                                borderColor: getPriorityColor(step.priority)
+                              }}>
+                                {step.priority}
+                              </span>
+                            )}
+                          </div>
                           {step.deadline && (
                             <span className="app-plan-step-deadline">
                               <Calendar className="w-3.5 h-3.5" />
@@ -469,7 +618,55 @@ export default function ApplicationPlanPage() {
                             </span>
                           )}
                         </div>
+                        
+                        {step.autoCompleted && step.autoCompletedReason && (
+                          <div className="app-plan-step-auto-badge">
+                            <CheckCircle2 className="w-4 h-4" />
+                            <span>Auto-verified: {step.autoCompletedReason}</span>
+                          </div>
+                        )}
+                        
                         <p>{step.description}</p>
+                        
+                        {/* Detailed Info Toggle */}
+                        {step.detailedInfo && (
+                          <button 
+                            className="app-plan-step-info-toggle"
+                            onClick={() => setExpandedStep(expandedStep === step.id ? null : step.id)}
+                          >
+                            <Info className="w-4 h-4" />
+                            {expandedStep === step.id ? 'Hide details' : 'Learn more about this step'}
+                            <ChevronDown className={`w-4 h-4 transition-transform ${expandedStep === step.id ? 'rotate-180' : ''}`} />
+                          </button>
+                        )}
+                        
+                        {expandedStep === step.id && step.detailedInfo && (
+                          <div className="app-plan-step-detailed">
+                            <p>{step.detailedInfo}</p>
+                          </div>
+                        )}
+                        
+                        {/* Resources */}
+                        {step.resources && step.resources.length > 0 && (
+                          <div className="app-plan-step-resources">
+                            <span className="app-plan-step-resources-label">Helpful Resources:</span>
+                            <div className="app-plan-step-resources-list">
+                              {step.resources.map((resource, ri) => (
+                                <a 
+                                  key={ri}
+                                  href={resource.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="app-plan-step-resource"
+                                  title={resource.description}
+                                >
+                                  <ExternalLink className="w-3.5 h-3.5" />
+                                  {resource.name}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                         
                         {/* Document List for Document Gathering step */}
                         {isDocumentStep(step.title) && (
@@ -538,6 +735,15 @@ export default function ApplicationPlanPage() {
           )}
         </div>
       </main>
+
+      {/* AI Course Assistant Chatbot */}
+      {plan && programDetails && (
+        <CourseAssistantChat 
+          programId={programId}
+          programContext={programDetails}
+          userProfile={userProfile}
+        />
+      )}
 
       {/* Document Drawer */}
       {docDrawerOpen && (
@@ -923,6 +1129,172 @@ const styles = `
     color: #555;
   }
   
+  /* AI Profile Match Summary */
+  .app-plan-ai-summary {
+    background: linear-gradient(135deg, rgba(221,0,0,0.03), rgba(124,58,237,0.03));
+    border: 1px solid rgba(221,0,0,0.15);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .app-plan-ai-summary-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .app-plan-ai-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, ${RED}, #7c3aed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  
+  .app-plan-ai-summary-header > div:nth-child(2) {
+    flex: 1;
+  }
+  
+  .app-plan-ai-summary-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 4px;
+  }
+  
+  .app-plan-ai-summary-header span {
+    font-size: 13px;
+    color: #666;
+  }
+  
+  .app-plan-match-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  
+  .app-plan-match-score .score-value {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  
+  .app-plan-match-score .score-label {
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-top: 2px;
+  }
+  
+  .app-plan-ai-summary-text {
+    font-size: 15px;
+    color: #444;
+    line-height: 1.6;
+    margin: 0 0 20px;
+    padding: 16px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 12px;
+  }
+  
+  .app-plan-ai-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .app-plan-ai-section {
+    padding: 16px;
+    border-radius: 12px;
+  }
+  
+  .app-plan-ai-strengths {
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.2);
+  }
+  
+  .app-plan-ai-gaps {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+  }
+  
+  .app-plan-ai-section h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 12px;
+  }
+  
+  .app-plan-ai-strengths h4 {
+    color: #16a34a;
+  }
+  
+  .app-plan-ai-gaps h4 {
+    color: #dc2626;
+  }
+  
+  .app-plan-ai-section ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  
+  .app-plan-ai-strengths ul {
+    color: #15803d;
+  }
+  
+  .app-plan-ai-gaps ul {
+    color: #991b1b;
+  }
+  
+  .app-plan-ai-section li {
+    margin-bottom: 6px;
+  }
+  
+  .app-plan-ai-recommendations {
+    padding: 16px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 12px;
+  }
+  
+  .app-plan-ai-recommendations h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin: 0 0 12px;
+  }
+  
+  .app-plan-ai-recommendations ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #1e40af;
+  }
+  
+  .app-plan-ai-recommendations li {
+    margin-bottom: 6px;
+  }
+
   /* Progress Card */
   .app-plan-progress-card {
     background: #fff;
@@ -1071,7 +1443,18 @@ const styles = `
   .app-plan-step-done {
     border-color: #22c55e;
     background: rgba(34,197,94,0.02);
-    opacity: 0.75;
+  }
+  
+  .app-plan-step-auto {
+    border-color: #3b82f6;
+    background: rgba(59,130,246,0.02);
+  }
+  
+  .app-plan-step-auto .app-plan-step-check {
+    border-color: #3b82f6;
+    background: #3b82f6;
+    color: #fff;
+    cursor: default;
   }
   
   .app-plan-step-check {
@@ -1108,6 +1491,19 @@ const styles = `
     margin-bottom: 8px;
   }
   
+  .app-plan-step-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .app-plan-step-category {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
   .app-plan-step-header h4 {
     font-size: 16px;
     font-weight: 700;
@@ -1115,9 +1511,32 @@ const styles = `
     margin: 0;
   }
   
+  .app-plan-step-priority {
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid;
+  }
+  
   .app-plan-step-done .app-plan-step-header h4 {
     color: #737373;
     text-decoration: line-through;
+  }
+  
+  .app-plan-step-auto-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(59,130,246,0.1);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #1d4ed8;
+    margin-bottom: 10px;
   }
   
   .app-plan-step-deadline {
@@ -1131,6 +1550,82 @@ const styles = `
     font-size: 12px;
     font-weight: 600;
     color: #d97706;
+  }
+  
+  .app-plan-step-info-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: #f5f5f5;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-step-info-toggle:hover {
+    background: #eee;
+    border-color: #d0d0d0;
+    color: #333;
+  }
+  
+  .app-plan-step-detailed {
+    padding: 16px;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    margin: 12px 0;
+  }
+  
+  .app-plan-step-detailed p {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+    margin: 0;
+  }
+  
+  .app-plan-step-resources {
+    margin: 12px 0;
+  }
+  
+  .app-plan-step-resources-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  
+  .app-plan-step-resources-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .app-plan-step-resource {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #555;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  
+  .app-plan-step-resource:hover {
+    border-color: ${RED};
+    color: ${RED};
+    background: rgba(221,0,0,0.03);
   }
   
   .app-plan-step-content > p {

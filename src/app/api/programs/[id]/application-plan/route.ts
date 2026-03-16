@@ -25,11 +25,17 @@ const ApplicationPlanRequestSchema = z.object({
     application_channel_notes: z.string().optional(),
   }),
   userProfile: z.object({
-    german_level: z.string().optional(),
-    english_level: z.string().optional(),
-    ielts_score: z.number().nullable().optional(),
-    toefl_score: z.number().nullable().optional(),
-    academic_background: z.string().optional(),
+    fullName: z.string().optional(),
+    nationality: z.string().optional(),
+    germanLevel: z.string().optional(),
+    englishLevel: z.string().optional(),
+    ieltsScore: z.number().nullable().optional(),
+    toeflScore: z.number().nullable().optional(),
+    academicBackground: z.string().optional(),
+    backgroundSummary: z.string().optional(),
+    targetDegreeLevel: z.string().optional(),
+    hasScholarship: z.boolean().optional(),
+    maxTuitionEur: z.number().nullable().optional(),
   }).optional(),
 });
 
@@ -41,22 +47,41 @@ const ChecklistUpdateSchema = z.object({
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'openai/gpt-4o-mini';
 
-const SYSTEM_PROMPT = `You are an expert university application advisor. Analyze program requirements and create a detailed, actionable application plan.
+const SYSTEM_PROMPT = `You are an expert German university application advisor. Analyze program requirements against the user's profile and create a detailed, personalized application plan.
 
-Return JSON ONLY with this structure:
+Return JSON ONLY with this exact structure:
 {
-  "overview": "Brief summary of the application process",
+  "profileMatch": {
+    "score": 85,
+    "summary": "Brief 2-3 sentence analysis comparing user profile to program requirements",
+    "strengths": ["What the user already has that matches requirements"],
+    "gaps": ["What the user is missing or needs to improve"],
+    "recommendations": ["Specific actionable recommendations"]
+  },
+  "overview": "Brief summary of the application process for this specific program",
   "estimatedTimeline": "e.g., 3-6 months",
-  "blockers": ["List of potential issues or missing requirements"],
+  "blockers": ["List of potential issues or missing requirements based on user profile"],
   "steps": [
     {
       "id": "unique-id",
       "title": "Step title",
-      "description": "What to do",
-      "deadline": "Optional deadline",
+      "description": "Detailed description of what to do",
+      "detailedInfo": "Extended explanation: why this step matters, what exactly is required for THIS program, tips for success",
+      "deadline": "Specific deadline or relative timing like '3 months before application deadline'",
       "completed": false,
+      "autoCompleted": false,
+      "autoCompletedReason": "If user profile already satisfies this requirement, explain why",
+      "priority": "high|medium|low",
+      "category": "language|documents|application|financial|visa",
+      "resources": [
+        {
+          "name": "Resource name",
+          "url": "Verified URL",
+          "description": "What this resource helps with"
+        }
+      ],
       "action": {
-        "type": "cv|letter|document|external",
+        "type": "cv|letter|document|external|info",
         "label": "Button text",
         "url": "Link to tool or resource"
       }
@@ -64,30 +89,58 @@ Return JSON ONLY with this structure:
   ]
 }
 
-Create steps for:
-1. Language test preparation (if needed)
-2. Document gathering (transcripts, certificates, etc.)
-3. CV preparation
-4. Motivation letter writing
-5. Reference letters
-6. Application submission
-7. Financial proof preparation
-8. Visa application (if international)
+CRITICAL RULES FOR STEPS:
 
-For each step that can use our tools, set action.url to:
-- CV: "/cv-maker"
-- Motivation letter: "/motivation-letter?programId={program.id}"
-- External resources: actual URLs
+1. LANGUAGE PREPARATION:
+   - If user already has required language certificate (IELTS/TOEFL score meets minimum), set autoCompleted=true
+   - For German courses, use these VERIFIED URLs only:
+     * Goethe Institut: https://www.goethe.de/en/spr/kup.html
+     * DW Learn German: https://learngerman.dw.com/en/overview
+     * TestDaF: https://www.testdaf.de/en/
+   - For English tests:
+     * IELTS: https://www.ielts.org/for-test-takers/how-to-prepare
+     * TOEFL: https://www.ets.org/toefl/test-takers/ibt/prepare.html
 
-Use the exact program ID from the context when creating URLs.
+2. DOCUMENT GATHERING:
+   - List specific documents required for THIS program
+   - Include APS certificate info if user is from China, India, Vietnam, or Mongolia
 
-Identify blockers like:
-- Missing language certificates
-- Insufficient academic background
-- Approaching deadlines
-- Missing documents
+3. CV PREPARATION:
+   - action.url = "/cv-maker"
+   - action.type = "cv"
 
-Be specific and actionable. Return ONLY valid JSON.`;
+4. MOTIVATION LETTER:
+   - action.url = "/motivation-letter?programId={PROGRAM_ID}"
+   - action.type = "letter"
+   - Replace {PROGRAM_ID} with the actual program ID provided
+
+5. FINANCIAL PROOF:
+   - Explain blocked account requirement (€11,904/year = €992/month as of 2024)
+   - Use these VERIFIED URLs only:
+     * Fintiba: https://www.fintiba.com/
+     * Expatrio: https://www.expatrio.com/
+   - Include specific amount needed based on program duration
+
+6. APPLICATION SUBMISSION:
+   - Use uni-assist URL if applicable: https://www.uni-assist.de/en/
+   - Or direct university portal if specified
+
+7. VISA APPLICATION:
+   - German Embassy info: https://www.germany.info/
+   - Make it in Germany: https://www.make-it-in-germany.com/en/visa-residence/types/studying
+
+8. HEALTH INSURANCE:
+   - TK: https://www.tk.de/en
+   - AOK: https://en.zuwanderer.aok.de/
+
+IMPORTANT:
+- Set autoCompleted=true for steps where user profile already meets requirements
+- Be specific about deadlines relative to application deadline
+- Include detailedInfo for EVERY step explaining what's needed for THIS specific program
+- Never invent URLs - only use the verified URLs listed above or internal tool URLs
+- If no verified URL exists, set action to null
+
+Return ONLY valid JSON.`;
 
 function applyChecklistState(planData: any, checklistState: Record<string, boolean> | null) {
   if (!planData?.steps || !Array.isArray(planData.steps)) {
@@ -122,42 +175,58 @@ async function callOpenRouter(program: any, userProfile?: any): Promise<any> {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
   try {
-    const userPrompt = `Program: ${program.program_name} at ${program.university}
-Degree: ${program.degree_level || 'Not specified'}
+    const userPrompt = `PROGRAM DETAILS:
+Program ID: ${program.id}
+Program: ${program.program_name} at ${program.university}
+Degree Level: ${program.degree_level || 'Not specified'}
 
-Requirements:
+PROGRAM REQUIREMENTS:
 ${program.tab_requirements_registration || program.requirements || 'No specific requirements listed'}
 
-Language Requirements:
-- Required: ${program.language_proficiency_required ? 'Yes' : 'No'}
-- IELTS: ${program.ielts_min_score || 'Not specified'}
-- TOEFL: ${program.toefl_min_score || 'Not specified'}
-- German: ${program.german_min_level || 'Not specified'}
-- English: ${program.english_min_level || 'Not specified'}
+LANGUAGE REQUIREMENTS:
+- Language Proficiency Required: ${program.language_proficiency_required ? 'Yes' : 'No'}
+- Minimum IELTS Score: ${program.ielts_min_score || 'Not specified'}
+- Minimum TOEFL Score: ${program.toefl_min_score || 'Not specified'}
+- German Level Required: ${program.german_min_level || 'Not specified'}
+- English Level Required: ${program.english_min_level || 'Not specified'}
 
-Academic Background:
+ACADEMIC REQUIREMENTS:
 ${program.academic_background_requirements || 'Not specified'}
 
-Documents Required:
-${program.documents_required_list || 'Not specified'}
+DOCUMENTS REQUIRED:
+${program.documents_required_list || 'Standard documents: transcripts, certificates, CV, motivation letter'}
 
-Application Deadline:
-${program.registration_deadline_text || program.registration_deadline_date || 'Not specified'}
+APPLICATION DEADLINE:
+${program.registration_deadline_text || program.registration_deadline_date || 'Check university website'}
 
-Application Channel:
+APPLICATION CHANNEL:
 ${program.application_channel || 'Not specified'}
 ${program.application_channel_notes || ''}
 
-User Profile:
+===== USER PROFILE =====
 ${userProfile ? `
-- German Level: ${userProfile.german_level || 'Not specified'}
-- English Level: ${userProfile.english_level || 'Not specified'}
-- IELTS Score: ${userProfile.ielts_score || 'Not taken'}
-- TOEFL Score: ${userProfile.toefl_score || 'Not taken'}
-- Academic Background: ${userProfile.academic_background || 'Not specified'}
-` : 'No user profile provided'}
+Name: ${userProfile.fullName || 'Not provided'}
+Nationality: ${userProfile.nationality || 'Not specified'}
+German Language Level: ${userProfile.germanLevel || 'Not specified'}
+English Language Level: ${userProfile.englishLevel || 'Not specified'}
+IELTS Score: ${userProfile.ieltsScore || 'Not taken'}
+TOEFL Score: ${userProfile.toeflScore || 'Not taken'}
+Academic Background: ${userProfile.academicBackground || 'Not specified'}
+Background Summary: ${userProfile.backgroundSummary || 'Not provided'}
+Target Degree: ${userProfile.targetDegreeLevel || 'Not specified'}
+Has Scholarship: ${userProfile.hasScholarship ? 'Yes' : 'No'}
+Max Tuition Budget: ${userProfile.maxTuitionEur ? `€${userProfile.maxTuitionEur}` : 'Not specified'}
+` : 'No user profile provided - assume international student needing all steps'}
 
-Create a comprehensive application plan.`;
+INSTRUCTIONS:
+1. Compare the user profile against program requirements
+2. Calculate a profile match score (0-100)
+3. Identify what the user already has vs what they need
+4. Create personalized steps - mark steps as autoCompleted if user already meets requirement
+5. Use ONLY the verified URLs from your instructions
+6. Replace {PROGRAM_ID} with: ${program.id}
+
+Generate a comprehensive, personalized application plan.`;
 
     const response = await fetch(OPENROUTER_URL, {
       method: 'POST',
