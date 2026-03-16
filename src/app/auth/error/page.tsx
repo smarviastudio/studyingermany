@@ -2,11 +2,12 @@ import Link from 'next/link';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 
 interface AuthErrorPageProps {
-  searchParams: Record<string, string | string[] | undefined>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export default function AuthErrorPage({ searchParams }: AuthErrorPageProps) {
-  const rawError = searchParams?.error;
+export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps) {
+  const params = await searchParams;
+  const rawError = params?.error;
   const error = Array.isArray(rawError) ? rawError[0] : rawError || null;
 
   const getErrorMessage = (errorType: string | null) => {
