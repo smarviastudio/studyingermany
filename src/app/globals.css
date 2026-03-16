@@ -597,8 +597,40 @@ details[open] summary .chevron { transform: rotate(180deg); }
   }
   .sitenav-drawer-credits strong { color: #dd0000; font-size: 15px; }
 
-  /* News ticker — smaller on mobile */
-  .news-ticker-track { font-size: 12px; }
+  /* News ticker — improved mobile layout */
+  .news-ticker-shell {
+    height: auto;
+    min-height: 44px;
+    padding: 8px 12px;
+    gap: 10px;
+    flex-wrap: nowrap;
+  }
+  .news-ticker-controls {
+    gap: 6px;
+  }
+  .news-ticker-label {
+    font-size: 9px;
+    padding: 3px 8px;
+  }
+  .news-ticker-nav-group {
+    display: none;
+  }
+  .news-ticker-track {
+    flex: 1;
+    min-width: 0;
+  }
+  .news-ticker-item {
+    gap: 8px;
+    padding: 0 4px;
+  }
+  .news-ticker-date {
+    font-size: 10px;
+    display: none;
+  }
+  .news-ticker-title {
+    font-size: 12px;
+    line-height: 1.4;
+  }
 }
 
 /* Hamburger hidden on desktop */
