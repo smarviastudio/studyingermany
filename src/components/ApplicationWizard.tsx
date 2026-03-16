@@ -1,15 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 import Link from 'next/link';
 import {
-  Loader2, ArrowLeft, ArrowRight, CheckCircle2, Circle, AlertCircle,
-  FileText, GraduationCap, ExternalLink, Sparkles, Globe, Zap, Clock,
-  ChevronRight, Wallet, Plane
+  ArrowLeft, ArrowRight, CheckCircle2, Circle, AlertCircle,
+  FileText, Globe, Wallet, Plane, Clock, ExternalLink,
+  Sparkles, Loader2, ChevronRight, GraduationCap, MapPin
 } from 'lucide-react';
-import { GermanPulseLoader } from '@/components/GermanPulseLoader';
 
 interface StepResource {
   name: string;
@@ -63,230 +60,31 @@ interface ApplicationPlan {
   steps: ApplicationStep[];
 }
 
-interface UserProfile {
-  fullName?: string;
-  nationality?: string;
-  germanLevel?: string;
-  englishLevel?: string;
-  ieltsScore?: number | null;
-  toeflScore?: number | null;
-  academicBackground?: string;
-  backgroundSummary?: string;
-  targetDegreeLevel?: string;
-  hasScholarship?: boolean;
-  maxTuitionEur?: number | null;
+interface ApplicationWizardProps {
+  plan: ApplicationPlan;
+  programName: string;
+  university: string;
+  programId: string;
+  onToggleStep: (stepId: string, completed: boolean) => Promise<void>;
+  updatingStep: string | null;
 }
 
-export default function ApplicationPlanPage() {
-  const params = useParams();
-  const router = useRouter();
-  const { status } = useSession();
-  const programId = params.programId as string;
-
-  const [loading, setLoading] = useState(true);
-  const [plan, setPlan] = useState<ApplicationPlan | null>(null);
-  const [programName, setProgramName] = useState('');
-  const [university, setUniversity] = useState('');
-  const [updatingStep, setUpdatingStep] = useState<string | null>(null);
-  const [programDetails, setProgramDetails] = useState<any>(null);
-  const [generating, setGenerating] = useState(false);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [generationError, setGenerationError] = useState<string | null>(null);
-  
-  // Wizard state
+export function ApplicationWizard({ 
+  plan, 
+  programName, 
+  university, 
+  programId,
+  onToggleStep,
+  updatingStep 
+}: ApplicationWizardProps) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showOverview, setShowOverview] = useState(true);
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin?callbackUrl=/my-applications');
-      return;
-    }
-    if (status === 'authenticated' && programId) {
-      fetchPlan();
-    }
-  }, [status, programId, router]);
-
-  const buildProgramPayload = (program: any) => ({
-    id: String(program.id),
-    program_name: program.program_name || 'Unknown Program',
-    university: program.university || 'Unknown University',
-    degree_level: program.degree_level || undefined,
-    requirements: program.requirements ?? null,
-    tab_requirements_registration: program.tab_requirements_registration ?? null,
-    tab_costs_funding: program.tab_costs_funding ?? null,
-    language_proficiency_required: typeof program.language_proficiency_required === 'boolean'
-      ? program.language_proficiency_required
-      : undefined,
-    ielts_min_score: program.ielts_min_score || undefined,
-    toefl_min_score: program.toefl_min_score || undefined,
-    german_min_level: program.german_min_level || undefined,
-    english_min_level: program.english_min_level || undefined,
-    academic_background_requirements: program.academic_background_requirements || undefined,
-    documents_required_list: typeof program.documents_required_list === 'string'
-      ? program.documents_required_list
-      : Array.isArray(program.documents_required_list)
-        ? JSON.stringify(program.documents_required_list)
-        : undefined,
-    registration_deadline_date: program.registration_deadline_date || undefined,
-    registration_deadline_text: program.registration_deadline_text || undefined,
-    application_channel: program.application_channel || undefined,
-    application_channel_notes: program.application_channel_notes || undefined,
-  });
-
-  const fetchPlan = async () => {
-    try {
-      setLoading(true);
-      
-      const profileRes = await fetch('/api/profile');
-      if (profileRes.ok) {
-        const profileData = await profileRes.json();
-        if (profileData.profile) {
-          setUserProfile(profileData.profile);
-        }
-      }
-      
-      const shortlistRes = await fetch('/api/shortlist');
-      if (shortlistRes.ok) {
-        const shortlistData = await shortlistRes.json();
-        const shortlistItem = shortlistData.shortlists?.find((item: any) => item.programId === programId);
-        if (shortlistItem) {
-          setProgramName(shortlistItem.programName);
-          setUniversity(shortlistItem.university);
-        }
-      }
-
-      const programRes = await fetch(`/api/programs/${programId}`);
-      if (programRes.ok) {
-        const programData = await programRes.json();
-        setProgramDetails(programData.program);
-        if (!programName && programData.program?.program_name) {
-          setProgramName(programData.program.program_name);
-        }
-        if (!university && programData.program?.university) {
-          setUniversity(programData.program.university);
-        }
-      }
-
-      const response = await fetch(`/api/programs/${programId}/application-plan`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.plan && data.plan.steps && Array.isArray(data.plan.steps)) {
-          const validatedPlan = {
-            ...data.plan,
-            criticalRequirements: Array.isArray(data.plan.criticalRequirements) 
-              ? data.plan.criticalRequirements.filter((r: any) => r && typeof r === 'object' && r.type && r.label)
-              : [],
-            profileMatch: data.plan.profileMatch && typeof data.plan.profileMatch === 'object'
-              ? data.plan.profileMatch
-              : null,
-          };
-          setPlan(validatedPlan);
-        }
-      }
-    } catch (err) {
-      console.error('Failed to load application plan:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const generatePlan = async () => {
-    try {
-      setGenerating(true);
-      setGenerationError(null);
-      
-      let programToUse = programDetails;
-      if (!programToUse) {
-        const programRes = await fetch(`/api/programs/${programId}`);
-        if (programRes.ok) {
-          const programData = await programRes.json();
-          programToUse = programData.program;
-          setProgramDetails(programData.program);
-          if (programData.program?.program_name) setProgramName(programData.program.program_name);
-          if (programData.program?.university) setUniversity(programData.program.university);
-        }
-      }
-      
-      if (!programToUse) {
-        setGenerationError('Could not fetch program details');
-        return;
-      }
-      
-      let profileToUse = userProfile;
-      if (!profileToUse) {
-        const profileRes = await fetch('/api/profile');
-        if (profileRes.ok) {
-          const profileData = await profileRes.json();
-          profileToUse = profileData.profile;
-          setUserProfile(profileData.profile);
-        }
-      }
-      
-      const sanitizedProgram = buildProgramPayload(programToUse);
-      const payload = profileToUse
-        ? { program: sanitizedProgram, userProfile: profileToUse }
-        : { program: sanitizedProgram };
-
-      const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      
-      if (generateRes.ok) {
-        const generatedData = await generateRes.json();
-        if (generatedData && generatedData.plan && generatedData.plan.steps && Array.isArray(generatedData.plan.steps)) {
-          const validatedPlan = {
-            ...generatedData.plan,
-            criticalRequirements: Array.isArray(generatedData.plan.criticalRequirements) 
-              ? generatedData.plan.criticalRequirements.filter((r: any) => r && typeof r === 'object' && r.type && r.label)
-              : [],
-            profileMatch: generatedData.plan.profileMatch && typeof generatedData.plan.profileMatch === 'object'
-              ? generatedData.plan.profileMatch
-              : null,
-          };
-          setPlan(validatedPlan);
-          setGenerationError(null);
-        } else {
-          setGenerationError('Invalid response from server. Please try again.');
-        }
-      } else {
-        const errorData = await generateRes.json().catch(() => ({}));
-        setGenerationError(errorData?.message || errorData?.error || 'Failed to generate plan.');
-      }
-    } catch (err) {
-      setGenerationError(err instanceof Error ? err.message : 'Unexpected error');
-    } finally {
-      setGenerating(false);
-    }
-  };
-
-  const toggleStep = async (stepId: string, currentStatus: boolean) => {
-    setUpdatingStep(stepId);
-    try {
-      const response = await fetch(`/api/programs/${programId}/application-plan`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ stepId, completed: !currentStatus }),
-      });
-      if (response.ok) {
-        setPlan(prev => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            steps: prev.steps.map(step =>
-              step.id === stepId ? { ...step, completed: !currentStatus } : step
-            ),
-          };
-        });
-      }
-    } catch (err) {
-      console.error('Failed to update step:', err);
-    } finally {
-      setUpdatingStep(null);
-    }
-  };
+  const steps = plan.steps || [];
+  const totalSteps = steps.length;
+  const completedSteps = steps.filter(s => s.completed || s.autoCompleted).length;
+  const progressPercent = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
+  const currentStep = steps[currentStepIndex];
 
   const getCategoryIcon = (category?: string) => {
     switch (category) {
@@ -307,95 +105,6 @@ export default function ApplicationPlanPage() {
     }
   };
 
-  // Loading state
-  if (status === 'loading' || loading) {
-    return (
-      <div className="wizard-loading">
-        <GermanPulseLoader
-          headline="Loading your application..."
-          progressLabel="Fetching plan data"
-          subline="Please wait"
-        />
-        <style jsx>{styles}</style>
-      </div>
-    );
-  }
-
-  // No plan - show generate screen
-  if (!plan) {
-    return (
-      <div className="wizard-container">
-        <div className="wizard-header">
-          <Link href="/my-shortlist" className="wizard-back">
-            <ArrowLeft className="w-5 h-5" />
-          </Link>
-          <div className="wizard-header-info">
-            <h1>{programName || 'Your Program'}</h1>
-            <p><GraduationCap className="w-4 h-4" /> {university}</p>
-          </div>
-        </div>
-
-        <div className="wizard-content">
-          <div className="wizard-generate">
-            <div className="wizard-generate-icon">
-              <Sparkles className="w-12 h-12" />
-            </div>
-            <h2>Create Your Application Plan</h2>
-            <p>Get a personalized step-by-step guide tailored to this program and your profile.</p>
-
-            <div className="wizard-features">
-              <div className="wizard-feature">
-                <CheckCircle2 className="w-5 h-5" />
-                <span>Personalized steps based on your profile</span>
-              </div>
-              <div className="wizard-feature">
-                <Clock className="w-5 h-5" />
-                <span>Timeline with deadlines</span>
-              </div>
-              <div className="wizard-feature">
-                <AlertCircle className="w-5 h-5" />
-                <span>Requirements check</span>
-              </div>
-            </div>
-
-            <button
-              onClick={generatePlan}
-              disabled={generating}
-              className="wizard-generate-btn"
-            >
-              {generating ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Creating Your Plan...
-                </>
-              ) : (
-                <>
-                  <Zap className="w-5 h-5" />
-                  Generate My Plan
-                </>
-              )}
-            </button>
-
-            {generationError && (
-              <div className="wizard-error">
-                <AlertCircle className="w-4 h-4" />
-                <span>{generationError}</span>
-              </div>
-            )}
-          </div>
-        </div>
-        <style jsx>{styles}</style>
-      </div>
-    );
-  }
-
-  // Has plan - wizard view
-  const steps = plan.steps || [];
-  const totalSteps = steps.length;
-  const completedSteps = steps.filter(s => s.completed || s.autoCompleted).length;
-  const progressPercent = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
-  const currentStep = steps[currentStepIndex];
-
   const goNext = () => {
     if (currentStepIndex < totalSteps - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
@@ -411,7 +120,12 @@ export default function ApplicationPlanPage() {
     }
   };
 
-  // Overview screen
+  const goToStep = (index: number) => {
+    setCurrentStepIndex(index);
+    setShowOverview(false);
+  };
+
+  // Overview Screen
   if (showOverview) {
     return (
       <div className="wizard-container">
@@ -448,22 +162,30 @@ export default function ApplicationPlanPage() {
               </div>
             </div>
 
+            {/* Progress Bar */}
             <div className="wizard-progress-section">
               <div className="wizard-progress-header">
                 <span>Progress</span>
                 <span>{progressPercent}%</span>
               </div>
               <div className="wizard-progress-bar">
-                <div className="wizard-progress-fill" style={{ width: `${progressPercent}%` }} />
+                <div 
+                  className="wizard-progress-fill" 
+                  style={{ width: `${progressPercent}%` }}
+                />
               </div>
             </div>
 
+            {/* Requirements Summary */}
             {plan.criticalRequirements && plan.criticalRequirements.length > 0 && (
               <div className="wizard-requirements">
                 <h3>Requirements Check</h3>
                 {plan.criticalRequirements.map((req, i) => (
                   <div key={i} className="wizard-req-item">
-                    <div className="wizard-req-status" style={{ background: getStatusColor(req.status) }}>
+                    <div 
+                      className="wizard-req-status"
+                      style={{ background: getStatusColor(req.status) }}
+                    >
                       {req.status === 'met' ? <CheckCircle2 className="w-4 h-4" /> : 
                        req.status === 'missing' ? <AlertCircle className="w-4 h-4" /> :
                        <Circle className="w-4 h-4" />}
@@ -472,10 +194,13 @@ export default function ApplicationPlanPage() {
                       <span className="wizard-req-label">{req.label}</span>
                       <span className="wizard-req-detail">{req.programRequirement}</span>
                     </div>
-                    <span className="wizard-req-badge" style={{ 
-                      color: getStatusColor(req.status),
-                      background: `${getStatusColor(req.status)}15`
-                    }}>
+                    <span 
+                      className="wizard-req-badge"
+                      style={{ 
+                        color: getStatusColor(req.status),
+                        background: `${getStatusColor(req.status)}15`
+                      }}
+                    >
                       {req.status}
                     </span>
                   </div>
@@ -483,18 +208,22 @@ export default function ApplicationPlanPage() {
               </div>
             )}
 
-            <button className="wizard-start-btn" onClick={() => setShowOverview(false)}>
-              {completedSteps > 0 ? 'Continue Your Journey' : 'Start Your Journey'}
+            <button 
+              className="wizard-start-btn"
+              onClick={() => setShowOverview(false)}
+            >
+              Start Your Journey
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>
         </div>
-        <style jsx>{styles}</style>
+
+        <style jsx>{wizardStyles}</style>
       </div>
     );
   }
 
-  // Step view
+  // Step View
   return (
     <div className="wizard-container">
       <div className="wizard-header">
@@ -504,19 +233,26 @@ export default function ApplicationPlanPage() {
         <div className="wizard-header-progress">
           <span>Step {currentStepIndex + 1} of {totalSteps}</span>
           <div className="wizard-mini-progress">
-            <div className="wizard-mini-progress-fill" style={{ width: `${((currentStepIndex + 1) / totalSteps) * 100}%` }} />
+            <div 
+              className="wizard-mini-progress-fill"
+              style={{ width: `${((currentStepIndex + 1) / totalSteps) * 100}%` }}
+            />
           </div>
         </div>
-        <button onClick={() => setShowOverview(true)} className="wizard-overview-btn">
+        <button 
+          onClick={() => setShowOverview(true)} 
+          className="wizard-overview-btn"
+        >
           Overview
         </button>
       </div>
 
+      {/* Step Dots */}
       <div className="wizard-dots">
         {steps.map((step, i) => (
           <button
             key={step.id}
-            onClick={() => { setCurrentStepIndex(i); setShowOverview(false); }}
+            onClick={() => goToStep(i)}
             className={`wizard-dot ${i === currentStepIndex ? 'active' : ''} ${step.completed || step.autoCompleted ? 'done' : ''}`}
           />
         ))}
@@ -555,11 +291,18 @@ export default function ApplicationPlanPage() {
               </div>
             )}
 
+            {/* Resources */}
             {currentStep.resources && currentStep.resources.length > 0 && (
               <div className="wizard-step-resources">
                 <h4>Helpful Resources</h4>
                 {currentStep.resources.map((resource, i) => (
-                  <a key={i} href={resource.url} target="_blank" rel="noopener noreferrer" className="wizard-resource-link">
+                  <a 
+                    key={i}
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="wizard-resource-link"
+                  >
                     <ExternalLink className="w-4 h-4" />
                     <span>{resource.name}</span>
                     <ChevronRight className="w-4 h-4" />
@@ -568,8 +311,12 @@ export default function ApplicationPlanPage() {
               </div>
             )}
 
+            {/* Action Button */}
             {currentStep.action && (
-              <Link href={currentStep.action.url} className="wizard-action-btn">
+              <Link 
+                href={currentStep.action.url}
+                className="wizard-action-btn"
+              >
                 {currentStep.action.label}
                 <ChevronRight className="w-5 h-5" />
               </Link>
@@ -578,42 +325,46 @@ export default function ApplicationPlanPage() {
         )}
       </div>
 
+      {/* Bottom Navigation */}
       <div className="wizard-footer">
         {!currentStep?.autoCompleted && (
           <button
-            onClick={() => currentStep && toggleStep(currentStep.id, currentStep.completed)}
+            onClick={() => currentStep && onToggleStep(currentStep.id, currentStep.completed)}
             disabled={updatingStep === currentStep?.id}
             className={`wizard-complete-btn ${currentStep?.completed ? 'completed' : ''}`}
           >
             {updatingStep === currentStep?.id ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : currentStep?.completed ? (
-              <><CheckCircle2 className="w-5 h-5" /> Completed</>
+              <>
+                <CheckCircle2 className="w-5 h-5" />
+                Completed
+              </>
             ) : (
-              <><Circle className="w-5 h-5" /> Mark as Done</>
+              <>
+                <Circle className="w-5 h-5" />
+                Mark as Done
+              </>
             )}
           </button>
         )}
 
-        <button onClick={goNext} disabled={currentStepIndex >= totalSteps - 1} className="wizard-next-btn">
+        <button
+          onClick={goNext}
+          disabled={currentStepIndex >= totalSteps - 1}
+          className="wizard-next-btn"
+        >
           {currentStepIndex >= totalSteps - 1 ? 'Finish' : 'Next Step'}
           <ArrowRight className="w-5 h-5" />
         </button>
       </div>
-      <style jsx>{styles}</style>
+
+      <style jsx>{wizardStyles}</style>
     </div>
   );
 }
 
-const styles = `
-  .wizard-loading {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fafafa;
-  }
-
+const wizardStyles = `
   .wizard-container {
     min-height: 100vh;
     background: #fafafa;
@@ -634,8 +385,8 @@ const styles = `
   }
 
   .wizard-back {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: 12px;
     border: 1px solid #e5e5e5;
     background: #fff;
@@ -644,17 +395,15 @@ const styles = `
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
-    text-decoration: none;
-    color: #333;
   }
 
   .wizard-back:hover {
     background: #f5f5f5;
+    border-color: #ddd;
   }
 
   .wizard-header-info {
     flex: 1;
-    min-width: 0;
   }
 
   .wizard-header-info h1 {
@@ -662,9 +411,7 @@ const styles = `
     font-weight: 600;
     color: #111;
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.3;
   }
 
   .wizard-header-info p {
@@ -703,14 +450,20 @@ const styles = `
   }
 
   .wizard-overview-btn {
-    padding: 10px 16px;
-    border-radius: 10px;
+    padding: 8px 16px;
+    border-radius: 8px;
     border: 1px solid #e5e5e5;
     background: #fff;
     font-size: 13px;
     font-weight: 500;
     color: #666;
     cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .wizard-overview-btn:hover {
+    background: #f5f5f5;
+    color: #333;
   }
 
   .wizard-dots {
@@ -719,7 +472,6 @@ const styles = `
     gap: 8px;
     padding: 16px;
     background: #fff;
-    flex-wrap: wrap;
   }
 
   .wizard-dot {
@@ -730,13 +482,12 @@ const styles = `
     background: #fff;
     cursor: pointer;
     transition: all 0.2s;
-    padding: 0;
   }
 
   .wizard-dot.active {
     border-color: #dd0000;
     background: #dd0000;
-    transform: scale(1.3);
+    transform: scale(1.2);
   }
 
   .wizard-dot.done {
@@ -747,107 +498,12 @@ const styles = `
   .wizard-content {
     flex: 1;
     padding: 24px 20px;
-    max-width: 560px;
+    max-width: 600px;
     margin: 0 auto;
     width: 100%;
   }
 
-  .wizard-generate {
-    text-align: center;
-    padding: 40px 0;
-  }
-
-  .wizard-generate-icon {
-    width: 100px;
-    height: 100px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, #dd0000, #ff4444);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 28px;
-    color: #fff;
-  }
-
-  .wizard-generate h2 {
-    font-size: 26px;
-    font-weight: 700;
-    color: #111;
-    margin: 0 0 12px;
-  }
-
-  .wizard-generate > p {
-    font-size: 16px;
-    color: #666;
-    margin: 0 0 32px;
-    line-height: 1.5;
-  }
-
-  .wizard-features {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-
-  .wizard-feature {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    font-size: 15px;
-    color: #333;
-  }
-
-  .wizard-feature svg {
-    color: #22c55e;
-    flex-shrink: 0;
-  }
-
-  .wizard-generate-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    padding: 18px 24px;
-    background: linear-gradient(135deg, #dd0000, #b91c1c);
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    font-size: 17px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .wizard-generate-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(221, 0, 0, 0.3);
-  }
-
-  .wizard-generate-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-
-  .wizard-error {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 16px;
-    padding: 12px 16px;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 10px;
-    color: #dc2626;
-    font-size: 14px;
-  }
-
+  /* Overview Styles */
   .wizard-overview {
     text-align: center;
   }
@@ -920,16 +576,16 @@ const styles = `
   }
 
   .wizard-progress-bar {
-    height: 10px;
+    height: 8px;
     background: #e5e5e5;
-    border-radius: 5px;
+    border-radius: 4px;
     overflow: hidden;
   }
 
   .wizard-progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #dd0000, #22c55e);
-    border-radius: 5px;
+    border-radius: 4px;
     transition: width 0.5s ease;
   }
 
@@ -953,19 +609,18 @@ const styles = `
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 14px 0;
+    padding: 12px 0;
     border-bottom: 1px solid #f0f0f0;
   }
 
   .wizard-req-item:last-child {
     border-bottom: none;
-    padding-bottom: 0;
   }
 
   .wizard-req-status {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -975,7 +630,6 @@ const styles = `
 
   .wizard-req-info {
     flex: 1;
-    min-width: 0;
   }
 
   .wizard-req-label {
@@ -990,32 +644,28 @@ const styles = `
     font-size: 12px;
     color: #888;
     margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .wizard-req-badge {
-    padding: 5px 10px;
+    padding: 4px 10px;
     border-radius: 6px;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
-    flex-shrink: 0;
   }
 
   .wizard-start-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
-    padding: 18px 24px;
+    padding: 16px 24px;
     background: linear-gradient(135deg, #dd0000, #b91c1c);
     color: #fff;
     border: none;
     border-radius: 14px;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
@@ -1026,14 +676,15 @@ const styles = `
     box-shadow: 0 8px 24px rgba(221, 0, 0, 0.3);
   }
 
+  /* Step View Styles */
   .wizard-step {
     text-align: center;
   }
 
   .wizard-step-icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 24px;
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1045,7 +696,7 @@ const styles = `
     font-size: 22px;
     font-weight: 700;
     color: #111;
-    margin: 0 0 16px;
+    margin: 0 0 12px;
     line-height: 1.3;
   }
 
@@ -1053,11 +704,11 @@ const styles = `
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 14px;
+    padding: 6px 12px;
     background: #fff3cd;
     color: #856404;
-    border-radius: 10px;
-    font-size: 14px;
+    border-radius: 8px;
+    font-size: 13px;
     font-weight: 500;
     margin-bottom: 20px;
   }
@@ -1071,8 +722,8 @@ const styles = `
 
   .wizard-step-details {
     background: #f8f9fa;
-    border-radius: 14px;
-    padding: 18px;
+    border-radius: 12px;
+    padding: 16px;
     margin-bottom: 24px;
     text-align: left;
   }
@@ -1088,8 +739,8 @@ const styles = `
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 14px 18px;
+    gap: 8px;
+    padding: 12px 16px;
     background: #dcfce7;
     color: #166534;
     border-radius: 12px;
@@ -1108,20 +759,20 @@ const styles = `
   }
 
   .wizard-step-resources h4 {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     color: #333;
-    margin: 0 0 14px;
+    margin: 0 0 12px;
   }
 
   .wizard-resource-link {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px;
+    gap: 10px;
+    padding: 12px;
     background: #f8f9fa;
-    border-radius: 12px;
-    margin-bottom: 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
     text-decoration: none;
     color: #333;
     transition: all 0.2s;
@@ -1144,14 +795,14 @@ const styles = `
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
-    padding: 16px 20px;
+    padding: 14px 20px;
     background: #fff;
     border: 2px solid #dd0000;
     color: #dd0000;
-    border-radius: 14px;
-    font-size: 16px;
+    border-radius: 12px;
+    font-size: 15px;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s;
@@ -1163,6 +814,7 @@ const styles = `
     color: #fff;
   }
 
+  /* Footer */
   .wizard-footer {
     display: flex;
     gap: 12px;
@@ -1178,12 +830,12 @@ const styles = `
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 16px 20px;
+    gap: 8px;
+    padding: 14px 20px;
     background: #fff;
     border: 2px solid #ddd;
-    border-radius: 14px;
-    font-size: 16px;
+    border-radius: 12px;
+    font-size: 15px;
     font-weight: 600;
     color: #666;
     cursor: pointer;
@@ -1211,12 +863,12 @@ const styles = `
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 16px 20px;
+    gap: 8px;
+    padding: 14px 20px;
     background: linear-gradient(135deg, #dd0000, #b91c1c);
     border: none;
-    border-radius: 14px;
-    font-size: 16px;
+    border-radius: 12px;
+    font-size: 15px;
     font-weight: 600;
     color: #fff;
     cursor: pointer;
@@ -1225,7 +877,7 @@ const styles = `
 
   .wizard-next-btn:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(221, 0, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(221, 0, 0, 0.3);
   }
 
   .wizard-next-btn:disabled {
@@ -1242,9 +894,8 @@ const styles = `
       padding: 20px 16px;
     }
 
-    .wizard-generate h2,
     .wizard-overview h2 {
-      font-size: 22px;
+      font-size: 20px;
     }
 
     .wizard-stats {
@@ -1256,21 +907,11 @@ const styles = `
     }
 
     .wizard-step-title {
-      font-size: 20px;
+      font-size: 18px;
     }
 
     .wizard-footer {
       flex-direction: column;
-    }
-
-    .wizard-dots {
-      padding: 12px;
-      gap: 6px;
-    }
-
-    .wizard-dot {
-      width: 8px;
-      height: 8px;
     }
   }
 `;
