@@ -15,6 +15,7 @@ import Image from 'next/image';
 import { SiteNav } from '@/components/SiteNav';
 import { CourseAssistantChat } from '@/components/CourseAssistantChat';
 import { GermanPulseLoader } from '@/components/GermanPulseLoader';
+import { CriticalRequirementsCard } from '@/components/CriticalRequirementsCard';
 
 const RED = '#dd0000';
 
@@ -43,6 +44,17 @@ interface ApplicationStep {
   };
 }
 
+interface CriticalRequirement {
+  type: string;
+  label: string;
+  programRequirement: string;
+  userProvided: string;
+  status: 'met' | 'partial' | 'missing' | 'unknown';
+  statusScore: number;
+  notes: string;
+  askUserQuestions?: string[];
+}
+
 interface ProfileMatch {
   score: number;
   summary: string;
@@ -52,6 +64,7 @@ interface ProfileMatch {
 }
 
 interface ApplicationPlan {
+  criticalRequirements?: CriticalRequirement[];
   profileMatch?: ProfileMatch;
   overview: string;
   estimatedTimeline: string;
@@ -461,6 +474,17 @@ export default function ApplicationPlanPage() {
           ) : (
             /* Has Plan - Show Progress and Steps */
             <>
+              {/* Critical Requirements Card */}
+              {plan.criticalRequirements && plan.criticalRequirements.length > 0 && (
+                <CriticalRequirementsCard 
+                  requirements={plan.criticalRequirements}
+                  onAnswerQuestion={(type, answers) => {
+                    // TODO: Handle updating profile with answers
+                    console.log('Answer questions for', type, answers);
+                  }}
+                />
+              )}
+
               {/* AI Profile Match Summary */}
               {plan.profileMatch && (
                 <div className="app-plan-ai-summary">

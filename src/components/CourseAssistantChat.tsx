@@ -36,33 +36,55 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
   const renderAssistantMessage = (content: string) => {
     const cleaned = content.trim();
     if (!cleaned) return null;
-    const lines = cleaned.split(/\n+/).map(line => line.trim()).filter(Boolean);
-    if (!lines.length) return null;
+    
+    const lines = cleaned.split(/\n/).map(line => line.trim());
+    const elements: React.ReactElement[] = [];
+    let currentList: string[] = [];
+    let listType: 'bullet' | 'number' | null = null;
 
-    const headline = lines[0];
-    const bulletLines = lines.slice(1).filter(line => /^(-|•|\d+\.)/.test(line));
-    const paragraphLines = lines.slice(1).filter(line => !/^(-|•|\d+\.)/.test(line));
-
-    return (
-      <div className="chat-assistant-content">
-        <p className="chat-assistant-headline">{headline}</p>
-        {paragraphLines.length > 0 && (
-          <div className="chat-assistant-paragraphs">
-            {paragraphLines.map((line, idx) => (
-              <p key={idx}>{line}</p>
-            ))}
-          </div>
-        )}
-        {bulletLines.length > 0 && (
-          <ul className="chat-assistant-list">
-            {bulletLines.map((line, idx) => {
-              const normalized = line.replace(/^(-|•|\d+\.)\s*/, '');
-              return <li key={idx}>{normalized}</li>;
-            })}
+    const flushList = () => {
+      if (currentList.length > 0) {
+        elements.push(
+          <ul key={`list-${elements.length}`} className="chat-assistant-list">
+            {currentList.map((item, idx) => <li key={idx}>{item}</li>)}
           </ul>
-        )}
-      </div>
-    );
+        );
+        currentList = [];
+        listType = null;
+      }
+    };
+
+    lines.forEach((line, idx) => {
+      if (!line) {
+        flushList();
+        return;
+      }
+
+      const bulletMatch = line.match(/^[-•]\s*(.+)$/);
+      const numberMatch = line.match(/^\d+\.\s*(.+)$/);
+
+      if (bulletMatch || numberMatch) {
+        const content = (bulletMatch || numberMatch)![1];
+        const type = bulletMatch ? 'bullet' : 'number';
+        
+        if (listType !== type) {
+          flushList();
+          listType = type;
+        }
+        currentList.push(content);
+      } else {
+        flushList();
+        if (idx === 0 && line.length < 80) {
+          elements.push(<p key={`p-${idx}`} className="chat-assistant-headline">{line}</p>);
+        } else {
+          elements.push(<p key={`p-${idx}`} className="chat-assistant-paragraph">{line}</p>);
+        }
+      }
+    });
+
+    flushList();
+
+    return <div className="chat-assistant-content">{elements}</div>;
   };
 
   const sendMessage = async () => {
@@ -462,11 +484,11 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
           color: #111;
         }
 
-        .chat-assistant-paragraphs p {
-          margin: 0;
+        .chat-assistant-paragraph {
+          margin: 0 0 8px;
           font-size: 13px;
           color: #444;
-          line-height: 1.5;
+          line-height: 1.6;
         }
 
         .chat-assistant-list {

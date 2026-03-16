@@ -30,7 +30,19 @@ const ApplicationPlanRequestSchema = z.object({
     germanLevel: z.string().optional(),
     englishLevel: z.string().optional(),
     ieltsScore: z.number().nullable().optional(),
+    ieltsListening: z.number().nullable().optional(),
+    ieltsReading: z.number().nullable().optional(),
+    ieltsWriting: z.number().nullable().optional(),
+    ieltsSpeaking: z.number().nullable().optional(),
     toeflScore: z.number().nullable().optional(),
+    toeflReading: z.number().nullable().optional(),
+    toeflListening: z.number().nullable().optional(),
+    toeflSpeaking: z.number().nullable().optional(),
+    toeflWriting: z.number().nullable().optional(),
+    testDafScore: z.string().optional(),
+    goetheLevel: z.string().optional(),
+    currentGPA: z.number().nullable().optional(),
+    gradingScale: z.string().optional(),
     academicBackground: z.string().optional(),
     backgroundSummary: z.string().optional(),
     targetDegreeLevel: z.string().optional(),
@@ -51,6 +63,18 @@ const SYSTEM_PROMPT = `You are an expert German university application advisor. 
 
 Return JSON ONLY with this exact structure:
 {
+  "criticalRequirements": [
+    {
+      "type": "language_english|language_german|gpa|financial|documents",
+      "label": "English Proficiency",
+      "programRequirement": "IELTS 6.5 overall, min 6.0 per band",
+      "userProvided": "IELTS 7.0 overall",
+      "status": "met|partial|missing|unknown",
+      "statusScore": 100,
+      "notes": "Your IELTS score exceeds the requirement",
+      "askUserQuestions": ["What is your IELTS overall score?", "What are your individual band scores?"]
+    }
+  ],
   "profileMatch": {
     "score": 85,
     "summary": "Brief 2-3 sentence analysis comparing user profile to program requirements",
@@ -133,12 +157,38 @@ CRITICAL RULES FOR STEPS:
    - TK: https://www.tk.de/en
    - AOK: https://en.zuwanderer.aok.de/
 
+CRITICAL REQUIREMENTS ANALYSIS:
+You MUST analyze these critical requirements and output them in criticalRequirements array:
+
+1. LANGUAGE REQUIREMENTS:
+   - Extract exact IELTS/TOEFL/German level requirements from program data
+   - Compare with user's provided scores
+   - If user data missing, add questions to askUserQuestions array
+   - Calculate statusScore: 100 if met, 50-99 if partial, 0 if missing
+   - Example: "IELTS 6.5 overall, min 6.0 per band" vs "User has IELTS 7.0"
+
+2. GPA/ACADEMIC REQUIREMENTS:
+   - Extract minimum GPA or grade requirements
+   - Compare with user's academic background
+   - If missing, ask "What is your current GPA?" and "What grading scale (4.0, 10.0, percentage)?"
+   - statusScore: 100 if exceeds, 75 if meets, 50 if close, 0 if unknown
+
+3. FINANCIAL REQUIREMENTS:
+   - Always include blocked account requirement (€11,904/year)
+   - Compare with user's maxTuitionEur and hasScholarship
+   - If missing, ask "Do you have funding arranged?" and "What is your budget?"
+
+4. DOCUMENT REQUIREMENTS:
+   - List critical documents (transcripts, certificates, passport)
+   - Mark as "unknown" if user hasn't confirmed
+
 IMPORTANT:
 - Set autoCompleted=true for steps where user profile already meets requirements
 - Be specific about deadlines relative to application deadline
 - Include detailedInfo for EVERY step explaining what's needed for THIS specific program
 - Never invent URLs - only use the verified URLs listed above or internal tool URLs
 - If no verified URL exists, set action to null
+- ALWAYS populate criticalRequirements array with at least language and financial requirements
 
 Return ONLY valid JSON.`;
 
