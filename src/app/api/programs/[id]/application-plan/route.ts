@@ -307,13 +307,29 @@ Generate a comprehensive, personalized application plan.`;
     const data = await response.json();
     const text = data?.choices?.[0]?.message?.content || '';
     
+    console.log('[OpenRouter] Raw AI response:', text.substring(0, 200));
+    
     // Extract JSON from response
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
+      console.error('[OpenRouter] No JSON found in response:', text);
       throw new Error('Invalid AI response format');
     }
 
-    return JSON.parse(jsonMatch[0]);
+    const parsed = JSON.parse(jsonMatch[0]);
+    
+    // Validate required fields
+    if (!parsed.steps || !Array.isArray(parsed.steps)) {
+      console.error('[OpenRouter] Missing or invalid steps in response:', parsed);
+      throw new Error('AI response missing required steps array');
+    }
+    
+    if (!parsed.profileMatch) {
+      console.error('[OpenRouter] Missing profileMatch in response:', parsed);
+      throw new Error('AI response missing required profileMatch');
+    }
+
+    return parsed;
   } finally {
     delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;
   }
