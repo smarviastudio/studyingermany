@@ -1,12 +1,13 @@
-'use client';
-
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 
-export default function AuthErrorPage() {
-  const searchParams = useSearchParams();
-  const error = searchParams.get('error');
+interface AuthErrorPageProps {
+  searchParams: Record<string, string | string[] | undefined>;
+}
+
+export default function AuthErrorPage({ searchParams }: AuthErrorPageProps) {
+  const rawError = searchParams?.error;
+  const error = Array.isArray(rawError) ? rawError[0] : rawError || null;
 
   const getErrorMessage = (errorType: string | null) => {
     switch (errorType) {
