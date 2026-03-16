@@ -33,6 +33,38 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
     }
   }, [isOpen, isMinimized]);
 
+  const renderAssistantMessage = (content: string) => {
+    const cleaned = content.trim();
+    if (!cleaned) return null;
+    const lines = cleaned.split(/\n+/).map(line => line.trim()).filter(Boolean);
+    if (!lines.length) return null;
+
+    const headline = lines[0];
+    const bulletLines = lines.slice(1).filter(line => /^(-|•|\d+\.)/.test(line));
+    const paragraphLines = lines.slice(1).filter(line => !/^(-|•|\d+\.)/.test(line));
+
+    return (
+      <div className="chat-assistant-content">
+        <p className="chat-assistant-headline">{headline}</p>
+        {paragraphLines.length > 0 && (
+          <div className="chat-assistant-paragraphs">
+            {paragraphLines.map((line, idx) => (
+              <p key={idx}>{line}</p>
+            ))}
+          </div>
+        )}
+        {bulletLines.length > 0 && (
+          <ul className="chat-assistant-list">
+            {bulletLines.map((line, idx) => {
+              const normalized = line.replace(/^(-|•|\d+\.)\s*/, '');
+              return <li key={idx}>{normalized}</li>;
+            })}
+          </ul>
+        )}
+      </div>
+    );
+  };
+
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
 
@@ -197,7 +229,7 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
             {messages.map((msg, i) => (
               <div key={i} className={`chat-message ${msg.role}`}>
                 <div className="chat-message-content">
-                  {msg.content}
+                  {msg.role === 'assistant' ? renderAssistantMessage(msg.content) : msg.content}
                 </div>
               </div>
             ))}
@@ -416,6 +448,36 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
           background: #f5f5f5;
           color: #333;
           border-bottom-left-radius: 4px;
+        }
+
+        .chat-assistant-content {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .chat-assistant-headline {
+          margin: 0;
+          font-weight: 600;
+          color: #111;
+        }
+
+        .chat-assistant-paragraphs p {
+          margin: 0;
+          font-size: 13px;
+          color: #444;
+          line-height: 1.5;
+        }
+
+        .chat-assistant-list {
+          margin: 0;
+          padding-left: 18px;
+          font-size: 13px;
+          color: #444;
+        }
+
+        .chat-assistant-list li {
+          margin-bottom: 4px;
         }
         
         .chat-message-content.loading {
