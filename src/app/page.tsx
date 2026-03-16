@@ -277,7 +277,7 @@ export default function HomePage() {
                     const isMaster = degreeLevel?.includes('master');
                     
                     return (
-                      <div key={program.id} onClick={() => { setSelectedProgramId(program.id); setShowSearchResults(false); }} className="program-card">
+                      <div key={program.id} onClick={() => { setSelectedProgramId(program.id); }} className="program-card">
                         <div className="program-card-image">
                           <Image src={imageUrl} alt={program.program_name} fill style={{ objectFit: 'cover' }} sizes="320px" unoptimized onError={e => { e.currentTarget.style.display = 'none'; }} />
                           {program.is_free && <span className="program-badge-free">No Tuition</span>}

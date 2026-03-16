@@ -166,6 +166,25 @@ export default function ApplicationPlanPage() {
   const generatePlan = async () => {
     try {
       setGenerating(true);
+      
+      // Ensure we have program details
+      let programToUse = programDetails;
+      if (!programToUse) {
+        const programRes = await fetch(`/api/programs/${programId}`);
+        if (programRes.ok) {
+          const programData = await programRes.json();
+          programToUse = programData.program;
+          setProgramDetails(programData.program);
+          if (programData.program?.program_name) setProgramName(programData.program.program_name);
+          if (programData.program?.university) setUniversity(programData.program.university);
+        }
+      }
+      
+      if (!programToUse) {
+        console.error('Could not fetch program details');
+        return;
+      }
+      
       // Use already fetched profile or fetch fresh
       let profileToUse = userProfile;
       if (!profileToUse) {
@@ -176,14 +195,19 @@ export default function ApplicationPlanPage() {
           setUserProfile(profileData.profile);
         }
       }
+      
       const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ program: programDetails, userProfile: profileToUse }),
+        body: JSON.stringify({ program: programToUse, userProfile: profileToUse }),
       });
+      
       if (generateRes.ok) {
         const generatedData = await generateRes.json();
         setPlan(generatedData.plan);
+      } else {
+        const errorData = await generateRes.json().catch(() => ({}));
+        console.error('Failed to generate plan:', errorData);
       }
     } catch (err) {
       console.error('Failed to generate plan:', err);
