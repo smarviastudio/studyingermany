@@ -105,6 +105,7 @@ export default function ApplicationPlanPage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [expandedStep, setExpandedStep] = useState<string | null>(null);
   const [stepInfoDrawer, setStepInfoDrawer] = useState<ApplicationStep | null>(null);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -115,6 +116,33 @@ export default function ApplicationPlanPage() {
       fetchPlan();
     }
   }, [status, programId, router]);
+
+  const buildProgramPayload = (program: any) => ({
+    id: String(program.id),
+    program_name: program.program_name || 'Unknown Program',
+    university: program.university || 'Unknown University',
+    degree_level: program.degree_level || undefined,
+    requirements: program.requirements ?? null,
+    tab_requirements_registration: program.tab_requirements_registration ?? null,
+    tab_costs_funding: program.tab_costs_funding ?? null,
+    language_proficiency_required: typeof program.language_proficiency_required === 'boolean'
+      ? program.language_proficiency_required
+      : undefined,
+    ielts_min_score: program.ielts_min_score || undefined,
+    toefl_min_score: program.toefl_min_score || undefined,
+    german_min_level: program.german_min_level || undefined,
+    english_min_level: program.english_min_level || undefined,
+    academic_background_requirements: program.academic_background_requirements || undefined,
+    documents_required_list: typeof program.documents_required_list === 'string'
+      ? program.documents_required_list
+      : Array.isArray(program.documents_required_list)
+        ? JSON.stringify(program.documents_required_list)
+        : undefined,
+    registration_deadline_date: program.registration_deadline_date || undefined,
+    registration_deadline_text: program.registration_deadline_text || undefined,
+    application_channel: program.application_channel || undefined,
+    application_channel_notes: program.application_channel_notes || undefined,
+  });
 
   const fetchPlan = async () => {
     try {
@@ -166,6 +194,7 @@ export default function ApplicationPlanPage() {
   const generatePlan = async () => {
     try {
       setGenerating(true);
+      setGenerationError(null);
       
       // Ensure we have program details
       let programToUse = programDetails;
@@ -196,21 +225,27 @@ export default function ApplicationPlanPage() {
         }
       }
       
+      const sanitizedProgram = buildProgramPayload(programToUse);
+
       const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ program: programToUse, userProfile: profileToUse }),
+        body: JSON.stringify({ program: sanitizedProgram, userProfile: profileToUse }),
       });
       
       if (generateRes.ok) {
         const generatedData = await generateRes.json();
         setPlan(generatedData.plan);
+        setGenerationError(null);
       } else {
         const errorData = await generateRes.json().catch(() => ({}));
+        const message = errorData?.message || errorData?.error || 'Failed to generate application plan. Please try again.';
+        setGenerationError(message);
         console.error('Failed to generate plan:', errorData);
       }
     } catch (err) {
       console.error('Failed to generate plan:', err);
+      setGenerationError(err instanceof Error ? err.message : 'Unexpected error generating plan');
     } finally {
       setGenerating(false);
     }
@@ -479,6 +514,16 @@ export default function ApplicationPlanPage() {
                   </>
                 )}
               </button>
+
+              {generationError && (
+                <div className="app-plan-generate-error">
+                  <AlertCircle className="w-4 h-4" />
+                  <span>{generationError}</span>
+                  <button onClick={generatePlan} disabled={generating}>
+                    Try again
+                  </button>
+                </div>
+              )}
 
               <div className="app-plan-features">
                 <div className="app-plan-feature">
@@ -1148,21 +1193,33 @@ const styles = `
     cursor: not-allowed;
   }
   
-  .app-plan-features {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 24px;
-    margin-top: 36px;
-  }
-  
-  .app-plan-feature {
+  .app-plan-generate-error {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: #22c55e;
-    font-size: 14px;
-    font-weight: 500;
+    gap: 10px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #991b1b;
+    font-size: 13px;
+  }
+  
+  .app-plan-generate-error button {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: #b91c1c;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .app-plan-features {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
   }
   
   .app-plan-feature span {

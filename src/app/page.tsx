@@ -94,6 +94,7 @@ export default function HomePage() {
   const [reasoning, setReasoning] = useState<string | null>(null);
   const [nonCourseMessage, setNonCourseMessage] = useState<string | null>(null);
   const [selectedProgramId, setSelectedProgramId] = useState<string | null>(null);
+  const [restoreSearchAfterModal, setRestoreSearchAfterModal] = useState(false);
   const [shortlistedPrograms, setShortlistedPrograms] = useState<string[]>([]);
   const [shortlistingId, setShortlistingId] = useState<string | null>(null);
   const [signInToast, setSignInToast] = useState(false);
@@ -212,6 +213,25 @@ export default function HomePage() {
     } catch { /* silent */ } finally { setShortlistingId(null); }
   };
 
+  const closeSearchModal = () => {
+    setShowSearchResults(false);
+    setRestoreSearchAfterModal(false);
+  };
+
+  const handleProgramCardClick = (programId: string) => {
+    setSelectedProgramId(programId);
+    setRestoreSearchAfterModal(true);
+    setShowSearchResults(false);
+  };
+
+  const handleProgramModalClose = () => {
+    setSelectedProgramId(null);
+    if (restoreSearchAfterModal) {
+      setShowSearchResults(true);
+      setRestoreSearchAfterModal(false);
+    }
+  };
+
   return (
     <div className="homepage-root">
 
@@ -230,7 +250,7 @@ export default function HomePage() {
         <ProgramModal
           programId={selectedProgramId}
           isShortlisted={shortlistedPrograms.includes(selectedProgramId)}
-          onClose={() => setSelectedProgramId(null)}
+          onClose={handleProgramModalClose}
           onToggleShortlist={() => {
             const prog = results.find(r => r.id === selectedProgramId);
             if (prog) handleShortlist(prog);
@@ -239,7 +259,7 @@ export default function HomePage() {
       )}
 
       {showSearchResults && (
-        <div className="search-modal-overlay" onClick={() => setShowSearchResults(false)}>
+        <div className="search-modal-overlay" onClick={closeSearchModal}>
           <div className="search-modal-content" onClick={e => e.stopPropagation()}>
             <div className="search-modal-header">
               <div>
@@ -248,7 +268,7 @@ export default function HomePage() {
                 </h1>
                 {reasoning && !searching && <p className="search-modal-subtitle">{reasoning}</p>}
               </div>
-              <button onClick={() => setShowSearchResults(false)} className="search-modal-close">
+              <button onClick={closeSearchModal} className="search-modal-close">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -277,7 +297,7 @@ export default function HomePage() {
                     const isMaster = degreeLevel?.includes('master');
                     
                     return (
-                      <div key={program.id} onClick={() => { setSelectedProgramId(program.id); }} className="program-card">
+                      <div key={program.id} onClick={() => handleProgramCardClick(program.id)} className="program-card">
                         <div className="program-card-image">
                           <Image src={imageUrl} alt={program.program_name} fill style={{ objectFit: 'cover' }} sizes="320px" unoptimized onError={e => { e.currentTarget.style.display = 'none'; }} />
                           {program.is_free && <span className="program-badge-free">No Tuition</span>}
