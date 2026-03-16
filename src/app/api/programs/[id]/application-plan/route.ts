@@ -377,8 +377,19 @@ export async function POST(
     
     console.log(`[Application Plan ${requestId}] Request body keys:`, Object.keys(body));
     console.log(`[Application Plan ${requestId}] Program data:`, body.program ? Object.keys(body.program) : 'missing');
+    console.log(`[Application Plan ${requestId}] Full program object:`, JSON.stringify(body.program, null, 2));
+    console.log(`[Application Plan ${requestId}] UserProfile data:`, body.userProfile ? Object.keys(body.userProfile) : 'missing');
     
-    const { program, userProfile } = ApplicationPlanRequestSchema.parse(body);
+    const parseResult = ApplicationPlanRequestSchema.safeParse(body);
+    if (!parseResult.success) {
+      console.error(`[Application Plan ${requestId}] Validation failed:`, JSON.stringify(parseResult.error.issues, null, 2));
+      return NextResponse.json({
+        error: 'Invalid request format',
+        details: parseResult.error.issues
+      }, { status: 400 });
+    }
+    
+    const { program, userProfile } = parseResult.data;
     
     console.log(`[Application Plan ${requestId}] Generating plan for program: ${program.program_name}`);
     
