@@ -106,6 +106,13 @@ export default function ApplicationPlanPage() {
   const [expandedStep, setExpandedStep] = useState<string | null>(null);
   const [stepInfoDrawer, setStepInfoDrawer] = useState<ApplicationStep | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
+  
+  // Collapsible section states
+  const [showRequirements, setShowRequirements] = useState(true);
+  const [showProfileMatch, setShowProfileMatch] = useState(true);
+  const [showOverview, setShowOverview] = useState(true);
+  const [showBlockers, setShowBlockers] = useState(true);
+  const [showSteps, setShowSteps] = useState(true);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -586,27 +593,35 @@ export default function ApplicationPlanPage() {
               {/* AI Profile Match Summary */}
               {plan.profileMatch && (
                 <div className="app-plan-ai-summary">
-                  <div className="app-plan-ai-summary-header">
-                    <div className="app-plan-ai-icon">
-                      <Sparkles className="w-5 h-5" />
+                  <button 
+                    className="app-plan-section-toggle"
+                    onClick={() => setShowProfileMatch(!showProfileMatch)}
+                  >
+                    <div className="app-plan-ai-summary-header">
+                      <div className="app-plan-ai-icon">
+                        <Sparkles className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3>AI Profile Analysis</h3>
+                        <span>How your profile matches this program</span>
+                      </div>
+                      <div className="app-plan-match-score" style={{ 
+                        background: plan.profileMatch.score >= 80 ? 'linear-gradient(135deg, #22c55e, #16a34a)' : 
+                                    plan.profileMatch.score >= 60 ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 
+                                    'linear-gradient(135deg, #ef4444, #dc2626)'
+                      }}>
+                        <span className="score-value">{plan.profileMatch.score}%</span>
+                        <span className="score-label">Match</span>
+                      </div>
                     </div>
-                    <div>
-                      <h3>AI Profile Analysis</h3>
-                      <span>How your profile matches this program</span>
-                    </div>
-                    <div className="app-plan-match-score" style={{ 
-                      background: plan.profileMatch.score >= 80 ? 'linear-gradient(135deg, #22c55e, #16a34a)' : 
-                                  plan.profileMatch.score >= 60 ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 
-                                  'linear-gradient(135deg, #ef4444, #dc2626)'
-                    }}>
-                      <span className="score-value">{plan.profileMatch.score}%</span>
-                      <span className="score-label">Match</span>
-                    </div>
-                  </div>
+                    {showProfileMatch ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                  </button>
                   
-                  <p className="app-plan-ai-summary-text">{plan.profileMatch.summary}</p>
-                  
-                  <div className="app-plan-ai-grid">
+                  {showProfileMatch && (
+                    <>
+                      <p className="app-plan-ai-summary-text">{plan.profileMatch.summary}</p>
+                      
+                      <div className="app-plan-ai-grid">
                     {plan.profileMatch.strengths?.length > 0 && (
                       <div className="app-plan-ai-section app-plan-ai-strengths">
                         <h4><CheckCircle2 className="w-4 h-4" /> Your Strengths</h4>
@@ -628,17 +643,19 @@ export default function ApplicationPlanPage() {
                         </ul>
                       </div>
                     )}
-                  </div>
-                  
-                  {plan.profileMatch.recommendations?.length > 0 && (
-                    <div className="app-plan-ai-recommendations">
-                      <h4><Target className="w-4 h-4" /> Recommendations</h4>
-                      <ul>
-                        {plan.profileMatch.recommendations.map((r, i) => (
-                          <li key={i}>{r}</li>
-                        ))}
-                      </ul>
-                    </div>
+                      </div>
+                      
+                      {plan.profileMatch.recommendations?.length > 0 && (
+                        <div className="app-plan-ai-recommendations">
+                          <h4><Target className="w-4 h-4" /> Recommendations</h4>
+                          <ul>
+                            {plan.profileMatch.recommendations.map((r, i) => (
+                              <li key={i}>{r}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               )}
@@ -676,28 +693,49 @@ export default function ApplicationPlanPage() {
               {/* Blockers */}
               {plan.blockers?.length > 0 && (
                 <div className="app-plan-blockers">
-                  <div className="app-plan-blockers-header">
-                    <AlertCircle className="w-5 h-5" />
-                    <h3>Potential Blockers</h3>
-                  </div>
-                  <ul>
-                    {plan.blockers.map((blocker, i) => (
-                      <li key={i}>{blocker}</li>
-                    ))}
-                  </ul>
+                  <button 
+                    className="app-plan-section-toggle"
+                    onClick={() => setShowBlockers(!showBlockers)}
+                  >
+                    <div className="app-plan-blockers-header">
+                      <AlertCircle className="w-5 h-5" />
+                      <h3>Potential Blockers</h3>
+                    </div>
+                    {showBlockers ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                  </button>
+                  {showBlockers && (
+                    <ul>
+                      {plan.blockers.map((blocker, i) => (
+                        <li key={i}>{blocker}</li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
 
               {/* Overview */}
               <div className="app-plan-overview">
-                <h3>Overview</h3>
-                <p>{plan.overview}</p>
+                <button 
+                  className="app-plan-section-toggle"
+                  onClick={() => setShowOverview(!showOverview)}
+                >
+                  <h3>Overview</h3>
+                  {showOverview ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                </button>
+                {showOverview && <p>{plan.overview}</p>}
               </div>
 
               {/* Steps */}
               <div className="app-plan-steps">
-                <h2>Application Steps</h2>
-                <div className="app-plan-steps-list">
+                <button 
+                  className="app-plan-section-toggle app-plan-steps-toggle"
+                  onClick={() => setShowSteps(!showSteps)}
+                >
+                  <h2>Application Steps ({completedSteps}/{totalSteps} completed)</h2>
+                  {showSteps ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                </button>
+                {showSteps && (
+                  <div className="app-plan-steps-list">
                   {plan.steps.map((step, index) => (
                     <div 
                       key={step.id} 
@@ -844,7 +882,8 @@ export default function ApplicationPlanPage() {
                       </div>
                     </div>
                   ))}
-                </div>
+                  </div>
+                )}
               </div>
 
               {/* Completion */}
@@ -1527,17 +1566,49 @@ const styles = `
     font-size: 18px;
     font-weight: 700;
     color: #111;
-    margin: 0 0 12px;
+    margin: 0;
   }
   
   .app-plan-overview p {
     font-size: 15px;
     color: #555;
     line-height: 1.6;
+    margin: 16px 0 0;
+  }
+  
+  /* Collapsible Section Toggle */
+  .app-plan-section-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity 0.2s;
+  }
+  
+  .app-plan-section-toggle:hover {
+    opacity: 0.7;
+  }
+  
+  .app-plan-section-toggle svg {
+    flex-shrink: 0;
+    color: #737373;
+    transition: transform 0.2s;
+  }
+  
+  .app-plan-steps-toggle h2 {
     margin: 0;
   }
   
   /* Steps */
+  .app-plan-steps {
+    margin-bottom: 24px;
+  }
+  
   .app-plan-steps h2 {
     font-size: 20px;
     font-weight: 700;
@@ -2114,23 +2185,36 @@ const styles = `
   /* Responsive */
   @media (max-width: 768px) {
     .app-plan-main {
-      padding: 24px 16px 100px;
+      padding: 20px 16px 100px;
+    }
+    
+    .app-plan-hero {
+      border-radius: 16px;
     }
     
     .app-plan-hero-content {
-      padding: 32px 20px;
+      padding: 28px 20px;
     }
     
     .app-plan-title {
-      font-size: 24px;
+      font-size: 22px;
+    }
+    
+    .app-plan-university {
+      font-size: 14px;
     }
     
     .app-plan-details-grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    .app-plan-detail-item {
+      padding: 12px 14px;
     }
     
     .app-plan-generate {
-      padding: 40px 20px;
+      padding: 32px 20px;
     }
     
     .app-plan-generate h2 {
@@ -2157,12 +2241,72 @@ const styles = `
     }
     
     .app-plan-step {
-      flex-direction: column;
+      padding: 16px;
       gap: 12px;
     }
     
     .app-plan-step-header {
       flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .app-plan-step-header h4 {
+      font-size: 15px;
+    }
+    
+    .app-plan-step-title-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .app-plan-ai-summary {
+      padding: 20px;
+    }
+    
+    .app-plan-ai-summary-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .app-plan-match-score {
+      align-self: flex-start;
+    }
+    
+    .app-plan-ai-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .app-plan-progress-card {
+      padding: 20px;
+    }
+    
+    .app-plan-progress-percent {
+      font-size: 32px;
+    }
+    
+    .app-plan-blockers,
+    .app-plan-overview {
+      padding: 18px;
+    }
+    
+    .app-plan-step-resources-list {
+      flex-direction: column;
+    }
+    
+    .app-plan-step-action {
+      padding: 12px 16px;
+      font-size: 14px;
+    }
+    
+    .app-plan-section-toggle svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .app-plan-steps h2 {
+      font-size: 18px;
     }
   }
 `;
