@@ -230,8 +230,23 @@ export default function ApplicationPlanPage() {
         <SiteNav />
         <div className="app-plan-loading">
           <div className="app-plan-loader">
-            <Loader2 className="w-10 h-10 animate-spin" />
-            <p>Loading your application...</p>
+            <div className="loader-aura">
+              <div className="loader-orbit orbit-black" />
+              <div className="loader-orbit orbit-red" />
+              <div className="loader-orbit orbit-gold" />
+              <div className="loader-core" />
+              <div className="loader-center">
+                <Plane className="w-6 h-6" />
+              </div>
+              <div className="loader-spark" />
+            </div>
+            <p>Crafting your German-ready roadmap…</p>
+            <div className="loader-progress">
+              <div className="loader-progress-track">
+                <div className="loader-progress-glow" />
+              </div>
+              <span>Syncing verified resources · Personalizing requirements</span>
+            </div>
           </div>
         </div>
         <style jsx global>{styles}</style>
@@ -838,12 +853,133 @@ const styles = `
   .app-plan-loader {
     text-align: center;
     color: ${RED};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
   }
   
   .app-plan-loader p {
     margin-top: 16px;
     color: #666;
     font-size: 15px;
+  }
+
+  .loader-aura {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loader-orbit {
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    animation: orbit-spin 2.4s linear infinite;
+  }
+
+  .orbit-black {
+    border-top-color: #111;
+    animation-delay: 0s;
+  }
+
+  .orbit-red {
+    border-right-color: #dd0000;
+    animation-delay: 0.2s;
+  }
+
+  .orbit-gold {
+    border-bottom-color: #f4c300;
+    animation-delay: 0.4s;
+  }
+
+  .loader-core {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    background: radial-gradient(circle at 30% 30%, #fff 0%, #ffe7a3 45%, #f4c300 100%);
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,0.15));
+    animation: core-pulse 1.8s ease-in-out infinite;
+  }
+
+  .loader-center {
+    position: absolute;
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #dd0000, #f97316);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(221,0,0,0.3);
+    animation: plane-bob 1.6s ease-in-out infinite;
+  }
+
+  .loader-spark {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, rgba(221,0,0,0.15), rgba(244,195,0,0.25), rgba(0,0,0,0.2), transparent 70%);
+    filter: blur(6px);
+    animation: spark-spin 3s linear infinite;
+  }
+
+  .loader-progress {
+    width: 240px;
+    text-align: center;
+  }
+
+  .loader-progress-track {
+    position: relative;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .loader-progress-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #000, #dd0000, #f4c300);
+    animation: progress-slide 1.4s ease-in-out infinite;
+  }
+
+  .loader-progress span {
+    font-size: 12px;
+    color: #777;
+    letter-spacing: 0.02em;
+  }
+
+  @keyframes orbit-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes core-pulse {
+    0%, 100% { transform: scale(0.95); }
+    50% { transform: scale(1.05); }
+  }
+
+  @keyframes plane-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @keyframes spark-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); }
+  }
+
+  @keyframes progress-slide {
+    0% { transform: translateX(-60%); }
+    100% { transform: translateX(60%); }
   }
   
   .app-plan-main {
