@@ -578,18 +578,9 @@ export default function ApplicationPlanPage() {
             </div>
           ) : (
             /* Has Plan - Show Progress and Steps */
-            <>
-              {/* Critical Requirements Card */}
-              {plan.criticalRequirements && plan.criticalRequirements.length > 0 && (
-                <CriticalRequirementsCard 
-                  requirements={plan.criticalRequirements}
-                  onAnswerQuestion={(type, answers) => {
-                    // TODO: Handle updating profile with answers
-                    console.log('Answer questions for', type, answers);
-                  }}
-                />
-              )}
-
+            <div className="app-plan-layout">
+              {/* Main Content */}
+              <div className="app-plan-main-content">
               {/* AI Profile Match Summary */}
               {plan.profileMatch && (
                 <div className="app-plan-ai-summary">
@@ -894,7 +885,24 @@ export default function ApplicationPlanPage() {
                   <p>You've completed all steps for this program. Good luck!</p>
                 </div>
               )}
-            </>
+              </div>
+
+              {/* Sidebar - Requirements & Missing Info */}
+              <aside className="app-plan-sidebar">
+                {/* Critical Requirements Card */}
+                {plan.criticalRequirements && plan.criticalRequirements.length > 0 && (
+                  <div className="app-plan-sidebar-sticky">
+                    <CriticalRequirementsCard 
+                      requirements={plan.criticalRequirements}
+                      onAnswerQuestion={(type, answers) => {
+                        // TODO: Handle updating profile with answers
+                        console.log('Answer questions for', type, answers);
+                      }}
+                    />
+                  </div>
+                )}
+              </aside>
+            </div>
           )}
         </div>
       </main>
@@ -1000,9 +1008,30 @@ const styles = `
   
   
   .app-plan-main {
-    max-width: 1000px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 32px 24px 100px;
+  }
+  
+  /* Two-column layout */
+  .app-plan-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 32px;
+    align-items: start;
+  }
+  
+  .app-plan-main-content {
+    min-width: 0;
+  }
+  
+  .app-plan-sidebar {
+    position: relative;
+  }
+  
+  .app-plan-sidebar-sticky {
+    position: sticky;
+    top: 24px;
   }
   
   .app-plan-back {
@@ -2183,9 +2212,28 @@ const styles = `
   }
   
   /* Responsive */
+  @media (max-width: 1024px) {
+    .app-plan-layout {
+      grid-template-columns: 1fr;
+    }
+    
+    .app-plan-sidebar {
+      order: -1;
+    }
+    
+    .app-plan-sidebar-sticky {
+      position: relative;
+      top: 0;
+    }
+  }
+  
   @media (max-width: 768px) {
     .app-plan-main {
       padding: 20px 16px 100px;
+    }
+    
+    .app-plan-layout {
+      gap: 20px;
     }
     
     .app-plan-hero {
