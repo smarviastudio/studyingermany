@@ -180,8 +180,18 @@ export default function ApplicationPlanPage() {
       const response = await fetch(`/api/programs/${programId}/application-plan`);
       if (response.ok) {
         const data = await response.json();
-        if (data.plan) {
-          setPlan(data.plan);
+        if (data.plan && data.plan.steps && Array.isArray(data.plan.steps)) {
+          // Ensure criticalRequirements is valid array
+          const validatedPlan = {
+            ...data.plan,
+            criticalRequirements: Array.isArray(data.plan.criticalRequirements) 
+              ? data.plan.criticalRequirements.filter((r: any) => r && typeof r === 'object' && r.type && r.label)
+              : [],
+            profileMatch: data.plan.profileMatch && typeof data.plan.profileMatch === 'object'
+              ? data.plan.profileMatch
+              : null,
+          };
+          setPlan(validatedPlan);
         }
       }
     } catch (err) {
@@ -239,8 +249,18 @@ export default function ApplicationPlanPage() {
       
       if (generateRes.ok) {
         const generatedData = await generateRes.json();
-        if (generatedData && generatedData.plan) {
-          setPlan(generatedData.plan);
+        if (generatedData && generatedData.plan && generatedData.plan.steps && Array.isArray(generatedData.plan.steps)) {
+          // Ensure criticalRequirements is valid array
+          const validatedPlan = {
+            ...generatedData.plan,
+            criticalRequirements: Array.isArray(generatedData.plan.criticalRequirements) 
+              ? generatedData.plan.criticalRequirements.filter((r: any) => r && typeof r === 'object' && r.type && r.label)
+              : [],
+            profileMatch: generatedData.plan.profileMatch && typeof generatedData.plan.profileMatch === 'object'
+              ? generatedData.plan.profileMatch
+              : null,
+          };
+          setPlan(validatedPlan);
           setGenerationError(null);
         } else {
           setGenerationError('Invalid response from server. Please try again.');
