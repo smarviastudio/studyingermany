@@ -30,6 +30,7 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
   const [expandedReq, setExpandedReq] = useState<string | null>(null);
   const [responses, setResponses] = useState<Record<string, Record<number, string>>>({});
   const [submitting, setSubmitting] = useState<string | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<Record<string, 'success' | 'error' | null>>({});
 
   const handleResponseChange = (reqType: string, questionIdx: number, value: string) => {
     setResponses((prev) => ({
@@ -55,11 +56,21 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
 
     try {
       setSubmitting(req.type);
+      setSubmitStatus((prev) => ({ ...prev, [req.type]: null }));
       await onAnswerQuestion?.(req.type, answers);
       setResponses((prev) => ({
         ...prev,
         [req.type]: {}
       }));
+      setSubmitStatus((prev) => ({ ...prev, [req.type]: 'success' }));
+      setTimeout(() => {
+        setSubmitStatus((prev) => ({ ...prev, [req.type]: null }));
+      }, 3000);
+    } catch (error) {
+      setSubmitStatus((prev) => ({ ...prev, [req.type]: 'error' }));
+      setTimeout(() => {
+        setSubmitStatus((prev) => ({ ...prev, [req.type]: null }));
+      }, 3000);
     } finally {
       setSubmitting(null);
     }
@@ -191,6 +202,18 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
                       {submitting === req.type ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                       {submitting === req.type ? 'Submitting...' : 'Share Answers'}
                     </button>
+                    {submitStatus[req.type] === 'success' && (
+                      <div className="critical-req-feedback critical-req-feedback-success">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Answers submitted successfully!</span>
+                      </div>
+                    )}
+                    {submitStatus[req.type] === 'error' && (
+                      <div className="critical-req-feedback critical-req-feedback-error">
+                        <AlertCircle className="w-4 h-4" />
+                        <span>Failed to submit. Please try again.</span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -466,6 +489,29 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
 
         .critical-req-answer-btn:hover:not(:disabled) {
           background: #b91c1c;
+        }
+
+        .critical-req-feedback {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 12px;
+          font-weight: 500;
+          margin-top: 8px;
+        }
+
+        .critical-req-feedback-success {
+          background: #f0fdf4;
+          border: 1px solid #86efac;
+          color: #166534;
+        }
+
+        .critical-req-feedback-error {
+          background: #fef2f2;
+          border: 1px solid #fecaca;
+          color: #991b1b;
         }
       `}</style>
     </div>

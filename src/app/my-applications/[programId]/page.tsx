@@ -1276,11 +1276,11 @@ const styles = `
     width: 40px;
     height: 40px;
     border-radius: 10px;
-    background: #f1f5f9;
+    background: linear-gradient(135deg, #dd0000, #9333ea);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #64748b;
+    color: #fff;
     flex-shrink: 0;
   }
   
@@ -1343,7 +1343,7 @@ const styles = `
   .app-plan-ai-grid {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
   }
   
   .app-plan-ai-section {

@@ -163,7 +163,14 @@ You MUST analyze these critical requirements and output them in criticalRequirem
 1. LANGUAGE REQUIREMENTS:
    - Extract exact IELTS/TOEFL/German level requirements from program data
    - Compare with user's provided scores
-   - If user data missing, add questions to askUserQuestions array
+   - If user data missing, ask STRUCTURED CONDITIONAL questions in this order:
+     * First: "Do you have an English language certificate (IELTS, TOEFL, etc.)?"
+     * If yes, then: "Which English test did you take? (IELTS, TOEFL, Cambridge, etc.)"
+     * Then: "What is your overall score/band?" and "What are your individual section scores?"
+   - For German requirements, follow same pattern:
+     * First: "Do you have a German language certificate?"
+     * If yes: "Which test? (TestDaF, Goethe-Zertifikat, DSH, etc.)"
+     * Then: "What is your level/score?"
    - Calculate statusScore: 100 if met, 50-99 if partial, 0 if missing
    - Example: "IELTS 6.5 overall, min 6.0 per band" vs "User has IELTS 7.0"
 
