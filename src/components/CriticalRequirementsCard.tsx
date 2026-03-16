@@ -1,4 +1,13 @@
-import { CheckCircle2, AlertCircle, HelpCircle, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  CheckCircle2,
+  AlertCircle,
+  HelpCircle,
+  TrendingUp,
+  ChevronDown,
+  ChevronUp,
+  Send,
+  Loader2
+} from 'lucide-react';
 import { useState } from 'react';
 
 interface CriticalRequirement {
@@ -19,6 +28,42 @@ interface CriticalRequirementsCardProps {
 
 export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: CriticalRequirementsCardProps) {
   const [expandedReq, setExpandedReq] = useState<string | null>(null);
+  const [responses, setResponses] = useState<Record<string, Record<number, string>>>({});
+  const [submitting, setSubmitting] = useState<string | null>(null);
+
+  const handleResponseChange = (reqType: string, questionIdx: number, value: string) => {
+    setResponses((prev) => ({
+      ...prev,
+      [reqType]: {
+        ...(prev[reqType] || {}),
+        [questionIdx]: value
+      }
+    }));
+  };
+
+  const handleSubmitAnswers = async (req: CriticalRequirement) => {
+    if (!req.askUserQuestions?.length) return;
+    const answers: Record<string, string> = {};
+    req.askUserQuestions.forEach((question, idx) => {
+      const value = responses[req.type]?.[idx];
+      if (value) {
+        answers[question] = value;
+      }
+    });
+
+    if (Object.keys(answers).length === 0) return;
+
+    try {
+      setSubmitting(req.type);
+      await onAnswerQuestion?.(req.type, answers);
+      setResponses((prev) => ({
+        ...prev,
+        [req.type]: {}
+      }));
+    } finally {
+      setSubmitting(null);
+    }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -76,7 +121,11 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
 
       <div className="critical-req-list">
         {requirements.map((req, idx) => (
-          <div key={idx} className="critical-req-item" style={{ borderLeftColor: getStatusColor(req.status) }}>
+          <div
+            key={idx}
+            className={`critical-req-item ${expandedReq === req.type ? 'critical-req-item-expanded' : ''}`}
+            style={{ borderLeftColor: getStatusColor(req.status) }}
+          >
             <div className="critical-req-item-header" onClick={() => setExpandedReq(expandedReq === req.type ? null : req.type)}>
               <div className="critical-req-item-left">
                 <div className="critical-req-icon" style={{ color: getStatusColor(req.status), background: getStatusBg(req.status) }}>
@@ -114,17 +163,33 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
                 
                 {req.askUserQuestions && req.askUserQuestions.length > 0 && (
                   <div className="critical-req-questions">
-                    <h5>Help us verify:</h5>
-                    <ul>
+                    <div className="critical-req-questions-header">
+                      <div>
+                        <h5>Help us verify</h5>
+                        <span>Share quick answers so we can update your readiness.</span>
+                      </div>
+                      <span className="critical-req-required">Required*</span>
+                    </div>
+                    <div className="critical-req-question-list">
                       {req.askUserQuestions.map((q, qIdx) => (
-                        <li key={qIdx}>{q}</li>
+                        <label key={qIdx} className="critical-req-question-item">
+                          <span>{q}</span>
+                          <textarea
+                            rows={2}
+                            placeholder="Type your answer"
+                            value={responses[req.type]?.[qIdx] || ''}
+                            onChange={(e) => handleResponseChange(req.type, qIdx, e.target.value)}
+                          />
+                        </label>
                       ))}
-                    </ul>
-                    <button 
+                    </div>
+                    <button
                       className="critical-req-answer-btn"
-                      onClick={() => onAnswerQuestion?.(req.type, {})}
+                      onClick={() => handleSubmitAnswers(req)}
+                      disabled={submitting === req.type}
                     >
-                      Provide Information
+                      {submitting === req.type ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                      {submitting === req.type ? 'Submitting...' : 'Share Answers'}
                     </button>
                   </div>
                 )}
@@ -136,11 +201,12 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
 
       <style jsx>{`
         .critical-req-card {
-          background: linear-gradient(135deg, rgba(221,0,0,0.02), rgba(124,58,237,0.02));
-          border: 1px solid rgba(221,0,0,0.12);
-          border-radius: 20px;
+          background: #fff;
+          border: 1px solid rgba(15, 23, 42, 0.08);
+          border-radius: 24px;
           padding: 24px;
           margin-bottom: 24px;
+          box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
         }
 
         .critical-req-header {
@@ -175,12 +241,12 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          width: 80px;
-          height: 80px;
-          border-radius: 16px;
+          width: 88px;
+          height: 88px;
+          border-radius: 20px;
           color: #fff;
           flex-shrink: 0;
-          box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+          box-shadow: 0 15px 35px rgba(221,0,0,0.3);
         }
 
         .critical-req-score .score-value {
@@ -204,11 +270,16 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
 
         .critical-req-item {
           background: #fff;
-          border: 1px solid #e5e5e5;
+          border: 1px solid #f3f4f6;
           border-left-width: 4px;
-          border-radius: 12px;
+          border-radius: 18px;
           overflow: hidden;
-          transition: all 0.2s;
+          transition: all 0.25s ease;
+        }
+
+        .critical-req-item-expanded {
+          box-shadow: 0 18px 35px rgba(15, 23, 42, 0.08);
+          transform: translateY(-2px);
         }
 
         .critical-req-item:hover {
@@ -219,7 +290,7 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 16px;
+          padding: 16px 20px;
           cursor: pointer;
         }
 
@@ -287,8 +358,9 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
         }
 
         .critical-req-expanded {
-          padding: 0 16px 16px;
+          padding: 18px 20px;
           border-top: 1px solid #f0f0f0;
+          background: linear-gradient(180deg, rgba(248, 250, 252, 0.6), rgba(255, 255, 255, 0.9));
         }
 
         .critical-req-notes {
@@ -301,44 +373,115 @@ export function CriticalRequirementsCard({ requirements, onAnswerQuestion }: Cri
         .critical-req-questions {
           margin-top: 16px;
           padding: 16px;
-          background: rgba(59,130,246,0.05);
-          border: 1px solid rgba(59,130,246,0.15);
+          background: #fff;
+          border: 1px solid rgba(59,130,246,0.12);
+          border-radius: 14px;
+          box-shadow: inset 0 0 0 1px rgba(15,23,42,0.02);
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .critical-req-questions-header {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 12px;
+        }
+
+        .critical-req-questions-header h5 {
+          font-size: 14px;
+          font-weight: 700;
+          color: #0f172a;
+          margin: 0;
+        }
+
+        .critical-req-questions-header span {
+          display: block;
+          font-size: 12px;
+          color: #64748b;
+          margin-top: 4px;
+        }
+
+        .critical-req-required {
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #ef4444;
+          font-weight: 700;
+        }
+
+        .critical-req-question-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .critical-req-question-item {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          font-size: 13px;
+          color: #0f172a;
+          font-weight: 500;
+        }
+
+        .critical-req-question-item textarea {
+          border: 1px solid #e2e8f0;
           border-radius: 10px;
-        }
-
-        .critical-req-questions h5 {
+          padding: 10px 12px;
           font-size: 13px;
-          font-weight: 600;
-          color: #1d4ed8;
-          margin: 0 0 8px;
+          resize: none;
+          transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .critical-req-questions ul {
-          margin: 0 0 12px;
-          padding-left: 18px;
-          font-size: 13px;
-          color: #444;
-        }
-
-        .critical-req-questions li {
-          margin-bottom: 4px;
+        .critical-req-question-item textarea:focus {
+          outline: none;
+          border-color: #dd0000;
+          box-shadow: 0 0 0 3px rgba(221,0,0,0.12);
         }
 
         .critical-req-answer-btn {
-          padding: 8px 16px;
-          background: linear-gradient(135deg, #dd0000, #b91c1c);
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          width: fit-content;
+          padding: 10px 18px;
+          background: #dd0000;
           color: #fff;
           border: none;
-          border-radius: 8px;
+          border-radius: 999px;
           font-size: 13px;
           font-weight: 600;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .critical-req-answer-btn:hover {
+        .critical-req-answer-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .critical-req-answer-btn:not(:disabled):hover {
           transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(221,0,0,0.3);
+          box-shadow: 0 10px 22px rgba(221,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+          .critical-req-card {
+            padding: 20px;
+          }
+
+          .critical-req-item-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+          }
+
+          .critical-req-score {
+            width: 72px;
+            height: 72px;
+          }
         }
       `}</style>
     </div>

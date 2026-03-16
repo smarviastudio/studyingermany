@@ -450,6 +450,23 @@ export default function ApplicationPlanPage() {
             
             {showCourseDetails && (
               <div className="app-plan-details-grid">
+                <div className="app-plan-details-grid-header">
+                  <div>
+                    <p className="app-plan-details-subtitle">At a glance</p>
+                    <h4>{programName || 'Program overview'}</h4>
+                  </div>
+                  {programDetails.detail_url && (
+                    <a 
+                      href={programDetails.detail_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="app-plan-daad-link"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      DAAD page
+                    </a>
+                  )}
+                </div>
                 {programDetails.city && (
                   <div className="app-plan-detail-item">
                     <MapPin className="w-4 h-4" />
@@ -505,17 +522,6 @@ export default function ApplicationPlanPage() {
                       <span className="app-plan-detail-value">{programDetails.subject_area}</span>
                     </div>
                   </div>
-                )}
-                {programDetails.detail_url && (
-                  <a 
-                    href={programDetails.detail_url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="app-plan-daad-link"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View on DAAD
-                  </a>
                 )}
               </div>
             )}
@@ -610,35 +616,46 @@ export default function ApplicationPlanPage() {
                   
                   {showProfileMatch && (
                     <>
-                      <p className="app-plan-ai-summary-text">{plan.profileMatch.summary}</p>
+                      <div className="app-plan-ai-summary-textbox">
+                        <p>{plan.profileMatch.summary}</p>
+                      </div>
                       
                       <div className="app-plan-ai-grid">
-                    {plan.profileMatch.strengths?.length > 0 && (
-                      <div className="app-plan-ai-section app-plan-ai-strengths">
-                        <h4><CheckCircle2 className="w-4 h-4" /> Your Strengths</h4>
-                        <ul>
-                          {plan.profileMatch.strengths.map((s, i) => (
-                            <li key={i}>{s}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    
-                    {plan.profileMatch.gaps?.length > 0 && (
-                      <div className="app-plan-ai-section app-plan-ai-gaps">
-                        <h4><AlertCircle className="w-4 h-4" /> Areas to Address</h4>
-                        <ul>
-                          {plan.profileMatch.gaps.map((g, i) => (
-                            <li key={i}>{g}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                        {plan.profileMatch.strengths?.length > 0 && (
+                          <div className="app-plan-ai-section app-plan-ai-strengths">
+                            <div className="app-plan-ai-section-header">
+                              <CheckCircle2 className="w-4 h-4" />
+                              <h4>Where you shine</h4>
+                            </div>
+                            <ul>
+                              {plan.profileMatch.strengths.map((s, i) => (
+                                <li key={i}>{s}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        
+                        {plan.profileMatch.gaps?.length > 0 && (
+                          <div className="app-plan-ai-section app-plan-ai-gaps">
+                            <div className="app-plan-ai-section-header">
+                              <AlertCircle className="w-4 h-4" />
+                              <h4>Areas to address</h4>
+                            </div>
+                            <ul>
+                              {plan.profileMatch.gaps.map((g, i) => (
+                                <li key={i}>{g}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                       
                       {plan.profileMatch.recommendations?.length > 0 && (
-                        <div className="app-plan-ai-recommendations">
-                          <h4><Target className="w-4 h-4" /> Recommendations</h4>
+                        <div className="app-plan-ai-callout app-plan-ai-info">
+                          <div className="app-plan-ai-callout-header">
+                            <Target className="w-4 h-4" />
+                            <h4>Recommendations</h4>
+                          </div>
                           <ul>
                             {plan.profileMatch.recommendations.map((r, i) => (
                               <li key={i}>{r}</li>
@@ -1200,24 +1217,26 @@ const styles = `
   }
   
   .app-plan-daad-link {
-    grid-column: 1 / -1;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    background: ${RED};
-    color: #fff;
-    border-radius: 10px;
-    text-decoration: none;
-    font-size: 13px;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(15,23,42,0.12);
+    background: #fff;
+    color: #0f172a;
     font-weight: 600;
-    width: fit-content;
+    font-size: 13px;
+    text-decoration: none;
     transition: all 0.2s;
+    white-space: nowrap;
   }
-  
+
   .app-plan-daad-link:hover {
-    background: #b91c1c;
+    border-color: rgba(221,0,0,0.4);
+    color: #dd0000;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(221,0,0,0.15);
   }
   
   /* Generate CTA */
@@ -1325,13 +1344,14 @@ const styles = `
   
   /* AI Profile Match Summary */
   .app-plan-ai-summary {
-    background: linear-gradient(135deg, rgba(221,0,0,0.03), rgba(124,58,237,0.03));
-    border: 1px solid rgba(221,0,0,0.15);
-    border-radius: 20px;
+    background: radial-gradient(circle at top left, rgba(221,0,0,0.08), rgba(15,23,42,0.02));
+    border: 1px solid rgba(15,23,42,0.08);
+    border-radius: 26px;
     padding: 24px;
     margin-bottom: 24px;
+    box-shadow: 0 25px 45px rgba(15,23,42,0.08);
   }
-  
+
   .app-plan-ai-summary-header {
     display: flex;
     align-items: flex-start;
@@ -1340,15 +1360,16 @@ const styles = `
   }
   
   .app-plan-ai-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, ${RED}, #7c3aed);
+    width: 52px;
+    height: 52px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #dd0000, #9333ea);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
     flex-shrink: 0;
+    box-shadow: 0 10px 25px rgba(147,51,234,0.35);
   }
   
   .app-plan-ai-summary-header > div:nth-child(2) {
@@ -1404,14 +1425,17 @@ const styles = `
   
   .app-plan-ai-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     gap: 16px;
     margin-bottom: 16px;
   }
   
   .app-plan-ai-section {
-    padding: 16px;
-    border-radius: 12px;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid rgba(15,23,42,0.06);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 12px 28px rgba(15,23,42,0.06);
   }
   
   .app-plan-ai-strengths {
@@ -1446,6 +1470,7 @@ const styles = `
     padding-left: 18px;
     font-size: 13px;
     line-height: 1.6;
+    color: #555;
   }
   
   .app-plan-ai-strengths ul {
@@ -1487,6 +1512,52 @@ const styles = `
   
   .app-plan-ai-recommendations li {
     margin-bottom: 6px;
+  }
+
+  .app-plan-ai-callout {
+    padding: 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(59,130,246,0.15);
+    background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(59,130,246,0));
+    box-shadow: 0 14px 30px rgba(59,130,246,0.12);
+  }
+
+  .app-plan-ai-callout-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin: 0 0 10px;
+  }
+
+  .app-plan-ai-callout ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #1e40af;
+  }
+
+  .app-plan-ai-callout li {
+    margin-bottom: 6px;
+  }
+
+  .app-plan-ai-summary-textbox {
+    margin: 16px 0 20px;
+    padding: 16px 18px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 18px;
+    border: 1px solid rgba(15,23,42,0.05);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
+  }
+
+  .app-plan-ai-summary-textbox p {
+    font-size: 15px;
+    color: #0f172a;
+    line-height: 1.6;
+    margin: 0;
   }
 
   /* Progress Card */
