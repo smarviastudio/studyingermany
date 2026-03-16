@@ -375,6 +375,9 @@ export async function POST(
     const { id } = await params;
     const body = await request.json();
     
+    console.log(`[Application Plan ${requestId}] Request body keys:`, Object.keys(body));
+    console.log(`[Application Plan ${requestId}] Program data:`, body.program ? Object.keys(body.program) : 'missing');
+    
     const { program, userProfile } = ApplicationPlanRequestSchema.parse(body);
     
     console.log(`[Application Plan ${requestId}] Generating plan for program: ${program.program_name}`);
