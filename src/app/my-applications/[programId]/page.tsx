@@ -227,10 +227,14 @@ export default function ApplicationPlanPage() {
       
       const sanitizedProgram = buildProgramPayload(programToUse);
 
+      const payload = profileToUse
+        ? { program: sanitizedProgram, userProfile: profileToUse }
+        : { program: sanitizedProgram };
+
       const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ program: sanitizedProgram, userProfile: profileToUse }),
+        body: JSON.stringify(payload),
       });
       
       if (generateRes.ok) {
