@@ -19,6 +19,16 @@ import { CriticalRequirementsCard } from '@/components/CriticalRequirementsCard'
 
 const RED = '#dd0000';
 
+const sanitizeUserProfilePayload = (profile?: UserProfile | null) => {
+  if (!profile) return null;
+  const sanitized: Record<string, unknown> = {};
+  Object.entries(profile).forEach(([key, value]) => {
+    if (value === null || value === undefined || value === '') return;
+    sanitized[key] = value;
+  });
+  return Object.keys(sanitized).length > 0 ? sanitized : null;
+};
+
 interface StepResource {
   name: string;
   url: string;
@@ -160,7 +170,10 @@ export default function ApplicationPlanPage() {
       if (profileRes.ok) {
         const profileData = await profileRes.json();
         if (profileData.profile) {
-          setUserProfile(profileData.profile);
+          const sanitized = sanitizeUserProfilePayload(profileData.profile);
+          if (sanitized) {
+            setUserProfile(sanitized as UserProfile);
+          }
         }
       }
       
@@ -237,15 +250,19 @@ export default function ApplicationPlanPage() {
         const profileRes = await fetch('/api/profile');
         if (profileRes.ok) {
           const profileData = await profileRes.json();
-          profileToUse = profileData.profile;
-          setUserProfile(profileData.profile);
+          const sanitized = sanitizeUserProfilePayload(profileData.profile);
+          profileToUse = sanitized as UserProfile | null;
+          if (sanitized) {
+            setUserProfile(sanitized as UserProfile);
+          }
         }
       }
-      
-      const sanitizedProgram = buildProgramPayload(programToUse);
 
-      const payload = profileToUse
-        ? { program: sanitizedProgram, userProfile: profileToUse }
+      const sanitizedProgram = buildProgramPayload(programToUse);
+      const sanitizedProfilePayload = sanitizeUserProfilePayload(profileToUse);
+
+      const payload = sanitizedProfilePayload
+        ? { program: sanitizedProgram, userProfile: sanitizedProfilePayload }
         : { program: sanitizedProgram };
 
       const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
