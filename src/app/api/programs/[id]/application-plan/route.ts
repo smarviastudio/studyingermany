@@ -149,13 +149,28 @@ CRITICAL RULES FOR STEPS:
      * TOEFL: https://www.ets.org/toefl/test-takers/ibt/prepare.html
 
 2. DOCUMENT GATHERING & REQUIRED DOCUMENTS ARRAY:
-   - CRITICAL: Parse the program's requirements, tab_requirements_registration, and documents_required_list fields
+   - CRITICAL: You MUST ALWAYS return a requiredDocuments array - this is MANDATORY
+   - Parse the program's requirements, tab_requirements_registration, and documents_required_list fields
    - Extract SPECIFIC documents mentioned in the program data
-   - Create a requiredDocuments array with documents found in the program requirements
-   - Common documents to look for: transcripts, diplomas, CV, motivation letter, language certificates, passport, recommendation letters, APS certificate
-   - Include APS certificate if user is from China, India, Vietnam, or Mongolia
-   - Each document must have: id, name, category (admission/visa/financial), required (true/false), description, programSpecificNotes
+   - MINIMUM documents to include (even if not explicitly mentioned):
+     * CV/Resume (id: "cv-resume", category: "admission")
+     * Motivation Letter (id: "motivation-letter", category: "admission")
+     * Academic Transcripts (id: "transcripts", category: "admission")
+     * Degree Certificate (id: "degree-certificate", category: "admission")
+     * Passport Copy (id: "passport", category: "visa")
+     * Language Certificate (id: "language-cert-english" or "language-cert-german", category: "admission")
+   - Additional documents based on program requirements: recommendation letters, APS certificate (for China/India/Vietnam/Mongolia), portfolio, etc.
+   - Each document MUST have: id, name, category (admission/visa/financial), required (true/false), description, programSpecificNotes
    - If program mentions "certified copies" or "apostille", include that in programSpecificNotes
+   - Example document object:
+     {
+       "id": "cv-resume",
+       "name": "Curriculum Vitae (CV)",
+       "category": "admission",
+       "required": true,
+       "description": "A detailed CV following German academic standards, including education, work experience, skills, and achievements.",
+       "programSpecificNotes": "Must be in English or German, maximum 2 pages"
+     }
 
 3. CV PREPARATION:
    - action.url = "/cv-maker"
@@ -373,6 +388,69 @@ Generate a comprehensive, personalized application plan.`;
     if (!parsed.profileMatch) {
       console.error('[OpenRouter] Missing profileMatch in response:', parsed);
       throw new Error('AI response missing required profileMatch');
+    }
+
+    // Ensure requiredDocuments array exists with minimum documents
+    if (!parsed.requiredDocuments || !Array.isArray(parsed.requiredDocuments) || parsed.requiredDocuments.length === 0) {
+      console.warn('[OpenRouter] Missing or empty requiredDocuments, adding default documents');
+      parsed.requiredDocuments = [
+        {
+          id: "cv-resume",
+          name: "Curriculum Vitae (CV)",
+          category: "admission",
+          required: true,
+          description: "A detailed CV following German academic standards, including education, work experience, skills, and achievements.",
+          programSpecificNotes: "Must be in English or German, typically 1-2 pages"
+        },
+        {
+          id: "motivation-letter",
+          name: "Motivation Letter",
+          category: "admission",
+          required: true,
+          description: "A letter explaining your motivation for this program, your academic background, career goals, and why you're a good fit.",
+          programSpecificNotes: "Usually 1 page, addressed to the admissions committee"
+        },
+        {
+          id: "transcripts",
+          name: "Academic Transcripts",
+          category: "admission",
+          required: true,
+          description: "Official transcripts from all universities/colleges attended, showing courses taken and grades received.",
+          programSpecificNotes: "Must be certified copies or officially translated if not in English/German"
+        },
+        {
+          id: "degree-certificate",
+          name: "Degree Certificate",
+          category: "admission",
+          required: true,
+          description: "Your bachelor's degree certificate (for master's programs) or high school diploma (for bachelor's programs).",
+          programSpecificNotes: "Certified copy required, with official translation if necessary"
+        },
+        {
+          id: "language-cert-english",
+          name: "English Language Certificate",
+          category: "admission",
+          required: true,
+          description: "Proof of English proficiency (IELTS, TOEFL, Cambridge, etc.) if the program is taught in English.",
+          programSpecificNotes: "Check specific minimum score requirements for this program"
+        },
+        {
+          id: "passport",
+          name: "Passport Copy",
+          category: "visa",
+          required: true,
+          description: "A clear copy of your valid passport, showing personal information and validity dates.",
+          programSpecificNotes: "Passport must be valid for at least 6 months beyond your intended stay"
+        },
+        {
+          id: "blocked-account",
+          name: "Blocked Account Confirmation",
+          category: "financial",
+          required: true,
+          description: "Proof of blocked account (Sperrkonto) with €11,904 for one year of living expenses in Germany.",
+          programSpecificNotes: "Required for student visa application"
+        }
+      ];
     }
 
     return parsed;
