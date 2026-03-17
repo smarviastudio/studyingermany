@@ -628,74 +628,131 @@ export default function ApplicationPlanPage() {
               )}
 
               {/* Section 3: Admission Documents */}
-              <div className="simple-section simple-admission-docs">
-                <div className="simple-section-header">
-                  <div className="simple-section-icon">
-                    <FileText className="w-5 h-5" />
-                  </div>
-                  <div className="simple-section-title">
-                    <h2>Admission Documents</h2>
-                    <p>Required documents for your application</p>
-                  </div>
-                </div>
+              {(() => {
+                const admissionDocs = plan.steps
+                  .filter(step => step.category === 'documents' && step.title.toLowerCase().includes('document'))
+                  .flatMap(step => {
+                    const desc = step.description || '';
+                    const detailedInfo = step.detailedInfo || '';
+                    const combined = desc + ' ' + detailedInfo;
+                    
+                    const docs = [];
+                    if (combined.match(/transcript|academic record/i)) docs.push({ id: 'transcript', label: 'Academic Transcripts', priority: 'high' });
+                    if (combined.match(/diploma|degree certificate/i)) docs.push({ id: 'diploma', label: 'Diploma / Degree Certificate', priority: 'high' });
+                    if (combined.match(/passport/i)) docs.push({ id: 'passport', label: 'Valid Passport', priority: 'high' });
+                    if (combined.match(/cv|curriculum vitae|resume/i)) docs.push({ id: 'cv', label: 'CV / Resume', priority: 'high' });
+                    if (combined.match(/motivation letter|statement of purpose/i)) docs.push({ id: 'motivation', label: 'Motivation Letter', priority: 'high' });
+                    if (combined.match(/language certificate|ielts|toefl|german/i)) docs.push({ id: 'language', label: 'Language Certificate (IELTS/TOEFL/German)', priority: 'high' });
+                    if (combined.match(/recommendation|reference letter/i)) docs.push({ id: 'recommendation', label: 'Letters of Recommendation', priority: 'medium' });
+                    if (combined.match(/aps certificate/i)) docs.push({ id: 'aps', label: 'APS Certificate', priority: 'high' });
+                    if (combined.match(/passport photo/i)) docs.push({ id: 'photo', label: 'Passport Photos', priority: 'low' });
+                    
+                    return docs;
+                  });
                 
-                <div className="simple-section-content">
-                  <div className="simple-doc-list">
-                    {documentList.filter(doc => doc.category === 'Admission').map(doc => (
-                      <label key={doc.id} className={`simple-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
-                        <input
-                          type="checkbox"
-                          checked={checkedDocs.includes(doc.id)}
-                          onChange={() => toggleDoc(doc.id)}
-                        />
-                        <span className="simple-doc-checkbox">
-                          {checkedDocs.includes(doc.id) ? (
-                            <CheckCircle2 className="w-5 h-5" />
-                          ) : (
-                            <Circle className="w-5 h-5" />
-                          )}
-                        </span>
-                        <span className="simple-doc-label">{doc.label}</span>
-                      </label>
-                    ))}
+                const uniqueDocs = Array.from(new Map(admissionDocs.map(d => [d.id, d])).values());
+                
+                if (uniqueDocs.length === 0) {
+                  uniqueDocs.push(
+                    { id: 'transcript', label: 'Academic Transcripts', priority: 'high' },
+                    { id: 'diploma', label: 'Diploma / Degree Certificate', priority: 'high' },
+                    { id: 'cv', label: 'CV / Resume', priority: 'high' },
+                    { id: 'motivation', label: 'Motivation Letter', priority: 'high' },
+                    { id: 'language', label: 'Language Certificate', priority: 'high' },
+                    { id: 'passport', label: 'Valid Passport', priority: 'high' }
+                  );
+                }
+                
+                return (
+                  <div className="simple-section simple-admission-docs">
+                    <div className="simple-section-header">
+                      <div className="simple-section-icon">
+                        <FileText className="w-5 h-5" />
+                      </div>
+                      <div className="simple-section-title">
+                        <h2>Admission Documents</h2>
+                        <p>Required documents for your application</p>
+                      </div>
+                    </div>
+                    
+                    <div className="simple-section-content">
+                      <div className="simple-doc-list">
+                        {uniqueDocs.map(doc => (
+                          <label key={doc.id} className={`simple-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
+                            <input
+                              type="checkbox"
+                              checked={checkedDocs.includes(doc.id)}
+                              onChange={() => toggleDoc(doc.id)}
+                            />
+                            <span className="simple-doc-checkbox">
+                              {checkedDocs.includes(doc.id) ? (
+                                <CheckCircle2 className="w-5 h-5" />
+                              ) : (
+                                <Circle className="w-5 h-5" />
+                              )}
+                            </span>
+                            <span className="simple-doc-label">{doc.label}</span>
+                            {doc.priority === 'high' && (
+                              <span className="simple-doc-badge" style={{ marginLeft: 'auto', padding: '2px 8px', background: '#fee2e2', color: '#dc2626', fontSize: 11, fontWeight: 600, borderRadius: 6 }}>Required</span>
+                            )}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                );
+              })()}
 
               {/* Section 4: Visa & Financial Requirements */}
-              <div className="simple-section simple-visa-docs">
-                <div className="simple-section-header">
-                  <div className="simple-section-icon">
-                    <Plane className="w-5 h-5" />
-                  </div>
-                  <div className="simple-section-title">
-                    <h2>Visa & Financial Requirements</h2>
-                    <p>Documents needed for visa application</p>
-                  </div>
-                </div>
+              {(() => {
+                const visaDocs = [
+                  { id: 'blocked-account', label: 'Blocked Account (€11,904/year)', priority: 'high', mandatory: true },
+                  { id: 'health-insurance', label: 'Health Insurance Proof', priority: 'high', mandatory: true },
+                  { id: 'visa-application', label: 'Visa Application Form', priority: 'high', mandatory: true },
+                  { id: 'admission-letter', label: 'University Admission Letter', priority: 'high', mandatory: true },
+                  { id: 'accommodation', label: 'Proof of Accommodation', priority: 'medium', mandatory: false },
+                  { id: 'financial-proof', label: 'Financial Resources Proof', priority: 'high', mandatory: true },
+                ];
                 
-                <div className="simple-section-content">
-                  <div className="simple-doc-list">
-                    {documentList.filter(doc => doc.category === 'Visa' || doc.category === 'Financial').map(doc => (
-                      <label key={doc.id} className={`simple-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
-                        <input
-                          type="checkbox"
-                          checked={checkedDocs.includes(doc.id)}
-                          onChange={() => toggleDoc(doc.id)}
-                        />
-                        <span className="simple-doc-checkbox">
-                          {checkedDocs.includes(doc.id) ? (
-                            <CheckCircle2 className="w-5 h-5" />
-                          ) : (
-                            <Circle className="w-5 h-5" />
-                          )}
-                        </span>
-                        <span className="simple-doc-label">{doc.label}</span>
-                      </label>
-                    ))}
+                return (
+                  <div className="simple-section simple-visa-docs">
+                    <div className="simple-section-header">
+                      <div className="simple-section-icon">
+                        <Plane className="w-5 h-5" />
+                      </div>
+                      <div className="simple-section-title">
+                        <h2>Visa & Financial Requirements</h2>
+                        <p>Documents needed for visa application</p>
+                      </div>
+                    </div>
+                    
+                    <div className="simple-section-content">
+                      <div className="simple-doc-list">
+                        {visaDocs.map(doc => (
+                          <label key={doc.id} className={`simple-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
+                            <input
+                              type="checkbox"
+                              checked={checkedDocs.includes(doc.id)}
+                              onChange={() => toggleDoc(doc.id)}
+                            />
+                            <span className="simple-doc-checkbox">
+                              {checkedDocs.includes(doc.id) ? (
+                                <CheckCircle2 className="w-5 h-5" />
+                              ) : (
+                                <Circle className="w-5 h-5" />
+                              )}
+                            </span>
+                            <span className="simple-doc-label">{doc.label}</span>
+                            {doc.mandatory && (
+                              <span className="simple-doc-badge" style={{ marginLeft: 'auto', padding: '2px 8px', background: '#fee2e2', color: '#dc2626', fontSize: 11, fontWeight: 600, borderRadius: 6 }}>Mandatory</span>
+                            )}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                );
+              })()}
 
             </div>
           )}
