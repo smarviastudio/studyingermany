@@ -158,9 +158,36 @@ interface ProfileMatch {
   recommendations: string[];
 }
 
+interface RequiredDocument {
+  id: string;
+  name: string;
+  category: 'admission' | 'visa' | 'financial';
+  required: boolean;
+  description: string;
+  programSpecificNotes?: string;
+}
+
+interface ApplicationSubmission {
+  method: string;
+  portalUrl?: string;
+  deadline?: string;
+  instructions: string;
+}
+
+interface UniversityInfo {
+  cityName: string;
+  cityDescription: string;
+  jobProspects: string;
+  accommodationInfo: string;
+  livingCosts: string;
+}
+
 interface ApplicationPlan {
   criticalRequirements?: CriticalRequirement[];
   profileMatch?: ProfileMatch;
+  requiredDocuments?: RequiredDocument[];
+  applicationSubmission?: ApplicationSubmission;
+  universityInfo?: UniversityInfo;
   overview: string;
   estimatedTimeline: string;
   blockers: string[];
@@ -202,6 +229,7 @@ export default function ApplicationPlanPage() {
   const [stepInfoDrawer, setStepInfoDrawer] = useState<ApplicationStep | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [selectedDocInfo, setSelectedDocInfo] = useState<{id: string; label: string; type: 'admission' | 'visa'} | null>(null);
+  const [expandedDocs, setExpandedDocs] = useState<string[]>([]);
   
   // Collapsible section states
   const [showRequirements, setShowRequirements] = useState(true);
@@ -463,6 +491,12 @@ export default function ApplicationPlanPage() {
 
   const toggleDoc = (docId: string) => {
     setCheckedDocs(prev => 
+      prev.includes(docId) ? prev.filter(id => id !== docId) : [...prev, docId]
+    );
+  };
+
+  const toggleDocExpansion = (docId: string) => {
+    setExpandedDocs(prev =>
       prev.includes(docId) ? prev.filter(id => id !== docId) : [...prev, docId]
     );
   };
@@ -739,152 +773,198 @@ export default function ApplicationPlanPage() {
                 </div>
               )}
 
-              {/* Section 3: Admission Documents */}
-              {(() => {
-                const admissionDocs = plan.steps
-                  .filter(step => step.category === 'documents' && step.title.toLowerCase().includes('document'))
-                  .flatMap(step => {
-                    const desc = step.description || '';
-                    const detailedInfo = step.detailedInfo || '';
-                    const combined = desc + ' ' + detailedInfo;
-                    
-                    const docs = [];
-                    if (combined.match(/transcript|academic record/i)) docs.push({ id: 'transcript', label: 'Academic Transcripts', priority: 'high' });
-                    if (combined.match(/diploma|degree certificate/i)) docs.push({ id: 'diploma', label: 'Diploma / Degree Certificate', priority: 'high' });
-                    if (combined.match(/passport/i)) docs.push({ id: 'passport', label: 'Valid Passport', priority: 'high' });
-                    if (combined.match(/cv|curriculum vitae|resume/i)) docs.push({ id: 'cv', label: 'CV / Resume', priority: 'high' });
-                    if (combined.match(/motivation letter|statement of purpose/i)) docs.push({ id: 'motivation', label: 'Motivation Letter', priority: 'high' });
-                    if (combined.match(/language certificate|ielts|toefl|german/i)) docs.push({ id: 'language', label: 'Language Certificate (IELTS/TOEFL/German)', priority: 'high' });
-                    if (combined.match(/recommendation|reference letter/i)) docs.push({ id: 'recommendation', label: 'Letters of Recommendation', priority: 'medium' });
-                    if (combined.match(/aps certificate/i)) docs.push({ id: 'aps', label: 'APS Certificate', priority: 'high' });
-                    if (combined.match(/passport photo/i)) docs.push({ id: 'photo', label: 'Passport Photos', priority: 'low' });
-                    
-                    return docs;
-                  });
-                
-                const uniqueDocs = Array.from(new Map(admissionDocs.map(d => [d.id, d])).values());
-                
-                if (uniqueDocs.length === 0) {
-                  uniqueDocs.push(
-                    { id: 'transcript', label: 'Academic Transcripts', priority: 'high' },
-                    { id: 'diploma', label: 'Diploma / Degree Certificate', priority: 'high' },
-                    { id: 'cv', label: 'CV / Resume', priority: 'high' },
-                    { id: 'motivation', label: 'Motivation Letter', priority: 'high' },
-                    { id: 'language', label: 'Language Certificate', priority: 'high' },
-                    { id: 'passport', label: 'Valid Passport', priority: 'high' }
-                  );
-                }
-                
-                return (
-                  <div className="simple-section simple-admission-docs">
-                    <div className="simple-section-header">
-                      <div className="simple-section-icon">
-                        <FileText className="w-5 h-5" />
-                      </div>
-                      <div className="simple-section-title">
-                        <h2>Admission Documents</h2>
-                        <p>Required documents for your application</p>
-                      </div>
+              {/* Section 3: Admission Documents - AI Generated */}
+              {plan.requiredDocuments && plan.requiredDocuments.filter(d => d.category === 'admission').length > 0 && (
+                <div className="simple-section simple-admission-docs">
+                  <div className="simple-section-header">
+                    <div className="simple-section-icon">
+                      <FileText className="w-5 h-5" />
                     </div>
-                    
-                    <div className="simple-section-content">
-                      <div className="simple-doc-list">
-                        {uniqueDocs.map(doc => (
-                          <label key={doc.id} className={`simple-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
-                            <input
-                              type="checkbox"
-                              checked={checkedDocs.includes(doc.id)}
-                              onChange={() => toggleDoc(doc.id)}
-                            />
-                            <span className="simple-doc-checkbox">
-                              {checkedDocs.includes(doc.id) ? (
-                                <CheckCircle2 className="w-5 h-5" />
-                              ) : (
-                                <Circle className="w-5 h-5" />
-                              )}
-                            </span>
-                            <span className="simple-doc-label">{doc.label}</span>
-                            {doc.priority === 'high' && (
-                              <span className="simple-doc-badge" style={{ marginLeft: 'auto', padding: '2px 8px', background: '#fee2e2', color: '#dc2626', fontSize: 11, fontWeight: 600, borderRadius: 6 }}>Required</span>
-                            )}
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setSelectedDocInfo({ id: doc.id, label: doc.label, type: 'admission' });
-                              }}
-                              style={{ marginLeft: doc.priority === 'high' ? '8px' : 'auto', padding: '4px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
-                              title="More info"
-                            >
-                              <Info className="w-4 h-4" />
-                            </button>
-                          </label>
-                        ))}
-                      </div>
+                    <div className="simple-section-title">
+                      <h2>Admission Documents</h2>
+                      <p>Required documents for your application</p>
                     </div>
                   </div>
-                );
-              })()}
+                  
+                  <div className="simple-section-content">
+                    <div className="simple-doc-list">
+                      {plan.requiredDocuments.filter(d => d.category === 'admission').map(doc => {
+                        const isExpanded = expandedDocs.includes(doc.id);
+                        return (
+                          <div key={doc.id} className="simple-doc-item-wrapper">
+                            <div className={`simple-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
+                              <input
+                                type="checkbox"
+                                checked={checkedDocs.includes(doc.id)}
+                                onChange={() => toggleDoc(doc.id)}
+                              />
+                              <span className="simple-doc-checkbox">
+                                {checkedDocs.includes(doc.id) ? (
+                                  <CheckCircle2 className="w-5 h-5" />
+                                ) : (
+                                  <Circle className="w-5 h-5" />
+                                )}
+                              </span>
+                              <span className="simple-doc-label">{doc.name}</span>
+                              {doc.required && (
+                                <span className="simple-doc-badge" style={{ marginLeft: 'auto', padding: '2px 8px', background: '#fee2e2', color: '#dc2626', fontSize: 11, fontWeight: 600, borderRadius: 6 }}>Required</span>
+                              )}
+                              <button
+                                onClick={() => toggleDocExpansion(doc.id)}
+                                style={{ marginLeft: doc.required ? '8px' : 'auto', padding: '4px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
+                                title={isExpanded ? 'Hide details' : 'Show details'}
+                              >
+                                {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                              </button>
+                            </div>
+                            {isExpanded && (
+                              <div className="doc-drawer-content">
+                                <p className="doc-description">{doc.description}</p>
+                                {doc.programSpecificNotes && (
+                                  <div className="doc-specific-notes">
+                                    <strong>Program-specific notes:</strong> {doc.programSpecificNotes}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
 
-              {/* Section 4: Visa & Financial Requirements */}
-              {(() => {
-                const visaDocs = [
-                  { id: 'blocked-account', label: 'Blocked Account (€11,904/year)', priority: 'high', mandatory: true },
-                  { id: 'health-insurance', label: 'Health Insurance Proof', priority: 'high', mandatory: true },
-                  { id: 'visa-application', label: 'Visa Application Form', priority: 'high', mandatory: true },
-                  { id: 'admission-letter', label: 'University Admission Letter', priority: 'high', mandatory: true },
-                  { id: 'accommodation', label: 'Proof of Accommodation', priority: 'medium', mandatory: false },
-                  { id: 'financial-proof', label: 'Financial Resources Proof', priority: 'high', mandatory: true },
-                ];
-                
-                return (
-                  <div className="simple-section simple-visa-docs">
-                    <div className="simple-section-header">
-                      <div className="simple-section-icon">
-                        <Plane className="w-5 h-5" />
-                      </div>
-                      <div className="simple-section-title">
-                        <h2>Visa & Financial Requirements</h2>
-                        <p>Documents needed for visa application</p>
-                      </div>
+              {/* Section 4: Visa & Financial Requirements - AI Generated */}
+              {plan.requiredDocuments && plan.requiredDocuments.filter(d => d.category === 'visa' || d.category === 'financial').length > 0 && (
+                <div className="simple-section simple-visa-docs">
+                  <div className="simple-section-header">
+                    <div className="simple-section-icon">
+                      <Plane className="w-5 h-5" />
                     </div>
-                    
-                    <div className="simple-section-content">
-                      <div className="simple-doc-list">
-                        {visaDocs.map(doc => (
-                          <label key={doc.id} className={`simple-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
-                            <input
-                              type="checkbox"
-                              checked={checkedDocs.includes(doc.id)}
-                              onChange={() => toggleDoc(doc.id)}
-                            />
-                            <span className="simple-doc-checkbox">
-                              {checkedDocs.includes(doc.id) ? (
-                                <CheckCircle2 className="w-5 h-5" />
-                              ) : (
-                                <Circle className="w-5 h-5" />
-                              )}
-                            </span>
-                            <span className="simple-doc-label">{doc.label}</span>
-                            {doc.mandatory && (
-                              <span className="simple-doc-badge" style={{ marginLeft: 'auto', padding: '2px 8px', background: '#fee2e2', color: '#dc2626', fontSize: 11, fontWeight: 600, borderRadius: 6 }}>Mandatory</span>
-                            )}
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setSelectedDocInfo({ id: doc.id, label: doc.label, type: 'visa' });
-                              }}
-                              style={{ marginLeft: doc.mandatory ? '8px' : 'auto', padding: '4px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
-                              title="More info"
-                            >
-                              <Info className="w-4 h-4" />
-                            </button>
-                          </label>
-                        ))}
-                      </div>
+                    <div className="simple-section-title">
+                      <h2>Visa & Financial Requirements</h2>
+                      <p>Documents needed for visa application</p>
                     </div>
                   </div>
-                );
-              })()}
+                  
+                  <div className="simple-section-content">
+                    <div className="simple-doc-list">
+                      {plan.requiredDocuments.filter(d => d.category === 'visa' || d.category === 'financial').map(doc => {
+                        const isExpanded = expandedDocs.includes(doc.id);
+                        return (
+                          <div key={doc.id} className="simple-doc-item-wrapper">
+                            <div className={`simple-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
+                              <input
+                                type="checkbox"
+                                checked={checkedDocs.includes(doc.id)}
+                                onChange={() => toggleDoc(doc.id)}
+                              />
+                              <span className="simple-doc-checkbox">
+                                {checkedDocs.includes(doc.id) ? (
+                                  <CheckCircle2 className="w-5 h-5" />
+                                ) : (
+                                  <Circle className="w-5 h-5" />
+                                )}
+                              </span>
+                              <span className="simple-doc-label">{doc.name}</span>
+                              {doc.required && (
+                                <span className="simple-doc-badge" style={{ marginLeft: 'auto', padding: '2px 8px', background: '#fee2e2', color: '#dc2626', fontSize: 11, fontWeight: 600, borderRadius: 6 }}>Mandatory</span>
+                              )}
+                              <button
+                                onClick={() => toggleDocExpansion(doc.id)}
+                                style={{ marginLeft: doc.required ? '8px' : 'auto', padding: '4px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
+                                title={isExpanded ? 'Hide details' : 'Show details'}
+                              >
+                                {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                              </button>
+                            </div>
+                            {isExpanded && (
+                              <div className="doc-drawer-content">
+                                <p className="doc-description">{doc.description}</p>
+                                {doc.programSpecificNotes && (
+                                  <div className="doc-specific-notes">
+                                    <strong>Program-specific notes:</strong> {doc.programSpecificNotes}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Section 5: Application Submission - AI Generated */}
+              {plan.applicationSubmission && (
+                <div className="simple-section">
+                  <div className="simple-section-header">
+                    <div className="simple-section-icon">
+                      <FileCheck className="w-5 h-5" />
+                    </div>
+                    <div className="simple-section-title">
+                      <h2>How to Submit Your Application</h2>
+                      <p>Application process and deadlines</p>
+                    </div>
+                  </div>
+                  
+                  <div className="simple-section-content">
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ display: 'inline-block', padding: '6px 12px', background: '#f0fdf4', color: '#166534', borderRadius: 8, fontSize: 13, fontWeight: 600, marginBottom: 12 }}>
+                        Method: {plan.applicationSubmission.method}
+                      </div>
+                      {plan.applicationSubmission.deadline && (
+                        <div style={{ display: 'inline-block', padding: '6px 12px', background: '#fef3c7', color: '#92400e', borderRadius: 8, fontSize: 13, fontWeight: 600, marginLeft: 8 }}>
+                          Deadline: {plan.applicationSubmission.deadline}
+                        </div>
+                      )}
+                    </div>
+                    <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.6, marginBottom: 16 }}>{plan.applicationSubmission.instructions}</p>
+                    {plan.applicationSubmission.portalUrl && (
+                      <a href={plan.applicationSubmission.portalUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: '#dd0000', color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+                        <ExternalLink className="w-4 h-4" />
+                        Go to Application Portal
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Section 6: University & City Info - AI Generated */}
+              {plan.universityInfo && (
+                <div className="simple-section">
+                  <div className="simple-section-header">
+                    <div className="simple-section-icon">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    <div className="simple-section-title">
+                      <h2>About {plan.universityInfo.cityName}</h2>
+                      <p>Living and working in this city</p>
+                    </div>
+                  </div>
+                  
+                  <div className="simple-section-content">
+                    <div style={{ marginBottom: 20 }}>
+                      <h4 style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>City Overview</h4>
+                      <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.6 }}>{plan.universityInfo.cityDescription}</p>
+                    </div>
+                    <div style={{ marginBottom: 20 }}>
+                      <h4 style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Job Prospects</h4>
+                      <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.6 }}>{plan.universityInfo.jobProspects}</p>
+                    </div>
+                    <div style={{ marginBottom: 20 }}>
+                      <h4 style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Accommodation</h4>
+                      <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.6 }}>{plan.universityInfo.accommodationInfo}</p>
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Living Costs</h4>
+                      <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.6 }}>{plan.universityInfo.livingCosts}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
             </div>
           )}
@@ -2606,6 +2686,40 @@ const styles = `
 
   .simple-doc-item.checked .simple-doc-label {
     color: #166534;
+  }
+
+  .simple-doc-item-wrapper {
+    margin-bottom: 8px;
+  }
+
+  .doc-drawer-content {
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    margin-top: -8px;
+  }
+
+  .doc-description {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0 0 12px;
+  }
+
+  .doc-specific-notes {
+    padding: 12px;
+    background: #fff7ed;
+    border-left: 3px solid #f59e0b;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #78350f;
+    line-height: 1.5;
+  }
+
+  .doc-specific-notes strong {
+    color: #92400e;
   }
 
   @media (max-width: 768px) {

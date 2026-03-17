@@ -75,6 +75,29 @@ Return JSON ONLY with this exact structure:
       "askUserQuestions": ["What is your IELTS overall score?", "What are your individual band scores?"]
     }
   ],
+  "requiredDocuments": [
+    {
+      "id": "unique-doc-id",
+      "name": "Document name extracted from program requirements",
+      "category": "admission|visa|financial",
+      "required": true,
+      "description": "Brief description of what this document is",
+      "programSpecificNotes": "Any specific notes from the program requirements about this document"
+    }
+  ],
+  "applicationSubmission": {
+    "method": "uni-assist|direct|other",
+    "portalUrl": "URL if available from program data",
+    "deadline": "Deadline from program data",
+    "instructions": "Step-by-step instructions extracted from program's application channel info"
+  },
+  "universityInfo": {
+    "cityName": "City name from program data",
+    "cityDescription": "Brief description of the city",
+    "jobProspects": "Job market analysis for this field in this city/region",
+    "accommodationInfo": "Housing situation and costs in this city",
+    "livingCosts": "Estimated monthly living costs"
+  },
   "profileMatch": {
     "score": 85,
     "summary": "Brief 2-3 sentence analysis comparing user profile to program requirements",
@@ -125,9 +148,14 @@ CRITICAL RULES FOR STEPS:
      * IELTS: https://www.ielts.org/for-test-takers/how-to-prepare
      * TOEFL: https://www.ets.org/toefl/test-takers/ibt/prepare.html
 
-2. DOCUMENT GATHERING:
-   - List specific documents required for THIS program
-   - Include APS certificate info if user is from China, India, Vietnam, or Mongolia
+2. DOCUMENT GATHERING & REQUIRED DOCUMENTS ARRAY:
+   - CRITICAL: Parse the program's requirements, tab_requirements_registration, and documents_required_list fields
+   - Extract SPECIFIC documents mentioned in the program data
+   - Create a requiredDocuments array with documents found in the program requirements
+   - Common documents to look for: transcripts, diplomas, CV, motivation letter, language certificates, passport, recommendation letters, APS certificate
+   - Include APS certificate if user is from China, India, Vietnam, or Mongolia
+   - Each document must have: id, name, category (admission/visa/financial), required (true/false), description, programSpecificNotes
+   - If program mentions "certified copies" or "apostille", include that in programSpecificNotes
 
 3. CV PREPARATION:
    - action.url = "/cv-maker"
@@ -146,8 +174,11 @@ CRITICAL RULES FOR STEPS:
    - Include specific amount needed based on program duration
 
 6. APPLICATION SUBMISSION:
-   - Use uni-assist URL if applicable: https://www.uni-assist.de/en/
-   - Or direct university portal if specified
+   - CRITICAL: Extract application submission info from application_channel and application_channel_notes fields
+   - Parse registration_deadline_date and registration_deadline_text for deadline info
+   - Determine if it's uni-assist, direct university portal, or other method
+   - Include step-by-step instructions from the program data
+   - Populate applicationSubmission object with method, portalUrl, deadline, and instructions
 
 7. VISA APPLICATION:
    - German Embassy info: https://www.germany.info/
@@ -156,6 +187,14 @@ CRITICAL RULES FOR STEPS:
 8. HEALTH INSURANCE:
    - TK: https://www.tk.de/en
    - AOK: https://en.zuwanderer.aok.de/
+
+9. UNIVERSITY & CITY INFORMATION:
+   - CRITICAL: Extract city name from program data
+   - Provide brief description of the city (size, character, student-friendliness)
+   - Analyze job prospects for this specific field in this city/region
+   - Describe accommodation situation (availability, typical costs, student housing options)
+   - Estimate monthly living costs for this specific city
+   - Populate universityInfo object with all this information
 
 CRITICAL REQUIREMENTS ANALYSIS:
 You MUST analyze these critical requirements and output them in criticalRequirements array:
