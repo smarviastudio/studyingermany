@@ -673,53 +673,74 @@ export default function ApplicationPlanPage() {
         <div className="app-plan-content">
           {!plan ? (
             /* No Plan - Generate CTA */
-            <div className="app-plan-generate">
-              <div className="app-plan-generate-icon">
-                <Sparkles className="w-12 h-12" />
-              </div>
-              <h2>Ready to Start Your Application?</h2>
-              <p>Generate a personalized AI-powered application plan tailored to this program's requirements and your profile.</p>
-              
-              <button
-                onClick={generatePlan}
-                disabled={generating}
-                className="app-plan-generate-btn"
-              >
-                {generating ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Generating Your Plan...
-                  </>
-                ) : (
-                  <>
-                    <Zap className="w-5 h-5" />
-                    Generate Application Plan
-                  </>
+            <div className="app-plan-generate-modern">
+              <div className="generate-card">
+                <div className="generate-icon-wrapper">
+                  <div className="generate-icon-bg"></div>
+                  <Sparkles className="generate-icon" />
+                </div>
+                
+                <h2 className="generate-title">Start Your Application Journey</h2>
+                <p className="generate-description">
+                  Get a personalized, AI-powered roadmap with document checklists, deadlines, and step-by-step guidance tailored to your profile and this program.
+                </p>
+                
+                <button
+                  onClick={generatePlan}
+                  disabled={generating}
+                  className="generate-btn"
+                >
+                  {generating ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>Analyzing program requirements...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Zap className="w-5 h-5" />
+                      <span>Generate My Application Plan</span>
+                    </>
+                  )}
+                </button>
+
+                {generationError && (
+                  <div className="generate-error">
+                    <AlertCircle className="w-4 h-4" />
+                    <span>{generationError}</span>
+                    <button onClick={generatePlan} disabled={generating} className="retry-btn">
+                      Try again
+                    </button>
+                  </div>
                 )}
-              </button>
 
-              {generationError && (
-                <div className="app-plan-generate-error">
-                  <AlertCircle className="w-4 h-4" />
-                  <span>{generationError}</span>
-                  <button onClick={generatePlan} disabled={generating}>
-                    Try again
-                  </button>
-                </div>
-              )}
-
-              <div className="app-plan-features">
-                <div className="app-plan-feature">
-                  <CheckCircle2 className="w-5 h-5" />
-                  <span>Personalized Steps</span>
-                </div>
-                <div className="app-plan-feature">
-                  <Clock className="w-5 h-5" />
-                  <span>Timeline Tracking</span>
-                </div>
-                <div className="app-plan-feature">
-                  <AlertCircle className="w-5 h-5" />
-                  <span>Blocker Detection</span>
+                <div className="generate-features">
+                  <div className="feature-item">
+                    <div className="feature-icon">
+                      <CheckCircle2 className="w-5 h-5" />
+                    </div>
+                    <div className="feature-text">
+                      <strong>Smart Document List</strong>
+                      <span>CV, motivation letter & program-specific docs with tool links</span>
+                    </div>
+                  </div>
+                  <div className="feature-item">
+                    <div className="feature-icon">
+                      <Clock className="w-5 h-5" />
+                    </div>
+                    <div className="feature-text">
+                      <strong>Timeline & Deadlines</strong>
+                      <span>Track every step from language tests to visa application</span>
+                    </div>
+                  </div>
+                  <div className="feature-item">
+                    <div className="feature-icon">
+                      <AlertCircle className="w-5 h-5" />
+                    </div>
+                    <div className="feature-text">
+                      <strong>Gap Analysis</strong>
+                      <span>See what you're missing and how to fix it</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1364,114 +1385,182 @@ const styles = `
     background: rgba(221,0,0,0.04);
   }
   
-  /* Generate CTA */
-  .app-plan-generate {
-    background: linear-gradient(135deg, rgba(221,0,0,0.03), rgba(124,58,237,0.03));
-    border: 2px dashed #e0e0e0;
+  /* Modern Generate CTA */
+  .app-plan-generate-modern {
+    padding: 40px 20px;
+  }
+
+  .generate-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+    border: 1px solid #fee2e2;
     border-radius: 24px;
-    padding: 60px 32px;
+    padding: 48px 40px;
+    max-width: 700px;
+    margin: 0 auto;
     text-align: center;
+    box-shadow: 0 20px 60px rgba(221, 0, 0, 0.08);
   }
-  
-  .app-plan-generate-icon {
-    width: 100px;
-    height: 100px;
-    border-radius: 24px;
-    background: linear-gradient(135deg, ${RED}, #7c3aed);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 28px;
+
+  .generate-icon-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+  }
+
+  .generate-icon-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #dd0000, #7c3aed);
+    border-radius: 20px;
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .generate-icon {
+    position: relative;
+    width: 80px;
+    height: 80px;
     color: #fff;
-    animation: pulse 2s infinite;
-    box-shadow: 0 8px 32px rgba(221,0,0,0.25);
+    z-index: 1;
   }
-  
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+
+  @keyframes pulse-glow {
+    0%, 100% { 
+      transform: scale(1);
+      box-shadow: 0 8px 32px rgba(221, 0, 0, 0.3);
+    }
+    50% { 
+      transform: scale(1.05);
+      box-shadow: 0 12px 48px rgba(221, 0, 0, 0.4);
+    }
   }
-  
-  .app-plan-generate h2 {
+
+  .generate-title {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 800;
-    color: #111;
-    margin: 0 0 12px;
+    color: #0f172a;
+    margin: 0 0 16px;
+    line-height: 1.2;
   }
-  
-  .app-plan-generate > p {
+
+  .generate-description {
     font-size: 16px;
-    color: #666;
-    line-height: 1.6;
-    max-width: 500px;
+    color: #64748b;
+    line-height: 1.7;
+    max-width: 560px;
     margin: 0 auto 32px;
   }
-  
-  .app-plan-generate-btn {
+
+  .generate-btn {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 18px 36px;
-    background: linear-gradient(135deg, ${RED}, #b91c1c);
+    gap: 12px;
+    padding: 16px 40px;
+    background: linear-gradient(135deg, #dd0000, #b91c1c);
     color: #fff;
     border: none;
-    border-radius: 14px;
-    font-size: 17px;
+    border-radius: 12px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 8px 28px rgba(221,0,0,0.35);
-    transition: all 0.3s;
+    box-shadow: 0 8px 24px rgba(221, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
-  .app-plan-generate-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 36px rgba(221,0,0,0.4);
+
+  .generate-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(221, 0, 0, 0.4);
   }
-  
-  .app-plan-generate-btn:disabled {
+
+  .generate-btn:disabled {
     opacity: 0.7;
     cursor: not-allowed;
   }
-  
-  .app-plan-generate-error {
-    margin-top: 16px;
-    padding: 12px 16px;
+
+  .generate-error {
+    margin-top: 20px;
+    padding: 14px 18px;
     border-radius: 12px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: rgba(239, 68, 68, 0.08);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    gap: 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
     color: #991b1b;
-    font-size: 13px;
+    font-size: 14px;
   }
-  
-  .app-plan-generate-error button {
+
+  .generate-error .retry-btn {
     margin-left: auto;
-    background: transparent;
+    background: #dc2626;
+    color: #fff;
     border: none;
-    color: #b91c1c;
+    padding: 6px 16px;
+    border-radius: 8px;
     font-weight: 600;
+    font-size: 13px;
     cursor: pointer;
-    padding: 0;
+    transition: background 0.2s;
   }
-  
-  .app-plan-features {
+
+  .generate-error .retry-btn:hover {
+    background: #b91c1c;
+  }
+
+  .generate-features {
     display: flex;
-    gap: 24px;
-    margin-top: 24px;
-    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 40px;
+    text-align: left;
   }
-  
-  .app-plan-feature {
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    transition: all 0.2s;
+  }
+
+  .feature-item:hover {
+    border-color: #dd0000;
+    box-shadow: 0 4px 12px rgba(221, 0, 0, 0.1);
+  }
+
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    color: #dc2626;
+    flex-shrink: 0;
   }
-  
-  .app-plan-feature span {
-    color: #555;
+
+  .feature-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .feature-text strong {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  .feature-text span {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.5;
   }
   
   /* AI Profile Match Summary - Clean Design */
@@ -2448,17 +2537,25 @@ const styles = `
       padding: 12px 14px;
     }
     
-    .app-plan-generate {
-      padding: 32px 20px;
+    .generate-card {
+      padding: 32px 24px;
     }
     
-    .app-plan-generate h2 {
-      font-size: 22px;
+    .generate-title {
+      font-size: 24px;
     }
     
-    .app-plan-generate-btn {
+    .generate-description {
+      font-size: 15px;
+    }
+    
+    .generate-btn {
       width: 100%;
       justify-content: center;
+    }
+    
+    .generate-features {
+      gap: 12px;
     }
     
     .app-plan-features {
