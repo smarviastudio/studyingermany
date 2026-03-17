@@ -208,11 +208,15 @@ export default function MyShortlistPage() {
               <X className="w-5 h-5" />
             </button>
 
-            {selectedProgram.image_url && (
-              <div style={{ height: 240, position: 'relative', borderRadius: '20px 20px 0 0', overflow: 'hidden', background: 'linear-gradient(135deg, #f5f5f0, #eee)' }}>
+            <div style={{ height: 240, position: 'relative', borderRadius: '20px 20px 0 0', overflow: 'hidden', background: selectedProgram.image_url ? '#eee' : 'linear-gradient(135deg, #dd0000, #7c3aed)' }}>
+              {selectedProgram.image_url ? (
                 <Image src={selectedProgram.image_url} alt={selectedProgram.program_name} fill style={{ objectFit: 'cover' }} sizes="800px" unoptimized />
-              </div>
-            )}
+              ) : (
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <GraduationCap className="w-16 h-16" style={{ color: 'rgba(255,255,255,0.7)' }} />
+                </div>
+              )}
+            </div>
 
             <div style={{ padding: 32 }}>
               <div style={{ marginBottom: 24 }}>
@@ -347,13 +351,13 @@ export default function MyShortlistPage() {
 
               return (
                 <div key={item.id} className="shortlist-card" style={{ opacity: isRemoving ? 0.5 : 1, pointerEvents: isRemoving ? 'none' : 'auto', display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: 20, overflow: 'hidden', border: '1px solid #e5e5e5', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                  {/* Image or gradient header */}
-                  <div style={{ position: 'relative', height: prog?.image_url ? 180 : 100, overflow: 'hidden', background: prog?.image_url ? '#eee' : 'linear-gradient(135deg, #dd0000 0%, #7c3aed 100%)', flexShrink: 0 }}>
+                  {/* Image or gradient header - consistent height */}
+                  <div style={{ position: 'relative', height: 180, overflow: 'hidden', background: prog?.image_url ? '#eee' : 'linear-gradient(135deg, #dd0000 0%, #7c3aed 100%)', flexShrink: 0 }}>
                     {prog?.image_url ? (
                       <Image src={prog.image_url} alt={item.programName} fill style={{ objectFit: 'cover' }} sizes="340px" unoptimized />
                     ) : (
                       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <GraduationCap className="w-10 h-10" style={{ color: 'rgba(255,255,255,0.6)' }} />
+                        <GraduationCap className="w-12 h-12" style={{ color: 'rgba(255,255,255,0.7)' }} />
                       </div>
                     )}
                     {prog?.is_free && (
@@ -434,6 +438,55 @@ export default function MyShortlistPage() {
           </div>
         )}
       </div>
+
+      <style jsx>{`
+        .program-detail-modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(4px);
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 40px 20px;
+          overflow-y: auto;
+        }
+
+        .program-detail-modal {
+          background: #fff;
+          border-radius: 20px;
+          max-width: 800px;
+          width: 100%;
+          position: relative;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+          max-height: calc(100vh - 80px);
+          overflow-y: auto;
+        }
+
+        .program-detail-close {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.95);
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          z-index: 10;
+          transition: all 0.2s;
+        }
+
+        .program-detail-close:hover {
+          background: #fee2e2;
+          border-color: #dc2626;
+          color: #dc2626;
+        }
+      `}</style>
     </div>
   );
 }

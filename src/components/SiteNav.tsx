@@ -211,7 +211,7 @@ export function SiteNav() {
           onClick={() => setNavAllOpen(false)}
         >
           <div
-            style={{ background: '#fff', borderRadius: 24, maxWidth: 720, width: '100%', maxHeight: 'calc(100vh - 120px)', overflowY: 'auto', boxShadow: '0 30px 80px rgba(0,0,0,0.35)', padding: '28px 32px' }}
+            style={{ background: '#fff', borderRadius: 24, maxWidth: 600, width: '100%', maxHeight: 'calc(100vh - 120px)', overflowY: 'auto', boxShadow: '0 30px 80px rgba(0,0,0,0.35)', padding: '28px 32px' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>

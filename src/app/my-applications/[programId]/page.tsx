@@ -803,7 +803,7 @@ const styles = `
   
   
   .app-plan-main {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 32px 24px 100px;
   }
@@ -1078,6 +1078,13 @@ const styles = `
     display: flex;
     gap: 24px;
     margin-top: 24px;
+    justify-content: center;
+  }
+  
+  .app-plan-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   
   .app-plan-feature span {
