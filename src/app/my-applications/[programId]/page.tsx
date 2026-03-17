@@ -819,6 +819,27 @@ export default function ApplicationPlanPage() {
                                     <strong>Program-specific notes:</strong> {doc.programSpecificNotes}
                                   </div>
                                 )}
+                                
+                                {/* Tool Links and Tips */}
+                                <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                  {doc.id.includes('cv') && (
+                                    <Link href="/cv-maker" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: '#dd0000', color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 14, fontWeight: 600, width: 'fit-content' }}>
+                                      <FileText className="w-4 h-4" />
+                                      Create Your CV
+                                    </Link>
+                                  )}
+                                  {doc.id.includes('motivation') && (
+                                    <Link href={`/motivation-letter?programId=${programId}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: '#dd0000', color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 14, fontWeight: 600, width: 'fit-content' }}>
+                                      <Sparkles className="w-4 h-4" />
+                                      Generate Motivation Letter
+                                    </Link>
+                                  )}
+                                  {doc.id.includes('transcript') && (
+                                    <div style={{ padding: 12, background: '#f0f9ff', borderLeft: '3px solid #0284c7', borderRadius: 6, fontSize: 13, color: '#0c4a6e' }}>
+                                      <strong>💡 Tip:</strong> Need to calculate your GPA? Use our <a href="https://www.scholaro.com/gpa-calculator/" target="_blank" rel="noopener noreferrer" style={{ color: '#0284c7', textDecoration: 'underline' }}>GPA Calculator</a> to convert your grades to the German system.
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             )}
                           </div>
@@ -881,6 +902,27 @@ export default function ApplicationPlanPage() {
                                     <strong>Program-specific notes:</strong> {doc.programSpecificNotes}
                                   </div>
                                 )}
+                                
+                                {/* Tool Links for Visa Docs */}
+                                <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                  {doc.id.includes('blocked') && (
+                                    <a href="https://www.fintiba.com/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: '#dd0000', color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 14, fontWeight: 600, width: 'fit-content' }}>
+                                      <ExternalLink className="w-4 h-4" />
+                                      Open Blocked Account (Fintiba)
+                                    </a>
+                                  )}
+                                  {doc.id.includes('insurance') && (
+                                    <a href="https://www.tk.de/en" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: '#dd0000', color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 14, fontWeight: 600, width: 'fit-content' }}>
+                                      <ExternalLink className="w-4 h-4" />
+                                      Get Health Insurance (TK)
+                                    </a>
+                                  )}
+                                  {doc.id.includes('visa') && (
+                                    <div style={{ padding: 12, background: '#f0f9ff', borderLeft: '3px solid #0284c7', borderRadius: 6, fontSize: 13, color: '#0c4a6e' }}>
+                                      <strong>💡 Tip:</strong> Find your nearest German embassy at <a href="https://www.germany.info/" target="_blank" rel="noopener noreferrer" style={{ color: '#0284c7', textDecoration: 'underline' }}>germany.info</a> to schedule your visa appointment.
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             )}
                           </div>
