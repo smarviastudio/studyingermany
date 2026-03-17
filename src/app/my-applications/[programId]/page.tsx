@@ -1272,6 +1272,9 @@ const styles = `
     border: 1px solid #e5e7eb;
     border-radius: 12px;
     margin-bottom: 24px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .app-plan-details-pills {
@@ -2512,7 +2515,10 @@ const styles = `
     border: 1px solid #e5e7eb;
     border-radius: 16px;
     padding: 24px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .simple-section-header {
