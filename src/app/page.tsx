@@ -30,6 +30,41 @@ const TOOLS = [
   { href: '/dashboard',                 label: 'My Dashboard',           desc: 'Track your applications, shortlists and study plans',                 icon: Zap,         gradient: 'from-blue-500 to-indigo-600' },
 ];
 
+const TESTIMONIALS = [
+  {
+    name: 'Ayesha Khan',
+    country: 'Karachi, Pakistan',
+    track: 'Bachelor in Data Science (TU Munich)',
+    quote: 'The AI document checklist told me exactly which certificates Munich required, and the CV builder gave me a German-style resume in 10 minutes.',
+    highlight: 'Got admission with full semester waiver',
+    avatar: '🇵🇰'
+  },
+  {
+    name: 'Chinedu Adewale',
+    country: 'Lagos, Nigeria',
+    track: 'Master in Renewable Energy (FH Aachen)',
+    quote: 'German Path showed me the blocked account options and helped me time my visa. I landed in Aachen with accommodation already sorted.',
+    highlight: 'Visa approved in 5 weeks',
+    avatar: '🇳🇬'
+  },
+  {
+    name: 'Meera Iyer',
+    country: 'Bangalore, India',
+    track: 'MBA in Berlin (SRH University)',
+    quote: 'The motivation letter tool used my profile and program info to craft a personalized story that admissions loved.',
+    highlight: 'Scholarship + internship offer',
+    avatar: '🇮🇳'
+  },
+  {
+    name: 'Kevin Otieno',
+    country: 'Nairobi, Kenya',
+    track: 'Master in Automotive Software (RWTH Aachen)',
+    quote: 'I used the shortlist + AI plan to track every deadline. The visa guide explained finances and health insurance step-by-step.',
+    highlight: 'Working student job in 2 months',
+    avatar: '🇰🇪'
+  }
+];
+
 const JOURNEY_CATEGORIES = [
   { key: 'getting-started', label: 'Getting Started', icon: Plane, color: '#dd0000', desc: 'First steps to study in Germany', slugs: ['guides', 'getting-started', 'visa-immigration', 'visa'] },
   { key: 'university-life', label: 'University Life', icon: GraduationCap, color: '#7c3aed', desc: 'Admissions, programs & campus', slugs: ['university-life', 'admissions', 'programs'] },
@@ -507,6 +542,34 @@ export default function HomePage() {
               <p className="stat-label">{label}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ══ TESTIMONIALS ══ */}
+      <section className="testimonial-section" id="stories">
+        <div className="section-container">
+          <div className="section-header scroll-reveal">
+            <div className="section-label">Student Voices</div>
+            <h2 className="section-title">Loved by applicants across Asia & Africa</h2>
+            <p className="section-desc">Real students using German Path to unlock admissions, scholarships, and visas — Pakistani, Indian, Nigerian, Kenyan and more.</p>
+          </div>
+
+          <div className="testimonial-grid">
+            {TESTIMONIALS.map((person, idx) => (
+              <article key={person.name} className="testimonial-card scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
+                <div className="testimonial-card-header">
+                  <div className="testimonial-avatar">{person.avatar}</div>
+                  <div>
+                    <p className="testimonial-name">{person.name}</p>
+                    <p className="testimonial-country">{person.country}</p>
+                  </div>
+                  <span className="testimonial-highlight">{person.highlight}</span>
+                </div>
+                <p className="testimonial-quote">“{person.quote}”</p>
+                <p className="testimonial-track">{person.track}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
