@@ -11,6 +11,7 @@ import {
   BookOpen, ExternalLink, X, Euro, Clock, Globe, Award, CheckCircle2, Info
 } from 'lucide-react';
 import type { Program } from '@/lib/types';
+import { SiteNav } from '@/components/SiteNav';
 
 interface ShortlistItem {
   id: string;
@@ -198,9 +199,11 @@ export default function MyShortlistPage() {
   const progressPct = (p: PlanProgress) => Math.round((p.completed / p.total) * 100);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+    <>
+      <SiteNav />
+      <div style={{ minHeight: '100vh', background: '#fafafa' }}>
 
-      {/* Program Detail Modal */}
+        {/* Program Detail Modal */}
       {selectedProgram && (
         <div className="program-detail-modal-overlay" onClick={() => setSelectedProgram(null)}>
           <div className="program-detail-modal" onClick={e => e.stopPropagation()}>
@@ -487,6 +490,7 @@ export default function MyShortlistPage() {
           color: #dc2626;
         }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 }

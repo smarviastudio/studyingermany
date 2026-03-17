@@ -29,6 +29,91 @@ const sanitizeUserProfilePayload = (profile?: UserProfile | null) => {
   return Object.keys(sanitized).length > 0 ? sanitized : null;
 };
 
+const getDocumentInfo = (docId: string, type: 'admission' | 'visa') => {
+  const admissionDocs: Record<string, {description: string; tips: string; toolUrl?: string}> = {
+    'transcript': {
+      description: 'Official academic transcripts from all universities/colleges attended, showing courses taken and grades received.',
+      tips: 'Request certified copies from your institution. Some universities require apostille or official translation.',
+      toolUrl: undefined
+    },
+    'diploma': {
+      description: 'Your degree certificate or diploma proving completion of your previous studies.',
+      tips: 'Must be officially certified. If not in English/German, get it professionally translated.',
+      toolUrl: undefined
+    },
+    'cv': {
+      description: 'A comprehensive curriculum vitae highlighting your academic and professional background.',
+      tips: 'Use our CV builder to create a professional German-style CV tailored for university applications.',
+      toolUrl: '/cv-maker'
+    },
+    'motivation': {
+      description: 'A letter explaining why you want to study this program and how it fits your career goals.',
+      tips: 'Use our AI-powered tool to generate a personalized motivation letter for this specific program.',
+      toolUrl: '/motivation-letter'
+    },
+    'language': {
+      description: 'Official language proficiency certificate (IELTS, TOEFL, TestDaF, Goethe-Zertifikat, etc.).',
+      tips: 'Check the specific score requirements for this program. Book your test early as slots fill up quickly.',
+      toolUrl: undefined
+    },
+    'passport': {
+      description: 'A valid passport with at least 6 months validity beyond your intended stay.',
+      tips: 'Make sure your passport is valid. Renew it if it expires soon.',
+      toolUrl: undefined
+    },
+    'recommendation': {
+      description: 'Letters of recommendation from professors or employers who can attest to your qualifications.',
+      tips: 'Request these early. Provide your recommenders with your CV and program details.',
+      toolUrl: undefined
+    },
+    'aps': {
+      description: 'Academic Evaluation Centre certificate required for applicants from certain countries (China, India, Vietnam, Mongolia).',
+      tips: 'The APS process can take 2-4 months. Start early! Visit www.aps.org.cn or your local APS office.',
+      toolUrl: undefined
+    },
+    'photo': {
+      description: 'Biometric passport photos meeting German requirements.',
+      tips: 'Usually 35mm x 45mm, recent, neutral expression, light background.',
+      toolUrl: undefined
+    }
+  };
+
+  const visaDocs: Record<string, {description: string; tips: string; toolUrl?: string}> = {
+    'blocked-account': {
+      description: 'A blocked bank account (Sperrkonto) with €11,904 for one year of living expenses in Germany.',
+      tips: 'Open with Fintiba or Expatrio online. Funds must be deposited before visa application. This proves you can support yourself.',
+      toolUrl: 'https://www.fintiba.com/'
+    },
+    'health-insurance': {
+      description: 'Proof of health insurance coverage valid in Germany for the entire duration of your studies.',
+      tips: 'Get statutory health insurance (TK, AOK) or private insurance. Must cover at least €30,000 in medical expenses.',
+      toolUrl: 'https://www.tk.de/en'
+    },
+    'visa-application': {
+      description: 'Completed visa application form for a student visa (national visa category D).',
+      tips: 'Download from your local German embassy website. Fill out completely and accurately.',
+      toolUrl: 'https://www.germany.info/'
+    },
+    'admission-letter': {
+      description: 'Official admission letter (Zulassungsbescheid) from the German university.',
+      tips: 'You need this before applying for a visa. Apply to the university first and wait for acceptance.',
+      toolUrl: undefined
+    },
+    'accommodation': {
+      description: 'Proof of accommodation in Germany (rental contract, dorm confirmation, or host declaration).',
+      tips: 'Can be temporary. Student dorms, private rentals, or Anmeldung from a host are acceptable.',
+      toolUrl: undefined
+    },
+    'financial-proof': {
+      description: 'Additional proof of financial resources (scholarship letter, sponsor declaration, bank statements).',
+      tips: 'If you have a scholarship or sponsor, include official documentation. Complements the blocked account.',
+      toolUrl: undefined
+    }
+  };
+
+  return type === 'admission' ? admissionDocs[docId] : visaDocs[docId];
+};
+
 interface StepResource {
   name: string;
   url: string;
@@ -116,6 +201,7 @@ export default function ApplicationPlanPage() {
   const [expandedStep, setExpandedStep] = useState<string | null>(null);
   const [stepInfoDrawer, setStepInfoDrawer] = useState<ApplicationStep | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
+  const [selectedDocInfo, setSelectedDocInfo] = useState<{id: string; label: string; type: 'admission' | 'visa'} | null>(null);
   
   // Collapsible section states
   const [showRequirements, setShowRequirements] = useState(true);
@@ -721,6 +807,16 @@ export default function ApplicationPlanPage() {
                             {doc.priority === 'high' && (
                               <span className="simple-doc-badge" style={{ marginLeft: 'auto', padding: '2px 8px', background: '#fee2e2', color: '#dc2626', fontSize: 11, fontWeight: 600, borderRadius: 6 }}>Required</span>
                             )}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setSelectedDocInfo({ id: doc.id, label: doc.label, type: 'admission' });
+                              }}
+                              style={{ marginLeft: doc.priority === 'high' ? '8px' : 'auto', padding: '4px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
+                              title="More info"
+                            >
+                              <Info className="w-4 h-4" />
+                            </button>
                           </label>
                         ))}
                       </div>
@@ -772,6 +868,16 @@ export default function ApplicationPlanPage() {
                             {doc.mandatory && (
                               <span className="simple-doc-badge" style={{ marginLeft: 'auto', padding: '2px 8px', background: '#fee2e2', color: '#dc2626', fontSize: 11, fontWeight: 600, borderRadius: 6 }}>Mandatory</span>
                             )}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setSelectedDocInfo({ id: doc.id, label: doc.label, type: 'visa' });
+                              }}
+                              style={{ marginLeft: doc.mandatory ? '8px' : 'auto', padding: '4px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
+                              title="More info"
+                            >
+                              <Info className="w-4 h-4" />
+                            </button>
                           </label>
                         ))}
                       </div>
@@ -793,6 +899,81 @@ export default function ApplicationPlanPage() {
           userProfile={userProfile}
         />
       )}
+
+      {/* Document Info Drawer */}
+      {selectedDocInfo && (() => {
+        const info = getDocumentInfo(selectedDocInfo.id, selectedDocInfo.type);
+        if (!info) return null;
+        
+        return (
+          <div className="doc-info-overlay" onClick={() => setSelectedDocInfo(null)}>
+            <div className="doc-info-drawer" onClick={e => e.stopPropagation()}>
+              <div className="doc-info-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, #dd0000, #9333ea)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: 0 }}>{selectedDocInfo.label}</h3>
+                    <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>Document Information</p>
+                  </div>
+                </div>
+                <button onClick={() => setSelectedDocInfo(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 8, color: '#64748b' }}>
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <div className="doc-info-content">
+                <div className="doc-info-section">
+                  <h4 style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', margin: '0 0 8px', display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <BookOpen className="w-4 h-4" style={{ color: '#dd0000' }} />
+                    What is this?
+                  </h4>
+                  <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.6, margin: 0 }}>{info.description}</p>
+                </div>
+                
+                <div className="doc-info-section">
+                  <h4 style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', margin: '0 0 8px', display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <Sparkles className="w-4 h-4" style={{ color: '#dd0000' }} />
+                    Tips & Advice
+                  </h4>
+                  <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.6, margin: 0 }}>{info.tips}</p>
+                </div>
+                
+                {info.toolUrl && (
+                  <div className="doc-info-section">
+                    <Link 
+                      href={info.toolUrl}
+                      target={info.toolUrl.startsWith('http') ? '_blank' : undefined}
+                      rel={info.toolUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      style={{ 
+                        display: 'inline-flex', 
+                        alignItems: 'center', 
+                        gap: 8, 
+                        padding: '12px 20px', 
+                        background: '#dd0000', 
+                        color: '#fff', 
+                        borderRadius: 10, 
+                        textDecoration: 'none', 
+                        fontWeight: 600, 
+                        fontSize: 14,
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#b91c1c'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#dd0000'}
+                    >
+                      {selectedDocInfo.id === 'cv' && <FileText className="w-4 h-4" />}
+                      {selectedDocInfo.id === 'motivation' && <Sparkles className="w-4 h-4" />}
+                      {selectedDocInfo.id !== 'cv' && selectedDocInfo.id !== 'motivation' && <ExternalLink className="w-4 h-4" />}
+                      {selectedDocInfo.id === 'cv' ? 'Create CV' : selectedDocInfo.id === 'motivation' ? 'Generate Letter' : 'Learn More'}
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Document Drawer */}
       {docDrawerOpen && (
@@ -2449,5 +2630,48 @@ const styles = `
       grid-template-columns: 1fr;
       gap: 12px;
     }
+  }
+
+  /* Document Info Drawer */
+  .doc-info-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .doc-info-drawer {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .doc-info-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .doc-info-content {
+    padding: 24px;
+  }
+
+  .doc-info-section {
+    margin-bottom: 24px;
+  }
+
+  .doc-info-section:last-child {
+    margin-bottom: 0;
   }
 `;
