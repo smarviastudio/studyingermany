@@ -538,338 +538,165 @@ export default function ApplicationPlanPage() {
               </div>
             </div>
           ) : (
-            /* Has Plan - Show Progress and Steps */
-            <div className="app-plan-layout">
-              {/* Main Content */}
-              <div className="app-plan-main-content">
-              {/* AI Profile Match Summary */}
+            /* Has Plan - Simplified Layout */
+            <div className="app-plan-simple">
+              
+              {/* Section 1: AI Profile Snapshot */}
               {plan.profileMatch && (
-                <div className="app-plan-ai-summary">
-                  <button 
-                    className="app-plan-section-toggle"
-                    onClick={() => setShowProfileMatch(!showProfileMatch)}
-                  >
-                    <div className="app-plan-ai-summary-header">
-                      <div className="app-plan-ai-icon">
-                        <Sparkles className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <h3>AI Profile Analysis</h3>
-                        <span>How your profile matches this program</span>
-                      </div>
-                      <div className="app-plan-match-score" style={{ 
-                        background: plan.profileMatch.score >= 80 ? 'linear-gradient(135deg, #22c55e, #16a34a)' : 
-                                    plan.profileMatch.score >= 60 ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 
-                                    'linear-gradient(135deg, #ef4444, #dc2626)'
-                      }}>
-                        <span className="score-value">{plan.profileMatch.score}%</span>
-                        <span className="score-label">Match</span>
-                      </div>
+                <div className="simple-section simple-ai-snapshot">
+                  <div className="simple-section-header">
+                    <div className="simple-section-icon">
+                      <Sparkles className="w-5 h-5" />
                     </div>
-                    {showProfileMatch ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                  </button>
+                    <div className="simple-section-title">
+                      <h2>AI Profile Analysis</h2>
+                      <p>How well you match this program</p>
+                    </div>
+                    <div className="simple-match-badge" style={{
+                      background: plan.profileMatch.score >= 80 ? '#22c55e' : 
+                                  plan.profileMatch.score >= 60 ? '#f59e0b' : '#ef4444'
+                    }}>
+                      {plan.profileMatch.score}% Match
+                    </div>
+                  </div>
                   
-                  {showProfileMatch && (
-                    <>
-                      <div className="app-plan-ai-summary-textbox">
-                        <p>{plan.profileMatch.summary}</p>
-                      </div>
-                      
-                      <div className="app-plan-ai-grid">
-                        {plan.profileMatch.strengths?.length > 0 && (
-                          <div className="app-plan-ai-section app-plan-ai-strengths">
-                            <div className="app-plan-ai-section-header">
-                              <CheckCircle2 className="w-4 h-4" />
-                              <h4>Where you shine</h4>
-                            </div>
-                            <ul>
-                              {plan.profileMatch.strengths.map((s, i) => (
-                                <li key={i}>{s}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                        
-                        {plan.profileMatch.gaps?.length > 0 && (
-                          <div className="app-plan-ai-section app-plan-ai-gaps">
-                            <div className="app-plan-ai-section-header">
-                              <AlertCircle className="w-4 h-4" />
-                              <h4>Areas to address</h4>
-                            </div>
-                            <ul>
-                              {plan.profileMatch.gaps.map((g, i) => (
-                                <li key={i}>{g}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                      
-                      {plan.profileMatch.recommendations?.length > 0 && (
-                        <div className="app-plan-ai-callout app-plan-ai-info">
-                          <div className="app-plan-ai-callout-header">
-                            <Target className="w-4 h-4" />
-                            <h4>Recommendations</h4>
-                          </div>
-                          <ul>
-                            {plan.profileMatch.recommendations.map((r, i) => (
-                              <li key={i}>{r}</li>
-                            ))}
-                          </ul>
+                  <div className="simple-section-content">
+                    <p className="simple-summary">{plan.profileMatch.summary}</p>
+                    
+                    <div className="simple-insights">
+                      {plan.profileMatch.strengths?.[0] && (
+                        <div className="simple-insight simple-insight-strength">
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span><strong>Strength:</strong> {plan.profileMatch.strengths[0]}</span>
                         </div>
                       )}
-                    </>
-                  )}
-                </div>
-              )}
-
-              {/* Progress Card */}
-              <div className="app-plan-progress-card">
-                <div className="app-plan-progress-header">
-                  <div>
-                    <span className="app-plan-progress-label">Application Progress</span>
-                    <div className="app-plan-progress-percent" style={{ color: progressPercent === 100 ? '#22c55e' : RED }}>
-                      {progressPercent}%
-                    </div>
-                  </div>
-                  <div className="app-plan-progress-right">
-                    <span className="app-plan-progress-label">Timeline</span>
-                    <div className="app-plan-progress-timeline">{plan.estimatedTimeline}</div>
-                  </div>
-                </div>
-                
-                <div className="app-plan-progress-bar">
-                  <div 
-                    className="app-plan-progress-fill" 
-                    style={{ 
-                      width: `${progressPercent}%`,
-                      background: progressPercent === 100 ? '#22c55e' : `linear-gradient(90deg, ${RED}, #7c3aed)`
-                    }} 
-                  />
-                </div>
-                
-                <div className="app-plan-progress-steps">
-                  {completedSteps} of {totalSteps} steps completed
-                </div>
-              </div>
-
-              {/* Blockers */}
-              {plan.blockers?.length > 0 && (
-                <div className="app-plan-blockers">
-                  <button 
-                    className="app-plan-section-toggle"
-                    onClick={() => setShowBlockers(!showBlockers)}
-                  >
-                    <div className="app-plan-blockers-header">
-                      <AlertCircle className="w-5 h-5" />
-                      <h3>Potential Blockers</h3>
-                    </div>
-                    {showBlockers ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                  </button>
-                  {showBlockers && (
-                    <ul>
-                      {plan.blockers.map((blocker, i) => (
-                        <li key={i}>{blocker}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              )}
-
-              {/* Overview */}
-              <div className="app-plan-overview">
-                <button 
-                  className="app-plan-section-toggle"
-                  onClick={() => setShowOverview(!showOverview)}
-                >
-                  <h3>Overview</h3>
-                  {showOverview ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                </button>
-                {showOverview && <p>{plan.overview}</p>}
-              </div>
-
-              {/* Steps */}
-              <div className="app-plan-steps">
-                <button 
-                  className="app-plan-section-toggle app-plan-steps-toggle"
-                  onClick={() => setShowSteps(!showSteps)}
-                >
-                  <h2>Application Steps ({completedSteps}/{totalSteps} completed)</h2>
-                  {showSteps ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                </button>
-                {showSteps && (
-                  <div className="app-plan-steps-list">
-                  {plan.steps.map((step, index) => (
-                    <div 
-                      key={step.id} 
-                      className={`app-plan-step ${step.completed || step.autoCompleted ? 'app-plan-step-done' : ''} ${step.autoCompleted ? 'app-plan-step-auto' : ''}`}
-                    >
-                      <button
-                        onClick={() => !step.autoCompleted && toggleStep(step.id, step.completed)}
-                        disabled={updatingStep === step.id || step.autoCompleted}
-                        className="app-plan-step-check"
-                        title={step.autoCompleted ? 'Auto-completed based on your profile' : 'Mark as complete'}
-                      >
-                        {updatingStep === step.id ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : step.completed || step.autoCompleted ? (
-                          <CheckCircle2 className="w-5 h-5" />
-                        ) : (
-                          <Circle className="w-5 h-5" />
-                        )}
-                      </button>
-                      
-                      <div className="app-plan-step-content">
-                        <div className="app-plan-step-header">
-                          <div className="app-plan-step-title-row">
-                            <span className="app-plan-step-category" style={{ color: getPriorityColor(step.priority) }}>
-                              {getCategoryIcon(step.category)}
-                            </span>
-                            <h4>{index + 1}. {step.title}</h4>
-                            {step.priority && (
-                              <span className="app-plan-step-priority" style={{ 
-                                background: `${getPriorityColor(step.priority)}15`,
-                                color: getPriorityColor(step.priority),
-                                borderColor: getPriorityColor(step.priority)
-                              }}>
-                                {step.priority}
-                              </span>
-                            )}
-                          </div>
-                          {step.deadline && (
-                            <span className="app-plan-step-deadline">
-                              <Calendar className="w-3.5 h-3.5" />
-                              {step.deadline}
-                            </span>
-                          )}
+                      {plan.profileMatch.gaps?.[0] && (
+                        <div className="simple-insight simple-insight-gap">
+                          <AlertCircle className="w-4 h-4" />
+                          <span><strong>Gap:</strong> {plan.profileMatch.gaps[0]}</span>
                         </div>
-                        
-                        {step.autoCompleted && step.autoCompletedReason && (
-                          <div className="app-plan-step-auto-badge">
-                            <CheckCircle2 className="w-4 h-4" />
-                            <span>Auto-verified: {step.autoCompletedReason}</span>
-                          </div>
-                        )}
-                        
-                        <p>{step.description}</p>
-                        
-                        {/* Detailed Info Toggle */}
-                        {step.detailedInfo && (
-                          <button 
-                            className="app-plan-step-info-toggle"
-                            onClick={() => setExpandedStep(expandedStep === step.id ? null : step.id)}
-                          >
-                            <Info className="w-4 h-4" />
-                            {expandedStep === step.id ? 'Hide details' : 'Learn more about this step'}
-                            <ChevronDown className={`w-4 h-4 transition-transform ${expandedStep === step.id ? 'rotate-180' : ''}`} />
-                          </button>
-                        )}
-                        
-                        {expandedStep === step.id && step.detailedInfo && (
-                          <div className="app-plan-step-detailed">
-                            <p>{step.detailedInfo}</p>
-                          </div>
-                        )}
-                        
-                        {/* Resources */}
-                        {step.resources && step.resources.length > 0 && (
-                          <div className="app-plan-step-resources">
-                            <span className="app-plan-step-resources-label">Helpful Resources:</span>
-                            <div className="app-plan-step-resources-list">
-                              {step.resources.map((resource, ri) => (
-                                <a 
-                                  key={ri}
-                                  href={resource.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="app-plan-step-resource"
-                                  title={resource.description}
-                                >
-                                  <ExternalLink className="w-3.5 h-3.5" />
-                                  {resource.name}
-                                </a>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        
-                        {/* Document List for Document Gathering step - Inline Checkable */}
-                        {isDocumentStep(step.title) && (
-                          <div className="app-plan-doc-checklist">
-                            <div className="app-plan-doc-checklist-header">
-                              <FileCheck className="w-4 h-4" />
-                              <span>Document Checklist</span>
-                              <span className="app-plan-doc-checklist-count">{checkedDocs.length}/{documentList.length}</span>
-                            </div>
-                            <div className="app-plan-doc-checklist-grid">
-                              {documentList.map(doc => (
-                                <label key={doc.id} className={`app-plan-doc-check-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
-                                  <input
-                                    type="checkbox"
-                                    checked={checkedDocs.includes(doc.id)}
-                                    onChange={() => toggleDoc(doc.id)}
-                                  />
-                                  <span className="app-plan-doc-check-box">
-                                    {checkedDocs.includes(doc.id) ? (
-                                      <CheckCircle2 className="w-4 h-4" />
-                                    ) : (
-                                      <Circle className="w-4 h-4" />
-                                    )}
-                                  </span>
-                                  <span className="app-plan-doc-check-label">{doc.label}</span>
-                                  <span className="app-plan-doc-check-category">{doc.category}</span>
-                                </label>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        
-                        {step.action && (
-                          <Link
-                            href={step.action.url}
-                            target={step.action.type === 'external' ? '_blank' : undefined}
-                            rel={step.action.type === 'external' ? 'noopener noreferrer' : undefined}
-                            className={`app-plan-step-action ${step.action.type === 'external' ? 'app-plan-step-action-outline' : ''}`}
-                          >
-                            {step.action.type === 'cv' && <FileText className="w-4 h-4" />}
-                            {step.action.type === 'letter' && <Sparkles className="w-4 h-4" />}
-                            {step.action.type === 'document' && <FileText className="w-4 h-4" />}
-                            {step.action.type === 'external' && <ExternalLink className="w-4 h-4" />}
-                            {step.action.label}
-                          </Link>
-                        )}
-                      </div>
+                      )}
                     </div>
-                  ))}
                   </div>
-                )}
-              </div>
-
-              {/* Completion */}
-              {progressPercent === 100 && (
-                <div className="app-plan-complete">
-                  <CheckCircle2 className="w-16 h-16" />
-                  <h3>Application Complete!</h3>
-                  <p>You've completed all steps for this program. Good luck!</p>
                 </div>
               )}
+
+              {/* Section 2: Program Highlights */}
+              {programDetails && (
+                <div className="simple-section simple-program-info">
+                  <div className="simple-section-header">
+                    <div className="simple-section-icon">
+                      <BookOpen className="w-5 h-5" />
+                    </div>
+                    <div className="simple-section-title">
+                      <h2>Program Highlights</h2>
+                      <p>Key information about this program</p>
+                    </div>
+                  </div>
+                  
+                  <div className="simple-section-content">
+                    <div className="simple-info-grid">
+                      {programDetails.subject_area && (
+                        <div className="simple-info-item">
+                          <span className="simple-info-label">Subject</span>
+                          <span className="simple-info-value">{programDetails.subject_area}</span>
+                        </div>
+                      )}
+                      {programDetails.programme_duration && (
+                        <div className="simple-info-item">
+                          <span className="simple-info-label">Duration</span>
+                          <span className="simple-info-value">{programDetails.programme_duration}</span>
+                        </div>
+                      )}
+                      {programDetails.languages_array?.length > 0 && (
+                        <div className="simple-info-item">
+                          <span className="simple-info-label">Language</span>
+                          <span className="simple-info-value">{programDetails.languages_array.join(', ')}</span>
+                        </div>
+                      )}
+                      {(programDetails.tuition_fee_number != null || programDetails.is_free) && (
+                        <div className="simple-info-item">
+                          <span className="simple-info-label">Tuition</span>
+                          <span className="simple-info-value">
+                            {programDetails.is_free ? 'Free' : `€${programDetails.tuition_fee_number?.toLocaleString()}/semester`}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Section 3: Admission Documents */}
+              <div className="simple-section simple-admission-docs">
+                <div className="simple-section-header">
+                  <div className="simple-section-icon">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <div className="simple-section-title">
+                    <h2>Admission Documents</h2>
+                    <p>Required documents for your application</p>
+                  </div>
+                </div>
+                
+                <div className="simple-section-content">
+                  <div className="simple-doc-list">
+                    {documentList.filter(doc => doc.category === 'Admission').map(doc => (
+                      <label key={doc.id} className={`simple-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
+                        <input
+                          type="checkbox"
+                          checked={checkedDocs.includes(doc.id)}
+                          onChange={() => toggleDoc(doc.id)}
+                        />
+                        <span className="simple-doc-checkbox">
+                          {checkedDocs.includes(doc.id) ? (
+                            <CheckCircle2 className="w-5 h-5" />
+                          ) : (
+                            <Circle className="w-5 h-5" />
+                          )}
+                        </span>
+                        <span className="simple-doc-label">{doc.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              {/* Sidebar - Requirements & Missing Info */}
-              <aside className="app-plan-sidebar">
-                {/* Critical Requirements Card */}
-                {plan.criticalRequirements && plan.criticalRequirements.length > 0 && (
-                  <div className="app-plan-sidebar-sticky">
-                    <CriticalRequirementsCard 
-                      requirements={plan.criticalRequirements}
-                      onAnswerQuestion={(type, answers) => {
-                        // TODO: Handle updating profile with answers
-                        console.log('Answer questions for', type, answers);
-                      }}
-                    />
+              {/* Section 4: Visa & Financial Requirements */}
+              <div className="simple-section simple-visa-docs">
+                <div className="simple-section-header">
+                  <div className="simple-section-icon">
+                    <Plane className="w-5 h-5" />
                   </div>
-                )}
-              </aside>
+                  <div className="simple-section-title">
+                    <h2>Visa & Financial Requirements</h2>
+                    <p>Documents needed for visa application</p>
+                  </div>
+                </div>
+                
+                <div className="simple-section-content">
+                  <div className="simple-doc-list">
+                    {documentList.filter(doc => doc.category === 'Visa' || doc.category === 'Financial').map(doc => (
+                      <label key={doc.id} className={`simple-doc-item ${checkedDocs.includes(doc.id) ? 'checked' : ''}`}>
+                        <input
+                          type="checkbox"
+                          checked={checkedDocs.includes(doc.id)}
+                          onChange={() => toggleDoc(doc.id)}
+                        />
+                        <span className="simple-doc-checkbox">
+                          {checkedDocs.includes(doc.id) ? (
+                            <CheckCircle2 className="w-5 h-5" />
+                          ) : (
+                            <Circle className="w-5 h-5" />
+                          )}
+                        </span>
+                        <span className="simple-doc-label">{doc.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
             </div>
           )}
         </div>
@@ -2325,6 +2152,212 @@ const styles = `
     
     .app-plan-steps h2 {
       font-size: 18px;
+    }
+  }
+
+  /* Simplified Layout Styles */
+  .app-plan-simple {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+  }
+
+  .simple-section {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .simple-section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .simple-section-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #dd0000, #9333ea);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .simple-section-title {
+    flex: 1;
+  }
+
+  .simple-section-title h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 4px;
+  }
+
+  .simple-section-title p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .simple-match-badge {
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .simple-section-content {
+    padding-top: 4px;
+  }
+
+  .simple-summary {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0 0 16px;
+  }
+
+  .simple-insights {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .simple-insight {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .simple-insight svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .simple-insight-strength {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+  }
+
+  .simple-insight-gap {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+  }
+
+  .simple-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .simple-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .simple-info-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .simple-info-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .simple-doc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .simple-doc-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .simple-doc-item:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+  }
+
+  .simple-doc-item.checked {
+    background: #f0fdf4;
+    border-color: #86efac;
+  }
+
+  .simple-doc-item input {
+    display: none;
+  }
+
+  .simple-doc-checkbox {
+    color: #cbd5e1;
+    flex-shrink: 0;
+  }
+
+  .simple-doc-item.checked .simple-doc-checkbox {
+    color: #22c55e;
+  }
+
+  .simple-doc-label {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: #334155;
+  }
+
+  .simple-doc-item.checked .simple-doc-label {
+    color: #166534;
+  }
+
+  @media (max-width: 768px) {
+    .app-plan-simple {
+      padding: 0 16px 32px;
+    }
+
+    .simple-section {
+      padding: 20px;
+    }
+
+    .simple-section-header {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .simple-match-badge {
+      align-self: flex-start;
+    }
+
+    .simple-info-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
     }
   }
 `;
