@@ -582,51 +582,91 @@ export default function ApplicationPlanPage() {
 
         {/* Course Details - Simple inline pills */}
         {programDetails && (
-          <div className="app-plan-details-strip">
-            <div className="app-plan-details-pills">
-              {programDetails.city && (
-                <span className="app-plan-detail-pill">
-                  <MapPin className="w-3.5 h-3.5" />
-                  {programDetails.city}
-                </span>
+          <>
+            <div className="app-plan-details-strip">
+              <div className="app-plan-details-pills">
+                {programDetails.city && (
+                  <span className="app-plan-detail-pill">
+                    <MapPin className="w-3.5 h-3.5" />
+                    {programDetails.city}
+                  </span>
+                )}
+                {programDetails.degree_level && (
+                  <span className="app-plan-detail-pill">
+                    <Award className="w-3.5 h-3.5" />
+                    {programDetails.degree_level}
+                  </span>
+                )}
+                {programDetails.languages_array?.length > 0 && (
+                  <span className="app-plan-detail-pill">
+                    <Globe className="w-3.5 h-3.5" />
+                    {programDetails.languages_array.join(', ')}
+                  </span>
+                )}
+                {programDetails.programme_duration && (
+                  <span className="app-plan-detail-pill">
+                    <Clock className="w-3.5 h-3.5" />
+                    {programDetails.programme_duration}
+                  </span>
+                )}
+                {programDetails.subject_area && (
+                  <span className="app-plan-detail-pill">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    {programDetails.subject_area}
+                  </span>
+                )}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto' }}>
+                {programDetails.detail_url && (
+                  <a 
+                    href={programDetails.detail_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="app-plan-daad-link"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    DAAD
+                  </a>
+                )}
+                {(programDetails.registration_deadline_date || programDetails.registration_deadline_text) && (
+                  <div style={{ padding: '8px 16px', background: '#fef3c7', color: '#92400e', borderRadius: 8, fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <Calendar className="w-4 h-4" />
+                    Deadline: {programDetails.registration_deadline_date || programDetails.registration_deadline_text}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Language Requirements & Fees Row */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginTop: 16, padding: '16px 24px', background: '#f8fafc', borderRadius: 12 }}>
+              {programDetails.language_requirements_english && (
+                <div style={{ flex: '1 1 200px' }}>
+                  <div style={{ fontSize: 12, color: '#64748b', fontWeight: 600, marginBottom: 4 }}>English Requirement</div>
+                  <div style={{ fontSize: 14, color: '#0f172a', fontWeight: 600 }}>{programDetails.language_requirements_english}</div>
+                </div>
               )}
-              {programDetails.degree_level && (
-                <span className="app-plan-detail-pill">
-                  <Award className="w-3.5 h-3.5" />
-                  {programDetails.degree_level}
-                </span>
+              {programDetails.language_requirements_german && (
+                <div style={{ flex: '1 1 200px' }}>
+                  <div style={{ fontSize: 12, color: '#64748b', fontWeight: 600, marginBottom: 4 }}>German Requirement</div>
+                  <div style={{ fontSize: 14, color: '#0f172a', fontWeight: 600 }}>{programDetails.language_requirements_german}</div>
+                </div>
               )}
-              {programDetails.languages_array?.length > 0 && (
-                <span className="app-plan-detail-pill">
-                  <Globe className="w-3.5 h-3.5" />
-                  {programDetails.languages_array.join(', ')}
-                </span>
+              {(programDetails.tuition_fee_number != null || programDetails.is_free) && (
+                <div style={{ flex: '1 1 200px' }}>
+                  <div style={{ fontSize: 12, color: '#64748b', fontWeight: 600, marginBottom: 4 }}>Semester Fee</div>
+                  <div style={{ fontSize: 14, color: '#0f172a', fontWeight: 600 }}>
+                    {programDetails.is_free ? 'Free (No tuition fees)' : `€${programDetails.tuition_fee_number?.toLocaleString()}`}
+                  </div>
+                </div>
               )}
-              {programDetails.programme_duration && (
-                <span className="app-plan-detail-pill">
-                  <Clock className="w-3.5 h-3.5" />
-                  {programDetails.programme_duration}
-                </span>
-              )}
-              {programDetails.subject_area && (
-                <span className="app-plan-detail-pill">
-                  <BookOpen className="w-3.5 h-3.5" />
-                  {programDetails.subject_area}
-                </span>
+              {programDetails.motivation_letter_required && (
+                <div style={{ flex: '1 1 200px' }}>
+                  <div style={{ fontSize: 12, color: '#64748b', fontWeight: 600, marginBottom: 4 }}>Motivation Letter</div>
+                  <div style={{ fontSize: 14, color: '#dc2626', fontWeight: 600 }}>Required</div>
+                </div>
               )}
             </div>
-            {programDetails.detail_url && (
-              <a 
-                href={programDetails.detail_url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="app-plan-daad-link"
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-                DAAD
-              </a>
-            )}
-          </div>
+          </>
         )}
 
         {/* Main Content Area */}
@@ -727,53 +767,7 @@ export default function ApplicationPlanPage() {
                 </div>
               )}
 
-              {/* Section 2: Program Highlights */}
-              {programDetails && (
-                <div className="simple-section simple-program-info">
-                  <div className="simple-section-header">
-                    <div className="simple-section-icon">
-                      <BookOpen className="w-5 h-5" />
-                    </div>
-                    <div className="simple-section-title">
-                      <h2>Program Highlights</h2>
-                      <p>Key information about this program</p>
-                    </div>
-                  </div>
-                  
-                  <div className="simple-section-content">
-                    <div className="simple-info-grid">
-                      {programDetails.subject_area && (
-                        <div className="simple-info-item">
-                          <span className="simple-info-label">Subject</span>
-                          <span className="simple-info-value">{programDetails.subject_area}</span>
-                        </div>
-                      )}
-                      {programDetails.programme_duration && (
-                        <div className="simple-info-item">
-                          <span className="simple-info-label">Duration</span>
-                          <span className="simple-info-value">{programDetails.programme_duration}</span>
-                        </div>
-                      )}
-                      {programDetails.languages_array?.length > 0 && (
-                        <div className="simple-info-item">
-                          <span className="simple-info-label">Language</span>
-                          <span className="simple-info-value">{programDetails.languages_array.join(', ')}</span>
-                        </div>
-                      )}
-                      {(programDetails.tuition_fee_number != null || programDetails.is_free) && (
-                        <div className="simple-info-item">
-                          <span className="simple-info-label">Tuition</span>
-                          <span className="simple-info-value">
-                            {programDetails.is_free ? 'Free' : `€${programDetails.tuition_fee_number?.toLocaleString()}/semester`}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Section 3: Admission Documents - AI Generated */}
+              {/* Section 2: Admission Documents - AI Generated */}
               {plan.requiredDocuments && plan.requiredDocuments.filter(d => d.category === 'admission').length > 0 && (
                 <div className="simple-section simple-admission-docs">
                   <div className="simple-section-header">
