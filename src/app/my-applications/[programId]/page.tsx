@@ -275,9 +275,18 @@ export default function ApplicationPlanPage() {
         }
       } else {
         const errorData = await generateRes.json().catch(() => ({}));
-        const message = errorData?.message || errorData?.error || 'Failed to generate application plan. Please try again.';
-        setGenerationError(message);
-        console.error('Failed to generate plan:', errorData);
+        console.error('Generation failed with status:', generateRes.status);
+        console.error('Error response:', errorData);
+        
+        // Show detailed validation errors if available
+        if (errorData?.details && Array.isArray(errorData.details)) {
+          console.error('Validation errors:', errorData.details);
+          const validationMessages = errorData.details.map((d: any) => `${d.path?.join('.')}: ${d.message}`).join(', ');
+          setGenerationError(`Validation failed: ${validationMessages}`);
+        } else {
+          const message = errorData?.message || errorData?.error || 'Failed to generate application plan. Please try again.';
+          setGenerationError(message);
+        }
       }
     } catch (err) {
       console.error('Failed to generate plan:', err);
