@@ -459,21 +459,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="guides-categories scroll-reveal">
-            {JOURNEY_CATEGORIES.map(cat => {
-              const Icon = cat.icon;
-              return (
-                <Link key={cat.key} href="/blog" className="guides-category-card">
-                  <div className="guides-category-icon" style={{ background: cat.color }}>
-                    <Icon className="w-5 h-5 text-white" />
-                  </div>
-                  <h3>{cat.label}</h3>
-                  <p>{cat.desc}</p>
-                </Link>
-              );
-            })}
-          </div>
-
           {/* Featured Articles */}
           {!postsLoading && filteredPosts.length > 0 && (
             <div className="guides-articles scroll-reveal">
@@ -549,8 +534,8 @@ export default function HomePage() {
           {[
             { num: '20,000+', label: 'Study programs indexed', icon: GraduationCap },
             { num: '2,500+', label: 'Students helped', icon: Users },
-            { num: '6 AI tools', label: 'Free to use', icon: Zap },
-            { num: '50+', label: 'Guides & articles', icon: BookOpen },
+            { num: 'AI Tools', label: 'Free to use', icon: Zap },
+            { num: 'Expert Guides', label: 'Step-by-step resources', icon: BookOpen },
           ].map(({ num, label, icon: Icon }, idx) => (
             <div key={label} className="stat-card scroll-reveal" style={{ transitionDelay: `${idx * 0.1}s` }}>
               <div className="stat-icon-wrap"><Icon className="w-6 h-6" /></div>
