@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
-import { SiteFooter } from '@/components/SiteFooter';
 import { 
   Calculator, Euro, CheckCircle2, 
   ArrowRight, Briefcase, PiggyBank, FileText,
@@ -238,8 +237,6 @@ export default function SalaryCalculatorLanding() {
           </Link>
         </div>
       </section>
-
-      <SiteFooter />
     </div>
   );
 }

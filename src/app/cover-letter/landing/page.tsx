@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
-import { SiteFooter } from '@/components/SiteFooter';
 import { 
   FileText, Sparkles, Download, CheckCircle2, 
   ArrowRight, Briefcase, Target, Building2,
@@ -238,8 +237,6 @@ export default function CoverLetterLanding() {
           </Link>
         </div>
       </section>
-
-      <SiteFooter />
     </div>
   );
 }

@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
-import { SiteFooter } from '@/components/SiteFooter';
 import { 
   FileText, Sparkles, Download, CheckCircle2, 
   ArrowRight, Star, Users, Globe, Zap,
@@ -238,8 +237,6 @@ export default function CVMakerLanding() {
           </Link>
         </div>
       </section>
-
-      <SiteFooter />
     </div>
   );
 }

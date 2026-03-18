@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
-import { SiteFooter } from '@/components/SiteFooter';
 import { 
   LayoutDashboard, Sparkles, CheckCircle2, 
   ArrowRight, GraduationCap, FileText, Heart,
@@ -246,8 +245,6 @@ export default function DashboardLanding() {
           </Link>
         </div>
       </section>
-
-      <SiteFooter />
     </div>
   );
 }

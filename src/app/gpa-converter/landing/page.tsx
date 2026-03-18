@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
-import { SiteFooter } from '@/components/SiteFooter';
 import { 
   Calculator, Sparkles, CheckCircle2, 
   ArrowRight, GraduationCap, Globe, BookOpen,
@@ -238,8 +237,6 @@ export default function GPAConverterLanding() {
           </Link>
         </div>
       </section>
-
-      <SiteFooter />
     </div>
   );
 }
