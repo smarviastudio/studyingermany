@@ -390,7 +390,7 @@ export function SiteNav() {
             ) : (
               <>
                 <Link href="/auth/signin" className="sitenav-btn-secondary">Sign in</Link>
-                <Link href="/cv-maker" className="sitenav-btn-primary">Try Free</Link>
+                <Link href="/cv-maker/landing" className="sitenav-btn-primary">Try Free</Link>
               </>
             )}
           </div>

@@ -28,10 +28,11 @@ export function SiteFooter() {
           <div>
             <h4 style={{ fontSize: 12, fontWeight: 600, color: '#fff', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tools</h4>
             <FooterLinks links={[
-              { href: '/cv-maker', label: 'CV Maker' },
-              { href: '/cover-letter', label: 'Cover Letter' },
-              { href: '/motivation-letter', label: 'Motivation Letter' },
-              { href: '/gpa-converter', label: 'GPA Converter' },
+              { href: '/cv-maker/landing', label: 'CV Maker' },
+              { href: '/cover-letter/landing', label: 'Cover Letter' },
+              { href: '/motivation-letter/landing', label: 'Motivation Letter' },
+              { href: '/gpa-converter/landing', label: 'GPA Converter' },
+              { href: '/netto-brutto-calculator/landing', label: 'Salary Calculator' },
             ]} />
           </div>
 
@@ -42,7 +43,7 @@ export function SiteFooter() {
               { href: '/', label: 'Home' },
               { href: '/blog', label: 'Guides' },
               { href: '/pricing', label: 'Pricing' },
-              { href: '/dashboard', label: 'Dashboard' },
+              { href: '/dashboard/landing', label: 'Dashboard' },
             ]} />
           </div>
 
