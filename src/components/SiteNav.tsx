@@ -318,240 +318,87 @@ export function SiteNav() {
         </div>
       </div>
 
-      <header style={{ background: '#fff', borderBottom: '1px solid #e5e5e5', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div className="sitenav-header" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <Image src="/logo_wp.png" alt="Students in Germany" width={130} height={40} style={{ objectFit: 'contain' }} priority />
+      <header className="sitenav-modern">
+        <div className="sitenav-inner">
+          {/* Logo */}
+          <Link href="/" className="sitenav-logo">
+            <Image src="/logo_wp.png" alt="German Path" width={120} height={36} style={{ objectFit: 'contain' }} priority />
           </Link>
 
-          <nav className="sitenav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {[
-              { label: 'Home', href: '/' },
-              { label: 'Guides', href: '/#guides' },
-              { label: 'Tools', href: '/#tools' },
-              { label: 'Course Finder', href: '/#hero' },
-              { label: 'Pricing', href: '/pricing' },
-            ].map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                style={{ 
-                  fontSize: 14, 
-                  fontWeight: 600, 
-                  color: '#525252', 
-                  textDecoration: 'none', 
-                  padding: '8px 16px',
-                  borderRadius: 8,
-                  transition: 'all 0.2s',
-                  whiteSpace: 'nowrap'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = RED;
-                  e.currentTarget.style.background = '#fff5f5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#525252';
-                  e.currentTarget.style.background = 'transparent';
-                }}
-              >
-                {label}
-              </a>
-            ))}
-            <button
-              type="button"
-              onClick={openContactModal}
-              style={{ 
-                fontSize: 14, 
-                fontWeight: 600, 
-                color: '#525252', 
-                border: '1px solid #e5e5e5', 
-                borderRadius: 8, 
-                padding: '8px 16px', 
-                background: '#fff', 
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                whiteSpace: 'nowrap',
-                marginLeft: 8
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = RED;
-                e.currentTarget.style.color = RED;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#e5e5e5';
-                e.currentTarget.style.color = '#525252';
-              }}
-            >
-              Contact
-            </button>
+          {/* Center Navigation */}
+          <nav className="sitenav-center">
+            <a href="/" className="sitenav-link">Home</a>
+            <a href="/#guides" className="sitenav-link">Guides</a>
+            <a href="/#tools" className="sitenav-link">Tools</a>
+            <a href="/#hero" className="sitenav-link">Courses</a>
+            <a href="/pricing" className="sitenav-link">Pricing</a>
+            <button type="button" onClick={openContactModal} className="sitenav-link">Contact</button>
           </nav>
 
-          <form onSubmit={handleNavSearchSubmit} style={{ position: 'relative', marginLeft: 8 }}>
-            <Search className="w-4 h-4" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#a3a3a3', pointerEvents: 'none' }} />
-            <input
-              ref={navInputRef}
-              type="text"
-              placeholder="Search articles..."
-              value={navQuery}
-              onChange={(e) => {
-                setNavQuery(e.target.value);
-                if (!e.target.value) {
-                  setNavResults([]);
-                  setNavDropdownOpen(false);
-                }
-              }}
-              style={{ 
-                width: 240, 
-                padding: '8px 12px 8px 36px', 
-                fontSize: 13, 
-                border: '1px solid #e5e5e5', 
-                borderRadius: 8, 
-                outline: 'none', 
-                transition: 'all 0.2s'
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = RED;
-                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(221,0,0,0.08)';
-                if (navResults.length) setNavDropdownOpen(true);
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#e5e5e5';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            />
-            <button type="submit" style={{ 
-              position: 'absolute', 
-              right: 6, 
-              top: '50%', 
-              transform: 'translateY(-50%)', 
-              background: 'none', 
-              border: 'none', 
-              cursor: 'pointer', 
-              color: RED, 
-              fontSize: 12, 
-              fontWeight: 700
-            }}>
-              Go
-            </button>
-            {navDropdownOpen && (
-              <div
-                ref={navDropdownRef}
-                style={{ 
-                  position: 'absolute', 
-                  top: 'calc(100% + 10px)', 
-                  right: 0, 
-                  width: 320, 
-                  background: '#fff', 
-                  borderRadius: 16, 
-                  boxShadow: '0 20px 45px rgba(0,0,0,0.12)', 
-                  border: '1px solid #f2f2f2', 
-                  padding: '14px 16px', 
-                  zIndex: 40
+          {/* Right Actions */}
+          <div className="sitenav-actions">
+            {/* Search */}
+            <form onSubmit={handleNavSearchSubmit} className="sitenav-search">
+              <Search className="sitenav-search-icon" />
+              <input
+                ref={navInputRef}
+                type="text"
+                placeholder="Search..."
+                value={navQuery}
+                onChange={(e) => {
+                  setNavQuery(e.target.value);
+                  if (!e.target.value) { setNavResults([]); setNavDropdownOpen(false); }
                 }}
-              >
-                {navLoading ? (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: '#666' }}>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Searching articles...
-                  </div>
-                ) : navResults.length === 0 ? (
-                  <p style={{ fontSize: 13, color: '#777', margin: 0 }}>No matches yet. Try a different keyword.</p>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    {navResults.map((post) => (
-                      <Link key={post.id} href={`/blog/${post.slug}`} style={{ textDecoration: 'none', color: '#111', paddingBottom: 10, borderBottom: '1px solid #f0f0f0' }}>
-                        <p style={{ fontSize: 13, fontWeight: 700, margin: '0 0 4px' }}>{stripHtml(post.title)}</p>
-                        <span style={{ fontSize: 12, color: '#777' }}>{timeAgo(post.date)}</span>
-                      </Link>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={openNavAllResults}
-                      style={{ fontSize: 12, fontWeight: 600, color: RED, textDecoration: 'none', alignSelf: 'flex-end', background: 'none', border: 'none', cursor: 'pointer' }}
-                    >
-                      View all results →
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </form>
+                className="sitenav-search-input"
+                onFocus={() => { if (navResults.length) setNavDropdownOpen(true); }}
+              />
+              {navDropdownOpen && (
+                <div ref={navDropdownRef} className="sitenav-search-dropdown">
+                  {navLoading ? (
+                    <div className="sitenav-search-loading"><Loader2 className="w-4 h-4 animate-spin" /> Searching...</div>
+                  ) : navResults.length === 0 ? (
+                    <p className="sitenav-search-empty">No results found</p>
+                  ) : (
+                    <>
+                      {navResults.map((post) => (
+                        <Link key={post.id} href={`/blog/${post.slug}`} className="sitenav-search-result">
+                          <span className="sitenav-search-result-title">{stripHtml(post.title)}</span>
+                          <span className="sitenav-search-result-date">{timeAgo(post.date)}</span>
+                        </Link>
+                      ))}
+                      <button type="button" onClick={openNavAllResults} className="sitenav-search-viewall">View all →</button>
+                    </>
+                  )}
+                </div>
+              )}
+            </form>
 
-          <div className="sitenav-desktop-actions" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            {/* Auth Actions */}
             {isAuthenticated ? (
               <>
                 {!hasUnlimited && aiCredits !== null && (
-                  <Link href="/credits" style={{ 
-                    textDecoration: 'none', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: 6, 
-                    padding: '6px 12px', 
-                    borderRadius: 8, 
-                    background: '#faf5ff', 
-                    border: '1px solid #e9d5ff',
-                    transition: 'all 0.2s'
-                  }}>
-                    <Zap className="w-4 h-4" style={{ color: '#7c3aed' }} />
-                    <span style={{ fontSize: 13, fontWeight: 700, color: aiCredits === 0 ? '#ef4444' : '#7c3aed' }}>{aiCredits}</span>
+                  <Link href="/credits" className="sitenav-credits">
+                    <Zap className="w-3.5 h-3.5" />
+                    <span>{aiCredits}</span>
                   </Link>
                 )}
-                <Link href="/dashboard" style={{ 
-                  fontSize: 14, 
-                  fontWeight: 600, 
-                  color: '#fff', 
-                  background: RED, 
-                  borderRadius: 8, 
-                  padding: '8px 16px', 
-                  textDecoration: 'none',
-                  transition: 'all 0.2s',
-                  whiteSpace: 'nowrap'
-                }}>
-                  Dashboard
-                </Link>
-                <button onClick={() => signOut()} style={{ 
-                  border: '1px solid #e5e5e5', 
-                  background: '#fff', 
-                  cursor: 'pointer', 
-                  padding: 8,
-                  borderRadius: 8,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'all 0.2s'
-                }}>
-                  <LogOut className="w-4 h-4" style={{ color: '#737373' }} />
+                <Link href="/dashboard" className="sitenav-btn-primary">Dashboard</Link>
+                <button onClick={() => signOut()} className="sitenav-btn-icon" title="Sign out">
+                  <LogOut className="w-4 h-4" />
                 </button>
               </>
             ) : (
               <>
-                <Link href="/auth/signin" style={{ 
-                  fontSize: 14, 
-                  fontWeight: 600, 
-                  color: '#525252', 
-                  textDecoration: 'none',
-                  padding: '8px 16px',
-                  borderRadius: 8,
-                  transition: 'all 0.2s',
-                  whiteSpace: 'nowrap'
-                }}>
-                  Sign in
-                </Link>
-                <Link href="/cv-maker" style={{ 
-                  fontSize: 14, 
-                  fontWeight: 600, 
-                  color: '#fff', 
-                  background: RED, 
-                  borderRadius: 8, 
-                  padding: '8px 20px', 
-                  textDecoration: 'none',
-                  transition: 'all 0.2s',
-                  whiteSpace: 'nowrap'
-                }}>
-                  Free CV Maker
-                </Link>
+                <Link href="/auth/signin" className="sitenav-btn-secondary">Sign in</Link>
+                <Link href="/cv-maker" className="sitenav-btn-primary">Try Free</Link>
               </>
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <button className="sitenav-mobile-toggle" onClick={() => setDrawerOpen(true)}>
+            <Menu className="w-5 h-5" />
+          </button>
         </div>
       </header>
 

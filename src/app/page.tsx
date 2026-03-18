@@ -532,10 +532,10 @@ export default function HomePage() {
         <div className="stats-bg-pattern" />
         <div className="section-container stats-grid">
           {[
-            { num: '20,000+', label: 'Study programs indexed', icon: GraduationCap },
+            { num: '20,000+', label: 'Programs indexed', icon: GraduationCap },
             { num: '2,500+', label: 'Students helped', icon: Users },
-            { num: 'AI Tools', label: 'Free to use', icon: Zap },
-            { num: 'Expert Guides', label: 'Step-by-step resources', icon: BookOpen },
+            { num: 'AI-Powered', label: 'Smart tools', icon: Zap },
+            { num: '100+', label: 'Expert guides', icon: BookOpen },
           ].map(({ num, label, icon: Icon }, idx) => (
             <div key={label} className="stat-card scroll-reveal" style={{ transitionDelay: `${idx * 0.1}s` }}>
               <div className="stat-icon-wrap"><Icon className="w-6 h-6" /></div>
