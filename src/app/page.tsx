@@ -428,101 +428,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══ STUDENT JOURNEY ARTICLES ══ */}
-      <section className="journey-section" id="guides">
+      {/* ══ GUIDES & RESOURCES ══ */}
+      <section className="guides-section" id="guides">
         <div className="section-container">
           <div className="section-header scroll-reveal">
-            <div className="section-label">Your Student Journey</div>
-            <h2 className="section-title">Step-by-step guides for every stage</h2>
-            <p className="section-desc">From your first visa application to landing a job — organized by the stages of your Germany experience.</p>
+            <div className="section-label">Guides & Resources</div>
+            <h2 className="section-title">Everything you need to know</h2>
+            <p className="section-desc">Browse guides by topic or search for specific information</p>
           </div>
 
-          <div className="journey-pills scroll-reveal">
-            <button className={`journey-pill ${activeCategory === 'all' ? 'active' : ''}`} onClick={() => setActiveCategory('all')}>
-              <BookOpen className="w-4 h-4" /> All Articles
-            </button>
+          <div className="guides-search-wrapper scroll-reveal">
+            <div className="guides-search-bar">
+              <Search className="w-5 h-5" style={{ color: '#737373' }} />
+              <input
+                type="text"
+                placeholder="Search guides: visa, housing, jobs..."
+                className="guides-search-input"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const searchQuery = (e.target as HTMLInputElement).value;
+                    if (searchQuery.trim()) {
+                      window.location.href = `/blog?search=${encodeURIComponent(searchQuery.trim())}`;
+                    }
+                  }
+                }}
+              />
+              <Link href="/blog" className="guides-browse-btn">
+                Browse All <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="guides-categories scroll-reveal">
             {JOURNEY_CATEGORIES.map(cat => {
               const Icon = cat.icon;
-              const count = categorizedPosts[cat.key]?.length || 0;
               return (
-                <button key={cat.key} className={`journey-pill ${activeCategory === cat.key ? 'active' : ''}`} onClick={() => setActiveCategory(cat.key)} style={{ '--pill-color': cat.color } as React.CSSProperties}>
-                  <Icon className="w-4 h-4" />
-                  {cat.label}
-                  {count > 0 && <span className="journey-pill-count">{count}</span>}
-                </button>
+                <Link key={cat.key} href="/blog" className="guides-category-card">
+                  <div className="guides-category-icon" style={{ background: cat.color }}>
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
+                  <h3>{cat.label}</h3>
+                  <p>{cat.desc}</p>
+                </Link>
               );
             })}
           </div>
-
-          {activeCategory === 'all' && featuredPost && !postsLoading && (
-            <Link href={`/blog/${featuredPost.slug}`} className="featured-card scroll-reveal">
-              <div className="featured-card-image">
-                {featuredPost.featuredImage ? (
-                  <Image src={featuredPost.featuredImage} alt={stripHtml(featuredPost.title)} className="featured-img" width={800} height={450} loading="lazy" />
-                ) : (
-                  <div className="featured-img-placeholder">
-                    <BookOpen className="w-16 h-16" style={{ color: 'rgba(255,255,255,0.3)' }} />
-                  </div>
-                )}
-                <div className="featured-card-overlay" />
-                <div className="featured-card-content">
-                  {featuredPost.categories[0] && <span className="featured-badge">{decodeHtmlEntities(featuredPost.categories[0].name)}</span>}
-                  <h3 className="featured-title">{stripHtml(featuredPost.title)}</h3>
-                  <p className="featured-excerpt">{stripHtml(featuredPost.excerpt)}</p>
-                  <div className="featured-meta">
-                    <Clock className="w-3.5 h-3.5" /><span>{timeAgo(featuredPost.date)}</span>
-                    <span className="featured-read">Read article <ArrowRight className="w-3.5 h-3.5" /></span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          )}
-
-          {postsLoading && (
-            <div className="articles-grid">
-              {[1,2,3,4,5,6].map(i => (
-                <div key={i} className="article-skeleton">
-                  <div className="skeleton-image" />
-                  <div className="skeleton-body">
-                    <div className="skeleton-line w80" />
-                    <div className="skeleton-line w60" />
-                    <div className="skeleton-line w40" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {!postsLoading && filteredPosts.length === 0 && (
-            <div className="empty-articles scroll-reveal">
-              <Newspaper className="w-12 h-12 mb-4" style={{ color: '#d4d4d4' }} />
-              <p className="empty-title">No articles in this category yet</p>
-              <p className="empty-desc">{activeCategory === 'all' ? 'Articles will appear here once published on WordPress.' : 'Try selecting "All Articles" or check back soon.'}</p>
-            </div>
-          )}
-
-          {!postsLoading && filteredPosts.length > 0 && (
-            <div className="articles-grid">
-              {(activeCategory === 'all' ? filteredPosts.filter(p => p.id !== featuredPost?.id) : filteredPosts).slice(0, 9).map((post, idx) => (
-                <Link key={post.id} href={`/blog/${post.slug}`} className="article-card scroll-reveal" style={{ transitionDelay: `${idx * 0.06}s` }}>
-                  <div className="article-card-image">
-                    {post.featuredImage ? (
-                      <Image src={post.featuredImage} alt={stripHtml(post.title)} loading="lazy" className="article-img" width={400} height={225} />
-                    ) : (
-                      <div className="article-img-placeholder"><BookOpen className="w-8 h-8" style={{ color: '#d4d4d4' }} /></div>
-                    )}
-                    {post.categories[0] && <span className="article-badge">{decodeHtmlEntities(post.categories[0].name)}</span>}
-                  </div>
-                  <div className="article-card-body">
-                    <div className="article-meta"><Calendar className="w-3 h-3" /><span>{timeAgo(post.date)}</span></div>
-                    <h3 className="article-title">{stripHtml(post.title)}</h3>
-                    <p className="article-excerpt">{stripHtml(post.excerpt)}</p>
-                    <span className="article-link">Read article <ArrowRight className="w-3.5 h-3.5" /></span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
         </div>
       </section>
 
