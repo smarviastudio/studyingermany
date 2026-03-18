@@ -395,7 +395,7 @@ export default function HomePage() {
           </h1>
           <p className="hero-subtitle animate-fade-up-3">
             Search bachelor & master programs, build your CV with AI, and get step-by-step guidance —
-            free tools for international students from Pakistan, India, and worldwide.
+            tools for international students from Pakistan, India, and worldwide. Basic features are free, AI tools include free credits.
           </p>
           <form onSubmit={handleSearch} className="hero-search-form animate-fade-up-4">
             <div className="hero-search-bar">
@@ -419,9 +419,9 @@ export default function HomePage() {
             ))}
           </div>
           <div className="hero-trust animate-fade-up-4">
-            <div className="hero-trust-item"><Shield className="w-4 h-4" /><span>Free forever</span></div>
+            <div className="hero-trust-item"><Shield className="w-4 h-4" /><span>Free to use</span></div>
             <div className="hero-trust-divider" />
-            <div className="hero-trust-item"><Users className="w-4 h-4" /><span>15,000+ students helped</span></div>
+            <div className="hero-trust-item"><Users className="w-4 h-4" /><span>2,500+ students helped</span></div>
             <div className="hero-trust-divider" />
             <div className="hero-trust-item"><Globe className="w-4 h-4" /><span>All German universities</span></div>
           </div>
@@ -532,9 +532,9 @@ export default function HomePage() {
         <div className="section-container stats-grid">
           {[
             { num: '20,000+', label: 'Study programs indexed', icon: GraduationCap },
-            { num: '15,000+', label: 'Students helped', icon: Users },
-            { num: '5 AI tools', label: 'Completely free', icon: Zap },
-            { num: '200+', label: 'Guides & articles', icon: BookOpen },
+            { num: '2,500+', label: 'Students helped', icon: Users },
+            { num: '6 AI tools', label: 'Free to use', icon: Zap },
+            { num: '50+', label: 'Guides & articles', icon: BookOpen },
           ].map(({ num, label, icon: Icon }, idx) => (
             <div key={label} className="stat-card scroll-reveal" style={{ transitionDelay: `${idx * 0.1}s` }}>
               <div className="stat-icon-wrap"><Icon className="w-6 h-6" /></div>
@@ -559,13 +559,13 @@ export default function HomePage() {
               <article key={person.name} className="testimonial-card scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
                 <div className="testimonial-card-header">
                   <div className="testimonial-avatar">{person.avatar}</div>
-                  <div>
+                  <div className="testimonial-info">
                     <p className="testimonial-name">{person.name}</p>
                     <p className="testimonial-country">{person.country}</p>
                   </div>
                   <span className="testimonial-highlight">{person.highlight}</span>
                 </div>
-                <p className="testimonial-quote">“{person.quote}”</p>
+                <p className="testimonial-quote">{person.quote}</p>
                 <p className="testimonial-track">{person.track}</p>
               </article>
             ))}
@@ -577,9 +577,9 @@ export default function HomePage() {
       <section className="tools-section" id="tools">
         <div className="section-container">
           <div className="section-header scroll-reveal">
-            <div className="section-label">Free AI Tools</div>
+            <div className="section-label">AI Tools</div>
             <h2 className="section-title">Everything you need to apply</h2>
-            <p className="section-desc">AI-powered assistants for CVs, cover letters, GPA conversion — all aligned with German standards.</p>
+            <p className="section-desc">AI-powered assistants for CVs, cover letters, GPA conversion — free to try, with credits for extended AI use.</p>
           </div>
           <div className="tools-grid">
             {TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
@@ -639,45 +639,34 @@ export default function HomePage() {
       <section className="howto-section scroll-reveal">
         <div className="section-container">
           <div className="section-header">
-            <div className="section-label">Step-by-Step Process</div>
-            <h2 className="section-title">How studying in Germany works</h2>
-            <p className="section-desc">From finding your program to landing a job — here&apos;s the journey most international students follow.</p>
+            <div className="section-label">Your Journey</div>
+            <h2 className="section-title">5 steps to study in Germany</h2>
           </div>
-          <div className="howto-timeline">
-            <div className="howto-step">
+          <div className="howto-grid">
+            <div className="howto-card">
               <div className="howto-number">1</div>
-              <div className="howto-content">
-                <h3>Search & Shortlist Programs</h3>
-                <p>Use our AI-powered search to find English-taught bachelor or master programs that match your interests, budget, and qualifications.</p>
-              </div>
+              <h3>Find Programs</h3>
+              <p>Search 20,000+ English-taught degrees</p>
             </div>
-            <div className="howto-step">
+            <div className="howto-card">
               <div className="howto-number">2</div>
-              <div className="howto-content">
-                <h3>Prepare Your Application</h3>
-                <p>Build your CV, write motivation letters, and gather required documents. Our AI tools help you create German-standard applications.</p>
-              </div>
+              <h3>Prepare Docs</h3>
+              <p>CV, motivation letter & transcripts</p>
             </div>
-            <div className="howto-step">
+            <div className="howto-card">
               <div className="howto-number">3</div>
-              <div className="howto-content">
-                <h3>Apply & Get Admitted</h3>
-                <p>Submit applications through uni-assist or directly to universities. Track deadlines and requirements for each program.</p>
-              </div>
+              <h3>Apply</h3>
+              <p>Submit via uni-assist or directly</p>
             </div>
-            <div className="howto-step">
+            <div className="howto-card">
               <div className="howto-number">4</div>
-              <div className="howto-content">
-                <h3>Visa & Blocked Account</h3>
-                <p>Open a blocked account (€11,904/year), get health insurance, and apply for your German student visa at the embassy.</p>
-              </div>
+              <h3>Get Visa</h3>
+              <p>Blocked account + health insurance</p>
             </div>
-            <div className="howto-step">
+            <div className="howto-card">
               <div className="howto-number">5</div>
-              <div className="howto-content">
-                <h3>Arrive & Register</h3>
-                <p>Complete Anmeldung (city registration), enroll at your university, and start your studies in Germany.</p>
-              </div>
+              <h3>Arrive</h3>
+              <p>Register & start your studies</p>
             </div>
           </div>
         </div>
@@ -725,7 +714,7 @@ export default function HomePage() {
         <div className="cta-bg" />
         <div className="section-container cta-content">
           <h2 className="cta-title">Ready to start your Germany journey?</h2>
-          <p className="cta-desc">Search 20,000+ programs and use our free AI tools to prepare your application.</p>
+          <p className="cta-desc">Search 20,000+ programs and use our AI tools to prepare your application. Start free, upgrade anytime.</p>
           <a href="#hero" className="cta-btn-primary"><Search className="w-5 h-5" />Search Programs Now</a>
         </div>
       </section>

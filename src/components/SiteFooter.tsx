@@ -39,6 +39,7 @@ export function SiteFooter() {
           <div>
             <h4 style={{ fontSize: 12, fontWeight: 600, color: '#fff', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Resources</h4>
             <FooterLinks links={[
+              { href: '/', label: 'Home' },
               { href: '/blog', label: 'Guides' },
               { href: '/pricing', label: 'Pricing' },
               { href: '/dashboard', label: 'Dashboard' },

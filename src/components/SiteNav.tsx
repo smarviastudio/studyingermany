@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
-import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard, ChevronLeft, ChevronRight, Home } from 'lucide-react';
 import { useContactModal } from './ContactModalProvider';
 
 const RED = '#dd0000';
@@ -289,6 +289,7 @@ export function SiteNav() {
           <button className="sitenav-drawer-close" onClick={() => setDrawerOpen(false)}>✕</button>
         </div>
         <div className="sitenav-drawer-links">
+          <a href="/" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Home size={20} />Home</a>
           <a href="/#hero" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><GraduationCap size={20} />Course Finder</a>
           <a href="/#guides" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><BookOpen size={20} />Study Guides</a>
           <a href="/#tools" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Wrench size={20} />Free AI Tools</a>
@@ -325,6 +326,7 @@ export function SiteNav() {
 
           <nav className="sitenav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
             {[
+              { label: 'Home', href: '/' },
               { label: 'Guides', href: '/#guides' },
               { label: 'Tools', href: '/#tools' },
               { label: 'Course Finder', href: '/#hero' },
