@@ -138,7 +138,16 @@ export default function GPAConverterPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
 
-      <div className="gpa-page-main" style={{ maxWidth: 900, margin: '0 auto', padding: '48px 24px 80px' }}>
+      {/* Back button to landing page */}
+      <div style={{ padding: '0 24px', marginTop: 24 }}>
+        <Link href="/gpa-converter/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#666', textDecoration: 'none', padding: '8px 16px', borderRadius: 8, transition: 'all 0.2s' }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = '#10b981'; e.currentTarget.style.background = '#f0fdf4'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = '#666'; e.currentTarget.style.background = 'transparent'; }}>
+          <ArrowLeft className="w-4 h-4" /> Back to GPA Converter Info
+        </Link>
+      </div>
+
+      <div className="gpa-page-main" style={{ maxWidth: 900, margin: '0 auto', padding: '24px 24px 80px' }}>
         {/* Header */}
         <div className="gpa-header" style={{ textAlign: 'center', marginBottom: 48 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #10b981, #059669)', marginBottom: 16, boxShadow: '0 8px 24px rgba(16,185,129,0.2)' }}>

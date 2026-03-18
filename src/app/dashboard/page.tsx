@@ -204,7 +204,16 @@ export default function DashboardPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
 
-      <main className="dash-main" style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
+      {/* Back button to landing page */}
+      <div style={{ padding: '0 24px', marginTop: 24 }}>
+        <Link href="/dashboard/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#666', textDecoration: 'none', padding: '8px 16px', borderRadius: 8, transition: 'all 0.2s' }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = '#dd0000'; e.currentTarget.style.background = '#fff5f5'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = '#666'; e.currentTarget.style.background = 'transparent'; }}>
+          <ChevronRight className="w-4 h-4 rotate-180" /> Back to Dashboard Info
+        </Link>
+      </div>
+
+      <main className="dash-main" style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>
         {/* Header */}
         <header style={{ marginBottom: 40 }}>
           <div className="dash-header-row" style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24 }}>

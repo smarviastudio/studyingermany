@@ -520,8 +520,8 @@ function MotivationLetterContent() {
       {/* Hero bar */}
       <div className="tool-hero-bar" style={{ background: 'linear-gradient(135deg,#0f0c29,#302b63,#24243e)', padding: '40px 24px 32px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.5)', fontSize: 13, textDecoration: 'none', marginBottom: 20 }}>
-            <ArrowLeft size={14} /> Back
+          <Link href="/motivation-letter/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.5)', fontSize: 13, textDecoration: 'none', marginBottom: 20 }}>
+            <ArrowLeft size={14} /> Back to Motivation Letter Info
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
             <div className="tool-hero-icon" style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg,#7c3aed,#dd0000)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(124,58,237,0.4)', flexShrink: 0 }}>

@@ -902,7 +902,16 @@ export default function CVMakerPage() {
       <div style={{ minHeight: '100vh', background: '#fafafa' }}>
         <SiteNav />
 
-        <div className="cvmaker-page-wrap" style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
+        {/* Back button to landing page */}
+        <div style={{ padding: '0 24px', marginTop: 24 }}>
+          <Link href="/cv-maker/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#666', textDecoration: 'none', padding: '8px 16px', borderRadius: 8, transition: 'all 0.2s' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#dd0000'; e.currentTarget.style.background = '#fff5f5'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = '#666'; e.currentTarget.style.background = 'transparent'; }}>
+            <ArrowLeft className="w-4 h-4" /> Back to CV Maker Info
+          </Link>
+        </div>
+
+        <div className="cvmaker-page-wrap" style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>
           <ProfileWarningBanner requiredFields={['fullName', 'phone', 'nationality', 'backgroundSummary', 'skills']} />
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 12px' }}>Create your CV</h1>
