@@ -473,6 +473,72 @@ export default function HomePage() {
               );
             })}
           </div>
+
+          {/* Featured Articles */}
+          {!postsLoading && filteredPosts.length > 0 && (
+            <div className="guides-articles scroll-reveal">
+              <h3 className="guides-section-title">Featured Guides</h3>
+              <div className="guides-articles-row">
+                {filteredPosts.slice(0, 3).map((post) => (
+                  <Link key={post.id} href={`/blog/${post.slug}`} className="guides-article-card">
+                    <div className="guides-article-image">
+                      {post.featuredImage ? (
+                        <Image src={post.featuredImage} alt={stripHtml(post.title)} loading="lazy" className="guides-article-img" width={300} height={160} />
+                      ) : (
+                        <div className="guides-article-img-placeholder"><BookOpen className="w-6 h-6" style={{ color: '#d4d4d4' }} /></div>
+                      )}
+                      {post.categories[0] && <span className="guides-article-badge">{decodeHtmlEntities(post.categories[0].name)}</span>}
+                    </div>
+                    <div className="guides-article-body">
+                      <h4 className="guides-article-title">{stripHtml(post.title)}</h4>
+                      <p className="guides-article-excerpt">{stripHtml(post.excerpt)}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Latest Articles */}
+          {!postsLoading && filteredPosts.length > 3 && (
+            <div className="guides-articles scroll-reveal">
+              <h3 className="guides-section-title">Latest Guides</h3>
+              <div className="guides-articles-row">
+                {filteredPosts.slice(3, 6).map((post) => (
+                  <Link key={post.id} href={`/blog/${post.slug}`} className="guides-article-card">
+                    <div className="guides-article-image">
+                      {post.featuredImage ? (
+                        <Image src={post.featuredImage} alt={stripHtml(post.title)} loading="lazy" className="guides-article-img" width={300} height={160} />
+                      ) : (
+                        <div className="guides-article-img-placeholder"><BookOpen className="w-6 h-6" style={{ color: '#d4d4d4' }} /></div>
+                      )}
+                      {post.categories[0] && <span className="guides-article-badge">{decodeHtmlEntities(post.categories[0].name)}</span>}
+                    </div>
+                    <div className="guides-article-body">
+                      <h4 className="guides-article-title">{stripHtml(post.title)}</h4>
+                      <p className="guides-article-excerpt">{stripHtml(post.excerpt)}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {postsLoading && (
+            <div className="guides-articles scroll-reveal">
+              <div className="guides-articles-row">
+                {[1,2,3].map(i => (
+                  <div key={i} className="guides-article-skeleton">
+                    <div className="guides-skeleton-image" />
+                    <div className="guides-skeleton-body">
+                      <div className="guides-skeleton-line w80" />
+                      <div className="guides-skeleton-line w60" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
