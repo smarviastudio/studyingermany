@@ -1,7 +1,7 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { Suspense, useState, useEffect } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2, Mail, Lock } from 'lucide-react';
@@ -19,6 +19,7 @@ export default function SignInPage() {
 }
 
 function SignInPageContent() {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
@@ -27,6 +28,31 @@ function SignInPageContent() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.push(callbackUrl);
+    }
+  }, [status, session, router, callbackUrl]);
+
+  // Show loading while checking auth status
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-[#f7f7f3] flex items-center justify-center">
+        <p className="text-sm text-[#5a5a5a] tracking-[0.2em] uppercase">Checking authentication...</p>
+      </div>
+    );
+  }
+
+  // Don't render signin form if already authenticated
+  if (status === 'authenticated') {
+    return (
+      <div className="min-h-screen bg-[#f7f7f3] flex items-center justify-center">
+        <p className="text-sm text-[#5a5a5a] tracking-[0.2em] uppercase">Redirecting...</p>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

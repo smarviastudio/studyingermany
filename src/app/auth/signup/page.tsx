@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Loader2, Mail, Lock, User } from 'lucide-react';
 
 export default function SignUpPage() {
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -17,6 +18,31 @@ export default function SignUpPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.push('/dashboard');
+    }
+  }, [status, session, router]);
+
+  // Show loading while checking auth status
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-[#f7f7f3] flex items-center justify-center">
+        <p className="text-sm text-[#5a5a5a] tracking-[0.2em] uppercase">Checking authentication...</p>
+      </div>
+    );
+  }
+
+  // Don't render signup form if already authenticated
+  if (status === 'authenticated') {
+    return (
+      <div className="min-h-screen bg-[#f7f7f3] flex items-center justify-center">
+        <p className="text-sm text-[#5a5a5a] tracking-[0.2em] uppercase">Redirecting...</p>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
