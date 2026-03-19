@@ -362,11 +362,15 @@ function MotivationLetterContent() {
   };
 
   const parseCv = async (file: File) => {
+    console.log('[CV Parser Frontend] Starting CV parse for file:', file.name);
+    
     if (file.type !== 'application/pdf') {
+      console.log('[CV Parser Frontend] Invalid file type:', file.type);
       setCvError('Please upload a PDF file');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
+      console.log('[CV Parser Frontend] File too large:', file.size);
       setCvError('File too large (max 5MB)');
       return;
     }
@@ -375,12 +379,21 @@ function MotivationLetterContent() {
       setCvError('');
       const formData = new FormData();
       formData.append('file', file);
+      
+      console.log('[CV Parser Frontend] Sending request to API');
       const res = await fetch('/api/parse-cv', { method: 'POST', body: formData });
+      
+      console.log('[CV Parser Frontend] API response status:', res.status);
+      
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
+        console.log('[CV Parser Frontend] API error:', err);
         throw new Error(err.error || 'Failed to parse CV');
       }
+      
       const data = await res.json();
+      console.log('[CV Parser Frontend] Successfully parsed CV, text length:', data.text?.length || 0);
+      
       setCvText(data.text);
       setCvFileName(file.name);
 
@@ -390,10 +403,12 @@ function MotivationLetterContent() {
         // First non-empty line is often the name — use it if it's short enough (likely a name)
         const firstLine = lines[0];
         if (firstLine.length <= 60 && !/[@|\d{4}]/.test(firstLine)) {
+          console.log('[CV Parser Frontend] Auto-filling name:', firstLine);
           setUserInput(p => ({ ...p, fullName: firstLine }));
         }
       }
     } catch (err) {
+      console.error('[CV Parser Frontend] Error:', err);
       setCvError(err instanceof Error ? err.message : 'Failed to parse CV');
     } finally {
       setCvParsing(false);

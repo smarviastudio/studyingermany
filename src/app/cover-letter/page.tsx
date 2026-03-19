@@ -76,17 +76,46 @@ export default function CoverLetterPage() {
   }, [profileData, fullName, background, strengths, achievements]);
 
   const parseCv = async (file: File) => {
-    if (file.type !== 'application/pdf') { setCvError('Please upload a PDF file.'); return; }
-    if (file.size > 5 * 1024 * 1024) { setCvError('File too large (max 5MB).'); return; }
+    console.log('[CV Parser Cover Letter] Starting CV parse for file:', file.name);
+    
+    if (file.type !== 'application/pdf') { 
+      console.log('[CV Parser Cover Letter] Invalid file type:', file.type);
+      setCvError('Please upload a PDF file.'); 
+      return; 
+    }
+    if (file.size > 5 * 1024 * 1024) { 
+      console.log('[CV Parser Cover Letter] File too large:', file.size);
+      setCvError('File too large (max 5MB).'); 
+      return; 
+    }
     try {
       setCvParsing(true); setCvError('');
       const fd = new FormData(); fd.append('file', file);
+      
+      console.log('[CV Parser Cover Letter] Sending request to API');
       const res = await fetch('/api/parse-cv', { method: 'POST', body: fd });
-      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'Failed'); }
+      
+      console.log('[CV Parser Cover Letter] API response status:', res.status);
+      
+      if (!res.ok) { 
+        const e = await res.json().catch(() => ({})); 
+        console.log('[CV Parser Cover Letter] API error:', e);
+        throw new Error(e.error || 'Failed'); 
+      }
+      
       const data = await res.json();
+      console.log('[CV Parser Cover Letter] Successfully parsed CV, text length:', data.text?.length || 0);
+      
       setCvSummary(data.text); setCvFileName(file.name);
-      if (!background.trim()) setBackground(data.text.split('\n').slice(0, 3).join(' ').slice(0, 200));
-    } catch (err) { setCvError(err instanceof Error ? err.message : 'Failed to parse CV'); }
+      if (!background.trim()) {
+        const autoBackground = data.text.split('\n').slice(0, 3).join(' ').slice(0, 200);
+        console.log('[CV Parser Cover Letter] Auto-filling background:', autoBackground.substring(0, 50) + '...');
+        setBackground(autoBackground);
+      }
+    } catch (err) { 
+      console.error('[CV Parser Cover Letter] Error:', err);
+      setCvError(err instanceof Error ? err.message : 'Failed to parse CV'); 
+    }
     finally { setCvParsing(false); }
   };
 
