@@ -228,22 +228,34 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
         )}
 
         <div className="relative">
-          <div className="relative h-56 overflow-hidden bg-gradient-to-br from-[#dd0000] via-[#b91c1c] to-[#991b1b]">
+          <div className="relative h-56 overflow-hidden bg-gradient-to-br from-[#8b5cf6] via-[#7c3aed] to-[#6366f1]">
             <div className="absolute inset-0">
               <div className="absolute -top-10 -left-6 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
-              <div className="absolute -bottom-12 right-0 w-72 h-72 rounded-full bg-[#ffce00]/20 blur-3xl" />
+              <div className="absolute -bottom-12 right-0 w-72 h-72 rounded-full bg-[#fbbf24]/20 blur-3xl" />
             </div>
             {program.image_url && program.image_url.trim() !== '' && !program.image_url.includes('placeholder') && (
               <Image
                 src={program.image_url}
                 alt={program.program_name}
                 fill
-                className="object-cover opacity-20 mix-blend-overlay"
+                className="object-cover opacity-30 mix-blend-overlay"
                 sizes="800px"
                 unoptimized
                 priority
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                onError={(e) => { 
+                  const target = e.currentTarget;
+                  target.style.display = 'none';
+                }}
+                onLoad={(e) => {
+                  const target = e.currentTarget;
+                  target.style.opacity = '0.3';
+                }}
               />
+            )}
+            {!program.image_url || program.image_url.trim() === '' || program.image_url.includes('placeholder') && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <GraduationCap className="w-20 h-20 text-white/20" />
+              </div>
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
@@ -267,7 +279,7 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
             <div className="absolute inset-0 flex flex-col justify-end px-6 pb-6">
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 {program.degree_level && (
-                  <span className="px-2.5 py-0.5 rounded-md bg-white text-[#dd0000] text-[11px] font-bold tracking-wide shadow-sm">
+                  <span className="px-2.5 py-0.5 rounded-md bg-white text-[#8b5cf6] text-[11px] font-bold tracking-wide shadow-sm">
                     {capitalize(program.degree_level)}
                   </span>
                 )}
@@ -341,9 +353,9 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
         <div className="sticky top-0 z-20 bg-white border-b border-[#ececec] px-6 pt-3 pb-2">
           <div className="flex gap-2 bg-[#f5f5f5] rounded-full p-1">
             {([
-              { key: 'overview' as Tab, label: 'Overview', icon: BookOpen, color: '#dd0000' },
-              { key: 'requirements' as Tab, label: 'Requirements', icon: ShieldCheck, color: '#5b4ad1' },
-              { key: 'costs' as Tab, label: 'Costs', icon: Coins, color: '#0f9b57' },
+              { key: 'overview' as Tab, label: 'Overview', icon: BookOpen, color: '#8b5cf6' },
+              { key: 'requirements' as Tab, label: 'Requirements', icon: ShieldCheck, color: '#7c3aed' },
+              { key: 'costs' as Tab, label: 'Costs', icon: Coins, color: '#10b981' },
             ] as const).map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
@@ -368,12 +380,12 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
           {activeTab === 'overview' && (
             <div className="space-y-5">
               {aiSummary?.overview && (
-                <div className="rounded-2xl border border-[#ffe1da] bg-[#fff8f7] p-5 shadow-sm">
+                <div className="rounded-2xl border border-[#e9d5ff] bg-[#faf5ff] p-5 shadow-sm">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-7 h-7 rounded-lg bg-[#dd0000]/10 flex items-center justify-center">
-                      <Star className="w-4 h-4 text-[#dd0000]" />
+                    <div className="w-7 h-7 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center">
+                      <Star className="w-4 h-4 text-[#8b5cf6]" />
                     </div>
-                    <span className="text-xs font-bold tracking-wider text-[#b30000] uppercase">AI Summary</span>
+                    <span className="text-xs font-bold tracking-wider text-[#7c3aed] uppercase">AI Summary</span>
                   </div>
                   <p className="text-[15px] leading-relaxed text-[#2d2d2d]">{aiSummary.overview}</p>
                 </div>
