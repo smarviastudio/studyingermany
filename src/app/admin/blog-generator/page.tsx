@@ -470,6 +470,10 @@ export default function BlogGeneratorPage() {
                   setCategory('Guides');
                   setLength('medium');
                   setTone('informative and friendly');
+                  // Only set ticker to false if user hasn't explicitly set it
+                  if (showInTicker && contentType === 'news') {
+                    setShowInTicker(false);
+                  }
                   setPreviewHtml(false);
                 }}
                 style={{
@@ -494,7 +498,10 @@ export default function BlogGeneratorPage() {
                   setCategory('News');
                   setLength('short');
                   setTone('professional');
-                  setShowInTicker(true);
+                  // Only auto-enable ticker for news if user hasn't explicitly disabled it
+                  if (!showInTicker && contentType === 'blog') {
+                    setShowInTicker(true);
+                  }
                   setPreviewHtml(true);
                 }}
                 style={{
@@ -529,8 +536,8 @@ export default function BlogGeneratorPage() {
                 style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical', fontFamily: 'inherit', transition: 'all 0.2s' }}
               />
               {contentType === 'news' && (
-                <p style={{ fontSize: 12, color: '#dd0000', marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
-                  📰 News articles are shorter and will automatically appear in the news ticker
+                <p style={{ fontSize: 12, color: '#64748b', marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  📰 News articles are optimized for ticker display. Use the checkbox below to control ticker visibility.
                 </p>
               )}
               <div style={{ marginTop: 16 }}>
@@ -825,6 +832,27 @@ export default function BlogGeneratorPage() {
                           placeholder="visa, germany, student"
                           style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                         />
+                      </div>
+                      <div style={{ border: '1px solid #f0f4f8', borderRadius: 12, padding: 16, background: '#fafbfc' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <input
+                            type="checkbox"
+                            id="showInTicker"
+                            checked={showInTicker}
+                            onChange={(e) => setShowInTicker(e.target.checked)}
+                            style={{ width: 18, height: 18, cursor: 'pointer' }}
+                          />
+                          <div>
+                            <label htmlFor="showInTicker" style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', margin: 0, cursor: 'pointer' }}>
+                              📰 Show in News Ticker
+                            </label>
+                            <p style={{ fontSize: 12, color: '#64748b', margin: '4px 0 0' }}>
+                              {showInTicker 
+                                ? 'This content will appear in the news ticker on the homepage' 
+                                : 'This content will only appear in the blog/articles section'}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                       <div style={{ border: '1px solid #f5f5f5', borderRadius: 16, padding: 16, background: '#fff' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
