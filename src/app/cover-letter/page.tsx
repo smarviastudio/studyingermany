@@ -26,13 +26,13 @@ const Field = ({
 );
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #e5e5e5',
-  fontSize: 14, color: '#111', outline: 'none', background: '#fff', fontFamily: 'inherit',
-  transition: 'border-color 0.2s', boxSizing: 'border-box',
+  width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid #e2e8f0',
+  fontSize: 14, color: '#1e293b', outline: 'none', background: '#f8fafc', fontFamily: 'inherit',
+  transition: 'all 0.2s ease', cursor: 'text', boxSizing: 'border-box',
 };
 
 const taStyle: React.CSSProperties = {
-  ...inputStyle, resize: 'vertical', minHeight: 90, lineHeight: 1.6,
+  ...inputStyle, resize: 'vertical', minHeight: 100, lineHeight: 1.7,
 };
 
 const TONES = ['Professional & warm', 'Bold & confident', 'Humble & eager', 'Formal & structured'];
@@ -147,32 +147,33 @@ export default function CoverLetterPage() {
       <SiteNav />
 
       {/* Hero bar */}
-      <div className="tool-hero-bar" style={{ background: 'linear-gradient(135deg,#0f0c29,#302b63,#24243e)', padding: '40px 24px 32px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <Link href="/cover-letter/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.5)', fontSize: 13, textDecoration: 'none', marginBottom: 20 }}>
-            <ArrowLeft size={14} /> Back to Cover Letter Info
+      {/* Hero bar - Cleaner design */}
+      <div className="tool-hero-bar" style={{ background: 'linear-gradient(135deg, #1e1b4b, #312e81)', padding: '32px 24px 28px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <Link href="/cover-letter/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.6)', fontSize: 13, textDecoration: 'none', marginBottom: 16, fontWeight: 500 }}>
+            <ArrowLeft size={14} /> Back
           </Link>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-            <div className="tool-hero-icon" style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.35)', flexShrink: 0 }}>
-              <NotebookPen size={26} color="#fff" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div className="tool-hero-icon" style={{ width: 48, height: 48, borderRadius: 14, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <NotebookPen size={22} color="#fff" />
             </div>
             <div>
-              <h1 className="tool-hero-title" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 'clamp(22px,3vw,30px)', fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>Cover Letter Studio</h1>
-              <p className="tool-hero-subtitle" style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: 0 }}>AI-powered cover letters tailored to German employers — ready in 60 seconds</p>
+              <h1 className="tool-hero-title" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 'clamp(20px,2.5vw,26px)', fontWeight: 700, color: '#fff', margin: '0 0 2px' }}>Cover Letter</h1>
+              <p className="tool-hero-subtitle" style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', margin: 0 }}>AI-powered letters for German employers</p>
             </div>
           </div>
 
-          {/* Progress steps */}
-          <div className="tool-progress-steps" style={{ display: 'flex', alignItems: 'center', gap: 0, marginTop: 28, maxWidth: 420 }}>
+          {/* Progress Steps - Simplified */}
+          <div className="tool-progress-steps" style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 24 }}>
             {steps.map((s, i) => (
-              <div key={s.id} style={{ display: 'flex', alignItems: 'center', flex: i < steps.length - 1 ? 1 : undefined }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: s.done ? '#22c55e' : 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.3s' }}>
-                    {s.done ? <Check size={14} color="#fff" /> : <s.icon size={12} color="rgba(255,255,255,0.6)" />}
+              <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 20, background: s.done ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.1)', transition: 'all 0.3s' }}>
+                  <div style={{ width: 20, height: 20, borderRadius: '50%', background: s.done ? '#22c55e' : 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {s.done ? <Check size={11} color="#fff" /> : <s.icon size={10} color="rgba(255,255,255,0.7)" />}
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: s.done ? '#86efac' : 'rgba(255,255,255,0.5)', whiteSpace: 'nowrap' }}>{s.label}</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: s.done ? '#86efac' : 'rgba(255,255,255,0.7)' }}>{s.label}</span>
                 </div>
-                {i < steps.length - 1 && <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.15)', margin: '0 12px' }} />}
+                {i < steps.length - 1 && <div style={{ width: 24, height: 1, background: 'rgba(255,255,255,0.2)' }} />}
               </div>
             ))}
           </div>
@@ -186,15 +187,15 @@ export default function CoverLetterPage() {
           {/* LEFT — Form */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-            {/* Job Card */}
-            <div style={{ background: '#fff', borderRadius: 20, padding: 24, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #e5e7eb' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg,#dd0000,#ff6b6b)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Briefcase size={16} color="#fff" />
+            {/* Job Card - Cleaner design */}
+            <div style={{ background: '#fff', borderRadius: 16, padding: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', border: '1px solid #f1f5f9' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#ef4444,#f87171)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(239,68,68,0.2)' }}>
+                  <Briefcase size={18} color="#fff" />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: 15, fontWeight: 700, color: '#111', margin: 0 }}>Job Details</h2>
-                  <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>Tell us about the position</p>
+                  <h2 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: 0 }}>Job Details</h2>
+                  <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>Position information</p>
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -219,15 +220,15 @@ export default function CoverLetterPage() {
               </div>
             </div>
 
-            {/* About You Card */}
-            <div style={{ background: '#fff', borderRadius: 20, padding: 24, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #e5e7eb' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg,#7c3aed,#a78bfa)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <User size={16} color="#fff" />
+            {/* About You Card - Cleaner design */}
+            <div style={{ background: '#fff', borderRadius: 16, padding: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', border: '1px solid #f1f5f9' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#8b5cf6,#a78bfa)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(139,92,246,0.2)' }}>
+                  <User size={18} color="#fff" />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: 15, fontWeight: 700, color: '#111', margin: 0 }}>About You</h2>
-                  <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>Your background & strengths</p>
+                  <h2 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: 0 }}>About You</h2>
+                  <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>Your background & strengths</p>
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
