@@ -6,8 +6,19 @@ export const runtime = 'nodejs';
 let pdfParse: any;
 try {
   pdfParse = require('pdf-parse');
+  console.log('[CV Parser] Successfully imported pdf-parse at startup');
 } catch (err) {
-  console.error('Failed to import pdf-parse:', err);
+  console.error('[CV Parser] Failed to import pdf-parse at startup:', err);
+}
+
+// Add a simple GET endpoint for testing
+export async function GET() {
+  return NextResponse.json({ 
+    message: 'CV Parser API is working',
+    pdfParseAvailable: !!pdfParse,
+    nodeVersion: process.version,
+    platform: process.platform
+  });
 }
 
 export async function POST(request: NextRequest) {
