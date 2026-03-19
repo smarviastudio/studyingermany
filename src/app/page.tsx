@@ -354,9 +354,11 @@ export default function HomePage() {
                             </p>
                           )}
                           <div className="program-card-footer">
-                            {program.tuition_fee_number != null ? <span>€{program.tuition_fee_number.toLocaleString()}</span> : program.is_free ? <span className="text-emerald-600 font-semibold">Free</span> : null}
-                            {program.beginning_normalized && <span>{program.beginning_normalized}</span>}
-                            <span className="program-card-view">View →</span>
+                            <div className="program-card-meta">
+                              {program.tuition_fee_number != null ? <span>€{program.tuition_fee_number.toLocaleString()}</span> : program.is_free ? <span className="text-emerald-600 font-semibold">Free</span> : null}
+                              {program.beginning_normalized && <span>{program.beginning_normalized}</span>}
+                            </div>
+                            <span className="program-card-view">View <ArrowRight className="w-3 h-3" /></span>
                           </div>
                         </div>
                       </div>
