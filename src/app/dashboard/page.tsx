@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import {
-  GraduationCap, Bookmark, Calendar, FileText, Target, TrendingUp, Award,
-  Briefcase, Star, ChevronRight, Calculator, Search, ArrowRight, Crown, Zap, Loader2,
-  Sparkles, ExternalLink, AlertCircle
+  GraduationCap, Bookmark, Calendar, FileText, TrendingUp, Award,
+  Briefcase, ChevronRight, Calculator, Search, ArrowRight, Crown, Zap, Loader2,
+  Sparkles, AlertCircle, User, Euro
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
@@ -72,73 +72,75 @@ export default function DashboardPage() {
   const [profileCompletion, setProfileCompletion] = useState(0);
   const [subscription, setSubscription] = useState<{ planType: string; status: string; currentPeriodEnd?: string } | null>(null);
   const [usage, setUsage] = useState<{ cv: number; motivation: number; cover: number } | null>(null);
-  const [portalLoading, setPortalLoading] = useState(false);
   const [recommendedPrograms, setRecommendedPrograms] = useState<RecommendedProgram[]>([]);
   const [recommendLoading, setRecommendLoading] = useState(false);
   const [aiCredits, setAiCredits] = useState<number | null>(null);
 
-  // Calculate profile completion percentage
   const calculateProfileCompletion = (profile: UserProfile | null) => {
     if (!profile) return 0;
     const fields = [
-      profile.fullName,
-      profile.phone,
-      profile.nationality,
-      profile.targetDegreeLevel,
-      profile.targetSubjects && profile.targetSubjects.length > 0,
-      profile.preferredLanguage,
-      profile.germanLevel,
-      profile.englishLevel,
-      profile.academicBackground,
-      profile.backgroundSummary,
-      profile.skills,
-      profile.careerGoals,
+      profile.fullName, profile.phone, profile.nationality, profile.targetDegreeLevel,
+      profile.targetSubjects && profile.targetSubjects.length > 0, profile.preferredLanguage,
+      profile.germanLevel, profile.englishLevel, profile.academicBackground,
+      profile.backgroundSummary, profile.skills, profile.careerGoals,
       profile.preferredCities && profile.preferredCities.length > 0
     ];
-    const completed = fields.filter(Boolean).length;
-    return Math.round((completed / fields.length) * 100);
+    return Math.round((fields.filter(Boolean).length / fields.length) * 100);
   };
 
   const loadRecommendations = async (profile: UserProfile) => {
-    if (!profile.targetDegreeLevel && !profile.targetSubjects?.length) return;
+    if (!profile.targetSubjects?.length && !profile.targetDegreeLevel) return;
     setRecommendLoading(true);
     try {
-      const res = await fetch('/api/recommendations', {
+      const res = await fetch('/api/programs/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile }),
+        body: JSON.stringify({
+          targetSubjects: profile.targetSubjects || [],
+          degreeLevel: profile.targetDegreeLevel || '',
+          preferredLanguage: profile.preferredLanguage || '',
+          germanLevel: profile.germanLevel || '',
+          englishLevel: profile.englishLevel || '',
+          preferredCities: profile.preferredCities || [],
+          academicBackground: profile.academicBackground || '',
+          careerGoals: profile.careerGoals || ''
+        })
       });
       if (res.ok) {
         const data = await res.json();
         setRecommendedPrograms(data.programs || []);
       }
-    } catch { /* silent */ }
-    finally { setRecommendLoading(false); }
+    } catch (error) {
+      console.warn('Failed to load recommendations', error);
+    } finally {
+      setRecommendLoading(false);
+    }
   };
 
-  // Load user's shortlist, progress, and profile
   useEffect(() => {
     if (!isAuthenticated) return;
     let cancelled = false;
+
     const loadShortlist = async () => {
       try {
         const res = await fetch('/api/shortlist');
         if (res.ok && !cancelled) {
           const data = await res.json();
-          setShortlistEntries(data.shortlists || []);
+          setShortlistEntries(data.entries || []);
         }
-      } catch (error) {
-        console.warn('Failed to load shortlist', error);
-      }
+      } catch { /* silent */ }
     };
+
     const loadProgress = async () => {
       try {
-        // Progress API doesn't exist yet, set to empty for now
-        setPlanProgress([]);
-      } catch (error) {
-        console.warn('Failed to load progress', error);
-      }
+        const res = await fetch('/api/plan-progress');
+        if (res.ok && !cancelled) {
+          const data = await res.json();
+          setPlanProgress(data.progress || []);
+        }
+      } catch { /* silent */ }
     };
+
     const loadProfile = async () => {
       try {
         const res = await fetch('/api/profile');
@@ -150,10 +152,9 @@ export default function DashboardPage() {
           setProfileCompletion(pct);
           if (p && pct >= 40) loadRecommendations(p);
         }
-      } catch (error) {
-        console.warn('Failed to load profile', error);
-      }
+      } catch { /* silent */ }
     };
+
     const loadSubscription = async () => {
       try {
         const res = await fetch('/api/subscription');
@@ -164,17 +165,17 @@ export default function DashboardPage() {
         }
       } catch { /* silent */ }
     };
+
     const loadCredits = async () => {
       try {
         const res = await fetch('/api/credits/balance');
         if (res.ok && !cancelled) {
           const data = await res.json();
-          if (!data.hasUnlimited) {
-            setAiCredits(data.credits);
-          }
+          if (!data.hasUnlimited) setAiCredits(data.credits);
         }
       } catch { /* silent */ }
     };
+
     loadShortlist();
     loadProgress();
     loadProfile();
@@ -184,395 +185,325 @@ export default function DashboardPage() {
   }, [isAuthenticated]);
 
   const hasShortlist = shortlistEntries.length > 0;
-  const hasPlans = planProgress.length > 0;
-
-  // Helper: get plan progress for a program
   const getPlanFor = (programId: string) => planProgress.find((p) => p.programId === programId);
+  const userName = session?.user?.name?.split(' ')[0] || 'there';
 
   if (status === 'loading' || status === 'unauthenticated') {
     return (
-      <div style={{ minHeight: '100vh', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ width: 48, height: 48, borderRadius: '50%', border: '3px solid #dd0000', borderTopColor: 'transparent', margin: '0 auto 16px' }} />
-          <p style={{ color: '#737373', fontSize: 14 }}>Redirecting...</p>
-        </div>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-red-600 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+    <div className="min-h-screen bg-slate-50">
       <SiteNav />
 
-      {/* Back button to landing page */}
-      <div style={{ padding: '0 24px', marginTop: 24 }}>
-        <Link href="/dashboard/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#666', textDecoration: 'none', padding: '8px 16px', borderRadius: 8, transition: 'all 0.2s' }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = '#dd0000'; e.currentTarget.style.background = '#fff5f5'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = '#666'; e.currentTarget.style.background = 'transparent'; }}>
-          <ChevronRight className="w-4 h-4 rotate-180" /> Back to Dashboard Info
-        </Link>
-      </div>
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        {/* Welcome Header */}
+        <div className="mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+            Welcome back, {userName}! 👋
+          </h1>
+          <p className="text-slate-600">
+            Here&apos;s an overview of your study in Germany journey.
+          </p>
+        </div>
 
-      <main className="dash-main" style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>
-        {/* Header */}
-        <header style={{ marginBottom: 40 }}>
-          <div className="dash-header-row" style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24 }}>
-            <div className="dash-header-icon" style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(221,0,0,0.2)' }}>
-              <GraduationCap className="w-8 h-8" style={{ color: '#fff' }} />
-            </div>
-            <div>
-              <h1 className="dash-header-title" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>Your Dashboard</h1>
-              <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>Track your study in Germany journey</p>
-            </div>
-          </div>
-          
-          {/* Subscription Banner */}
-          {subscription?.planType === 'free' || !subscription ? (
-            <div className="dash-banner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 16, padding: '20px 24px', boxShadow: '0 4px 20px rgba(221,0,0,0.25)', flexWrap: 'wrap', gap: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Zap className="w-6 h-6" style={{ color: '#fff' }} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>You're on the Free Plan</h3>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', margin: 0 }}>
-                    {usage ? `${usage.cv + usage.motivation + usage.cover} / 5 AI generations used this month · ` : ''}
-                    Upgrade for unlimited AI documents &amp; all templates.
-                  </p>
-                </div>
+        {/* Quick Stats Row */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <Link href="/my-shortlist" className="bg-white rounded-2xl p-5 border border-slate-200 hover:border-red-300 hover:shadow-lg transition-all group">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+                <Bookmark className="w-5 h-5 text-red-600" />
               </div>
-              <Link href="/pricing" className="dash-banner-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 22px', borderRadius: 12, background: '#fff', color: '#dd0000', fontSize: 14, fontWeight: 800, textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
-                <Crown size={15} /> Upgrade Plan
-              </Link>
+              <span className="text-2xl font-bold text-slate-900">{shortlistEntries.length}</span>
             </div>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: subscription.planType === 'pro' ? 'linear-gradient(135deg, #1e0a3c, #2d1457)' : 'linear-gradient(135deg, #0a2a0a, #14532d)', borderRadius: 16, padding: '20px 24px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', flexWrap: 'wrap', gap: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Crown className="w-6 h-6" style={{ color: '#fff' }} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>
-                    {subscription.planType === 'pro' ? 'Pro Plan Active' : 'Student Plan Active'}
-                  </h3>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', margin: 0 }}>
-                    Unlimited AI generations · All features unlocked
-                    {subscription.currentPeriodEnd ? ` · Renews ${new Date(subscription.currentPeriodEnd).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={async () => {
-                  setPortalLoading(true);
-                  try {
-                    const res = await fetch('/api/stripe/portal', { method: 'POST' });
-                    const data = await res.json();
-                    if (data.url) window.location.href = data.url;
-                  } finally { setPortalLoading(false); }
-                }}
-                disabled={portalLoading}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 22px', borderRadius: 12, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
-              >
-                {portalLoading ? <Loader2 size={15} className="animate-spin" /> : <ArrowRight size={15} />}
-                Manage Billing
-              </button>
-            </div>
-          )}
-        </header>
-
-        {/* Stats Cards - Fixed Height for Uniformity */}
-        <div className="dash-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, marginBottom: 40 }}>
-          <Link href="/my-shortlist" className="dash-stat-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '200px', boxSizing: 'border-box' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(221,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Bookmark className="w-6 h-6" style={{ color: '#dd0000' }} />
-              </div>
-              <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{shortlistEntries.length}</span>
-            </div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Saved Programs</h3>
-              <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Programs you've shortlisted</p>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#dd0000', fontSize: 13, fontWeight: 600 }}>
-              {hasShortlist ? 'View saved programs' : 'View shortlist'}
-              <ChevronRight className="w-4 h-4" />
-            </div>
+            <p className="text-sm font-medium text-slate-600 group-hover:text-red-600 transition-colors">Saved Programs</p>
           </Link>
 
-          <Link href="/profile" className="dash-stat-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '200px', boxSizing: 'border-box' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(59,130,246,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TrendingUp className="w-6 h-6" style={{ color: '#3b82f6' }} />
+          <Link href="/profile" className="bg-white rounded-2xl p-5 border border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all group">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                <User className="w-5 h-5 text-blue-600" />
               </div>
-              <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{profileCompletion}%</span>
+              <span className="text-2xl font-bold text-slate-900">{profileCompletion}%</span>
             </div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>Profile Complete</h3>
-              <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Complete your profile for better recommendations</p>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#3b82f6', fontSize: 13, fontWeight: 600 }}>
-              {profileCompletion === 100 ? 'View profile' : 'Complete profile'}
-              <ChevronRight className="w-4 h-4" />
-            </div>
+            <p className="text-sm font-medium text-slate-600 group-hover:text-blue-600 transition-colors">Profile Complete</p>
           </Link>
 
           {aiCredits !== null && (
-            <Link href="/credits" className="dash-stat-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '200px', boxSizing: 'border-box' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(124,58,237,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Zap className="w-6 h-6" style={{ color: '#7c3aed' }} />
+            <Link href="/credits" className="bg-white rounded-2xl p-5 border border-slate-200 hover:border-purple-300 hover:shadow-lg transition-all group">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-purple-600" />
                 </div>
-                <span style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a' }}>{aiCredits}</span>
+                <span className="text-2xl font-bold text-slate-900">{aiCredits}</span>
               </div>
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <h3 style={{ fontSize: 16, fontWeight: 600, color: '#111', margin: '0 0 4px' }}>AI Credits</h3>
-                <p style={{ fontSize: 14, color: '#737373', margin: '0 0 12px' }}>Available for AI generations</p>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#7c3aed', fontSize: 13, fontWeight: 600 }}>
-                {aiCredits === 0 ? 'Buy credits' : 'Manage credits'}
-                <ChevronRight className="w-4 h-4" />
-              </div>
+              <p className="text-sm font-medium text-slate-600 group-hover:text-purple-600 transition-colors">AI Credits</p>
             </Link>
           )}
+
+          <Link href="/course-finder" className="bg-white rounded-2xl p-5 border border-slate-200 hover:border-emerald-300 hover:shadow-lg transition-all group">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                <Search className="w-5 h-5 text-emerald-600" />
+              </div>
+              <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors" />
+            </div>
+            <p className="text-sm font-medium text-slate-600 group-hover:text-emerald-600 transition-colors">Find Programs</p>
+          </Link>
         </div>
 
-        {/* ── RECOMMENDED PROGRAMS ── */}
-        {profileCompletion >= 40 && (
-          <section style={{ marginBottom: 40 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Sparkles size={18} color="#fff" />
-                </div>
-                <div>
-                  <h2 className="dash-section-title" style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: 0 }}>AI Recommended Programs</h2>
-                  <p style={{ fontSize: 12, color: '#737373', margin: '2px 0 0' }}>Based on your profile — updated as you complete it</p>
-                </div>
-              </div>
-              <Link href="/course-finder" style={{ color: '#dd0000', fontSize: 13, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
-                Browse all <ChevronRight size={14} />
-              </Link>
-            </div>
-
-            {recommendLoading ? (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 20px', background: '#fff', borderRadius: 20, border: '1px solid #ebebeb' }}>
-                <Loader2 size={28} style={{ color: '#dd0000', animation: 'spin 1s linear infinite' }} />
-                <span style={{ marginLeft: 12, fontSize: 14, color: '#737373' }}>Finding best matching programs...</span>
-              </div>
-            ) : recommendedPrograms.length > 0 ? (
-              <div className="dash-activity-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
-                {recommendedPrograms.slice(0, 3).map((prog) => (
-                  <div key={prog.id} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 20, transition: 'all 0.2s', cursor: 'pointer' }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(221,0,0,0.08)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div style={{ width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg,rgba(221,0,0,0.1),rgba(124,58,237,0.1))', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <GraduationCap size={20} style={{ color: '#dd0000' }} />
-                        </div>
-                        <div style={{ minWidth: 0 }}>
-                          <h3 style={{ fontSize: 13, fontWeight: 700, color: '#111', margin: '0 0 2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 180 }}>{prog.name}</h3>
-                          <p style={{ fontSize: 12, color: '#737373', margin: 0 }}>{prog.university}</p>
-                        </div>
-                      </div>
-                      <div style={{ flexShrink: 0, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', borderRadius: 8, padding: '4px 8px', fontSize: 11, fontWeight: 700, color: '#fff' }}>
-                        {prog.matchScore}%
-                      </div>
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Subscription Card */}
+            {(subscription?.planType === 'free' || !subscription) && (
+              <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 text-white">
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Zap className="w-5 h-5 text-yellow-400" />
+                      <span className="text-sm font-medium text-slate-300">Free Plan</span>
                     </div>
-                    <p style={{ fontSize: 12, color: '#555', lineHeight: 1.5, margin: '0 0 12px' }}>{prog.matchReason}</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 11, background: '#f5f5f5', color: '#555', padding: '3px 8px', borderRadius: 6, fontWeight: 600 }}>{prog.city}</span>
-                      <span style={{ fontSize: 11, background: '#f5f5f5', color: '#555', padding: '3px 8px', borderRadius: 6, fontWeight: 600 }}>{prog.language}</span>
-                      <span style={{ fontSize: 11, background: '#f5f5f5', color: '#555', padding: '3px 8px', borderRadius: 6, fontWeight: 600 }}>{prog.degreeLevel}</span>
+                    <h3 className="text-lg font-semibold mb-1">Upgrade for unlimited AI</h3>
+                    <p className="text-sm text-slate-400">
+                      {usage ? `${usage.cv + usage.motivation + usage.cover}/5 generations used` : 'Get unlimited AI documents & premium templates'}
+                    </p>
+                  </div>
+                  <Link href="/pricing" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-slate-900 rounded-xl font-semibold text-sm hover:bg-slate-100 transition-colors shrink-0">
+                    <Crown className="w-4 h-4" />
+                    Upgrade
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* AI Recommendations */}
+            {profileCompletion >= 40 && (
+              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-purple-600 flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="font-semibold text-slate-900">Recommended for You</h2>
+                      <p className="text-xs text-slate-500">Based on your profile</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 20, padding: 24, display: 'flex', alignItems: 'center', gap: 16 }}>
-                <AlertCircle size={22} color="#d97706" style={{ flexShrink: 0 }} />
-                <div>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: '#92400e', margin: '0 0 4px' }}>Complete more of your profile to get recommendations</p>
-                  <p style={{ fontSize: 13, color: '#a16207', margin: 0 }}>Add your target subjects, degree level, and language skills for AI to find matching programs.</p>
+                  <Link href="/course-finder" className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-1">
+                    View all <ChevronRight className="w-4 h-4" />
+                  </Link>
                 </div>
-                <Link href="/profile" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, background: '#dd0000', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-                  Complete <ArrowRight size={13} />
+
+                <div className="p-4">
+                  {recommendLoading ? (
+                    <div className="flex items-center justify-center py-12">
+                      <Loader2 className="w-6 h-6 text-red-600 animate-spin" />
+                    </div>
+                  ) : recommendedPrograms.length > 0 ? (
+                    <div className="space-y-3">
+                      {recommendedPrograms.slice(0, 3).map((prog) => (
+                        <div key={prog.id} className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer group">
+                          <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0">
+                            <GraduationCap className="w-6 h-6 text-slate-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-slate-900 truncate group-hover:text-red-600 transition-colors">{prog.name}</h3>
+                            <p className="text-sm text-slate-500 truncate">{prog.university} · {prog.city}</p>
+                          </div>
+                          <div className="shrink-0 flex items-center gap-3">
+                            <span className="px-2.5 py-1 rounded-full bg-gradient-to-r from-red-500 to-purple-600 text-white text-xs font-bold">
+                              {prog.matchScore}%
+                            </span>
+                            <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-red-600 transition-colors" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-3" />
+                      <p className="text-sm text-slate-600 mb-3">Complete your profile to get personalized recommendations</p>
+                      <Link href="/profile" className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
+                        Complete Profile <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Recent Saved Programs */}
+            {hasShortlist && (
+              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                  <h2 className="font-semibold text-slate-900">Recently Saved</h2>
+                  <Link href="/my-shortlist" className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-1">
+                    View all <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </div>
+                <div className="divide-y divide-slate-100">
+                  {shortlistEntries.slice(0, 3).map((entry) => {
+                    const plan = getPlanFor(entry.programId);
+                    const pct = plan ? Math.round((plan.completed / plan.total) * 100) : 0;
+                    return (
+                      <div key={entry.id} className="p-4 hover:bg-slate-50 transition-colors">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+                            <GraduationCap className="w-5 h-5 text-slate-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-slate-900 truncate">{entry.programName}</h3>
+                            <p className="text-sm text-slate-500 truncate">{entry.university}</p>
+                          </div>
+                          <Bookmark className="w-5 h-5 text-red-600 fill-red-600 shrink-0" />
+                        </div>
+                        {plan && (
+                          <div className="mt-3 ml-14">
+                            <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                              <span>Progress</span>
+                              <span className="font-medium">{pct}%</span>
+                            </div>
+                            <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                              <div className="h-full bg-gradient-to-r from-red-500 to-purple-600 rounded-full" style={{ width: `${pct}%` }} />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right Column - Quick Actions */}
+          <div className="space-y-6">
+            {/* Quick Actions */}
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100">
+                <h2 className="font-semibold text-slate-900">Quick Actions</h2>
+              </div>
+              <div className="p-3 space-y-1">
+                <Link href="/cv-maker" className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                  <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center group-hover:bg-red-100 transition-colors">
+                    <FileText className="w-5 h-5 text-red-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-slate-900 text-sm">Create CV</p>
+                    <p className="text-xs text-slate-500">German format</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </Link>
+
+                <Link href="/motivation-letter" className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                  <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+                    <Briefcase className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-slate-900 text-sm">Motivation Letter</p>
+                    <p className="text-xs text-slate-500">For universities</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </Link>
+
+                <Link href="/cover-letter" className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
+                    <Award className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-slate-900 text-sm">Cover Letter</p>
+                    <p className="text-xs text-slate-500">For jobs</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </Link>
+
+                <Link href="/gpa-converter" className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                    <Calculator className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-slate-900 text-sm">GPA Converter</p>
+                    <p className="text-xs text-slate-500">German scale</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </Link>
+
+                <Link href="/netto-brutto-calculator" className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                  <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center group-hover:bg-amber-100 transition-colors">
+                    <Euro className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-slate-900 text-sm">Salary Calculator</p>
+                    <p className="text-xs text-slate-500">Net/Gross</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Profile Completion */}
+            {profileCompletion < 100 && (
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <User className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-900">Complete Profile</p>
+                    <p className="text-xs text-slate-600">{profileCompletion}% complete</p>
+                  </div>
+                </div>
+                <div className="h-2 bg-white rounded-full overflow-hidden mb-4">
+                  <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all" style={{ width: `${profileCompletion}%` }} />
+                </div>
+                <p className="text-sm text-slate-600 mb-4">
+                  Complete your profile to get personalized program recommendations.
+                </p>
+                <Link href="/profile" className="inline-flex items-center gap-2 w-full justify-center px-4 py-2.5 bg-blue-600 text-white rounded-xl font-medium text-sm hover:bg-blue-700 transition-colors">
+                  Complete Now <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             )}
-          </section>
-        )}
 
-        {/* Application Tools */}
-        <section style={{ marginBottom: 40 }}>
-          <h2 className="dash-section-title" style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: '0 0 20px' }}>Application Tools</h2>
-          <div className="dash-tools-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
-
-            <Link href="/cv-maker" className="dash-tool-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <FileText className="w-6 h-6" style={{ color: '#fff' }} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Create CV</h3>
-                  <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Build professional CV</p>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#dd0000', fontSize: 14, fontWeight: 600 }}>
-                Create CV
-                <ChevronRight className="w-4 h-4" />
-              </div>
-            </Link>
-
-            <Link href="/motivation-letter" className="dash-tool-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Briefcase className="w-6 h-6" style={{ color: '#fff' }} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Write Letter</h3>
-                  <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Generate motivation letter</p>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#dd0000', fontSize: 14, fontWeight: 600 }}>
-                Write Letter
-                <ChevronRight className="w-4 h-4" />
-              </div>
-            </Link>
-
-            <Link href="/cover-letter" className="dash-tool-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Award className="w-6 h-6" style={{ color: '#fff' }} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Cover Letter</h3>
-                  <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Professional cover letters</p>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#dd0000', fontSize: 14, fontWeight: 600 }}>
-                Create Cover Letter
-                <ChevronRight className="w-4 h-4" />
-              </div>
-            </Link>
-
-            <Link href="/gpa-converter" className="dash-tool-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Calculator className="w-6 h-6" style={{ color: '#fff' }} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>GPA Converter</h3>
-                  <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Convert your grades</p>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#dd0000', fontSize: 14, fontWeight: 600 }}>
-                Convert GPA
-                <ChevronRight className="w-4 h-4" />
-              </div>
-            </Link>
-
-            <Link href="/netto-brutto-calculator" className="dash-tool-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <TrendingUp className="w-6 h-6" style={{ color: '#fff' }} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Salary Calculator</h3>
-                  <p style={{ fontSize: 14, color: '#737373', margin: 0 }}>Calculate net/gross salary</p>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#dd0000', fontSize: 14, fontWeight: 600 }}>
-                Calculate Salary
-                <ChevronRight className="w-4 h-4" />
-              </div>
-            </Link>
-
-          </div>
-        </section>
-
-        {/* Recent Activity */}
-        {hasShortlist && (
-          <section>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: 0 }}>Recent Activity</h2>
-              <Link href="/my-shortlist" style={{ color: '#dd0000', fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
-                View all
-                <ChevronRight className="w-4 h-4" />
+            {/* Help Card */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-5">
+              <h3 className="font-semibold text-slate-900 mb-2">Need Help?</h3>
+              <p className="text-sm text-slate-600 mb-4">
+                Check our guides for tips on studying in Germany.
+              </p>
+              <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-700">
+                Browse Guides <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
-            <div className="dash-activity-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
-              {shortlistEntries.slice(0, 3).map((entry) => {
-                const plan = getPlanFor(entry.programId);
-                const pct = plan ? Math.round((plan.completed / plan.total) * 100) : 0;
-
-                return (
-                  <div key={entry.id} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 16, padding: 20 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <div style={{ width: 40, height: 40, borderRadius: 10, background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <GraduationCap className="w-5 h-5" style={{ color: '#999' }} />
-                        </div>
-                        <div>
-                          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#111', margin: '0 0 2px' }}>{entry.programName}</h3>
-                          <p style={{ fontSize: 12, color: '#737373', margin: 0 }}>{entry.university}</p>
-                        </div>
-                      </div>
-                      <Bookmark className="w-4 h-4" style={{ color: '#dd0000', fill: '#dd0000' }} />
-                    </div>
-                    {plan && (
-                      <div style={{ marginBottom: 12 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                          <span style={{ fontSize: 12, color: '#737373' }}>Application Progress</span>
-                          <span style={{ fontSize: 12, fontWeight: 600, color: '#111' }}>{pct}%</span>
-                        </div>
-                        <div style={{ height: 6, background: '#f5f5f5', borderRadius: 3, overflow: 'hidden' }}>
-                          <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, #dd0000, #7c3aed)', borderRadius: 3 }} />
-                        </div>
-                      </div>
-                    )}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#737373' }}>
-                      <Calendar className="w-3 h-3" />
-                      Added {new Date(entry.addedAt).toLocaleDateString()}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        )}
+          </div>
+        </div>
 
         {/* Empty State */}
-        {!hasShortlist && (
-          <section style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <div style={{ width: 80, height: 80, margin: '0 auto 24px', borderRadius: 20, background: '#fafafa', border: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Search className="w-10 h-10" style={{ color: '#999' }} />
+        {!hasShortlist && profileCompletion < 40 && (
+          <div className="mt-8 bg-white rounded-2xl border border-slate-200 p-12 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-6">
+              <Search className="w-8 h-8 text-slate-400" />
             </div>
-            <h2 style={{ fontSize: 20, fontWeight: 600, color: '#111', marginBottom: 12 }}>Start Your Journey</h2>
-            <p style={{ fontSize: 16, color: '#737373', marginBottom: 24, maxWidth: 500, margin: '0 auto 24px' }}>
-              Complete your profile and explore our tools to prepare for studying in Germany.
+            <h2 className="text-xl font-semibold text-slate-900 mb-2">Start Your Journey</h2>
+            <p className="text-slate-600 mb-6 max-w-md mx-auto">
+              Complete your profile and explore programs to begin your path to studying in Germany.
             </p>
-            <Link href="/profile" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 600, color: '#fff', background: 'linear-gradient(135deg, #dd0000, #7c3aed)', textDecoration: 'none', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}>
-              <TrendingUp className="w-5 h-5" />
-              Complete Profile
-            </Link>
-          </section>
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              <Link href="/profile" className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors">
+                <User className="w-5 h-5" />
+                Complete Profile
+              </Link>
+              <Link href="/course-finder" className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-colors">
+                <Search className="w-5 h-5" />
+                Find Programs
+              </Link>
+            </div>
+          </div>
         )}
       </main>
     </div>
