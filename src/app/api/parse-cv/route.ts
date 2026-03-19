@@ -2,20 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-// Import pdf-parse at the top level
-let pdfParse: any;
-try {
-  pdfParse = require('pdf-parse');
-  console.log('[CV Parser] Successfully imported pdf-parse at startup');
-} catch (err) {
-  console.error('[CV Parser] Failed to import pdf-parse at startup:', err);
-}
-
 // Add a simple GET endpoint for testing
 export async function GET() {
+  let pdfParseAvailable = false;
+  try {
+    const pdfParseModule = await import('pdf-parse');
+    pdfParseAvailable = !!pdfParseModule;
+  } catch (err) {
+    console.error('Failed to import pdf-parse:', err);
+  }
+  
   return NextResponse.json({ 
     message: 'CV Parser API is working',
-    pdfParseAvailable: !!pdfParse,
+    pdfParseAvailable,
     nodeVersion: process.version,
     platform: process.platform
   });
@@ -49,10 +48,9 @@ export async function POST(request: NextRequest) {
     console.log('[CV Parser] Buffer created, size:', buffer.length);
 
     try {
-      // Check if pdf-parse is available
-      if (!pdfParse) {
-        throw new Error('pdf-parse module not available');
-      }
+      // Import pdf-parse dynamically
+      const pdfParseModule = await import('pdf-parse');
+      const pdfParse = pdfParseModule as any;
       
       console.log('[CV Parser] Using pdf-parse to parse buffer');
       const data = await pdfParse(buffer);
