@@ -157,7 +157,14 @@ CRITICAL RULES:
 
 6. Nationality-specific advice: If user is from India/Pakistan/China/Vietnam/Mongolia, include APS certificate requirements. For non-EU students, always include visa steps.
 
-7. Return ONLY valid JSON - no extra text, no markdown.`;
+7. Return ONLY valid JSON - no extra text, no markdown, no code blocks.
+
+CRITICAL JSON RULES:
+- All string values must be properly escaped
+- No trailing commas in arrays or objects
+- All quotes must be properly closed
+- Arrays must not have syntax errors
+- Return ONLY the JSON object, nothing else`;
 
 export async function POST(request: NextRequest) {
   try {
@@ -297,19 +304,45 @@ Be specific and actionable.`;
       
       console.log('[Plan AI] Response length:', content.length);
 
-      // Extract JSON
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        console.error('[Plan AI] No JSON found in response');
-        return NextResponse.json({ error: 'Invalid AI response' }, { status: 500 });
+      // Extract JSON - try to find the outermost JSON object
+      let jsonText = content.trim();
+      
+      // Remove markdown code blocks if present
+      if (jsonText.startsWith('```')) {
+        jsonText = jsonText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
       }
-
-      // Clean and parse JSON
-      const jsonText = jsonMatch[0]
+      
+      // Find JSON object boundaries
+      const firstBrace = jsonText.indexOf('{');
+      const lastBrace = jsonText.lastIndexOf('}');
+      
+      if (firstBrace === -1 || lastBrace === -1) {
+        console.error('[Plan AI] No JSON found in response');
+        console.error('[Plan AI] Content preview:', content.substring(0, 500));
+        return NextResponse.json({ error: 'Invalid AI response - no JSON found' }, { status: 500 });
+      }
+      
+      jsonText = jsonText.substring(firstBrace, lastBrace + 1);
+      
+      // Clean common JSON issues
+      jsonText = jsonText
         .replace(/,\s*}/g, '}')
-        .replace(/,\s*]/g, ']');
-
-      const plan = JSON.parse(jsonText);
+        .replace(/,\s*]/g, ']')
+        .replace(/\n/g, ' ')
+        .replace(/\r/g, '')
+        .replace(/\t/g, ' ');
+      
+      let plan;
+      try {
+        plan = JSON.parse(jsonText);
+      } catch (parseError: any) {
+        console.error('[Plan AI] JSON parse error:', parseError.message);
+        console.error('[Plan AI] Failed JSON preview:', jsonText.substring(0, 1000));
+        return NextResponse.json({ 
+          error: 'Failed to parse AI response', 
+          details: parseError.message 
+        }, { status: 500 });
+      }
       
       console.log('[Plan AI] Parsed plan successfully');
 
