@@ -2372,7 +2372,7 @@ function CVMakerContent() {
                   </div>
                 )}
 
-                <form onSubmit={e => { e.preventDefault(); const fd = new FormData(e.currentTarget); handleAI({ name: fd.get('name'), jobTitle: fd.get('jobTitle'), years: fd.get('years'), skills: fd.get('skills'), background: fd.get('background'), degree: fd.get('degree'), university: fd.get('university'), programId: !useManualInput ? selectedProgramId : undefined }); }} className="space-y-3">
+                <form onSubmit={e => { e.preventDefault(); const fd = new FormData(e.currentTarget); handleAI({ name: fd.get('name'), jobTitle: fd.get('jobTitle'), years: fd.get('years'), skills: fd.get('skills'), background: fd.get('background'), degree: fd.get('degree'), university: fd.get('university'), additionalEducation: fd.get('additionalEducation'), workExperience: fd.get('workExperience'), hobbies: fd.get('hobbies'), programId: !useManualInput ? selectedProgramId : undefined }); }} className="space-y-3">
                   {[
                     { name: 'name', label: 'Your Name', ph: 'Maria Schmidt', req: true },
                     { name: 'jobTitle', label: 'Target Role', ph: 'Software Engineer', req: true },
@@ -2389,9 +2389,18 @@ function CVMakerContent() {
                     <textarea name="background" rows={3} placeholder="Tell us about your experience..." className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors resize-none" />
                   </div>
                   <div className="pt-2 border-t border-gray-200">
-                    <label className="text-gray-600 text-[11px] uppercase tracking-wider mb-1.5 block font-semibold">Education (Optional)</label>
+                    <label className="text-gray-600 text-[11px] uppercase tracking-wider mb-1.5 block font-semibold">Education</label>
                     <input name="degree" type="text" placeholder="e.g., B.Sc. Computer Science" className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors mb-2" />
-                    <input name="university" type="text" placeholder="e.g., Technical University of Munich" className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors" />
+                    <input name="university" type="text" placeholder="e.g., Technical University of Munich" className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors mb-2" />
+                    <textarea name="additionalEducation" rows={2} placeholder="Additional education (e.g., M.Sc. Data Science, Online Certifications...)" className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors resize-none" />
+                  </div>
+                  <div className="pt-2 border-t border-gray-200">
+                    <label className="text-gray-600 text-[11px] uppercase tracking-wider mb-1.5 block font-semibold">Work Experience Details (Optional)</label>
+                    <textarea name="workExperience" rows={3} placeholder="List your previous roles, companies, and key achievements..." className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors resize-none" />
+                  </div>
+                  <div className="pt-2 border-t border-gray-200">
+                    <label className="text-gray-600 text-[11px] uppercase tracking-wider mb-1.5 block font-semibold">Hobbies & Interests (Optional)</label>
+                    <input name="hobbies" type="text" placeholder="e.g., Photography, Hiking, Open Source Contributions..." className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors" />
                   </div>
                   {aiError && (
                     <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs">

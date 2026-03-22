@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const { name, jobTitle, years, skills, background, hobbies, degree, university, programId } = await request.json();
+    const { name, jobTitle, years, skills, background, hobbies, degree, university, additionalEducation, workExperience, programId } = await request.json();
     
     if (!name || !jobTitle) {
       return NextResponse.json({ message: 'Name and job title are required' }, { status: 400 });
@@ -69,9 +69,11 @@ Job Title/Target Role: ${jobTitle}
 Years of Experience: ${years || 'Not specified'}
 Skills: ${skills || 'Not specified'}
 Background: ${background || 'Not specified'}
-Hobbies: ${hobbies || 'Not specified'}
-${degree ? `Education Degree: ${degree}` : ''}
-${university ? `University: ${university}` : ''}${programContext}
+${degree ? `Primary Education: ${degree}` : ''}
+${university ? `University: ${university}` : ''}
+${additionalEducation ? `Additional Education: ${additionalEducation}` : ''}
+${workExperience ? `Work Experience Details: ${workExperience}` : ''}
+${hobbies ? `Hobbies & Interests: ${hobbies}` : ''}${programContext}
 
 Generate a complete CV with the following sections in JSON format:
 {
@@ -95,7 +97,14 @@ Generate a complete CV with the following sections in JSON format:
   ]
 }
 
-Make the content professional, achievement-focused${programDetails ? ', and specifically tailored to demonstrate qualifications for the target program' : ', and tailored to the job title'}. ${programDetails ? 'Emphasize skills and experiences relevant to ' + programDetails.subject_area + ' and ' + programDetails.degree_level + ' studies.' : ''} ${degree && university ? `IMPORTANT: Include the provided education (${degree} from ${university}) in the education section with appropriate dates.` : 'Generate 1-2 education entries based on the background and experience level.'} Generate 2-3 experience entries. Only return valid JSON, no additional text.`;
+IMPORTANT INSTRUCTIONS:
+${degree && university ? `- MUST include ${degree} from ${university} as the primary education entry with appropriate dates` : ''}
+${additionalEducation ? `- MUST include all additional education mentioned: ${additionalEducation}` : ''}
+${workExperience ? `- Use the provided work experience details to create realistic job entries: ${workExperience}` : '- Generate 2-3 realistic experience entries based on the years of experience and background'}
+${hobbies ? `- Consider incorporating hobbies (${hobbies}) if relevant to the target role or program` : ''}
+- Make the content professional and achievement-focused${programDetails ? ', specifically tailored to demonstrate qualifications for the target program' : ''}
+${programDetails ? `- Emphasize skills and experiences relevant to ${programDetails.subject_area} and ${programDetails.degree_level} studies` : ''}
+- Only return valid JSON, no additional text or markdown`;
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
