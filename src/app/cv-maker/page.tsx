@@ -868,30 +868,34 @@ function CVMakerContent() {
       exportRoot.style.background = '#ffffff';
       exportRoot.style.zIndex = '-1';
 
+      // First, get all computed styles from the original element BEFORE cloning
+      const originalElements = previewElement.querySelectorAll('*');
+      const computedStyles = new Map<Element, CSSStyleDeclaration>();
+      originalElements.forEach(el => {
+        computedStyles.set(el, window.getComputedStyle(el));
+      });
+
       const exportNode = previewElement.cloneNode(true) as HTMLElement;
       exportNode.style.transform = 'none';
       exportNode.style.width = '595px';
       exportNode.style.background = '#ffffff';
 
       // Fix unsupported color functions (oklab, oklch, etc.) for html2canvas
-      const allElements = exportNode.querySelectorAll('*');
-      allElements.forEach((el) => {
+      const allElements = Array.from(exportNode.querySelectorAll('*'));
+      allElements.forEach((el, index) => {
         const element = el as HTMLElement;
+        const originalElement = originalElements[index];
+        const computedStyle = computedStyles.get(originalElement);
         
-        // Check inline styles for problematic color functions
-        const inlineStyle = element.getAttribute('style');
-        if (inlineStyle && (inlineStyle.includes('oklab') || inlineStyle.includes('oklch') || inlineStyle.includes('lab(') || inlineStyle.includes('lch('))) {
-          // Get computed style which is already in RGB
-          const computedStyle = window.getComputedStyle(element);
-          
-          // Replace problematic color properties with computed RGB values
-          ['color', 'background-color', 'border-color', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'].forEach(prop => {
-            const computedValue = computedStyle.getPropertyValue(prop);
-            if (computedValue && computedValue !== 'rgba(0, 0, 0, 0)' && computedValue !== 'transparent') {
-              element.style.setProperty(prop, computedValue, 'important');
-            }
-          });
-        }
+        if (!computedStyle) return;
+        
+        // Always replace color properties with computed RGB values to avoid any oklab issues
+        ['color', 'background-color', 'border-color', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color', 'fill', 'stroke'].forEach(prop => {
+          const computedValue = computedStyle.getPropertyValue(prop);
+          if (computedValue && computedValue !== 'rgba(0, 0, 0, 0)' && computedValue !== 'transparent' && computedValue !== 'none') {
+            element.style.setProperty(prop, computedValue, 'important');
+          }
+        });
       });
 
       const chipCandidates = Array.from(exportNode.querySelectorAll('[data-export-chip="true"]')) as HTMLElement[];
