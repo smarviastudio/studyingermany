@@ -2,7 +2,7 @@
 import { useState, useCallback, useRef, useEffect, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
 import Link from 'next/link';
 import {
@@ -868,52 +868,10 @@ function CVMakerContent() {
       exportRoot.style.background = '#ffffff';
       exportRoot.style.zIndex = '-1';
 
-      // First, get all computed styles from the original element BEFORE cloning
-      const originalElements = Array.from(previewElement.querySelectorAll('*'));
-      const computedStyles = new Map<Element, CSSStyleDeclaration>();
-      originalElements.forEach(el => {
-        computedStyles.set(el, window.getComputedStyle(el));
-      });
-
       const exportNode = previewElement.cloneNode(true) as HTMLElement;
       exportNode.style.transform = 'none';
       exportNode.style.width = '595px';
       exportNode.style.background = '#ffffff';
-
-      // Fix unsupported color functions - strip ALL inline styles and reapply computed values
-      const allElements = Array.from(exportNode.querySelectorAll('*'));
-      allElements.forEach((el, index) => {
-        const element = el as HTMLElement;
-        const originalElement = originalElements[index];
-        const computedStyle = computedStyles.get(originalElement);
-        
-        if (!computedStyle) return;
-        
-        // Remove the style attribute completely to eliminate any oklab references
-        const oldStyle = element.getAttribute('style');
-        if (oldStyle) {
-          element.removeAttribute('style');
-        }
-        
-        // Reapply all important styles from computed values (which are in RGB)
-        const importantProps = [
-          'color', 'background-color', 'background', 
-          'border-color', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color',
-          'border-width', 'border-style', 'border-radius',
-          'width', 'height', 'padding', 'margin',
-          'font-size', 'font-weight', 'font-family', 'line-height',
-          'display', 'position', 'top', 'left', 'right', 'bottom',
-          'text-align', 'vertical-align',
-          'fill', 'stroke'
-        ];
-        
-        importantProps.forEach(prop => {
-          const computedValue = computedStyle.getPropertyValue(prop);
-          if (computedValue && computedValue !== '' && computedValue !== 'none' && computedValue !== 'auto') {
-            element.style.setProperty(prop, computedValue, 'important');
-          }
-        });
-      });
 
       const chipCandidates = Array.from(exportNode.querySelectorAll('[data-export-chip="true"]')) as HTMLElement[];
       chipCandidates.forEach((node) => {

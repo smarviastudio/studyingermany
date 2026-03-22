@@ -16,6 +16,7 @@
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.3",
     "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^2.0.2",
     "jspdf": "^4.2.0",
     "lightningcss": "^1.31.1",
     "lucide-react": "^0.563.0",
