@@ -873,6 +873,27 @@ function CVMakerContent() {
       exportNode.style.width = '595px';
       exportNode.style.background = '#ffffff';
 
+      // Fix unsupported color functions (oklab, oklch, etc.) for html2canvas
+      const allElements = exportNode.querySelectorAll('*');
+      allElements.forEach((el) => {
+        const element = el as HTMLElement;
+        
+        // Check inline styles for problematic color functions
+        const inlineStyle = element.getAttribute('style');
+        if (inlineStyle && (inlineStyle.includes('oklab') || inlineStyle.includes('oklch') || inlineStyle.includes('lab(') || inlineStyle.includes('lch('))) {
+          // Get computed style which is already in RGB
+          const computedStyle = window.getComputedStyle(element);
+          
+          // Replace problematic color properties with computed RGB values
+          ['color', 'background-color', 'border-color', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'].forEach(prop => {
+            const computedValue = computedStyle.getPropertyValue(prop);
+            if (computedValue && computedValue !== 'rgba(0, 0, 0, 0)' && computedValue !== 'transparent') {
+              element.style.setProperty(prop, computedValue, 'important');
+            }
+          });
+        }
+      });
+
       const chipCandidates = Array.from(exportNode.querySelectorAll('[data-export-chip="true"]')) as HTMLElement[];
       chipCandidates.forEach((node) => {
         const textNode = node.querySelector('[data-export-chip-text="true"]') as HTMLElement | null;
