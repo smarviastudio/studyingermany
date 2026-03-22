@@ -873,6 +873,26 @@ function CVMakerContent() {
       exportNode.style.width = '595px';
       exportNode.style.background = '#ffffff';
 
+      // Hide all interactive edit elements (buttons, inputs, forms) from the PDF
+      exportNode.querySelectorAll('button, form, input, [contenteditable="true"]').forEach(el => {
+        const element = el as HTMLElement;
+        // Keep contenteditable text visible but remove editability
+        if (element.getAttribute('contenteditable') === 'true') {
+          element.removeAttribute('contenteditable');
+          return;
+        }
+        // Hide edit buttons and forms
+        element.style.display = 'none';
+      });
+
+      // Also remove any dashed borders (edit indicators)
+      exportNode.querySelectorAll('*').forEach(el => {
+        const element = el as HTMLElement;
+        if (element.style.borderStyle === 'dashed') {
+          element.style.borderStyle = 'none';
+        }
+      });
+
       const chipCandidates = Array.from(exportNode.querySelectorAll('[data-export-chip="true"]')) as HTMLElement[];
       chipCandidates.forEach((node) => {
         const textNode = node.querySelector('[data-export-chip-text="true"]') as HTMLElement | null;
