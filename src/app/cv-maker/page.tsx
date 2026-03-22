@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import html2canvas from 'html2canvas';
@@ -615,7 +615,7 @@ function MiniCV({ tpl }: { tpl: CVTemplate }) {
 /* ══════════════════════════════════════════════════════════
    MAIN PAGE COMPONENT
    ══════════════════════════════════════════════════════════ */
-export default function CVMakerPage() {
+function CVMakerContent() {
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const initialProgramId = searchParams.get('programId');
@@ -2419,5 +2419,17 @@ export default function CVMakerPage() {
         .overflow-y-auto::-webkit-scrollbar-thumb:hover, .overflow-auto::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
       `}</style>
     </div>
+  );
+}
+
+export default function CVMakerPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f9fafb' }}>
+        <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+      </div>
+    }>
+      <CVMakerContent />
+    </Suspense>
   );
 }
