@@ -869,7 +869,7 @@ function CVMakerContent() {
       exportRoot.style.zIndex = '-1';
 
       // First, get all computed styles from the original element BEFORE cloning
-      const originalElements = previewElement.querySelectorAll('*');
+      const originalElements = Array.from(previewElement.querySelectorAll('*'));
       const computedStyles = new Map<Element, CSSStyleDeclaration>();
       originalElements.forEach(el => {
         computedStyles.set(el, window.getComputedStyle(el));
@@ -880,7 +880,7 @@ function CVMakerContent() {
       exportNode.style.width = '595px';
       exportNode.style.background = '#ffffff';
 
-      // Fix unsupported color functions (oklab, oklch, etc.) for html2canvas
+      // Fix unsupported color functions - strip ALL inline styles and reapply computed values
       const allElements = Array.from(exportNode.querySelectorAll('*'));
       allElements.forEach((el, index) => {
         const element = el as HTMLElement;
@@ -889,10 +889,27 @@ function CVMakerContent() {
         
         if (!computedStyle) return;
         
-        // Always replace color properties with computed RGB values to avoid any oklab issues
-        ['color', 'background-color', 'border-color', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color', 'fill', 'stroke'].forEach(prop => {
+        // Remove the style attribute completely to eliminate any oklab references
+        const oldStyle = element.getAttribute('style');
+        if (oldStyle) {
+          element.removeAttribute('style');
+        }
+        
+        // Reapply all important styles from computed values (which are in RGB)
+        const importantProps = [
+          'color', 'background-color', 'background', 
+          'border-color', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color',
+          'border-width', 'border-style', 'border-radius',
+          'width', 'height', 'padding', 'margin',
+          'font-size', 'font-weight', 'font-family', 'line-height',
+          'display', 'position', 'top', 'left', 'right', 'bottom',
+          'text-align', 'vertical-align',
+          'fill', 'stroke'
+        ];
+        
+        importantProps.forEach(prop => {
           const computedValue = computedStyle.getPropertyValue(prop);
-          if (computedValue && computedValue !== 'rgba(0, 0, 0, 0)' && computedValue !== 'transparent' && computedValue !== 'none') {
+          if (computedValue && computedValue !== '' && computedValue !== 'none' && computedValue !== 'auto') {
             element.style.setProperty(prop, computedValue, 'important');
           }
         });
