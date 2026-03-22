@@ -1,12 +1,15 @@
 'use client';
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import Link from 'next/link';
 import {
   ArrowLeft, Download, Sparkles, Plus, Trash2,
   GraduationCap, Loader2, Check, Palette, Camera,
-  ChevronRight, X, Wand2, Printer, Save, Type, AArrowUp, User, LogIn, FolderOpen, Crown, FileText
+  ChevronRight, X, Wand2, Printer, Save, Type, AArrowUp, User, LogIn, FolderOpen, Crown, FileText,
+  ChevronDown, CheckCircle2
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
@@ -14,6 +17,14 @@ import { ProfileWarningBanner } from '@/components/ProfileWarningBanner';
 import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
 import { templates as TEMPLATE_LIBRARY } from '@/lib/cv-maker/templates';
 import { useProfileData } from '@/hooks/useProfileData';
+import type { Program } from '@/lib/types';
+
+interface ShortlistItem {
+  id: string;
+  programId: string;
+  programName: string;
+  university: string;
+}
 
 /* ── SAMPLE DATA ── */
 const SAMPLE: CVData = {
@@ -605,6 +616,10 @@ function MiniCV({ tpl }: { tpl: CVTemplate }) {
    MAIN PAGE COMPONENT
    ══════════════════════════════════════════════════════════ */
 export default function CVMakerPage() {
+  const { data: session, status } = useSession();
+  const searchParams = useSearchParams();
+  const initialProgramId = searchParams.get('programId');
+  
   const [phase, setPhase] = useState<'templates' | 'editor'>('templates');
   const [tplId, setTplId] = useState('professional');
   const [isPremiumTemplate, setIsPremiumTemplate] = useState(false);
@@ -628,6 +643,16 @@ export default function CVMakerPage() {
   const [saveMessage, setSaveMessage] = useState('');
   const [user, setUser] = useState<any>(null);
   const [mobileTab, setMobileTab] = useState<'design' | 'preview'>('design');
+  
+  // Program selection states
+  const [shortlist, setShortlist] = useState<ShortlistItem[]>([]);
+  const [shortlistLoading, setShortlistLoading] = useState(true);
+  const [selectedProgramId, setSelectedProgramId] = useState<string>(initialProgramId || '');
+  const [program, setProgram] = useState<Program | null>(null);
+  const [programLoading, setProgramLoading] = useState(false);
+  const [useManualInput, setUseManualInput] = useState<boolean>(status !== 'authenticated');
+  const [showProgramDropdown, setShowProgramDropdown] = useState(false);
+  
   const cvRef = useRef<HTMLDivElement>(null);
   const tpl = TEMPLATES.find(t => t.id === tplId) || TEMPLATES[0];
 
@@ -661,6 +686,54 @@ export default function CVMakerPage() {
       .then(data => setUser(data))
       .catch(() => setUser(null));
   }, []);
+
+  // Fetch shortlist
+  useEffect(() => {
+    if (status !== 'authenticated') {
+      setShortlistLoading(false);
+      return;
+    }
+    const load = async () => {
+      try {
+        const res = await fetch('/api/shortlist');
+        if (!res.ok) return;
+        const data = await res.json();
+        setShortlist(data.shortlists || []);
+      } catch { /* silent */ } finally {
+        setShortlistLoading(false);
+      }
+    };
+    load();
+  }, [status]);
+
+  // Fetch program details when selected
+  useEffect(() => {
+    if (!selectedProgramId) return;
+    const load = async () => {
+      setProgramLoading(true);
+      try {
+        const res = await fetch(`/api/programs/${selectedProgramId}`);
+        if (!res.ok) throw new Error('Failed');
+        const data = await res.json();
+        setProgram(data.program);
+      } catch (err) {
+        console.error('Failed to load program:', err);
+        setProgram(null);
+      } finally {
+        setProgramLoading(false);
+      }
+    };
+    load();
+  }, [selectedProgramId]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = () => setShowProgramDropdown(false);
+    if (showProgramDropdown) {
+      document.addEventListener('click', handler);
+      return () => document.removeEventListener('click', handler);
+    }
+  }, [showProgramDropdown]);
 
   useEffect(() => {
     if (!profileData || autoFillDoneRef.current) return;
@@ -2240,7 +2313,66 @@ export default function CVMakerPage() {
                   <div><h2 className="text-white font-semibold">AI CV Generator</h2><p className="text-white/35 text-xs">Tell us about yourself</p></div>
                   <button onClick={() => setShowAI(false)} className="ml-auto text-white/30 hover:text-white/60"><X className="w-5 h-5" /></button>
                 </div>
-                <form onSubmit={e => { e.preventDefault(); const fd = new FormData(e.currentTarget); handleAI({ name: fd.get('name'), jobTitle: fd.get('jobTitle'), years: fd.get('years'), skills: fd.get('skills'), background: fd.get('background'), degree: fd.get('degree'), university: fd.get('university') }); }} className="space-y-3">
+
+                {/* Program Selection */}
+                {status === 'authenticated' && shortlist.length > 0 && (
+                  <div className="mb-4 pb-4 border-b border-white/[0.06]">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <label className="text-white/40 text-[11px] uppercase tracking-wider block mb-1">Target Program (Optional)</label>
+                        <p className="text-white/25 text-[10px]">Select to tailor CV to a specific program</p>
+                      </div>
+                      <div style={{ display: 'flex', borderRadius: 6, border: '1px solid rgba(255,255,255,0.08)', overflow: 'hidden', fontSize: 10 }}>
+                        <button type="button" onClick={() => setUseManualInput(false)} style={{ padding: '4px 10px', background: !useManualInput ? '#7c3aed' : 'transparent', color: !useManualInput ? '#fff' : 'rgba(255,255,255,0.4)', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>Shortlist</button>
+                        <button type="button" onClick={() => setUseManualInput(true)} style={{ padding: '4px 10px', background: useManualInput ? '#7c3aed' : 'transparent', color: useManualInput ? '#fff' : 'rgba(255,255,255,0.4)', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>Manual</button>
+                      </div>
+                    </div>
+
+                    {!useManualInput && (
+                      <div style={{ position: 'relative' }}>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); setShowProgramDropdown(!showProgramDropdown); }}
+                          className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm px-3 py-2.5 transition-colors flex items-center justify-between hover:border-purple-500/40"
+                        >
+                          {selectedProgramId && shortlist.find(s => s.programId === selectedProgramId) ? (
+                            <div style={{ flex: 1, overflow: 'hidden', textAlign: 'left' }}>
+                              <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {shortlist.find(s => s.programId === selectedProgramId)?.programName}
+                              </p>
+                              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: 0 }}>
+                                {shortlist.find(s => s.programId === selectedProgramId)?.university}
+                              </p>
+                            </div>
+                          ) : (
+                            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>Select a program from your shortlist</span>
+                          )}
+                          <ChevronDown className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.3)', transform: showProgramDropdown ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }} />
+                        </button>
+                        {showProgramDropdown && (
+                          <div style={{ position: 'absolute', left: 0, right: 0, marginTop: 6, borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)', background: '#1a1a2e', boxShadow: '0 8px 24px rgba(0,0,0,0.4)', maxHeight: 200, overflowY: 'auto', zIndex: 9999 }}>
+                            {shortlist.map(item => (
+                              <button
+                                key={item.id}
+                                type="button"
+                                onClick={() => { setSelectedProgramId(item.programId); setShowProgramDropdown(false); }}
+                                style={{ width: '100%', textAlign: 'left', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, background: item.programId === selectedProgramId ? 'rgba(124,58,237,0.1)' : 'transparent', cursor: 'pointer', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+                              >
+                                <div style={{ flex: 1, overflow: 'hidden' }}>
+                                  <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.programName}</p>
+                                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: 0 }}>{item.university}</p>
+                                </div>
+                                {item.programId === selectedProgramId && <CheckCircle2 className="w-4 h-4" style={{ color: '#7c3aed' }} />}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <form onSubmit={e => { e.preventDefault(); const fd = new FormData(e.currentTarget); handleAI({ name: fd.get('name'), jobTitle: fd.get('jobTitle'), years: fd.get('years'), skills: fd.get('skills'), background: fd.get('background'), degree: fd.get('degree'), university: fd.get('university'), programId: !useManualInput ? selectedProgramId : undefined }); }} className="space-y-3">
                   {[
                     { name: 'name', label: 'Your Name', ph: 'Maria Schmidt', req: true },
                     { name: 'jobTitle', label: 'Target Role', ph: 'Software Engineer', req: true },
