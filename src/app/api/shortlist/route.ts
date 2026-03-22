@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       orderBy: { addedAt: 'desc' },
     });
 
-    return NextResponse.json({ shortlists });
+    return NextResponse.json({ shortlists, entries: shortlists });
   } catch (error) {
     console.error('Get shortlist error:', error);
     return NextResponse.json({ error: 'Failed to fetch shortlist' }, { status: 500 });
@@ -38,8 +38,46 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Check if user exists in database
+    let user = await prisma.user.findUnique({
+      where: { id: session.user.id }
+    });
+
+    if (!user) {
+      console.log('User not found in database, creating user record:', session.user.id);
+      // Create user record if it doesn't exist
+      try {
+        user = await prisma.user.create({
+          data: {
+            id: session.user.id,
+            email: session.user.email || '',
+            name: session.user.name || '',
+            password: '', // Empty password for OAuth users
+          }
+        });
+        console.log('User record created successfully');
+      } catch (createError) {
+        console.error('Failed to create user record:', createError);
+        return NextResponse.json({ error: 'Failed to create user profile. Please try signing out and back in.' }, { status: 500 });
+      }
+    }
+
     const body = await request.json();
     const { programId, programName, university, notes } = AddToShortlistSchema.parse(body);
+
+    // Check if already in shortlist
+    const existing = await prisma.shortlist.findUnique({
+      where: {
+        userId_programId: {
+          userId: session.user.id,
+          programId,
+        }
+      }
+    });
+
+    if (existing) {
+      return NextResponse.json({ error: 'Program already in shortlist' }, { status: 409 });
+    }
 
     const shortlist = await prisma.shortlist.create({
       data: {

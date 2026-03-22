@@ -176,7 +176,7 @@ export default function ProfilePage() {
     return (
       <div style={{ minHeight: '100vh', background: '#fafafa' }}>
         <SiteNav />
-        <main style={{ maxWidth: 800, margin: '0 auto', padding: '48px 24px 80px' }}>
+        <main style={{ maxWidth: 800, margin: '0 auto', padding: '114px 24px 80px' }}>
           <div style={{ textAlign: 'center', padding: '60px 20px' }}>
             <User className="w-16 h-16" style={{ color: '#999', margin: '0 auto 24px' }} />
             <h2 style={{ fontSize: 24, fontWeight: 600, color: '#111', marginBottom: 16 }}>Please Sign In</h2>
@@ -191,7 +191,7 @@ export default function ProfilePage() {
     return (
       <div style={{ minHeight: '100vh', background: '#fafafa' }}>
         <SiteNav />
-        <main style={{ maxWidth: 800, margin: '0 auto', padding: '48px 24px 80px' }}>
+        <main style={{ maxWidth: 800, margin: '0 auto', padding: '114px 24px 80px' }}>
           <div style={{ textAlign: 'center', padding: '60px 20px' }}>
             <div style={{ width: 40, height: 40, margin: '0 auto', border: '4px solid #f3f3f3', borderTop: '4px solid #dd0000', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
             <p style={{ fontSize: 16, color: '#737373', marginTop: 16 }}>Loading profile...</p>
@@ -205,7 +205,7 @@ export default function ProfilePage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
       
-      <main className="profile-main" style={{ maxWidth: 800, margin: '0 auto', padding: '48px 24px 80px' }}>
+      <main className="profile-main" style={{ maxWidth: 800, margin: '0 auto', padding: '114px 24px 80px' }}>
         {/* Header */}
         <header style={{ marginBottom: 40 }}>
           <Link href="/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#666', textDecoration: 'none', fontSize: 14, marginBottom: 16 }}>

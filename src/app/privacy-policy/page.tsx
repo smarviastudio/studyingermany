@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f9fafb' }}>
       <SiteNav />
-      <main style={{ maxWidth: 760, margin: '0 auto', padding: '56px 24px 80px' }}>
+      <main style={{ maxWidth: 760, margin: '0 auto', padding: '122px 24px 80px' }}>
         <div style={{ background: '#fff', borderRadius: 24, padding: '48px 48px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #e5e7eb' }}>
 
           <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#dd0000', marginBottom: 8 }}>Legal</p>

@@ -7,7 +7,8 @@ import { useSession } from 'next-auth/react';
 import { 
   Search, Loader2, Bookmark, X, ArrowRight, BookOpen, Newspaper, Calendar,
   GraduationCap, FileText, Languages, Home, Briefcase, CreditCard, Shield,
-  Plane, Star, Zap, TrendingUp, Users, Globe, Clock, Calculator, LayoutDashboard
+  Plane, Star, Zap, TrendingUp, Users, Globe, Clock, Calculator, LayoutDashboard, MapPin,
+  Settings, Filter, Sparkles
 } from 'lucide-react';
 import { ProgramModal } from '@/components/ProgramModal';
 import type { ProgramSummary } from '@/lib/types';
@@ -43,8 +44,8 @@ const TESTIMONIALS = [
     name: 'Chinedu Adewale',
     country: 'Lagos, Nigeria',
     track: 'Master in Renewable Energy (FH Aachen)',
-    quote: 'German Path showed me the blocked account options and helped me time my visa. I landed in Aachen with accommodation already sorted.',
-    highlight: 'Visa approved in 5 weeks',
+    quote: 'German Path showed me the blocked account options and helped me time every admin step. Their AI roadmap kept my tasks organized while I handled embassy requirements myself.',
+    highlight: 'Planned finances + deadlines with AI',
     avatar: '🇳🇬'
   },
   {
@@ -59,7 +60,7 @@ const TESTIMONIALS = [
     name: 'Kevin Otieno',
     country: 'Nairobi, Kenya',
     track: 'Master in Automotive Software (RWTH Aachen)',
-    quote: 'I used the shortlist + AI plan to track every deadline. The visa guide explained finances and health insurance step-by-step.',
+    quote: 'I used the shortlist + AI plan to track every deadline. The guidance explained finances and insurance so I could prepare documents with confidence.',
     highlight: 'Working student job in 2 months',
     avatar: '🇰🇪'
   }
@@ -137,6 +138,47 @@ export default function HomePage() {
   const [postsLoading, setPostsLoading] = useState(true);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [filters, setFilters] = useState({ language: 'all', city: 'all', degreeLevel: 'all', tuition: 'all' });
+  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  const [advancedFilters, setAdvancedFilters] = useState({
+    degreeLevel: '',
+    city: '',
+    language: '',
+    tuitionMin: '',
+    tuitionMax: '',
+    isFree: false,
+    intake: '',
+    ieltsRequired: false,
+    toeflRequired: false,
+    germanRequired: false,
+    englishRequired: false,
+    onlineAvailable: false,
+    scholarshipAvailable: false,
+    subjectArea: '',
+  });
+
+  const heroSlides = [
+    { main: 'Your journey to', highlight: 'Germany starts here' },
+    { main: 'Say goodbye to', highlight: 'expensive consultants' },
+    { main: 'Find your program', highlight: 'in minutes, not months' },
+    { main: 'Save thousands on', highlight: 'consultant fees' },
+    { main: 'AI-powered guidance', highlight: 'completely free' },
+  ];
+
+  const filteredResults = useMemo(() => {
+    return results.filter(program => {
+      const degreeLevel = program.degree_level?.toLowerCase() || '';
+      const languages = program.languages_array?.map(l => l.toLowerCase()) || [];
+      
+      if (filters.language !== 'all' && !languages.some(l => l.includes(filters.language))) return false;
+      if (filters.degreeLevel !== 'all' && !degreeLevel.includes(filters.degreeLevel)) return false;
+      if (filters.tuition === 'free' && !program.is_free) return false;
+      if (filters.tuition === 'paid' && program.is_free) return false;
+      
+      return true;
+    });
+  }, [results, filters]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -146,6 +188,13 @@ export default function HomePage() {
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, [wpPosts, postsLoading, activeCategory]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroSlideIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [heroSlides.length]);
 
   useEffect(() => {
     (async () => {
@@ -160,6 +209,17 @@ export default function HomePage() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (showSearchResults) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showSearchResults]);
 
   useEffect(() => {
     if (status !== 'authenticated') return;
@@ -202,6 +262,62 @@ export default function HomePage() {
   const featuredPost = useMemo(() => {
     return wpPosts.find(p => p.featuredImage) || wpPosts[0] || null;
   }, [wpPosts]);
+
+  const handleAdvancedSearch = async () => {
+    setShowAdvancedSearch(false);
+    setSearching(true);
+    setSearchError(null);
+    setResults([]);
+    setReasoning(null);
+    setNonCourseMessage(null);
+    setShowSearchResults(true);
+
+    try {
+      // Construct natural language query from filters
+      const queryParts: string[] = [];
+      
+      if (advancedFilters.isFree) queryParts.push('tuition-free');
+      else if (advancedFilters.tuitionMin || advancedFilters.tuitionMax) {
+        if (advancedFilters.tuitionMin && advancedFilters.tuitionMax) {
+          queryParts.push(`tuition between €${advancedFilters.tuitionMin} and €${advancedFilters.tuitionMax}`);
+        } else if (advancedFilters.tuitionMin) {
+          queryParts.push(`tuition minimum €${advancedFilters.tuitionMin}`);
+        } else if (advancedFilters.tuitionMax) {
+          queryParts.push(`tuition maximum €${advancedFilters.tuitionMax}`);
+        }
+      }
+      
+      if (advancedFilters.subjectArea) queryParts.push(advancedFilters.subjectArea);
+      if (advancedFilters.degreeLevel) queryParts.push(advancedFilters.degreeLevel);
+      if (advancedFilters.language) queryParts.push(`in ${advancedFilters.language}`);
+      if (advancedFilters.city) queryParts.push(`in ${advancedFilters.city}`);
+      if (advancedFilters.intake) queryParts.push(`${advancedFilters.intake} intake`);
+      if (advancedFilters.onlineAvailable) queryParts.push('online');
+      if (advancedFilters.scholarshipAvailable) queryParts.push('with scholarships');
+      
+      const constructedQuery = queryParts.length > 0 ? queryParts.join(' ') : 'programs in Germany';
+      
+      const res = await fetch('/api/course-finder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: constructedQuery, limit: 12 }),
+      });
+      
+      if (!res.ok) throw new Error('Search failed');
+      const data = await res.json();
+      
+      if (data.is_course_related === false) {
+        setNonCourseMessage(data.message || 'Please search for academic programs.');
+      } else {
+        setResults(data.programs || []);
+        setReasoning(data.reasoning || 'Advanced filter search');
+      }
+    } catch (err) {
+      setSearchError('Failed to search programs. Please try again.');
+    } finally {
+      setSearching(false);
+    }
+  };
 
   const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
@@ -297,21 +413,70 @@ export default function HomePage() {
         <div className="search-modal-overlay" onClick={closeSearchModal}>
           <div className="search-modal-content" onClick={e => e.stopPropagation()}>
             <div className="search-modal-header">
-              <div>
-                <h1 className="search-modal-title">
-                  {searching ? 'Searching programs...' : results.length > 0 ? `Found ${results.length} programs` : 'Search Results'}
-                </h1>
-                {reasoning && !searching && <p className="search-modal-subtitle">{reasoning}</p>}
+              <div className="flex-1">
+                {!searching && results.length > 0 && (
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-purple-600 flex items-center justify-center">
+                        <GraduationCap className="w-4 h-4 text-white" />
+                      </div>
+                      <h1 className="text-2xl font-bold text-slate-900">{filteredResults.length} Programs</h1>
+                    </div>
+                  </div>
+                )}
+                {!searching && results.length === 0 && (
+                  <h1 className="text-2xl font-bold text-slate-900">Search Results</h1>
+                )}
+                {reasoning && !searching && (
+                  <p className="text-sm text-slate-600 mt-1">Search: {reasoning}</p>
+                )}
               </div>
               <button onClick={closeSearchModal} className="search-modal-close">
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
             <div className="search-modal-body">
+              {!searching && results.length > 0 && (
+                <div className="flex gap-3 mb-6 pb-4 border-b border-slate-200 flex-wrap">
+                  <select 
+                    value={filters.language} 
+                    onChange={(e) => setFilters({...filters, language: e.target.value})}
+                    className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  >
+                    <option value="all">All Languages</option>
+                    <option value="english">English</option>
+                    <option value="german">German</option>
+                  </select>
+                  <select 
+                    value={filters.degreeLevel} 
+                    onChange={(e) => setFilters({...filters, degreeLevel: e.target.value})}
+                    className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  >
+                    <option value="all">All Degrees</option>
+                    <option value="bachelor">Bachelor</option>
+                    <option value="master">Master</option>
+                    <option value="phd">PhD</option>
+                    <option value="language_course">Language Course</option>
+                  </select>
+                  <select 
+                    value={filters.tuition} 
+                    onChange={(e) => setFilters({...filters, tuition: e.target.value})}
+                    className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  >
+                    <option value="all">All Tuition</option>
+                    <option value="free">Free / No Tuition</option>
+                    <option value="paid">With Tuition Fee</option>
+                  </select>
+                </div>
+              )}
               {searching && (
                 <div className="search-modal-loading">
-                  <Loader2 className="w-8 h-8 animate-spin mb-4" style={{ color: RED }} />
-                  <p>Finding the best programs for you...</p>
+                  <div className="modern-spinner">
+                    <div className="spinner-ring"></div>
+                    <div className="spinner-ring"></div>
+                    <div className="spinner-ring"></div>
+                  </div>
+                  <p className="loading-text">Finding the best programs for you...</p>
                 </div>
               )}
               {searchError && (
@@ -324,51 +489,111 @@ export default function HomePage() {
                 <div className="search-modal-message"><p>{nonCourseMessage}</p></div>
               )}
               {!searching && results.length > 0 && (
-                <div className="search-results-grid">
-                  {results.map(program => {
-                    const imageUrl = program.image_url || `https://source.unsplash.com/400x300/?${encodeURIComponent(program.subject_area || 'university')},germany,education`;
-                    const degreeLevel = program.degree_level?.toLowerCase();
-                    const isBachelor = degreeLevel?.includes('bachelor');
-                    const isMaster = degreeLevel?.includes('master');
+                <>
+                  {filteredResults.length === 0 && (
+                    <div className="col-span-full text-center py-12">
+                      <p className="text-slate-600">No programs match your filters. Try adjusting your selection.</p>
+                    </div>
+                  )}
+                  <div className="program-list">
+                      {filteredResults.map(program => {
+                    const degreeLevel = program.degree_level?.toLowerCase() || '';
+                    const isBachelor = degreeLevel.includes('bachelor');
+                    const isMaster = degreeLevel.includes('master');
+                    const isPhd = degreeLevel.includes('phd') || degreeLevel.includes('doctor');
+                    const degreeLabel = isBachelor ? 'Bachelor' : isMaster ? 'Master' : isPhd ? 'PhD' : program.degree_level;
+                    const languageLabel = program.languages_array?.[0] || 'English';
+                    const durationLabel = program.duration_months ? `${Math.round(program.duration_months / 6)} sem` : null;
                     
                     return (
-                      <div key={program.id} onClick={() => handleProgramCardClick(program.id)} className="program-card">
-                        <div className="program-card-image">
-                          <Image src={imageUrl} alt={program.program_name} fill style={{ objectFit: 'cover' }} sizes="320px" unoptimized onError={e => { e.currentTarget.style.display = 'none'; }} />
-                          {program.is_free && <span className="program-badge-free">No Tuition</span>}
-                          {(isBachelor || isMaster) && (
-                            <span style={{ position: 'absolute', bottom: 10, left: 10, background: isBachelor ? '#3b82f6' : '#7c3aed', color: '#fff', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 99, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                              {isBachelor ? 'Bachelor' : 'Master'}
-                            </span>
+                      <div key={program.id} className="program-card-v2" onClick={() => handleProgramCardClick(program.id)}>
+                        <div className="program-card-v2-image">
+                          {program.image_url ? (
+                            <Image 
+                              src={program.image_url} 
+                              alt={program.program_name} 
+                              fill 
+                              className="object-cover"
+                              unoptimized
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <GraduationCap className="w-12 h-12" style={{ color: 'rgba(255,255,255,0.15)' }} />
+                            </div>
                           )}
-                          <button onClick={e => { e.stopPropagation(); handleShortlist(program); }} disabled={shortlistingId === program.id} className="program-bookmark-btn" style={{ color: shortlistedPrograms.includes(program.id) ? '#d97706' : '#525252' }}>
-                            {shortlistingId === program.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" style={{ fill: shortlistedPrograms.includes(program.id) ? 'currentColor' : 'none' }} />}
+                          <div className="program-card-v2-image-overlay" />
+                          <div className="program-card-v2-badges">
+                            {degreeLabel && <span className="program-card-v2-badge program-card-v2-badge-degree">{degreeLabel}</span>}
+                            {languageLabel && <span className="program-card-v2-badge program-card-v2-badge-lang">{languageLabel}</span>}
+                          </div>
+                          {program.city && (
+                            <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2">
+                              <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/95 backdrop-blur-sm border border-slate-200 shadow-sm">
+                                <MapPin className="w-3.5 h-3.5 text-slate-600" />
+                                <span className="text-xs font-bold text-slate-800">{program.city}</span>
+                              </div>
+                              {program.is_free && (
+                                <span className="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-green-500/95 backdrop-blur-sm border border-green-600 shadow-sm">
+                                  <span className="text-xs font-bold text-white">Free</span>
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          <button 
+                            onClick={e => { e.stopPropagation(); handleShortlist(program); }} 
+                            disabled={shortlistingId === program.id} 
+                            className={`program-card-v2-bookmark ${shortlistedPrograms.includes(program.id) ? 'active' : ''}`}
+                          >
+                            {shortlistingId === program.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Bookmark className="w-4 h-4" style={{ fill: shortlistedPrograms.includes(program.id) ? 'currentColor' : 'none' }} />
+                            )}
                           </button>
                         </div>
-                        <div className="program-card-body">
-                          <h4 className="program-card-title">{program.program_name}</h4>
-                          <p className="program-card-uni">{program.university}{program.city ? ` · ${program.city}` : ''}</p>
-                          {program.match_reason && (
-                            <p className="program-card-match" title={program.match_reason === 'General match' ? 'This program matches your general search criteria' : program.match_reason.includes('subject') ? 'This program matches specific subjects you searched for' : 'This program matches your specific requirements'}>
-                              {program.match_reason}
-                            </p>
-                          )}
-                          <div className="program-card-footer">
-                            <div className="program-card-meta">
-                              {program.tuition_fee_number != null ? <span>€{program.tuition_fee_number.toLocaleString()}</span> : program.is_free ? <span className="text-emerald-600 font-semibold">Free</span> : null}
-                              {program.beginning_normalized && <span>{program.beginning_normalized}</span>}
-                            </div>
-                            <span className="program-card-view">View <ArrowRight className="w-3 h-3" /></span>
+                        <div className="program-card-v2-body">
+                          <h4 className="program-card-v2-title">{program.program_name}</h4>
+                          <p className="program-card-v2-uni">
+                            <GraduationCap />
+                            {program.university}
+                          </p>
+                          <div className="program-card-v2-meta">
+                            {durationLabel && (
+                              <span className="program-card-v2-meta-item">
+                                <Clock />
+                                {durationLabel}
+                              </span>
+                            )}
+                            {program.beginning_normalized && (
+                              <span className="program-card-v2-meta-item">
+                                <Calendar />
+                                {program.beginning_normalized.charAt(0).toUpperCase() + program.beginning_normalized.slice(1)}
+                              </span>
+                            )}
                           </div>
+                        </div>
+                        <div className="program-card-v2-footer">
+                          {program.match_reason && program.match_reason !== 'General match' ? (
+                            <span className="program-card-v2-match">
+                              <Star />
+                              {program.match_reason.length > 25 ? program.match_reason.substring(0, 25) + '...' : program.match_reason}
+                            </span>
+                          ) : (
+                            <span />
+                          )}
+                          <span className="program-card-v2-view">
+                            View Details <ArrowRight />
+                          </span>
                         </div>
                       </div>
                     );
                   })}
                 </div>
+                </>
               )}
               {!searching && !searchError && !nonCourseMessage && results.length === 0 && (
                 <div className="search-modal-empty">
-                  <Search className="w-12 h-12 mx-auto mb-4" style={{ color: '#d4d4d4' }} />
+                  <Search className="w-12 h-12 mx-auto mb-4" style={{ color: '#cbd5e1' }} />
                   <p>No results yet. Try searching for a program above.</p>
                 </div>
               )}
@@ -378,6 +603,146 @@ export default function HomePage() {
       )}
 
       <SiteNav />
+
+      {/* Advanced Search Modal */}
+      {showAdvancedSearch && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(8px)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, overflowY: 'auto' }} onClick={() => setShowAdvancedSearch(false)}>
+          <div style={{ background: '#fff', borderRadius: 24, maxWidth: 800, width: '100%', padding: 32, boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)', maxHeight: 'calc(100vh - 40px)', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #dd0000, #b91c1c)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Filter className="w-6 h-6" style={{ color: '#fff' }} />
+                </div>
+                <div>
+                  <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 24, fontWeight: 800, color: '#111', margin: 0, lineHeight: 1.2 }}>Advanced Search</h2>
+                  <p style={{ fontSize: 14, color: '#666', margin: 0 }}>Find programs with precise filters</p>
+                </div>
+              </div>
+              <button onClick={() => setShowAdvancedSearch(false)} style={{ width: 40, height: 40, borderRadius: 12, background: '#f5f5f5', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#fee2e2'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#f5f5f5'; }}>
+                <X className="w-5 h-5" style={{ color: '#666' }} />
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, marginBottom: 24 }}>
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 8 }}>Degree Level</label>
+                <select value={advancedFilters.degreeLevel} onChange={(e) => setAdvancedFilters({...advancedFilters, degreeLevel: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}>
+                  <option value="">All Levels</option>
+                  <option value="bachelor">Bachelor</option>
+                  <option value="master">Master</option>
+                  <option value="phd">PhD / Doctorate</option>
+                  <option value="language_course">Language Course</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 8 }}>Language of Study</label>
+                <select value={advancedFilters.language} onChange={(e) => setAdvancedFilters({...advancedFilters, language: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}>
+                  <option value="">Any Language</option>
+                  <option value="english">English</option>
+                  <option value="german">German</option>
+                  <option value="bilingual">Bilingual (English & German)</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 8 }}>City</label>
+                <input type="text" value={advancedFilters.city} onChange={(e) => setAdvancedFilters({...advancedFilters, city: e.target.value})} placeholder="e.g. Berlin, Munich" style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 8 }}>Subject Area</label>
+                <select value={advancedFilters.subjectArea} onChange={(e) => setAdvancedFilters({...advancedFilters, subjectArea: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}>
+                  <option value="">All Subjects</option>
+                  <option value="engineering">Engineering</option>
+                  <option value="computer science">Computer Science & IT</option>
+                  <option value="business">Business & Management</option>
+                  <option value="economics">Economics</option>
+                  <option value="natural sciences">Natural Sciences</option>
+                  <option value="medicine">Medicine & Health</option>
+                  <option value="social sciences">Social Sciences</option>
+                  <option value="arts">Arts & Humanities</option>
+                  <option value="law">Law</option>
+                  <option value="mathematics">Mathematics</option>
+                  <option value="architecture">Architecture</option>
+                  <option value="design">Design</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 8 }}>Intake Season</label>
+                <select value={advancedFilters.intake} onChange={(e) => setAdvancedFilters({...advancedFilters, intake: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}>
+                  <option value="">Any Intake</option>
+                  <option value="winter">Winter Semester</option>
+                  <option value="summer">Summer Semester</option>
+                </select>
+              </div>
+
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 12 }}>Tuition Fee Range (EUR/year)</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <input type="number" value={advancedFilters.tuitionMin} onChange={(e) => setAdvancedFilters({...advancedFilters, tuitionMin: e.target.value})} placeholder="Min (e.g. 0)" style={{ padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
+                    onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }} />
+                  <input type="number" value={advancedFilters.tuitionMax} onChange={(e) => setAdvancedFilters({...advancedFilters, tuitionMax: e.target.value})} placeholder="Max (e.g. 5000)" style={{ padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
+                    onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }} />
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 24 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 12 }}>Additional Filters</label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: advancedFilters.isFree ? '#f0fdf4' : '#f9fafb', border: `2px solid ${advancedFilters.isFree ? '#16a34a' : '#e5e7eb'}`, borderRadius: 12, cursor: 'pointer', transition: 'all 0.2s' }}>
+                  <input type="checkbox" checked={advancedFilters.isFree} onChange={(e) => setAdvancedFilters({...advancedFilters, isFree: e.target.checked})} style={{ width: 18, height: 18, cursor: 'pointer' }} />
+                  <span style={{ fontSize: 14, fontWeight: 600, color: advancedFilters.isFree ? '#16a34a' : '#374151' }}>Tuition-Free Only</span>
+                </label>
+
+                <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: advancedFilters.onlineAvailable ? '#eff6ff' : '#f9fafb', border: `2px solid ${advancedFilters.onlineAvailable ? '#3b82f6' : '#e5e7eb'}`, borderRadius: 12, cursor: 'pointer', transition: 'all 0.2s' }}>
+                  <input type="checkbox" checked={advancedFilters.onlineAvailable} onChange={(e) => setAdvancedFilters({...advancedFilters, onlineAvailable: e.target.checked})} style={{ width: 18, height: 18, cursor: 'pointer' }} />
+                  <span style={{ fontSize: 14, fontWeight: 600, color: advancedFilters.onlineAvailable ? '#3b82f6' : '#374151' }}>Online/E-Learning</span>
+                </label>
+
+                <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: advancedFilters.scholarshipAvailable ? '#fef3c7' : '#f9fafb', border: `2px solid ${advancedFilters.scholarshipAvailable ? '#f59e0b' : '#e5e7eb'}`, borderRadius: 12, cursor: 'pointer', transition: 'all 0.2s' }}>
+                  <input type="checkbox" checked={advancedFilters.scholarshipAvailable} onChange={(e) => setAdvancedFilters({...advancedFilters, scholarshipAvailable: e.target.checked})} style={{ width: 18, height: 18, cursor: 'pointer' }} />
+                  <span style={{ fontSize: 14, fontWeight: 600, color: advancedFilters.scholarshipAvailable ? '#f59e0b' : '#374151' }}>Scholarships Available</span>
+                </label>
+
+                <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: advancedFilters.englishRequired ? '#fce7f3' : '#f9fafb', border: `2px solid ${advancedFilters.englishRequired ? '#ec4899' : '#e5e7eb'}`, borderRadius: 12, cursor: 'pointer', transition: 'all 0.2s' }}>
+                  <input type="checkbox" checked={advancedFilters.englishRequired} onChange={(e) => setAdvancedFilters({...advancedFilters, englishRequired: e.target.checked})} style={{ width: 18, height: 18, cursor: 'pointer' }} />
+                  <span style={{ fontSize: 14, fontWeight: 600, color: advancedFilters.englishRequired ? '#ec4899' : '#374151' }}>English Proficiency Required</span>
+                </label>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button onClick={() => setAdvancedFilters({ degreeLevel: '', city: '', language: '', tuitionMin: '', tuitionMax: '', isFree: false, intake: '', ieltsRequired: false, toeflRequired: false, germanRequired: false, englishRequired: false, onlineAvailable: false, scholarshipAvailable: false, subjectArea: '' })} style={{ flex: 1, padding: '14px 24px', background: '#f5f5f5', border: '1px solid #e5e5e5', borderRadius: 14, fontSize: 15, fontWeight: 700, color: '#555', cursor: 'pointer', transition: 'all 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#e5e5e5'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#f5f5f5'; }}>
+                Clear All
+              </button>
+              <button onClick={handleAdvancedSearch} style={{ flex: 2, padding: '14px 24px', background: 'linear-gradient(135deg, #dd0000, #b91c1c)', border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700, color: '#fff', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221, 0, 0, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(221, 0, 0, 0.4)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(221, 0, 0, 0.3)'; }}>
+                <Sparkles className="w-5 h-5" /> Search Programs
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ══ HERO ══ */}
       <section className="hero-section" id="hero">
@@ -392,12 +757,13 @@ export default function HomePage() {
             <span>AI-POWERED · 20,000+ PROGRAMS</span>
           </div>
           <h1 className="hero-title animate-fade-up-2">
-            Your journey to<br />
-            <span className="hero-title-gradient">Germany starts here</span>
+            <span className="hero-slide-text" key={heroSlideIndex}>
+              {heroSlides[heroSlideIndex].main}<br />
+              <span className="hero-title-gradient">{heroSlides[heroSlideIndex].highlight}</span>
+            </span>
           </h1>
           <p className="hero-subtitle animate-fade-up-3">
-            Search bachelor & master programs, build your CV with AI, and get step-by-step guidance —
-            tools for international students from Pakistan, India, and worldwide. Basic features are free, AI tools include free credits.
+            Find your perfect German university program with AI-powered search. Get personalized guidance, build your application, and track your progress — all without paying expensive consultant fees. Join 2,500+ students who found their path to Germany.
           </p>
           <form onSubmit={handleSearch} className="hero-search-form animate-fade-up-4">
             <div className="hero-search-bar">
@@ -410,6 +776,9 @@ export default function HomePage() {
                 placeholder="e.g. tuition-free data science master in English, Berlin intake 2025"
                 className="hero-search-input"
               />
+              <button type="button" onClick={() => setShowAdvancedSearch(true)} className="hero-advanced-btn" title="Advanced Search">
+                <Settings className="w-5 h-5" />
+              </button>
               <button type="submit" disabled={searching || !query.trim()} className="hero-search-btn">
                 {searching ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Search'}
               </button>

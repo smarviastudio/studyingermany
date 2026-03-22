@@ -127,7 +127,7 @@ export default function PricingPage() {
 
       <main>
         {/* ── HERO ── */}
-        <section className="pricing-hero" style={{ textAlign: 'center', padding: '72px 24px 56px', position: 'relative', overflow: 'hidden' }}>
+        <section className="pricing-hero" style={{ textAlign: 'center', padding: '100px 24px 56px', position: 'relative', overflow: 'hidden' }}>
           {/* Background blobs */}
           <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-60%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(221,0,0,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', top: 40, right: '10%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -212,12 +212,12 @@ export default function PricingPage() {
             <div style={{ padding: '24px 28px 32px' }}>
               <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#aaa', margin: '0 0 16px' }}>Includes</p>
               {[
-                '5 AI generations per month total',
-                '3 basic CV templates',
-                'Save up to 20 programs',
-                'Track up to 5 applications',
-                'GPA & Salary calculators',
-                'Community support',
+                '5 AI generations/month (CV, letters, documents)',
+                '3 basic CV templates (German format)',
+                'Save up to 20 programs for comparison',
+                'Track up to 5 applications with deadlines',
+                'GPA converter & salary calculator',
+                'Community forum support',
               ].map((f, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
                   <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
@@ -250,7 +250,7 @@ export default function PricingPage() {
             </div>
 
             <div style={{ padding: '52px 28px 24px', borderBottom: '1px solid #fce8e8' }}>
-              <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: RED, margin: '0 0 12px' }}>Student</p>
+              <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: RED, margin: '0 0 12px' }}>Essential</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
                 <span style={{ fontSize: 42, fontWeight: 900, color: RED }}>
                   {billing === 'month' ? '€9.99' : '€6.58'}
@@ -262,7 +262,7 @@ export default function PricingPage() {
                   Billed €79.99/year · save €39.89
                 </p>
               )}
-              <p style={{ fontSize: 14, color: '#666', margin: '0 0 24px', lineHeight: 1.5 }}>Unlimited AI power for your entire application journey.</p>
+              <p style={{ fontSize: 14, color: '#666', margin: '0 0 24px', lineHeight: 1.5 }}>Everything you need to apply successfully — unlimited AI assistance for documents, applications, and planning.</p>
               <button
                 onClick={() => handleUpgrade(studentKey)}
                 disabled={loading !== null}
@@ -275,20 +275,20 @@ export default function PricingPage() {
                 }}
               >
                 {loading === studentKey ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
-                {loading === studentKey ? 'Redirecting...' : 'Get Student Plan'}
+                {loading === studentKey ? 'Redirecting...' : 'Get Essential Plan'}
               </button>
             </div>
 
             <div style={{ padding: '24px 28px 32px' }}>
               <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#aaa', margin: '0 0 16px' }}>Everything in Free, plus</p>
               {[
-                'Unlimited AI generations',
-                'All 20+ CV templates',
-                'Unlimited program saves',
-                'Unlimited application tracking',
-                'Email support (24h response)',
-                'Priority program recommendations',
-                'AI Chat Consultant (limited)',
+                'Unlimited AI generations (CV, cover letter, motivation letter)',
+                'All 20+ premium CV templates (ATS-optimized)',
+                'Unlimited program saves & shortlists',
+                'Unlimited application tracking with reminders',
+                'Email support with 24h response time',
+                'AI-powered program recommendations',
+                '3 AI chat messages per day (program-specific advice)',
               ].map((f, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
                   <div style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(221,0,0,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
@@ -339,13 +339,13 @@ export default function PricingPage() {
             </div>
 
             <div style={{ padding: '24px 28px 32px' }}>
-              <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.4)', margin: '0 0 16px' }}>Everything in Student, plus</p>
+              <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.4)', margin: '0 0 16px' }}>Everything in Essential, plus</p>
               {[
-                'AI Chat Consultant (unlimited)',
-                'Priority email support (12h)',
-                'All Student plan features',
-                'Early access to new features',
-                'Dedicated application guidance',
+                'Unlimited AI Chat Consultant (24/7 expert advice)',
+                'Priority email support (12h response)',
+                'All Essential plan features included',
+                'Early access to new AI tools & features',
+                'Personalized application roadmap & guidance',
               ].map((f, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
                   <div style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(167,139,250,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
@@ -367,7 +367,7 @@ export default function PricingPage() {
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', background: '#fafafa', borderBottom: '1px solid #e5e5e5', padding: '16px 24px' }}>
               <span style={{ fontSize: 13, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Feature</span>
               <span style={{ fontSize: 13, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'center' }}>Free</span>
-              <span style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'center' }}>Student</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'center' }}>Essential</span>
               <span style={{ fontSize: 13, fontWeight: 700, color: PURPLE, textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'center' }}>Pro</span>
             </div>
 
@@ -570,7 +570,7 @@ export default function PricingPage() {
               }}
             >
               {loading === studentKey ? <Loader2 size={18} className="animate-spin" /> : <Zap size={18} color={RED} />}
-              Start with Student Plan
+              Start with Essential Plan
             </button>
             <Link
               href={isAuthenticated ? '/dashboard' : '/auth/signin'}

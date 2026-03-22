@@ -139,7 +139,7 @@ export default function GPAConverterPage() {
       <SiteNav />
 
       {/* Back button to landing page */}
-      <div style={{ padding: '0 24px', marginTop: 24 }}>
+      <div style={{ padding: '90px 24px', marginTop: 0 }}>
         <Link href="/gpa-converter/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#666', textDecoration: 'none', padding: '8px 16px', borderRadius: 8, transition: 'all 0.2s' }}
           onMouseEnter={(e) => { e.currentTarget.style.color = '#10b981'; e.currentTarget.style.background = '#f0fdf4'; }}
           onMouseLeave={(e) => { e.currentTarget.style.color = '#666'; e.currentTarget.style.background = 'transparent'; }}>

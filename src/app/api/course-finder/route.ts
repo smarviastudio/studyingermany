@@ -47,12 +47,12 @@ If the query IS about finding a university program, return:
 }
 
 IMPORTANT RULES:
-1. ONLY extract subjects that the user explicitly mentions. Do NOT add related subjects.
-2. If user says "psychology", subjects should be ["psychology"] NOT ["psychology", "sociology"].
-3. If user says "no X" or "not X" or "exclude X", add X to excluded_subjects array.
-4. Be very specific with subject matching - only include what user actually requested.
-5. Tuition is euros per year.
-6. Queries about "learning German", "German language courses", "visa", "accommodation", "scholarships", "blocked account", "health insurance", "living in Germany" are NON-course queries.
+1. Extract subjects broadly - include the main subject AND related terms. For "chemical engineering", include ["chemical engineering", "chemistry", "chemical"]. For "computer science", include ["computer science", "software", "informatics", "IT"].
+2. If user says "no X" or "not X" or "exclude X", add X to excluded_subjects array.
+3. Tuition is euros per year. If user says "free" or "no tuition", set max_tuition to 0.
+4. LANGUAGE COURSES: If user searches for "language course", "German language course", "language program", etc., this IS a course query. Set degree_level to "language_course" and subjects to ["german", "language"].
+5. NON-course queries are: general questions about "how to learn German" (without mentioning course/program), "visa process", "accommodation tips", "blocked account", "health insurance", "living costs", etc.
+6. The search will match against program names, subject areas, AND subject tags (like "software engineering", "mechanical engineering", etc.), so include relevant keywords.
 
 Do not include any text outside of JSON.`;
 

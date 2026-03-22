@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 import { Program } from '@/lib/types';
 import {
   X, MapPin, GraduationCap, Calendar, Globe, Clock,
-  ExternalLink, FileText, AlertTriangle, Star, CheckCircle,
+  ExternalLink, FileText, Star, CheckCircle,
   Bookmark, ArrowRight, Loader2, ChevronDown, ChevronUp, Euro,
-  BookOpen, ShieldCheck, Coins
+  BookOpen, ShieldCheck, Coins, Building2, Briefcase, Home,
+  Users, Languages, TrendingUp, Sparkles, AlertCircle
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,7 +19,7 @@ interface ProgramModalProps {
   onToggleShortlist?: () => void;
 }
 
-type Tab = 'overview' | 'requirements' | 'costs';
+type Tab = 'overview' | 'city' | 'requirements' | 'costs';
 
 export function ProgramModal({ programId, onClose, isShortlisted = false, onToggleShortlist }: ProgramModalProps) {
   const [program, setProgram] = useState<Program | null>(null);
@@ -85,7 +86,10 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
     try {
       if (isShortlistedState) {
         const response = await fetch(`/api/shortlist?programId=${programId}`, { method: 'DELETE' });
-        if (!response.ok) throw new Error('Failed to remove from shortlist');
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({}));
+          throw new Error(error?.error || 'Failed to remove from shortlist');
+        }
         setIsShortlistedState(false);
       } else {
         const response = await fetch('/api/shortlist', {
@@ -98,12 +102,28 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
             notes: ''
           }),
         });
-        if (!response.ok) throw new Error('Failed to add to shortlist');
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({}));
+          if (response.status === 409) {
+            // Already in shortlist, just update the state
+            setIsShortlistedState(true);
+            return;
+          }
+          if (response.status === 400 && error?.error?.includes('User not found')) {
+            // User session issue
+            setSignInMessage(true);
+            setTimeout(() => setSignInMessage(false), 5000);
+            throw new Error('Please sign out and sign back in to update your shortlist');
+          }
+          throw new Error(error?.error || 'Failed to add to shortlist');
+        }
         setIsShortlistedState(true);
       }
       onToggleShortlist?.();
     } catch (err) {
       console.error('Shortlist error:', err);
+      // You could add a toast notification here
+      alert(err instanceof Error ? err.message : 'Failed to update shortlist');
     } finally {
       setShortlistLoading(false);
     }
@@ -130,14 +150,19 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
     return `€${numeric.toLocaleString('de-DE')}`;
   };
   const getTuitionDisplay = () => {
+    if (program?.is_free || program?.tuition_fee_number === 0) return 'Free';
     const exactFee = formatEuroValue(program?.tuition_exact_eur ?? null);
     if (exactFee) return exactFee;
     if (program?.tuition_min_eur && program?.tuition_max_eur) {
       const rangeMin = formatEuroValue(program.tuition_min_eur);
       const rangeMax = formatEuroValue(program.tuition_max_eur);
-      if (rangeMin && rangeMax) return `${rangeMin}–${rangeMax}`;
+      if (rangeMin && rangeMax) {
+        // Shorten display if too long
+        const display = `${rangeMin}–${rangeMax}`;
+        if (display.length > 20) return `${rangeMin.substring(0, 7)}...–${rangeMax.substring(0, 7)}...`;
+        return display;
+      }
     }
-    if (program?.is_free || program?.tuition_fee_number === 0) return 'Free';
     if (program?.tuition_fee_number) return `€${program.tuition_fee_number.toLocaleString('de-DE')}`;
     return null;
   };
@@ -157,6 +182,10 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
   const tuitionDisplay = getTuitionDisplay();
   const durationDisplay = formatDuration(program?.duration_months ?? null);
   const languageDisplay = parseArrayField(program?.languages_array)[0] || 'English';
+  
+  // Check if city/life tab has content
+  const hasCityContent = program?.city_expats_overview || program?.accommodation_outlook || 
+    program?.job_market_demand || program?.city_living_costs || program?.german_daily_life_requirement;
 
   const quickStats = [
     durationDisplay && { icon: Clock, label: 'Duration', value: durationDisplay },
@@ -183,7 +212,7 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center" onClick={onClose}>
         <div className="bg-white rounded-2xl p-8 max-w-md mx-4 border border-[#e5e5e5] shadow-2xl" onClick={(e) => e.stopPropagation()}>
           <div className="text-center text-[#171717]">
-            <AlertTriangle className="w-10 h-10 text-[#dd0000] mx-auto mb-3" />
+            <AlertCircle className="w-10 h-10 text-[#dd0000] mx-auto mb-3" />
             <h3 className="font-semibold mb-1">Error Loading Program</h3>
             <p className="text-sm text-[#6b6b6b] mb-4">{error || 'Program not found'}</p>
             <button onClick={onClose} className="px-4 py-2 bg-[#dd0000] text-white text-sm rounded-lg hover:bg-[#c20000] transition-colors">
@@ -198,7 +227,7 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
   const cardClass = 'rounded-2xl border border-[#ececec] bg-white shadow-sm';
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-start justify-center overflow-y-auto py-8 px-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[9999] flex items-start justify-center overflow-y-auto py-8 px-4" onClick={onClose}>
       <style jsx global>{`
         .modal-scroll::-webkit-scrollbar { width: 6px; }
         .modal-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -228,36 +257,39 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
         )}
 
         <div className="relative">
-          <div className="relative h-56 overflow-hidden bg-gradient-to-br from-[#8b5cf6] via-[#7c3aed] to-[#6366f1]">
-            <div className="absolute inset-0">
-              <div className="absolute -top-10 -left-6 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
-              <div className="absolute -bottom-12 right-0 w-72 h-72 rounded-full bg-[#fbbf24]/20 blur-3xl" />
-            </div>
-            {program.image_url && program.image_url.trim() !== '' && !program.image_url.includes('placeholder') && (
-              <Image
-                src={program.image_url}
-                alt={program.program_name}
-                fill
-                className="object-cover opacity-30 mix-blend-overlay"
-                sizes="800px"
-                unoptimized
-                priority
-                onError={(e) => { 
-                  const target = e.currentTarget;
-                  target.style.display = 'none';
-                }}
-                onLoad={(e) => {
-                  const target = e.currentTarget;
-                  target.style.opacity = '0.3';
-                }}
-              />
+          <div className="relative h-64 overflow-hidden">
+            {/* Background - show image prominently or gradient fallback */}
+            {program.image_url && program.image_url.trim() !== '' && !program.image_url.includes('placeholder') ? (
+              <>
+                <Image
+                  src={program.image_url}
+                  alt={program.program_name}
+                  fill
+                  className="object-cover"
+                  sizes="800px"
+                  unoptimized
+                  priority
+                  onError={(e) => { 
+                    const target = e.currentTarget;
+                    target.style.display = 'none';
+                  }}
+                />
+                {/* Lighter gradient overlay for readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+              </>
+            ) : (
+              <>
+                <div className="absolute inset-0 bg-gradient-to-br from-[#667eea] via-[#764ba2] to-[#6B8DD6]" />
+                <div className="absolute inset-0">
+                  <div className="absolute -top-10 -left-6 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
+                  <div className="absolute -bottom-12 right-0 w-72 h-72 rounded-full bg-[#fbbf24]/15 blur-3xl" />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <GraduationCap className="w-24 h-24 text-white/15" />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              </>
             )}
-            {!program.image_url || program.image_url.trim() === '' || program.image_url.includes('placeholder') && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <GraduationCap className="w-20 h-20 text-white/20" />
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
             <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
               {program.detail_url && (
@@ -351,25 +383,26 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
         </div>
 
         <div className="sticky top-0 z-20 bg-white border-b border-[#ececec] px-6 pt-3 pb-2">
-          <div className="flex gap-2 bg-[#f5f5f5] rounded-full p-1">
-            {([
-              { key: 'overview' as Tab, label: 'Overview', icon: BookOpen, color: '#8b5cf6' },
+          <div className="flex gap-1 bg-[#f5f5f5] rounded-full p-1">
+            {[
+              { key: 'overview' as Tab, label: 'Overview', icon: Sparkles, color: '#8b5cf6' },
               { key: 'requirements' as Tab, label: 'Requirements', icon: ShieldCheck, color: '#7c3aed' },
+              ...(hasCityContent ? [{ key: 'city' as Tab, label: 'City & Life', icon: MapPin, color: '#3b82f6' }] : []),
               { key: 'costs' as Tab, label: 'Costs', icon: Coins, color: '#10b981' },
-            ] as const).map((tab) => {
+            ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
               return (
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                  className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold transition-all ${
                     isActive ? 'text-white shadow-sm' : 'text-[#7c7c7c]'
                   }`}
                   style={isActive ? { backgroundColor: tab.color } : { backgroundColor: 'transparent' }}
                 >
                   <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#b5b5b5]'}`} />
-                  {tab.label}
+                  <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               );
             })}
@@ -388,6 +421,19 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                     <span className="text-xs font-bold tracking-wider text-[#7c3aed] uppercase">AI Summary</span>
                   </div>
                   <p className="text-[15px] leading-relaxed text-[#2d2d2d]">{aiSummary.overview}</p>
+                </div>
+              )}
+
+              {/* University Profile */}
+              {program?.university_profile && (
+                <div className="rounded-2xl border border-[#dcfce7] bg-[#f0fdf4] p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-7 h-7 rounded-lg bg-[#22c55e]/10 flex items-center justify-center">
+                      <GraduationCap className="w-4 h-4 text-[#22c55e]" />
+                    </div>
+                    <span className="text-xs font-bold tracking-wider text-[#16a34a] uppercase">University Profile</span>
+                  </div>
+                  <p className="text-[14px] leading-relaxed text-[#2d2d2d]">{program.university_profile}</p>
                 </div>
               )}
 
@@ -444,6 +490,124 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                         {service}
                       </span>
                     ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* CITY & LIFE TAB */}
+          {activeTab === 'city' && hasCityContent && (
+            <div className="space-y-5">
+              {/* City Overview */}
+              {program.city_expats_overview && (
+                <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-5">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
+                      <MapPin className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-blue-900">Life in {program.city}</h3>
+                      <p className="text-xs text-blue-600">Expat & student community</p>
+                    </div>
+                  </div>
+                  <p className="text-[15px] leading-relaxed text-gray-700">{program.city_expats_overview}</p>
+                </div>
+              )}
+
+              {/* Job Market */}
+              {program.job_market_demand && (
+                <div className="rounded-2xl bg-white border border-gray-200 p-5 shadow-sm">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg shadow-emerald-500/25">
+                      <Briefcase className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900">Job Market & Career</h3>
+                      <p className="text-xs text-gray-500">Employment opportunities</p>
+                    </div>
+                  </div>
+                  <p className="text-[15px] leading-relaxed text-gray-700">{program.job_market_demand}</p>
+                </div>
+              )}
+
+              {/* Accommodation */}
+              {program.accommodation_outlook && (
+                <div className="rounded-2xl bg-white border border-gray-200 p-5 shadow-sm">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/25">
+                      <Home className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900">Accommodation</h3>
+                      <p className="text-xs text-gray-500">Housing options</p>
+                    </div>
+                  </div>
+                  <p className="text-[15px] leading-relaxed text-gray-700">{program.accommodation_outlook}</p>
+                </div>
+              )}
+
+              {/* Living Costs */}
+              {program.city_living_costs && (
+                <div className="rounded-2xl bg-white border border-gray-200 p-5 shadow-sm">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/25">
+                      <Euro className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900">Cost of Living</h3>
+                      <p className="text-xs text-gray-500">Monthly expenses</p>
+                    </div>
+                  </div>
+                  <p className="text-[15px] leading-relaxed text-gray-700">{program.city_living_costs}</p>
+                </div>
+              )}
+
+              {/* Language in Daily Life */}
+              {(program.german_daily_life_requirement || program.english_livability) && (
+                <div className="rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100 p-5">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
+                      <Languages className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-violet-900">Language in Daily Life</h3>
+                      <p className="text-xs text-violet-600">How much German/English you need</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    {program.german_daily_life_requirement && (
+                      <div>
+                        <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">German Requirement</p>
+                        <p className="text-[14px] leading-relaxed text-gray-700">{program.german_daily_life_requirement}</p>
+                      </div>
+                    )}
+                    {program.english_livability && (
+                      <div>
+                        <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">English Livability</p>
+                        <p className="text-[14px] leading-relaxed text-gray-700">{program.english_livability}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* AI City Fit Score */}
+              {program.ai_city_fit_score && (
+                <div className="rounded-2xl bg-gradient-to-r from-gray-900 to-gray-800 p-5 text-white">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold">AI City Fit Analysis</h3>
+                        <p className="text-xs text-gray-400">Suitability for international students</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold">{program.ai_city_fit_score}</p>
+                    </div>
                   </div>
                 </div>
               )}

@@ -39,6 +39,7 @@ export default function MyShortlistPage() {
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [navigatingId, setNavigatingId] = useState<string | null>(null);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ programId: string; programName: string } | null>(null);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -159,9 +160,14 @@ export default function MyShortlistPage() {
     };
   }, [shortlist]);
 
+  const confirmDelete = (programId: string, programName: string) => {
+    setDeleteConfirm({ programId, programName });
+  };
+
   const removeFromShortlist = async (programId: string) => {
     try {
       setRemovingId(programId);
+      setDeleteConfirm(null);
       const response = await fetch(`/api/shortlist?programId=${programId}`, {
         method: 'DELETE',
       });
@@ -203,7 +209,36 @@ export default function MyShortlistPage() {
       <SiteNav />
       <div style={{ minHeight: '100vh', background: '#fafafa' }}>
 
-        {/* Program Detail Modal */}
+        {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(8px)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={() => setDeleteConfirm(null)}>
+          <div style={{ background: '#fff', borderRadius: 20, maxWidth: 440, width: '100%', padding: 32, boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)' }} onClick={e => e.stopPropagation()}>
+            <div style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg, #fee2e2, #fecaca)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+              <Trash2 className="w-6 h-6" style={{ color: '#dc2626' }} />
+            </div>
+            <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 800, color: '#111', margin: '0 0 12px', textAlign: 'center', lineHeight: 1.3 }}>
+              Remove from Shortlist?
+            </h3>
+            <p style={{ fontSize: 15, color: '#666', margin: '0 0 24px', textAlign: 'center', lineHeight: 1.6 }}>
+              Are you sure you want to remove <strong style={{ color: '#111' }}>{deleteConfirm.programName}</strong> from your shortlist?
+            </p>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button onClick={() => setDeleteConfirm(null)} style={{ flex: 1, padding: '12px 20px', background: '#f5f5f5', border: '1px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 700, color: '#555', cursor: 'pointer', transition: 'all 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#e5e5e5'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#f5f5f5'; }}>
+                Cancel
+              </button>
+              <button onClick={() => removeFromShortlist(deleteConfirm.programId)} style={{ flex: 1, padding: '12px 20px', background: '#dc2626', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, color: '#fff', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(220, 38, 38, 0.3)' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#dc2626'; e.currentTarget.style.transform = 'none'; }}>
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Program Detail Modal */}
       {selectedProgram && (
         <div className="program-detail-modal-overlay" onClick={() => setSelectedProgram(null)}>
           <div className="program-detail-modal" onClick={e => e.stopPropagation()}>
@@ -368,7 +403,7 @@ export default function MyShortlistPage() {
                         No Tuition
                       </span>
                     )}
-                    <button onClick={() => removeFromShortlist(item.programId)} disabled={isRemoving} style={{ position: 'absolute', top: 12, right: 12, width: 36, height: 36, borderRadius: 999, background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
+                    <button onClick={() => confirmDelete(item.programId, item.programName)} disabled={isRemoving} style={{ position: 'absolute', top: 12, right: 12, width: 36, height: 36, borderRadius: 999, background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
                       onMouseEnter={e => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.borderColor = '#dc2626'; }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.95)'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; }}>
                       {isRemoving ? <Loader2 className="w-4 h-4 animate-spin" style={{ color: '#dc2626' }} /> : <Trash2 className="w-4 h-4" style={{ color: '#dc2626' }} />}
@@ -398,8 +433,8 @@ export default function MyShortlistPage() {
                       )}
                     </div>
 
-                    {/* Progress bar (only if plan exists) */}
-                    {plan && (
+                    {/* Progress bar or status */}
+                    {plan ? (
                       <div style={{ padding: '10px 12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10 }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                           <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -410,6 +445,12 @@ export default function MyShortlistPage() {
                         <div style={{ height: 5, background: '#dcfce7', borderRadius: 99, overflow: 'hidden' }}>
                           <div style={{ height: '100%', background: 'linear-gradient(90deg, #16a34a, #22c55e)', borderRadius: 99, transition: 'width 0.3s ease', width: `${progressPct(plan)}%` }} />
                         </div>
+                      </div>
+                    ) : (
+                      <div style={{ padding: '10px 12px', background: '#fef3f2', border: '1px solid #fecaca', borderRadius: 10 }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: '#dc2626', display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <Info className="w-3.5 h-3.5" /> Application not started
+                        </span>
                       </div>
                     )}
 

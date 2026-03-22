@@ -27,6 +27,17 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const savedCount = shortlistedIds.length;
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.body.classList.remove('modal-open');
+    };
+  }, []);
+
   useEffect(() => {
     fetchPrograms();
   }, [criteria]);
@@ -150,11 +161,11 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50">
-      <div className="h-full flex flex-col bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900">
+      <div className="h-full flex flex-col bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 max-h-screen">
         {/* Header */}
-        <div className="sticky top-0 z-10 border-b border-white/10 bg-white/5 backdrop-blur-xl">
-          <div className="max-w-7xl mx-auto px-6 py-5">
-            <div className="flex items-center justify-between">
+        <div className="flex-shrink-0 border-b border-white/10 bg-white/5 backdrop-blur-xl">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center space-x-4">
                 <button
                   onClick={onClose}
@@ -165,10 +176,10 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
                 
                 <div>
                   <p className="text-sm uppercase tracking-wide text-blue-300 mb-1">Program Matches</p>
-                  <h1 className="text-3xl font-semibold text-white">
+                  <h1 className="text-2xl font-semibold text-white">
                     {loading ? 'Searching...' : `${programs.length} Programs Found`}
                   </h1>
-                  <div className="flex flex-wrap gap-2 mt-3">
+                  <div className="flex flex-wrap gap-2 mt-2">
                     {[criteria.degree_level, criteria.subject_area, `${criteria.language} programs`]
                       .filter(Boolean)
                       .map((pill, index) => (
@@ -183,7 +194,7 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
                 </div>
               </div>
 
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
                 <div className="px-3 py-2 rounded-lg border border-white/15 bg-white/5 text-xs uppercase tracking-wide text-white/80">
                   Shortlisted: <span className="text-white font-semibold">{savedCount}</span>
                 </div>
@@ -192,45 +203,35 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
                 <div className="flex items-center border border-white/20 rounded-lg overflow-hidden bg-white/5">
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`flex items-center space-x-2 px-4 py-2 transition-colors ${
+                    className={`flex items-center space-x-2 px-3 py-2 transition-colors ${
                       viewMode === 'list'
                         ? 'bg-blue-500 text-white'
                         : 'text-white/70 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     <List className="w-4 h-4" />
-                    <span>List</span>
+                    <span className="hidden sm:inline">List</span>
                   </button>
                   <button
                     onClick={() => setViewMode('map')}
-                    className={`flex items-center space-x-2 px-4 py-2 transition-colors ${
+                    className={`flex items-center space-x-2 px-3 py-2 transition-colors ${
                       viewMode === 'map'
                         ? 'bg-blue-500 text-white'
                         : 'text-white/70 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     <Map className="w-4 h-4" />
-                    <span>Map</span>
+                    <span className="hidden sm:inline">Map</span>
                   </button>
                 </div>
-                
-                <button className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-white/20 text-white bg-white/5 hover:bg-white/10 transition-colors">
-                  <Filter className="w-4 h-4" />
-                  <span>Filter</span>
-                </button>
-                
-                <button className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-white/20 text-white bg-white/5 hover:bg-white/10 transition-colors">
-                  <Search className="w-4 h-4" />
-                  <span>Search</span>
-                </button>
               </div>
             </div>
           </div>
         </div>
 
         {/* Results */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="max-w-7xl mx-auto px-6 py-10 space-y-8">
+        <div className="flex-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 120px)' }}>
+          <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
             {shortlistedPrograms.length > 0 && (
               <div className="bg-white/5 border border-white/15 rounded-2xl p-6 backdrop-blur-lg">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -285,12 +286,30 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
             )}
 
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-white/5 rounded-2xl border border-white/10 p-6 animate-pulse">
-                    <div className="h-4 bg-white/10 rounded mb-3"></div>
-                    <div className="h-3 bg-white/10 rounded mb-2"></div>
-                    <div className="h-3 bg-white/10 rounded w-2/3"></div>
+                  <div key={i} className="bg-white/5 rounded-2xl border border-white/10 animate-pulse">
+                    <div className="h-48 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-t-2xl"></div>
+                    <div className="p-6 space-y-4">
+                      <div className="h-4 bg-white/10 rounded mb-3"></div>
+                      <div className="h-3 bg-white/10 rounded mb-2"></div>
+                      <div className="h-3 bg-white/10 rounded w-2/3"></div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="h-3 bg-white/10 rounded"></div>
+                        <div className="h-3 bg-white/10 rounded"></div>
+                        <div className="h-3 bg-white/10 rounded"></div>
+                        <div className="h-3 bg-white/10 rounded"></div>
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="h-6 bg-white/10 rounded-full w-16"></div>
+                        <div className="h-6 bg-white/10 rounded-full w-20"></div>
+                      </div>
+                      <div className="h-12 bg-white/10 rounded"></div>
+                      <div className="flex gap-3">
+                        <div className="h-10 bg-white/10 rounded flex-1"></div>
+                        <div className="h-10 bg-white/10 rounded flex-1"></div>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -326,7 +345,7 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
                 <p className="text-xs text-white/60 mt-4">Full interactive map with Google Maps integration coming soon</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {programs.map((program) => (
                   <div
                     key={program.id}
@@ -334,7 +353,7 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
                     onClick={() => onProgramSelect(program)}
                   >
                     {/* Program Image */}
-                    <div className="relative h-48 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl m-4 overflow-hidden">
+                    <div className="relative h-48 bg-gradient-to-br from-purple-600 to-blue-600 rounded-t-2xl overflow-hidden">
                       {program.image_url && (
                         <img
                           src={program.image_url}
@@ -361,7 +380,7 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
                       </button>
 
                       <div className="absolute bottom-4 left-4 right-4 text-white">
-                        <h3 className="font-semibold text-lg mb-1 line-clamp-2">
+                        <h3 className="font-semibold text-lg mb-1 leading-tight">
                           {program.program_name}
                         </h3>
                         <p className="text-sm opacity-90">{program.university}</p>
@@ -369,26 +388,26 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
                     </div>
 
                     {/* Program Details */}
-                    <div className="px-6 pb-6">
+                    <div className="px-6 pb-6 flex flex-col h-full">
                       <div className="grid grid-cols-2 gap-4 mb-4">
                         <div className="flex items-center space-x-2 text-sm text-white/80">
-                          <Clock className="w-4 h-4" />
-                          <span>{formatDuration(program.duration_months)}</span>
+                          <Clock className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate">{formatDuration(program.duration_months)}</span>
                         </div>
                         
                         <div className="flex items-center space-x-2 text-sm text-white/80">
-                          <Globe className="w-4 h-4" />
-                          <span>{program.languages_array?.[0] || 'English'}</span>
+                          <Globe className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate">{program.languages_array?.[0] || 'English'}</span>
                         </div>
                         
                         <div className="flex items-center space-x-2 text-sm text-white/80">
-                          <MapPin className="w-4 h-4" />
-                          <span>{program.city || 'Germany'}</span>
+                          <MapPin className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate">{program.city || 'Germany'}</span>
                         </div>
                         
                         <div className="flex items-center space-x-2 text-sm text-white/80">
-                          <Euro className="w-4 h-4" />
-                          <span>{getTuitionDisplay(program)}</span>
+                          <Euro className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate">{getTuitionDisplay(program)}</span>
                         </div>
                       </div>
 
@@ -413,8 +432,15 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
                         )}
                       </div>
 
+                      {/* Description preview */}
+                      {program.description && (
+                        <div className="mb-4 text-sm text-white/70 line-clamp-3">
+                          {program.description}
+                        </div>
+                      )}
+
                       {/* Action Buttons */}
-                      <div className="flex items-center justify-between gap-3">
+                      <div className="mt-auto flex items-center justify-between gap-3">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();

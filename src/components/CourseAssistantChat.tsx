@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader2, Sparkles, Minimize2, Maximize2 } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Sparkles, Minimize2, Maximize2, AlertCircle, Crown } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -20,6 +21,10 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [remainingMessages, setRemainingMessages] = useState<number | null>(null);
+  const [dailyLimit, setDailyLimit] = useState<number | null>(null);
+  const [tier, setTier] = useState<string>('free');
+  const [limitReached, setLimitReached] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -34,57 +39,24 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
   }, [isOpen, isMinimized]);
 
   const renderAssistantMessage = (content: string) => {
-    const cleaned = content.trim();
-    if (!cleaned) return null;
-    
-    const lines = cleaned.split(/\n/).map(line => line.trim());
-    const elements: React.ReactElement[] = [];
-    let currentList: string[] = [];
-    let listType: 'bullet' | 'number' | null = null;
-
-    const flushList = () => {
-      if (currentList.length > 0) {
-        elements.push(
-          <ul key={`list-${elements.length}`} className="chat-assistant-list">
-            {currentList.map((item, idx) => <li key={idx}>{item}</li>)}
-          </ul>
-        );
-        currentList = [];
-        listType = null;
-      }
-    };
-
-    lines.forEach((line, idx) => {
-      if (!line) {
-        flushList();
-        return;
-      }
-
-      const bulletMatch = line.match(/^[-•]\s*(.+)$/);
-      const numberMatch = line.match(/^\d+\.\s*(.+)$/);
-
-      if (bulletMatch || numberMatch) {
-        const content = (bulletMatch || numberMatch)![1];
-        const type = bulletMatch ? 'bullet' : 'number';
-        
-        if (listType !== type) {
-          flushList();
-          listType = type;
-        }
-        currentList.push(content);
-      } else {
-        flushList();
-        if (idx === 0 && line.length < 80) {
-          elements.push(<p key={`p-${idx}`} className="chat-assistant-headline">{line}</p>);
-        } else {
-          elements.push(<p key={`p-${idx}`} className="chat-assistant-paragraph">{line}</p>);
-        }
-      }
-    });
-
-    flushList();
-
-    return <div className="chat-assistant-content">{elements}</div>;
+    return (
+      <div className="chat-assistant-markdown">
+        <ReactMarkdown
+          components={{
+            p: ({node, ...props}) => <p className="chat-md-paragraph" {...props} />,
+            strong: ({node, ...props}) => <strong className="chat-md-bold" {...props} />,
+            ul: ({node, ...props}) => <ul className="chat-md-list" {...props} />,
+            ol: ({node, ...props}) => <ol className="chat-md-list-numbered" {...props} />,
+            li: ({node, ...props}) => <li className="chat-md-list-item" {...props} />,
+            h1: ({node, ...props}) => <h3 className="chat-md-heading" {...props} />,
+            h2: ({node, ...props}) => <h3 className="chat-md-heading" {...props} />,
+            h3: ({node, ...props}) => <h3 className="chat-md-heading" {...props} />,
+          }}
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
+    );
   };
 
   const sendMessage = async () => {
@@ -110,6 +82,22 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
       if (response.ok) {
         const data = await response.json();
         setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+        setRemainingMessages(data.remainingMessages);
+        setDailyLimit(data.dailyLimit);
+        setTier(data.tier);
+        if (data.remainingMessages === 0) {
+          setLimitReached(true);
+        }
+      } else if (response.status === 429) {
+        const data = await response.json();
+        setLimitReached(true);
+        setRemainingMessages(0);
+        setDailyLimit(data.limit);
+        setTier(data.tier);
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: `You've reached your daily message limit (${data.limit} messages for ${data.tier} plan). Upgrade to get more messages per day!` 
+        }]);
       } else {
         setMessages(prev => [...prev, { 
           role: 'assistant', 
@@ -214,7 +202,15 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
           </div>
           <div>
             <h3>Course Assistant</h3>
-            <span>AI-powered help</span>
+            <span>
+              {remainingMessages !== null && dailyLimit !== null ? (
+                <span className="chat-limit-badge">
+                  {remainingMessages}/{dailyLimit} messages left today
+                </span>
+              ) : (
+                'AI-powered help'
+              )}
+            </span>
           </div>
         </div>
         <div className="chat-header-actions">
@@ -500,6 +496,69 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
 
         .chat-assistant-list li {
           margin-bottom: 4px;
+        }
+
+        /* Markdown Formatting Styles */
+        .chat-assistant-markdown {
+          font-size: 14px;
+          line-height: 1.6;
+        }
+
+        .chat-md-paragraph {
+          margin: 0 0 12px;
+          color: #333;
+        }
+
+        .chat-md-paragraph:last-child {
+          margin-bottom: 0;
+        }
+
+        .chat-md-bold {
+          font-weight: 700;
+          color: #111;
+        }
+
+        .chat-md-heading {
+          font-size: 15px;
+          font-weight: 700;
+          color: #111;
+          margin: 12px 0 8px;
+        }
+
+        .chat-md-heading:first-child {
+          margin-top: 0;
+        }
+
+        .chat-md-list {
+          margin: 8px 0 12px;
+          padding-left: 20px;
+          color: #444;
+        }
+
+        .chat-md-list-numbered {
+          margin: 8px 0 12px;
+          padding-left: 20px;
+          color: #444;
+        }
+
+        .chat-md-list-item {
+          margin-bottom: 6px;
+          line-height: 1.5;
+        }
+
+        .chat-md-list-item::marker {
+          color: #dd0000;
+        }
+
+        .chat-limit-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 11px;
+          font-weight: 600;
+          padding: 3px 8px;
+          background: rgba(255,255,255,0.2);
+          border-radius: 8px;
         }
         
         .chat-message-content.loading {

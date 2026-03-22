@@ -9,7 +9,7 @@ import {
   FileText, GraduationCap, Calendar, ExternalLink, Sparkles,
   MapPin, Euro, Globe, Award, BookOpen, Zap, Clock, ChevronDown, ChevronUp,
   X, FolderOpen, FileCheck, ClipboardList, ChevronRight, Info, TrendingUp,
-  Shield, Wallet, Plane, Heart, RefreshCw, User, Target, Star
+  Shield, Wallet, Plane, Heart, RefreshCw, User, Target, Star, Building2, Languages, Briefcase
 } from 'lucide-react';
 import Image from 'next/image';
 import { SiteNav } from '@/components/SiteNav';
@@ -182,7 +182,18 @@ interface UniversityInfo {
   livingCosts: string;
 }
 
+interface AIProgramSummary {
+  overview: string;
+  academicRequirements: string;
+  languageRequirements: string;
+  costsAndFunding: string;
+  careerOutlook: string;
+  applicationProcess: string;
+  keyHighlights: string[];
+}
+
 interface ApplicationPlan {
+  aiProgramSummary?: AIProgramSummary;
   criticalRequirements?: CriticalRequirement[];
   profileMatch?: ProfileMatch;
   requiredDocuments?: RequiredDocument[];
@@ -1022,6 +1033,98 @@ export default function ApplicationPlanPage() {
                   </div>
                 </div>
               )}
+
+              {/* Section 7: AI Program Summary */}
+              <div className="simple-section">
+                <div className="simple-section-header">
+                  <div className="simple-section-icon">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <div className="simple-section-title">
+                    <h2>AI Program Analysis</h2>
+                    <p>Comprehensive overview of this program</p>
+                  </div>
+                </div>
+                
+                <div className="simple-section-content">
+                  {plan.aiProgramSummary?.overview ? (
+                    <>
+                      <div style={{ marginBottom: '24px' }}>
+                        <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <BookOpen className="w-4 h-4" style={{ color: '#dd0000' }} />
+                          Program Overview
+                        </h4>
+                        <p style={{ fontSize: '14px', lineHeight: '1.7', color: '#555', whiteSpace: 'pre-wrap' }}>{plan.aiProgramSummary.overview}</p>
+                      </div>
+                      {plan.aiProgramSummary.academicRequirements && (
+                        <div style={{ marginBottom: '24px' }}>
+                          <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <GraduationCap className="w-4 h-4" style={{ color: '#dd0000' }} />
+                            Academic Requirements
+                          </h4>
+                          <p style={{ fontSize: '14px', lineHeight: '1.7', color: '#555', whiteSpace: 'pre-wrap' }}>{plan.aiProgramSummary.academicRequirements}</p>
+                        </div>
+                      )}
+                      {plan.aiProgramSummary.languageRequirements && (
+                        <div style={{ marginBottom: '24px' }}>
+                          <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Languages className="w-4 h-4" style={{ color: '#dd0000' }} />
+                            Language Requirements
+                          </h4>
+                          <p style={{ fontSize: '14px', lineHeight: '1.7', color: '#555', whiteSpace: 'pre-wrap' }}>{plan.aiProgramSummary.languageRequirements}</p>
+                        </div>
+                      )}
+                      {plan.aiProgramSummary.costsAndFunding && (
+                        <div style={{ marginBottom: '24px' }}>
+                          <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Euro className="w-4 h-4" style={{ color: '#dd0000' }} />
+                            Costs & Funding
+                          </h4>
+                          <p style={{ fontSize: '14px', lineHeight: '1.7', color: '#555', whiteSpace: 'pre-wrap' }}>{plan.aiProgramSummary.costsAndFunding}</p>
+                        </div>
+                      )}
+                      {plan.aiProgramSummary.careerOutlook && (
+                        <div style={{ marginBottom: '24px' }}>
+                          <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Briefcase className="w-4 h-4" style={{ color: '#dd0000' }} />
+                            Career Outlook
+                          </h4>
+                          <p style={{ fontSize: '14px', lineHeight: '1.7', color: '#555', whiteSpace: 'pre-wrap' }}>{plan.aiProgramSummary.careerOutlook}</p>
+                        </div>
+                      )}
+                      {plan.aiProgramSummary.applicationProcess && (
+                        <div style={{ marginBottom: '24px' }}>
+                          <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <FileText className="w-4 h-4" style={{ color: '#dd0000' }} />
+                            Application Process
+                          </h4>
+                          <p style={{ fontSize: '14px', lineHeight: '1.7', color: '#555', whiteSpace: 'pre-wrap' }}>{plan.aiProgramSummary.applicationProcess}</p>
+                        </div>
+                      )}
+                      {plan.aiProgramSummary.keyHighlights?.length > 0 && (
+                        <div>
+                          <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Star className="w-4 h-4" style={{ color: '#dd0000' }} />
+                            Key Highlights
+                          </h4>
+                          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                            {plan.aiProgramSummary.keyHighlights.map((highlight: string, i: number) => (
+                              <li key={i} style={{ fontSize: '14px', lineHeight: '1.7', color: '#555', marginBottom: '8px', paddingLeft: '24px', position: 'relative' }}>
+                                <span style={{ position: 'absolute', left: 0, color: '#dd0000', fontWeight: 700 }}>✓</span>
+                                {highlight}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <p style={{ fontSize: '14px', color: '#666', textAlign: 'center', padding: '20px' }}>
+                      AI program analysis will appear here after generation.
+                    </p>
+                  )}
+                </div>
+              </div>
 
             </div>
           )}

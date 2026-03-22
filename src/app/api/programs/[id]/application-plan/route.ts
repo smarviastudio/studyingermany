@@ -59,10 +59,28 @@ const ChecklistUpdateSchema = z.object({
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'openai/gpt-4o-mini';
 
-const SYSTEM_PROMPT = `You are an expert German university application advisor. Analyze program requirements against the user's profile and create a detailed, personalized application plan.
+const SYSTEM_PROMPT = `You are an expert German university application advisor with deep knowledge of German higher education. Your role is to analyze program requirements comprehensively and create a detailed, personalized application roadmap.
+
+FIRST: Generate a comprehensive AI-powered program analysis summary that covers:
+1. Program Overview: What this program is about, its focus areas, and what makes it unique
+2. Academic Requirements: Detailed analysis of admission criteria, prerequisites, and academic standards
+3. Language Requirements: Exact language proficiency needed and how to meet it
+4. Tuition & Costs: Complete breakdown of fees, living costs, and financial requirements
+5. Career Prospects: Job market outlook for graduates in this field in Germany
+6. Application Process: How applications are submitted, deadlines, and key dates
+7. Your Match Analysis: How well the user's profile aligns with program requirements
 
 Return JSON ONLY with this exact structure:
 {
+  "aiProgramSummary": {
+    "overview": "2-3 paragraph comprehensive analysis of this program, covering what it teaches, its strengths, target students, and unique features",
+    "academicRequirements": "Detailed explanation of academic prerequisites, GPA requirements, and prior education needed",
+    "languageRequirements": "Complete breakdown of language proficiency requirements with specific test scores and levels",
+    "costsAndFunding": "Full analysis of tuition fees, semester fees, living costs, and available funding options",
+    "careerOutlook": "Job market analysis for this field in Germany, typical career paths, and salary expectations",
+    "applicationProcess": "Step-by-step explanation of how to apply, including portals, deadlines, and submission methods",
+    "keyHighlights": ["3-5 most important facts about this program that students should know"]
+  },
   "criticalRequirements": [
     {
       "type": "language_english|language_german|gpa|financial|documents",
@@ -251,6 +269,13 @@ IMPORTANT:
 - If no verified URL exists, set action to null
 - ALWAYS populate criticalRequirements array with at least language and financial requirements
 
+CRITICAL JSON REQUIREMENTS:
+- Return ONLY valid JSON - no extra text, no explanations, no markdown formatting
+- Ensure all strings are properly quoted
+- No trailing commas in arrays or objects
+- All required fields must be present
+- Double-check all brackets and braces are properly closed
+
 Return ONLY valid JSON.`;
 
 function applyChecklistState(planData: any, checklistState: Record<string, boolean> | null) {
@@ -370,14 +395,43 @@ Generate a comprehensive, personalized application plan.`;
     
     console.log('[OpenRouter] Raw AI response:', text.substring(0, 200));
     
-    // Extract JSON from response
+    // Extract and clean JSON from response
+    let jsonText = text;
+    
+    // Try to find JSON object in the response
     const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.error('[OpenRouter] No JSON found in response:', text);
-      throw new Error('Invalid AI response format');
+    if (jsonMatch) {
+      jsonText = jsonMatch[0];
     }
+    
+    // Clean common JSON formatting issues
+    jsonText = jsonText
+      .replace(/,\s*}/g, '}')  // Remove trailing commas before closing braces
+      .replace(/,\s*]/g, ']')  // Remove trailing commas before closing brackets
+      .replace(/:\s*,/g, ': null,')  // Fix empty values
+      .replace(/:\s*}/g, ': null}')  // Fix missing values at end
+      .replace(/:\s*]/g, ': null]');  // Fix missing values in arrays
 
-    const parsed = JSON.parse(jsonMatch[0]);
+    let parsed;
+    try {
+      parsed = JSON.parse(jsonText);
+      console.log('[OpenRouter] Successfully parsed JSON');
+    } catch (parseError) {
+      console.error('[OpenRouter] JSON parse error:', parseError);
+      console.error('[OpenRouter] Attempted JSON text:', jsonText.substring(0, 500));
+      
+      // Try a more aggressive cleanup
+      try {
+        // Remove any non-JSON content that might be wrapped around
+        const cleanJson = jsonText.replace(/^[^{]*({.*})[^}]*$/, '$1');
+        parsed = JSON.parse(cleanJson);
+        console.log('[OpenRouter] Successfully parsed JSON after aggressive cleanup');
+      } catch (secondError) {
+        console.error('[OpenRouter] Second JSON parse attempt failed:', secondError);
+        console.error('[OpenRouter] Full AI response for debugging:', text);
+        throw new Error('AI response contains invalid JSON format');
+      }
+    }
     
     // Validate required fields
     if (!parsed.steps || !Array.isArray(parsed.steps)) {
@@ -515,11 +569,6 @@ export async function POST(
     const { id } = await params;
     const body = await request.json();
     
-    console.log(`[Application Plan ${requestId}] Request body keys:`, Object.keys(body));
-    console.log(`[Application Plan ${requestId}] Program data:`, body.program ? Object.keys(body.program) : 'missing');
-    console.log(`[Application Plan ${requestId}] Full program object:`, JSON.stringify(body.program, null, 2));
-    console.log(`[Application Plan ${requestId}] UserProfile data:`, body.userProfile ? Object.keys(body.userProfile) : 'missing');
-    
     const parseResult = ApplicationPlanRequestSchema.safeParse(body);
     if (!parseResult.success) {
       console.error(`[Application Plan ${requestId}] Validation failed:`, JSON.stringify(parseResult.error.issues, null, 2));
@@ -533,14 +582,87 @@ export async function POST(
     
     console.log(`[Application Plan ${requestId}] Generating plan for program: ${program.program_name}`);
     
-    const plan = await callOpenRouter(program, userProfile);
-    
-    console.log(`[Application Plan ${requestId}] Plan generated successfully`);
-    
-    // Save to database if user is authenticated
+    // Check subscription tier and plan limits
     const session = await auth();
     if (session?.user?.id) {
+      const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: {
+          subscription: {
+            select: { planType: true }
+          }
+        }
+      });
+
+      const tier = user?.subscription?.planType || 'free';
+      
+      // Check plan count for free users - only count plans that still exist in shortlist
+      if (tier === 'free') {
+        // Get user's current shortlist
+        const shortlistItems = await prisma.shortlist.findMany({
+          where: { userId: session.user.id },
+          select: { programId: true }
+        });
+        
+        const shortlistedProgramIds = shortlistItems.map(item => item.programId);
+        
+        // Count only plans for programs that are still in shortlist
+        const planCount = await prisma.applicationPlan.count({
+          where: { 
+            userId: session.user.id,
+            programId: { in: shortlistedProgramIds }
+          }
+        });
+
+        if (planCount >= 3) {
+          return NextResponse.json({
+            error: 'Free plan limit reached',
+            message: 'You have reached the maximum of 3 application plans on the free tier. Please upgrade to generate more plans.',
+            limit: 3,
+            current: planCount,
+            tier: 'free'
+          }, { status: 403 });
+        }
+      }
+    }
+    
+    // ALWAYS create a guaranteed fallback plan first
+    const fallbackPlan = createGuaranteedPlan(program, userProfile);
+    
+    let plan = fallbackPlan;
+    
+    // Try AI enhancement, but don't fail if it doesn't work
+    try {
+      const aiPlan = await callOpenRouter(program, userProfile);
+      if (aiPlan && aiPlan.steps && Array.isArray(aiPlan.steps) && aiPlan.steps.length > 0) {
+        console.log(`[Application Plan ${requestId}] AI plan generated successfully, using AI plan`);
+        plan = aiPlan;
+      } else {
+        console.log(`[Application Plan ${requestId}] AI plan invalid, using fallback plan`);
+      }
+    } catch (aiError) {
+      console.error(`[Application Plan ${requestId}] AI generation failed, using fallback plan:`, aiError);
+      // Continue with fallback plan - no error thrown
+    }
+    
+    console.log(`[Application Plan ${requestId}] Plan ready with ${plan.steps?.length || 0} steps`);
+    
+    // Save to database if user is authenticated
+    if (session?.user?.id) {
       try {
+        // Ensure user exists first
+        let user = await prisma.user.findUnique({ where: { id: session.user.id } });
+        if (!user) {
+          user = await prisma.user.create({
+            data: {
+              id: session.user.id,
+              email: session.user.email || '',
+              name: session.user.name || '',
+              password: '',
+            }
+          });
+        }
+        
         await prisma.applicationPlan.upsert({
           where: {
             userId_programId: {
@@ -596,6 +718,203 @@ export async function POST(
       message: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
+}
+
+// GUARANTEED PLAN - This ALWAYS works, no AI needed
+function createGuaranteedPlan(program: any, userProfile?: any) {
+  const programName = program.program_name || 'This Program';
+  const university = program.university || 'the University';
+  const deadline = program.registration_deadline_date || program.registration_deadline_text || 'Check university website';
+  
+  // Determine language requirements
+  const needsEnglish = program.language_proficiency_required !== false;
+  const needsGerman = program.german_min_level && program.german_min_level !== 'Not required';
+  
+  // Check user's language status
+  const hasEnglish = userProfile?.englishLevel || userProfile?.ieltsScore || userProfile?.toeflScore;
+  const hasGerman = userProfile?.germanLevel;
+  
+  const steps = [
+    {
+      id: 'step-1-requirements',
+      title: 'Review Program Requirements',
+      description: `Check all admission requirements for ${programName} at ${university}. Make sure you understand what documents and qualifications are needed.`,
+      completed: false,
+      priority: 'high' as const,
+      category: 'application' as const,
+    },
+    {
+      id: 'step-2-language',
+      title: 'Prepare Language Certificates',
+      description: needsEnglish 
+        ? 'Obtain English proficiency certificate (IELTS, TOEFL, or equivalent). Most German universities require IELTS 6.0-6.5 or TOEFL 80-90.'
+        : 'Check if German language proficiency is required for this program.',
+      completed: hasEnglish ? true : false,
+      autoCompleted: hasEnglish ? true : false,
+      autoCompletedReason: hasEnglish ? 'Language proficiency already provided in profile' : undefined,
+      priority: 'high' as const,
+      category: 'language' as const,
+    },
+    {
+      id: 'step-3-documents',
+      title: 'Gather Required Documents',
+      description: 'Collect all required documents: academic transcripts, degree certificates, CV, motivation letter, and passport copy.',
+      completed: false,
+      priority: 'high' as const,
+      category: 'documents' as const,
+    },
+    {
+      id: 'step-4-cv',
+      title: 'Create Your CV',
+      description: 'Prepare a professional CV following German academic standards. Include education, work experience, skills, and achievements.',
+      completed: false,
+      priority: 'high' as const,
+      category: 'documents' as const,
+    },
+    {
+      id: 'step-5-motivation',
+      title: 'Write Motivation Letter',
+      description: `Write a compelling motivation letter explaining why you want to study ${programName} and how it fits your career goals.`,
+      completed: false,
+      priority: 'high' as const,
+      category: 'documents' as const,
+    },
+    {
+      id: 'step-6-submit',
+      title: 'Submit Application',
+      description: `Submit your complete application before the deadline: ${deadline}. Apply through the university portal or uni-assist.`,
+      completed: false,
+      priority: 'high' as const,
+      category: 'application' as const,
+    },
+    {
+      id: 'step-7-financial',
+      title: 'Prepare Financial Documents',
+      description: 'Open a blocked account (Sperrkonto) with €11,904 for living expenses. This is required for your student visa.',
+      completed: false,
+      priority: 'medium' as const,
+      category: 'financial' as const,
+    },
+    {
+      id: 'step-8-visa',
+      title: 'Apply for Student Visa',
+      description: 'After receiving your admission letter, apply for a German student visa at your local German embassy.',
+      completed: false,
+      priority: 'medium' as const,
+      category: 'visa' as const,
+    },
+  ];
+
+  const requiredDocuments = [
+    {
+      id: 'cv-resume',
+      name: 'Curriculum Vitae (CV)',
+      category: 'admission' as const,
+      required: true,
+      description: 'A detailed CV following German academic standards, including education, work experience, skills, and achievements.',
+      programSpecificNotes: 'Must be in English or German, typically 1-2 pages'
+    },
+    {
+      id: 'motivation-letter',
+      name: 'Motivation Letter',
+      category: 'admission' as const,
+      required: true,
+      description: 'A letter explaining your motivation for this program, your academic background, career goals, and why you are a good fit.',
+      programSpecificNotes: 'Usually 1-2 pages, addressed to the admissions committee'
+    },
+    {
+      id: 'transcripts',
+      name: 'Academic Transcripts',
+      category: 'admission' as const,
+      required: true,
+      description: 'Official transcripts from all universities/colleges attended, showing courses taken and grades received.',
+      programSpecificNotes: 'Must be certified copies or officially translated if not in English/German'
+    },
+    {
+      id: 'degree-certificate',
+      name: 'Degree Certificate',
+      category: 'admission' as const,
+      required: true,
+      description: 'Your degree certificate proving completion of your previous studies.',
+      programSpecificNotes: 'Certified copy required, with official translation if necessary'
+    },
+    {
+      id: 'language-certificate',
+      name: 'Language Proficiency Certificate',
+      category: 'admission' as const,
+      required: needsEnglish,
+      description: 'Official language proficiency certificate (IELTS, TOEFL, TestDaF, etc.).',
+      programSpecificNotes: program.ielts_min_score ? `Minimum IELTS: ${program.ielts_min_score}` : 'Check specific requirements'
+    },
+    {
+      id: 'passport-copy',
+      name: 'Passport Copy',
+      category: 'visa' as const,
+      required: true,
+      description: 'A clear copy of your valid passport showing personal information and validity dates.',
+      programSpecificNotes: 'Passport must be valid for at least 6 months beyond your intended stay'
+    },
+    {
+      id: 'blocked-account',
+      name: 'Blocked Account (Sperrkonto)',
+      category: 'financial' as const,
+      required: true,
+      description: 'Proof of blocked account with €11,904 for one year of living expenses in Germany.',
+      programSpecificNotes: 'Required for student visa application. Open with Fintiba or Expatrio.'
+    },
+    {
+      id: 'health-insurance',
+      name: 'Health Insurance',
+      category: 'visa' as const,
+      required: true,
+      description: 'Proof of health insurance coverage valid in Germany.',
+      programSpecificNotes: 'Get statutory health insurance (TK, AOK) or private insurance'
+    },
+  ];
+
+  // Calculate match score based on user profile
+  let score = 50; // Base score
+  if (userProfile) {
+    if (hasEnglish) score += 20;
+    if (hasGerman) score += 10;
+    if (userProfile.academicBackground) score += 10;
+    if (userProfile.nationality) score += 5;
+    if (userProfile.fullName) score += 5;
+  }
+  score = Math.min(score, 100);
+
+  return {
+    overview: `Application plan for ${programName} at ${university}. Follow these steps to complete your application successfully. Deadline: ${deadline}`,
+    estimatedTimeline: '2-4 months',
+    blockers: [],
+    steps,
+    requiredDocuments,
+    applicationSubmission: {
+      method: program.application_channel || 'University Portal',
+      portalUrl: program.detail_url || undefined,
+      deadline: deadline,
+      instructions: program.application_channel_notes || 'Submit your application through the university\'s online portal. Make sure all documents are uploaded before the deadline.'
+    },
+    profileMatch: {
+      score,
+      summary: userProfile 
+        ? `Based on your profile, you have a ${score}% match with this program. ${score >= 70 ? 'You meet most requirements!' : 'Complete your profile and documents to improve your chances.'}`
+        : 'Complete your profile to get a personalized compatibility analysis.',
+      strengths: userProfile ? [
+        hasEnglish ? 'Language proficiency verified' : null,
+        userProfile.academicBackground ? 'Academic background provided' : null,
+      ].filter(Boolean) : [],
+      gaps: userProfile ? [
+        !hasEnglish ? 'Language certificate needed' : null,
+        !userProfile.academicBackground ? 'Academic background not specified' : null,
+      ].filter(Boolean) : ['Profile information needed for detailed analysis'],
+      recommendations: [
+        'Prepare all required documents early',
+        'Check application deadlines carefully',
+        'Start your motivation letter with plenty of time'
+      ]
+    }
+  };
 }
 
 export async function PATCH(

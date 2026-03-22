@@ -186,7 +186,7 @@ export default function NettoBruttoCalculatorPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
 
-      <main className="salary-main" style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 80px' }}>
+      <main className="salary-main" style={{ maxWidth: 1200, margin: '0 auto', padding: '114px 24px 80px' }}>
         {/* Header */}
         <header style={{ marginBottom: 40 }}>
           <Link href="/netto-brutto-calculator/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#666', textDecoration: 'none', fontSize: 14, marginBottom: 16 }}>

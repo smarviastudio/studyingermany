@@ -116,6 +116,18 @@ export const ProgramSchema = z.object({
   scholarship_notes: z.string().optional(),
   documents_required_list: z.string().optional(), // JSON array
   ai_course_summary: AICourseSummarySchema.optional(),
+  
+  // Additional AI-enhanced fields from programs_with_ai.csv
+  city_expats_overview: z.string().optional(),
+  accommodation_outlook: z.string().optional(),
+  job_market_demand: z.string().optional(),
+  city_living_costs: z.string().optional(),
+  german_daily_life_requirement: z.string().optional(),
+  english_livability: z.string().optional(),
+  ai_city_fit_score: z.string().optional(),
+  university_profile: z.string().optional(),
+  how_to_apply: z.string().optional(),
+  subjects: z.string().optional(),
 });
 
 export type Program = z.infer<typeof ProgramSchema>;
@@ -179,6 +191,10 @@ export const ProgramSummarySchema = z.object({
   match_reason: z.string().optional(),
   image_url: z.string().optional(),
   detail_url: z.string().optional(),
+  // Additional fields for search results display
+  languages_array: z.array(z.string()).optional(),
+  duration_months: z.number().nullable().optional(),
+  tags_array: z.array(z.string()).optional(),
 });
 
 export type ProgramSummary = z.infer<typeof ProgramSummarySchema>;

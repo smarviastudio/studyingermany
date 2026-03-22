@@ -65,16 +65,36 @@ export class CSVDataProvider implements DataProvider {
         if (program.degree_level !== filters.degree_level) return false;
       }
       
-      // Subject filter
+      // Subject filter - searches in program name, subject area, subject_tags, AND tags_array
       if (filters.subjects && filters.subjects.length > 0) {
-        const normalizeSubject = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const normalizeSubject = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
         const hasSubjectMatch = filters.subjects.some(subject => {
           const normalizedFilter = normalizeSubject(subject);
-          return (
-            program.subject_tags.some(tag => normalizeSubject(tag).includes(normalizedFilter)) ||
-            normalizeSubject(program.subject_area || '').includes(normalizedFilter) ||
-            normalizeSubject(program.program_name).includes(normalizedFilter)
-          );
+          const filterWords = normalizedFilter.split(/\s+/).filter(w => w.length > 2);
+          
+          // Check subject_tags
+          const matchesTags = program.subject_tags.some(tag => {
+            const normalizedTag = normalizeSubject(tag);
+            return normalizedTag.includes(normalizedFilter) || 
+                   filterWords.some(word => normalizedTag.includes(word));
+          });
+          
+          // Check tags_array (subjects column)
+          const matchesTagsArray = program.tags_array.some(tag => {
+            const normalizedTag = normalizeSubject(tag);
+            return normalizedTag.includes(normalizedFilter) || 
+                   filterWords.some(word => normalizedTag.includes(word));
+          });
+          
+          // Check subject_area
+          const matchesSubjectArea = normalizeSubject(program.subject_area || '').includes(normalizedFilter) ||
+                                     filterWords.some(word => normalizeSubject(program.subject_area || '').includes(word));
+          
+          // Check program_name
+          const matchesProgramName = normalizeSubject(program.program_name).includes(normalizedFilter) ||
+                                     filterWords.some(word => normalizeSubject(program.program_name).includes(word));
+          
+          return matchesTags || matchesTagsArray || matchesSubjectArea || matchesProgramName;
         });
         if (!hasSubjectMatch) return false;
       }
@@ -226,7 +246,11 @@ export class CSVDataProvider implements DataProvider {
       match_score: program.matchScore,
       match_reason: program.matchReason,
       image_url: program.image_url,
-      detail_url: program.detail_url
+      detail_url: program.detail_url,
+      // Additional fields for search results display
+      languages_array: program.languages_array,
+      duration_months: program.duration_months,
+      tags_array: program.tags_array,
     };
   }
 

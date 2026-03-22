@@ -209,7 +209,7 @@ export default function CoverLetterPage() {
         </div>
       </div>
 
-      <main className="tool-main" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
+      <main className="tool-main" style={{ maxWidth: 1100, margin: '0 auto', padding: '98px 24px 80px' }}>
         <ProfileWarningBanner requiredFields={['fullName', 'phone', 'nationality', 'backgroundSummary', 'skills']} />
         <div className="tool-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
 

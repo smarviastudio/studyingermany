@@ -78,7 +78,7 @@ export default function BlogPage() {
         </div>
       </nav>
 
-      <div className="max-w-5xl mx-auto px-6 py-10">
+      <div className="max-w-5xl mx-auto px-6 pt-24 pb-10">
         {/* Header */}
         <div className="mb-10">
           <div className="flex items-center gap-2 text-white/30 text-xs mb-3">

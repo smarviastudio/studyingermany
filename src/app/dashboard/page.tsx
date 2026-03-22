@@ -200,7 +200,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-slate-50">
       <SiteNav />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-8">
         {/* Welcome Header */}
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
@@ -446,15 +446,15 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Profile Completion */}
-            {profileCompletion < 100 && (
+            {/* Profile Completion - Only show if less than 60% complete */}
+            {profileCompletion < 60 && (
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
                     <User className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-900">Complete Profile</p>
+                    <p className="font-semibold text-slate-900">Complete Your Profile</p>
                     <p className="text-xs text-slate-600">{profileCompletion}% complete</p>
                   </div>
                 </div>
@@ -462,7 +462,7 @@ export default function DashboardPage() {
                   <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all" style={{ width: `${profileCompletion}%` }} />
                 </div>
                 <p className="text-sm text-slate-600 mb-4">
-                  Complete your profile to get personalized program recommendations.
+                  Get personalized program recommendations by completing your profile.
                 </p>
                 <Link href="/profile" className="inline-flex items-center gap-2 w-full justify-center px-4 py-2.5 bg-blue-600 text-white rounded-xl font-medium text-sm hover:bg-blue-700 transition-colors">
                   Complete Now <ArrowRight className="w-4 h-4" />

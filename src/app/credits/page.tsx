@@ -86,7 +86,7 @@ export default function CreditsPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
-      <main style={{ maxWidth: 1000, margin: '0 auto', padding: '60px 24px 100px' }}>
+      <main style={{ maxWidth: 1000, margin: '0 auto', padding: '126px 24px 100px' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 60 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', borderRadius: 999, padding: '6px 16px', marginBottom: 20 }}>

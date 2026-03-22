@@ -6,6 +6,30 @@ import { Program, ProgramSchema, AICourseSummarySchema } from '../types';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
+// Fix encoding issues with German umlauts and special characters
+function fixEncoding(str: string): string {
+  if (!str) return str;
+  // Fix common mojibake patterns for German umlauts
+  return str
+    .replace(/Ã¼/g, 'ü')
+    .replace(/Ã¶/g, 'ö')
+    .replace(/Ã¤/g, 'ä')
+    .replace(/Ãœ/g, 'Ü')
+    .replace(/Ã–/g, 'Ö')
+    .replace(/Ã„/g, 'Ä')
+    .replace(/ÃŸ/g, 'ß')
+    .replace(/Ã©/g, 'é')
+    .replace(/Ã¨/g, 'è')
+    .replace(/Ã /g, 'à')
+    .replace(/Ã¢/g, 'â')
+    .replace(/Ã®/g, 'î')
+    .replace(/Ã´/g, 'ô')
+    .replace(/Ã»/g, 'û')
+    .replace(/Ã§/g, 'ç')
+    .replace(/�/g, 'ü') // Replacement character often means ü
+    .replace(/\uFFFD/g, 'ü'); // Unicode replacement character
+}
+
 function normalizeIsoDeadline(year: number, month: number, day: number): string {
   let targetYear = year < CURRENT_YEAR ? CURRENT_YEAR : year;
   const today = new Date();
@@ -74,7 +98,7 @@ export class CSVLoader {
       return this.programs;
     }
 
-    const csvPath = path.join(process.cwd(), 'data', 'programs.csv');
+    const csvPath = path.join(process.cwd(), 'data', 'programs_with_ai.csv');
     
     console.log(`[CSVLoader] Attempting to load CSV from: ${csvPath}`);
     console.log(`[CSVLoader] Current working directory: ${process.cwd()}`);
@@ -85,9 +109,9 @@ export class CSVLoader {
       console.error(`[CSVLoader] CSV file not found at ${csvPath}`);
       // Try alternative paths for Vercel serverless
       const altPaths = [
-        path.join(__dirname, '../../../../data/programs.csv'),
-        path.join(process.cwd(), '../data/programs.csv'),
-        '/var/task/data/programs.csv',
+        path.join(__dirname, '../../../../data/programs_with_ai.csv'),
+        path.join(process.cwd(), '../data/programs_with_ai.csv'),
+        '/var/task/data/programs_with_ai.csv',
       ];
       let found = false;
       for (const altPath of altPaths) {
@@ -107,7 +131,7 @@ export class CSVLoader {
     const rawRows: RawCSVRow[] = [];
     
     return new Promise((resolve, reject) => {
-      fs.createReadStream(finalPath)
+      fs.createReadStream(finalPath, { encoding: 'utf8' })
         .pipe(csv())
         .on('data', (row: RawCSVRow) => {
           rawRows.push(row);
@@ -232,8 +256,8 @@ export class CSVLoader {
       id,
       course_id: row.id || row.course_id,
       source_url: row.detail_url || row.source_url,
-      university: row.university || 'Unknown University',
-      program_name: row.program_name || 'Unknown Program',
+      university: fixEncoding(row.university || 'Unknown University'),
+      program_name: fixEncoding(row.program_name || 'Unknown Program'),
       degree_level: row.degree_level_normalized || row.degree_level,
       subject_tags: parseJsonArray(row.tags_array || ''),
       languages_array: parseJsonArray(row.languages_array || ''),
@@ -246,7 +270,8 @@ export class CSVLoader {
       tuition_fee_currency: row.tuition_fee_currency || 'EUR',
       tuition_eur_min: tuitionMinValue || null,
       tuition_eur_max: tuitionMaxValue || null,
-      city: row.city,
+      is_free: parseBoolean(row.is_free),
+      city: fixEncoding(row.city || ''),
       state: row.state,
       country: 'Germany',
       application_deadline: normalizeDeadline(row.application_deadline) ?? null,
@@ -297,7 +322,29 @@ export class CSVLoader {
       scholarship_notes: row.scholarship_notes || undefined,
       documents_required_list: ensureJsonString(row.documents_required_list),
       ai_course_summary: parseAICourseSummary(row.ai_course_summary),
+      
+      // Additional AI-enhanced fields - apply encoding fix to text fields
+      city_expats_overview: fixEncoding(row.city_expats_overview || ''),
+      accommodation_outlook: fixEncoding(row.accommodation_outlook || ''),
+      job_market_demand: fixEncoding(row.job_market_demand || ''),
+      city_living_costs: fixEncoding(row.city_living_costs || ''),
+      german_daily_life_requirement: fixEncoding(row.german_daily_life_requirement || ''),
+      english_livability: fixEncoding(row.english_livability || ''),
+      ai_city_fit_score: row.ai_city_fit_score || undefined,
+      university_profile: fixEncoding(row.university_profile || ''),
+      how_to_apply: fixEncoding(row.how_to_apply || ''),
+      subjects: row.subjects || undefined,
     };
+
+    // Debug: Log if AI fields are present
+    if (row.city_expats_overview || row.accommodation_outlook || row.job_market_demand || row.university_profile) {
+      console.log(`[CSVLoader] Program ${id} has AI fields:`, {
+        city_expats_overview: !!row.city_expats_overview,
+        accommodation_outlook: !!row.accommodation_outlook,
+        job_market_demand: !!row.job_market_demand,
+        university_profile: !!row.university_profile
+      });
+    }
 
     // Validate with schema
     return ProgramSchema.parse(program);

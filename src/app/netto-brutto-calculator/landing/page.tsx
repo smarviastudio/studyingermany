@@ -102,7 +102,7 @@ export default function SalaryCalculatorLanding() {
       <SiteNav />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-amber-50 to-white pt-16 pb-20">
+      <section className="relative overflow-hidden bg-gradient-to-b from-amber-50 to-white pt-24 pb-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(245,158,11,0.06),transparent_50%)]" />
         <div className="max-w-6xl mx-auto px-6 relative">
           <div className="text-center max-w-3xl mx-auto">

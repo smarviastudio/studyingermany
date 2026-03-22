@@ -246,7 +246,7 @@ export default async function BlogPostPage({ params }: Props) {
       />
       <SiteNav />
 
-      <article className="blog-static-article max-w-3xl mx-auto px-6 py-10">
+      <article className="blog-static-article max-w-3xl mx-auto px-6 pt-24 pb-10">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-white/30 text-xs mb-6">
           <Link href="/" className="hover:text-white/60 transition-colors">Home</Link>
@@ -380,7 +380,7 @@ export default async function BlogPostPage({ params }: Props) {
       <SiteNav />
 
       {/* Header */}
-      <header className="blog-wp-header max-w-[1100px] mx-auto px-6 pt-8 pb-7 border-b-2 border-[#ffce00]">
+      <header className="blog-wp-header max-w-[1100px] mx-auto px-6 pt-24 pb-7 border-b-2 border-[#ffce00]">
         <h1 className="text-[clamp(28px,4vw,46px)] font-bold text-gray-900 leading-[1.15] tracking-tight mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }} dangerouslySetInnerHTML={{ __html: title }} />
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <span>{publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>

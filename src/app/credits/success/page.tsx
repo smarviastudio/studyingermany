@@ -39,7 +39,7 @@ function SuccessContent() {
   }, [sessionId, router]);
 
   return (
-    <main style={{ maxWidth: 600, margin: '0 auto', padding: '100px 24px', textAlign: 'center' }}>
+    <main style={{ maxWidth: 600, margin: '0 auto', padding: '166px 24px', textAlign: 'center' }}>
       {loading ? (
         <>
           <Loader2 className="w-16 h-16 animate-spin" style={{ color: '#dd0000', margin: '0 auto 24px' }} />
@@ -118,7 +118,7 @@ export default function CreditsSuccessPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
       <Suspense fallback={
-        <main style={{ maxWidth: 600, margin: '0 auto', padding: '100px 24px', textAlign: 'center' }}>
+        <main style={{ maxWidth: 600, margin: '0 auto', padding: '166px 24px', textAlign: 'center' }}>
           <Loader2 className="w-16 h-16 animate-spin" style={{ color: '#dd0000', margin: '0 auto 24px' }} />
         </main>
       }>
