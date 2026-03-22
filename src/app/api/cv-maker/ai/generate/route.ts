@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const { name, jobTitle, years, skills, background, hobbies, programId } = await request.json();
+    const { name, jobTitle, years, skills, background, hobbies, degree, university, programId } = await request.json();
     
     if (!name || !jobTitle) {
       return NextResponse.json({ message: 'Name and job title are required' }, { status: 400 });
@@ -69,7 +69,9 @@ Job Title/Target Role: ${jobTitle}
 Years of Experience: ${years || 'Not specified'}
 Skills: ${skills || 'Not specified'}
 Background: ${background || 'Not specified'}
-Hobbies: ${hobbies || 'Not specified'}${programContext}
+Hobbies: ${hobbies || 'Not specified'}
+${degree ? `Education Degree: ${degree}` : ''}
+${university ? `University: ${university}` : ''}${programContext}
 
 Generate a complete CV with the following sections in JSON format:
 {
@@ -93,7 +95,7 @@ Generate a complete CV with the following sections in JSON format:
   ]
 }
 
-Make the content professional, achievement-focused${programDetails ? ', and specifically tailored to demonstrate qualifications for the target program' : ', and tailored to the job title'}. ${programDetails ? 'Emphasize skills and experiences relevant to ' + programDetails.subject_area + ' and ' + programDetails.degree_level + ' studies.' : ''} Generate 2-3 experience entries and 1-2 education entries. Only return valid JSON, no additional text.`;
+Make the content professional, achievement-focused${programDetails ? ', and specifically tailored to demonstrate qualifications for the target program' : ', and tailored to the job title'}. ${programDetails ? 'Emphasize skills and experiences relevant to ' + programDetails.subject_area + ' and ' + programDetails.degree_level + ' studies.' : ''} ${degree && university ? `IMPORTANT: Include the provided education (${degree} from ${university}) in the education section with appropriate dates.` : 'Generate 1-2 education entries based on the background and experience level.'} Generate 2-3 experience entries. Only return valid JSON, no additional text.`;
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
