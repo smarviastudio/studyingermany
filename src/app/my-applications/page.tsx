@@ -155,6 +155,8 @@ export default function MyApplicationsPage() {
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const [expandedWeeks, setExpandedWeeks] = useState<Set<string>>(new Set());
   const [expandedPrograms, setExpandedPrograms] = useState<Set<string>>(new Set());
+  const [shortlist, setShortlist] = useState<any[]>([]);
+  const [loadingShortlist, setLoadingShortlist] = useState(true);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -163,8 +165,24 @@ export default function MyApplicationsPage() {
     }
     if (status === 'authenticated') {
       fetchPlan();
+      fetchShortlist();
     }
   }, [status, router]);
+
+  const fetchShortlist = async () => {
+    try {
+      setLoadingShortlist(true);
+      const res = await fetch('/api/shortlist');
+      if (res.ok) {
+        const data = await res.json();
+        setShortlist(data.shortlist || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch shortlist:', err);
+    } finally {
+      setLoadingShortlist(false);
+    }
+  };
 
   const fetchPlan = async () => {
     try {
@@ -347,17 +365,69 @@ export default function MyApplicationsPage() {
             </div>
           )}
 
+          {/* Shortlisted Programs */}
+          {!loadingShortlist && shortlist.length > 0 && (
+            <div style={{ background: '#fff', borderRadius: 16, padding: 24, marginBottom: 24, border: '1px solid #e5e5e5' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                <GraduationCap className="w-5 h-5" style={{ color: '#dd0000' }} />
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0a0a0a', margin: 0 }}>
+                  Your Shortlisted Programs ({shortlist.length})
+                </h3>
+              </div>
+              <div style={{ display: 'grid', gap: 12 }}>
+                {shortlist.map((item: any) => (
+                  <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: '#fafafa', borderRadius: 10, border: '1px solid #f0f0f0' }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 4 }}>
+                        {item.programName}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#737373', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <Building2 className="w-3.5 h-3.5" />
+                        {item.university}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {!plan && (
+                <p style={{ fontSize: 13, color: '#737373', margin: '16px 0 0', textAlign: 'center' }}>
+                  Click "Generate Plan" to create a comprehensive roadmap for all these programs
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* No shortlist warning */}
+          {!loadingShortlist && shortlist.length === 0 && !plan && (
+            <div style={{ background: '#fef3f2', border: '1px solid #fecaca', borderRadius: 16, padding: 24, marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'start', gap: 12 }}>
+                <AlertTriangle className="w-5 h-5" style={{ color: '#dc2626', flexShrink: 0, marginTop: 2 }} />
+                <div>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, color: '#dc2626', margin: '0 0 6px' }}>
+                    No programs shortlisted yet
+                  </h3>
+                  <p style={{ fontSize: 14, color: '#991b1b', margin: '0 0 12px' }}>
+                    You need to shortlist programs before generating an application plan.
+                  </p>
+                  <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', background: '#dc2626', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
+                    <GraduationCap className="w-4 h-4" /> Browse Programs
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* No plan state */}
-          {!plan && !generating && (
+          {!plan && !generating && shortlist.length > 0 && (
             <div style={{ background: '#fff', border: '2px dashed #e5e5e5', borderRadius: 24, padding: '80px 24px', textAlign: 'center' }}>
               <div style={{ width: 72, height: 72, borderRadius: 20, background: 'linear-gradient(135deg, rgba(221,0,0,0.08), rgba(221,0,0,0.04))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
                 <Target className="w-8 h-8" style={{ color: '#dd0000' }} />
               </div>
               <h2 style={{ fontSize: 22, fontWeight: 700, color: '#111', margin: '0 0 10px' }}>
-                No application plan yet
+                Ready to generate your plan
               </h2>
               <p style={{ fontSize: 15, color: '#737373', margin: '0 auto 8px', maxWidth: 520, lineHeight: 1.6 }}>
-                Shortlist your programs first, then generate a personalized AI roadmap with deadlines, document checklists, financial planning, and weekly tasks.
+                Generate a personalized AI roadmap analyzing all {shortlist.length} shortlisted program{shortlist.length > 1 ? 's' : ''} with deadlines, document checklists, financial planning, and weekly tasks.
               </p>
               <p style={{ fontSize: 13, color: '#a3a3a3', margin: '0 auto 28px', maxWidth: 520 }}>
                 Includes: Application Timeline • Document Checklist • Financial Plan • Language Path • Weekly Task Board
