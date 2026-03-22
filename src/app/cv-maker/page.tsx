@@ -906,35 +906,46 @@ function CVMakerContent() {
       await new Promise(resolve => setTimeout(resolve, 150));
 
       // Capture with high quality
+      console.log('[PDF] Starting html2canvas capture...');
       const canvas = await html2canvas(exportNode, {
         scale: 2,
         useCORS: true,
-        logging: false,
+        logging: true,
         backgroundColor: '#ffffff',
         width: 595,
-        height: 842
+        height: 842,
+        allowTaint: true,
+        foreignObjectRendering: false
       });
 
+      console.log('[PDF] Canvas created:', canvas.width, 'x', canvas.height);
       document.body.removeChild(exportRoot);
 
       // Create PDF
+      console.log('[PDF] Creating PDF document...');
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'px',
         format: [595, 842]
       });
 
+      console.log('[PDF] Converting canvas to image...');
       const imgData = canvas.toDataURL('image/png', 1.0);
+      
+      console.log('[PDF] Adding image to PDF...');
       pdf.addImage(imgData, 'PNG', 0, 0, 595, 842, undefined, 'FAST');
       
       // Download
+      console.log('[PDF] Saving PDF...');
       pdf.save(`${cv.name || 'CV'}.pdf`);
 
+      console.log('[PDF] PDF download complete!');
       // Close modal
       setTimeout(() => setShowPrintPreview(false), 500);
     } catch (error) {
-      console.error('Failed to generate PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
+      console.error('[PDF] Failed to generate PDF:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Failed to generate PDF: ${errorMessage}\n\nPlease check the console for details.`);
     } finally {
       // Reset button
       const btn = document.querySelector('[data-pdf-btn]') as HTMLButtonElement;
