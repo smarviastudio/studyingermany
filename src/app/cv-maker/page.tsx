@@ -2295,36 +2295,36 @@ function CVMakerContent() {
       {/* AI Modal */}
       {showAI && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-          <div className="bg-[#12122a] border border-white/[0.08] rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             {aiDone ? (
               <div className="text-center py-10">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-                  <Check className="w-8 h-8 text-emerald-400" />
+                <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                  <Check className="w-8 h-8 text-emerald-600" />
                 </div>
-                <h2 className="text-white font-semibold text-lg mb-1">CV Generated!</h2>
-                <p className="text-white/40 text-sm">Your CV has been filled with AI-generated content. Closing...</p>
+                <h2 className="text-gray-900 font-semibold text-lg mb-1">CV Generated!</h2>
+                <p className="text-gray-500 text-sm">Your CV has been filled with AI-generated content. Closing...</p>
               </div>
             ) : (
               <>
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center">
-                    <Wand2 className="w-5 h-5 text-purple-400" />
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/10 to-red-600/10 flex items-center justify-center">
+                    <Wand2 className="w-5 h-5 text-red-600" />
                   </div>
-                  <div><h2 className="text-white font-semibold">AI CV Generator</h2><p className="text-white/35 text-xs">Tell us about yourself</p></div>
-                  <button onClick={() => setShowAI(false)} className="ml-auto text-white/30 hover:text-white/60"><X className="w-5 h-5" /></button>
+                  <div><h2 className="text-gray-900 font-semibold">AI CV Generator</h2><p className="text-gray-500 text-xs">Tell us about yourself</p></div>
+                  <button onClick={() => setShowAI(false)} className="ml-auto text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
                 </div>
 
                 {/* Program Selection */}
                 {status === 'authenticated' && shortlist.length > 0 && (
-                  <div className="mb-4 pb-4 border-b border-white/[0.06]">
+                  <div className="mb-4 pb-4 border-b border-gray-200">
                     <div className="flex items-center justify-between mb-3">
                       <div>
-                        <label className="text-white/40 text-[11px] uppercase tracking-wider block mb-1">Target Program (Optional)</label>
-                        <p className="text-white/25 text-[10px]">Select to tailor CV to a specific program</p>
+                        <label className="text-gray-600 text-[11px] uppercase tracking-wider block mb-1 font-semibold">Target Program (Optional)</label>
+                        <p className="text-gray-400 text-[10px]">Select to tailor CV to a specific program</p>
                       </div>
-                      <div style={{ display: 'flex', borderRadius: 6, border: '1px solid rgba(255,255,255,0.08)', overflow: 'hidden', fontSize: 10 }}>
-                        <button type="button" onClick={() => setUseManualInput(false)} style={{ padding: '4px 10px', background: !useManualInput ? '#7c3aed' : 'transparent', color: !useManualInput ? '#fff' : 'rgba(255,255,255,0.4)', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>Shortlist</button>
-                        <button type="button" onClick={() => setUseManualInput(true)} style={{ padding: '4px 10px', background: useManualInput ? '#7c3aed' : 'transparent', color: useManualInput ? '#fff' : 'rgba(255,255,255,0.4)', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>Manual</button>
+                      <div style={{ display: 'flex', borderRadius: 6, border: '1px solid #e5e7eb', overflow: 'hidden', fontSize: 10 }}>
+                        <button type="button" onClick={() => setUseManualInput(false)} style={{ padding: '4px 10px', background: !useManualInput ? '#dd0000' : 'transparent', color: !useManualInput ? '#fff' : '#9ca3af', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>Shortlist</button>
+                        <button type="button" onClick={() => setUseManualInput(true)} style={{ padding: '4px 10px', background: useManualInput ? '#dd0000' : 'transparent', color: useManualInput ? '#fff' : '#9ca3af', border: 'none', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}>Manual</button>
                       </div>
                     </div>
 
@@ -2333,36 +2333,36 @@ function CVMakerContent() {
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setShowProgramDropdown(!showProgramDropdown); }}
-                          className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm px-3 py-2.5 transition-colors flex items-center justify-between hover:border-purple-500/40"
+                          className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm px-3 py-2.5 transition-colors flex items-center justify-between hover:border-red-300"
                         >
                           {selectedProgramId && shortlist.find(s => s.programId === selectedProgramId) ? (
                             <div style={{ flex: 1, overflow: 'hidden', textAlign: 'left' }}>
-                              <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              <p style={{ fontSize: 13, fontWeight: 600, color: '#111', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {shortlist.find(s => s.programId === selectedProgramId)?.programName}
                               </p>
-                              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: 0 }}>
+                              <p style={{ fontSize: 11, color: '#6b7280', margin: 0 }}>
                                 {shortlist.find(s => s.programId === selectedProgramId)?.university}
                               </p>
                             </div>
                           ) : (
-                            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>Select a program from your shortlist</span>
+                            <span style={{ fontSize: 13, color: '#9ca3af' }}>Select a program from your shortlist</span>
                           )}
-                          <ChevronDown className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.3)', transform: showProgramDropdown ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }} />
+                          <ChevronDown className="w-4 h-4" style={{ color: '#9ca3af', transform: showProgramDropdown ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }} />
                         </button>
                         {showProgramDropdown && (
-                          <div style={{ position: 'absolute', left: 0, right: 0, marginTop: 6, borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)', background: '#1a1a2e', boxShadow: '0 8px 24px rgba(0,0,0,0.4)', maxHeight: 200, overflowY: 'auto', zIndex: 9999 }}>
+                          <div style={{ position: 'absolute', left: 0, right: 0, marginTop: 6, borderRadius: 12, border: '1px solid #e5e7eb', background: '#fff', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', maxHeight: 200, overflowY: 'auto', zIndex: 9999 }}>
                             {shortlist.map(item => (
                               <button
                                 key={item.id}
                                 type="button"
                                 onClick={() => { setSelectedProgramId(item.programId); setShowProgramDropdown(false); }}
-                                style={{ width: '100%', textAlign: 'left', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, background: item.programId === selectedProgramId ? 'rgba(124,58,237,0.1)' : 'transparent', cursor: 'pointer', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+                                style={{ width: '100%', textAlign: 'left', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, background: item.programId === selectedProgramId ? 'rgba(221,0,0,0.05)' : 'transparent', cursor: 'pointer', border: 'none', borderBottom: '1px solid #f3f4f6' }}
                               >
                                 <div style={{ flex: 1, overflow: 'hidden' }}>
-                                  <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.programName}</p>
-                                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: 0 }}>{item.university}</p>
+                                  <p style={{ fontSize: 13, fontWeight: 600, color: '#111', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.programName}</p>
+                                  <p style={{ fontSize: 11, color: '#6b7280', margin: 0 }}>{item.university}</p>
                                 </div>
-                                {item.programId === selectedProgramId && <CheckCircle2 className="w-4 h-4" style={{ color: '#7c3aed' }} />}
+                                {item.programId === selectedProgramId && <CheckCircle2 className="w-4 h-4" style={{ color: '#dd0000' }} />}
                               </button>
                             ))}
                           </div>
@@ -2380,28 +2380,28 @@ function CVMakerContent() {
                     { name: 'skills', label: 'Key Skills', ph: 'Python, React, Data Analysis...' },
                   ].map(f => (
                     <div key={f.name}>
-                      <label className="text-white/40 text-[11px] uppercase tracking-wider mb-1.5 block">{f.label}</label>
-                      <input name={f.name} type="text" required={f.req} placeholder={f.ph} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-blue-500/40 px-3 py-2.5 transition-colors" />
+                      <label className="text-gray-600 text-[11px] uppercase tracking-wider mb-1.5 block font-semibold">{f.label}</label>
+                      <input name={f.name} type="text" required={f.req} placeholder={f.ph} className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors" />
                     </div>
                   ))}
                   <div>
-                    <label className="text-white/40 text-[11px] uppercase tracking-wider mb-1.5 block">Brief Background</label>
-                    <textarea name="background" rows={3} placeholder="Tell us about your experience..." className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-blue-500/40 px-3 py-2.5 transition-colors resize-none" />
+                    <label className="text-gray-600 text-[11px] uppercase tracking-wider mb-1.5 block font-semibold">Brief Background</label>
+                    <textarea name="background" rows={3} placeholder="Tell us about your experience..." className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors resize-none" />
                   </div>
-                  <div className="pt-2 border-t border-white/[0.06]">
-                    <label className="text-white/40 text-[11px] uppercase tracking-wider mb-1.5 block">Education (Optional)</label>
-                    <input name="degree" type="text" placeholder="e.g., B.Sc. Computer Science" className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-blue-500/40 px-3 py-2.5 transition-colors mb-2" />
-                    <input name="university" type="text" placeholder="e.g., Technical University of Munich" className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-blue-500/40 px-3 py-2.5 transition-colors" />
+                  <div className="pt-2 border-t border-gray-200">
+                    <label className="text-gray-600 text-[11px] uppercase tracking-wider mb-1.5 block font-semibold">Education (Optional)</label>
+                    <input name="degree" type="text" placeholder="e.g., B.Sc. Computer Science" className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors mb-2" />
+                    <input name="university" type="text" placeholder="e.g., Technical University of Munich" className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors" />
                   </div>
                   {aiError && (
-                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
+                    <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs">
                       <p className="font-medium mb-0.5">Generation failed</p>
                       <p className="opacity-70">{aiError}</p>
                     </div>
                   )}
                   <div className="flex gap-3 pt-2">
-                    <button type="button" onClick={() => setShowAI(false)} className="flex-1 px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] text-white/60 rounded-lg text-sm hover:bg-white/[0.08] transition-colors">Cancel</button>
-                    <button type="submit" disabled={aiLoading} className="flex-1 px-4 py-2.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg text-sm font-medium hover:from-purple-600 hover:to-blue-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                    <button type="button" onClick={() => setShowAI(false)} className="flex-1 px-4 py-2.5 bg-gray-100 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">Cancel</button>
+                    <button type="submit" disabled={aiLoading} className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg text-sm font-medium hover:from-red-700 hover:to-red-800 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-red-500/30">
                       {aiLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating...</> : <><Sparkles className="w-4 h-4" /> Generate</>}
                     </button>
                   </div>
