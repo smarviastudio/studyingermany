@@ -305,7 +305,7 @@ Be specific and actionable.`;
       }
 
       // Clean and parse JSON
-      let jsonText = jsonMatch[0]
+      const jsonText = jsonMatch[0]
         .replace(/,\s*}/g, '}')
         .replace(/,\s*]/g, ']');
 
