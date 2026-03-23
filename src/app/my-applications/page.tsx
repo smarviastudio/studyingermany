@@ -81,9 +81,14 @@ export default function MyApplicationsPage() {
   const criticalStepsList: { step: any; programName: string; programId: string }[] = [];
 
   plans.forEach(plan => {
-    const planData = typeof plan.planData === 'string' ? JSON.parse(plan.planData) : plan.planData;
+    let planData;
+    try {
+      planData = typeof plan.planData === 'string' ? JSON.parse(plan.planData) : plan.planData;
+    } catch {
+      planData = null;
+    }
     const steps = planData?.steps || [];
-    const cl = plan.checklistState ? (typeof plan.checklistState === 'string' ? JSON.parse(plan.checklistState) : plan.checklistState) : {};
+    const cl: Record<string, boolean> = plan.checklistState ? (typeof plan.checklistState === 'string' ? JSON.parse(plan.checklistState) : plan.checklistState) : {};
     steps.forEach((step: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
       totalSteps++;
       if (cl[step.id] || step.autoCompleted) totalCompleted++;
@@ -173,19 +178,19 @@ export default function MyApplicationsPage() {
           {plans.length > 0 && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 24 }}>
               <div style={{ background: '#fff', borderRadius: 14, padding: '18px 16px', border: '1px solid #e5e5e5', textAlign: 'center' }}>
-                <div style={{ fontSize: 28, fontWeight: 800, color: '#dd0000' }}>{overallProgress}%</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: '#dd0000' }}>{overallProgress || 0}%</div>
                 <div style={{ fontSize: 12, color: '#737373', fontWeight: 600, marginTop: 2 }}>Overall Progress</div>
                 <div style={{ marginTop: 8, height: 5, background: '#f0f0f0', borderRadius: 3, overflow: 'hidden' }}>
                   <div style={{ width: `${overallProgress}%`, height: '100%', background: overallProgress === 100 ? '#22c55e' : '#dd0000', borderRadius: 3 }} />
                 </div>
               </div>
               <div style={{ background: '#fff', borderRadius: 14, padding: '18px 16px', border: '1px solid #e5e5e5', textAlign: 'center' }}>
-                <div style={{ fontSize: 28, fontWeight: 800, color: '#22c55e' }}>{totalCompleted}</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: '#22c55e' }}>{totalCompleted || 0}</div>
                 <div style={{ fontSize: 12, color: '#737373', fontWeight: 600, marginTop: 2 }}>Steps Done</div>
-                <div style={{ fontSize: 11, color: '#a3a3a3', marginTop: 4 }}>of {totalSteps} total</div>
+                <div style={{ fontSize: 11, color: '#a3a3a3', marginTop: 4 }}>of {totalSteps || 0} total</div>
               </div>
               <div style={{ background: '#fff', borderRadius: 14, padding: '18px 16px', border: '1px solid #e5e5e5', textAlign: 'center' }}>
-                <div style={{ fontSize: 28, fontWeight: 800, color: '#dc2626' }}>{totalCritical}</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: '#dc2626' }}>{totalCritical || 0}</div>
                 <div style={{ fontSize: 12, color: '#737373', fontWeight: 600, marginTop: 2 }}>Critical Steps</div>
                 <div style={{ fontSize: 11, color: '#a3a3a3', marginTop: 4 }}>high priority</div>
               </div>
@@ -296,12 +301,22 @@ export default function MyApplicationsPage() {
                   const hasPlan = !!planObj;
                   let pSteps = 0, pDone = 0, pProg = 0, nextDeadline = '';
                   if (planObj) {
-                    const planData = typeof planObj.planData === 'string' ? JSON.parse(planObj.planData) : planObj.planData;
+                    let planData;
+                    try {
+                      planData = typeof planObj.planData === 'string' ? JSON.parse(planObj.planData) : planObj.planData;
+                    } catch {
+                      planData = null;
+                    }
                     const st = planData?.steps || [];
-                    const cl = planObj.checklistState ? (typeof planObj.checklistState === 'string' ? JSON.parse(planObj.checklistState) : planObj.checklistState) : {};
-                    pSteps = st.length;
+                    let cl: Record<string, boolean> = {};
+                    try {
+                      cl = planObj.checklistState ? (typeof planObj.checklistState === 'string' ? JSON.parse(planObj.checklistState) : planObj.checklistState) : {};
+                    } catch {
+                      cl = {};
+                    }
+                    pSteps = st.length || 0;
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    pDone = st.filter((s: any) => cl[s.id] || s.autoCompleted).length;
+                    pDone = st.filter((s: any) => cl[s.id] || s.autoCompleted).length || 0;
                     pProg = pSteps > 0 ? Math.round((pDone / pSteps) * 100) : 0;
                     // Find next upcoming deadline
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -325,9 +340,9 @@ export default function MyApplicationsPage() {
                                 <div style={{ flex: 1, maxWidth: 160, height: 5, background: '#e5e5e5', borderRadius: 3, overflow: 'hidden' }}>
                                   <div style={{ width: `${pProg}%`, height: '100%', background: pProg === 100 ? '#22c55e' : '#dd0000', borderRadius: 3 }} />
                                 </div>
-                                <span style={{ fontSize: 12, fontWeight: 700, color: pProg === 100 ? '#22c55e' : '#dd0000' }}>{pProg}%</span>
+                                <span style={{ fontSize: 12, fontWeight: 700, color: pProg === 100 ? '#22c55e' : '#dd0000' }}>{pProg || 0}%</span>
                               </div>
-                              <div style={{ fontSize: 12, color: '#737373' }}>{pDone} of {pSteps} steps done</div>
+                              <div style={{ fontSize: 12, color: '#737373' }}>{pDone || 0} of {pSteps || 0} steps done</div>
                               {nextDeadline && (
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6, fontSize: 11, color: '#dc2626', fontWeight: 600 }}>
                                   <Clock className="w-3 h-3" /> Next: {nextDeadline}
