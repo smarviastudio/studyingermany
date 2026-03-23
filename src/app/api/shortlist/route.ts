@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       orderBy: { addedAt: 'desc' },
     });
 
-    return NextResponse.json({ shortlists, entries: shortlists });
+    return NextResponse.json({ shortlist: shortlists, shortlists, entries: shortlists });
   } catch (error) {
     console.error('Get shortlist error:', error);
     return NextResponse.json({ error: 'Failed to fetch shortlist' }, { status: 500 });
