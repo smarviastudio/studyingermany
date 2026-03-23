@@ -465,6 +465,18 @@ export default function ApplicationPlanPage() {
     }
   };
 
+  const regeneratePlan = async () => {
+    // Delete existing plan, show questionnaire
+    try {
+      await fetch(`/api/programs/${programId}/application-plan`, { method: 'DELETE' });
+      setPlan(null);
+      setShowQuestionnaire(true);
+      setQuestionnaireStep(0);
+    } catch (err) {
+      console.error('Failed to delete plan:', err);
+    }
+  };
+
   const getCategoryIcon = (category?: string) => {
     switch (category) {
       case 'language': return <Globe className="w-4 h-4" />;
@@ -1014,6 +1026,19 @@ export default function ApplicationPlanPage() {
           ) : (
             /* Has Plan - Simplified Layout */
             <div className="app-plan-simple">
+
+              {/* Regenerate Banner */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: 12, marginBottom: 20 }}>
+                <span style={{ fontSize: 13, color: '#92400e', fontWeight: 500 }}>
+                  Want a more personalized plan? Answer a few questions and regenerate.
+                </span>
+                <button
+                  onClick={regeneratePlan}
+                  style={{ padding: '8px 16px', background: '#dd0000', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                >
+                  Regenerate Plan
+                </button>
+              </div>
               
               {/* Section 1: AI Profile Snapshot */}
               {plan.profileMatch && (
