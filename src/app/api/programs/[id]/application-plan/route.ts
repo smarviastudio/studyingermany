@@ -407,7 +407,7 @@ Generate a comprehensive, personalized application plan.`;
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.5,
-        max_tokens: 2000
+        max_tokens: 4000
       }),
       cache: 'no-store'
     });
