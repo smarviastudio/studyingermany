@@ -36,6 +36,7 @@ export default function MyApplicationsPage() {
   const [plans, setPlans] = useState<ProgramPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [shortlist, setShortlist] = useState<any[]>([]);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -97,6 +98,22 @@ export default function MyApplicationsPage() {
     !plans.some(p => p.programId === s.programId)
   );
 
+  const deleteAllPlans = async () => {
+    if (!confirm('Delete all application plans? You can recreate them anytime.')) return;
+    try {
+      setDeleting(true);
+      const res = await fetch('/api/application-plans/delete-all', { method: 'DELETE' });
+      if (res.ok) {
+        setPlans([]);
+        alert('All plans deleted successfully');
+      }
+    } catch (err) {
+      console.error('Failed to delete plans:', err);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (status === 'loading' || loading) {
     return (
       <>
@@ -115,13 +132,28 @@ export default function MyApplicationsPage() {
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 20px 100px' }}>
 
           {/* Header */}
-          <div style={{ marginBottom: 32 }}>
-            <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 28, fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>
-              My Applications
-            </h1>
-            <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>
-              Track your application progress and deadlines
-            </p>
+          <div style={{ marginBottom: 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 28, fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>
+                My Applications
+              </h1>
+              <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>
+                Track your application progress and deadlines
+              </p>
+            </div>
+            {plans.length > 0 && (
+              <button
+                onClick={deleteAllPlans}
+                disabled={deleting}
+                style={{
+                  padding: '8px 16px', background: '#fff', border: '1px solid #e5e5e5',
+                  borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#dc2626',
+                  cursor: deleting ? 'not-allowed' : 'pointer', opacity: deleting ? 0.5 : 1
+                }}
+              >
+                {deleting ? 'Deleting...' : 'Reset All Plans'}
+              </button>
+            )}
           </div>
 
           {/* No shortlist warning */}
