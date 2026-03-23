@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
-import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard, ChevronLeft, ChevronRight, Home } from 'lucide-react';
+import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard, ChevronLeft, ChevronRight, Home, Bookmark } from 'lucide-react';
 import { useContactModal } from './ContactModalProvider';
 
 const RED = '#dd0000';
@@ -295,6 +295,7 @@ export function SiteNav() {
           <a href="/#tools" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Wrench size={20} />Free AI Tools</a>
           <a href="/pricing" className="sitenav-drawer-link red" onClick={() => setDrawerOpen(false)}><Tag size={20} />Pricing</a>
           {isAuthenticated && <Link href="/dashboard" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><LayoutDashboard size={20} />Dashboard</Link>}
+          {isAuthenticated && <Link href="/my-applications" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Bookmark size={20} />My Applications</Link>}
         </div>
         <div className="sitenav-drawer-auth">
           {isAuthenticated ? (
