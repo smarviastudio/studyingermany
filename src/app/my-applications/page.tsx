@@ -81,7 +81,8 @@ export default function MyApplicationsPage() {
   const criticalStepsList: { step: any; programName: string; programId: string }[] = [];
 
   plans.forEach(plan => {
-    const steps = plan.planData?.steps || [];
+    const planData = typeof plan.planData === 'string' ? JSON.parse(plan.planData) : plan.planData;
+    const steps = planData?.steps || [];
     const cl = plan.checklistState ? (typeof plan.checklistState === 'string' ? JSON.parse(plan.checklistState) : plan.checklistState) : {};
     steps.forEach((step: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
       totalSteps++;
@@ -293,14 +294,19 @@ export default function MyApplicationsPage() {
                 {shortlist.map((item: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
                   const planObj = plans.find(p => p.programId === item.programId);
                   const hasPlan = !!planObj;
-                  let pSteps = 0, pDone = 0, pProg = 0;
+                  let pSteps = 0, pDone = 0, pProg = 0, nextDeadline = '';
                   if (planObj) {
-                    const st = planObj.planData?.steps || [];
+                    const planData = typeof planObj.planData === 'string' ? JSON.parse(planObj.planData) : planObj.planData;
+                    const st = planData?.steps || [];
                     const cl = planObj.checklistState ? (typeof planObj.checklistState === 'string' ? JSON.parse(planObj.checklistState) : planObj.checklistState) : {};
                     pSteps = st.length;
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     pDone = st.filter((s: any) => cl[s.id] || s.autoCompleted).length;
                     pProg = pSteps > 0 ? Math.round((pDone / pSteps) * 100) : 0;
+                    // Find next upcoming deadline
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const upcomingDeadlines = st.filter((s: any) => s.deadline && !cl[s.id] && !s.autoCompleted).map((s: any) => s.deadline).sort();
+                    nextDeadline = upcomingDeadlines[0] || '';
                   }
                   return (
                     <div key={item.id} style={{ padding: 20, background: '#fafafa', borderRadius: 12, border: '1px solid #f0f0f0' }}>
@@ -322,6 +328,11 @@ export default function MyApplicationsPage() {
                                 <span style={{ fontSize: 12, fontWeight: 700, color: pProg === 100 ? '#22c55e' : '#dd0000' }}>{pProg}%</span>
                               </div>
                               <div style={{ fontSize: 12, color: '#737373' }}>{pDone} of {pSteps} steps done</div>
+                              {nextDeadline && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6, fontSize: 11, color: '#dc2626', fontWeight: 600 }}>
+                                  <Clock className="w-3 h-3" /> Next: {nextDeadline}
+                                </div>
+                              )}
                             </div>
                           ) : (
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#737373' }}>
