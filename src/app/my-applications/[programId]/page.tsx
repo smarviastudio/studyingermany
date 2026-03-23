@@ -6,9 +6,9 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {
   Loader2, ArrowLeft, CheckCircle2, Circle, AlertCircle,
-  FileText, GraduationCap, Calendar, ExternalLink, Sparkles,
-  Globe, Zap, Clock, ChevronDown, ChevronUp,
-  Shield, Wallet, Plane, Target, Building2
+  FileText, Calendar, ExternalLink, Sparkles,
+  Globe, Clock, ChevronDown, ChevronUp,
+  Wallet, Plane, Target, Building2
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { GermanPulseLoader } from '@/components/GermanPulseLoader';
@@ -114,7 +114,7 @@ function PlanPageInner() {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const programId = params.programId as string;
   const forceNew = searchParams.get('new') === '1';
 
@@ -138,14 +138,6 @@ function PlanPageInner() {
   });
 
   // ─── Load data on mount ──────────────────────────────────
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin?callbackUrl=/my-applications');
-      return;
-    }
-    if (status === 'authenticated' && programId) loadData();
-  }, [status, programId]);
-
   const loadData = async () => {
     try {
       setPageState('loading');
@@ -202,6 +194,15 @@ function PlanPageInner() {
       setPageState('questionnaire');
     }
   };
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/auth/signin?callbackUrl=/my-applications');
+      return;
+    }
+    if (status === 'authenticated' && programId) loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, programId]);
 
   // ─── Generate plan ───────────────────────────────────────
   const generatePlan = async () => {
@@ -620,7 +621,7 @@ function PlanPageInner() {
               <Target className="w-5 h-5" style={{ color: '#dd0000' }} /> Your Application Steps
             </h2>
             <div style={{ display: 'grid', gap: 8 }}>
-              {plan.steps.map((step, i) => {
+              {plan.steps.map((step) => {
                 const isChecked = checklist[step.id] || step.autoCompleted;
                 const isExpanded = expandedSteps.includes(step.id);
                 const pc = priorityColor(step.priority);
