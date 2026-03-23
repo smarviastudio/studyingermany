@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {
@@ -222,8 +222,10 @@ interface UserProfile {
 export default function ApplicationPlanPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: session, status } = useSession();
   const programId = params.programId as string;
+  const forceNew = searchParams.get('new') === '1';
 
   const [loading, setLoading] = useState(true);
   const [plan, setPlan] = useState<ApplicationPlan | null>(null);
@@ -336,21 +338,30 @@ export default function ApplicationPlanPage() {
           setUniversity(programData.program.university);
         }
       }
-      const response = await fetch(`/api/programs/${programId}/application-plan`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.plan && data.plan.steps && Array.isArray(data.plan.steps)) {
-          // Ensure criticalRequirements is valid array
-          const validatedPlan = {
-            ...data.plan,
-            criticalRequirements: Array.isArray(data.plan.criticalRequirements) 
-              ? data.plan.criticalRequirements.filter((r: any) => r && typeof r === 'object' && r.type && r.label)
-              : [],
-            profileMatch: data.plan.profileMatch && typeof data.plan.profileMatch === 'object'
-              ? data.plan.profileMatch
-              : null,
-          };
-          setPlan(validatedPlan);
+      // If ?new=1, delete old plan and show questionnaire
+      if (forceNew) {
+        await fetch(`/api/programs/${programId}/application-plan`, { method: 'DELETE' });
+        setPlan(null);
+        setShowQuestionnaire(true);
+        setQuestionnaireStep(0);
+        // Clean URL without reload
+        window.history.replaceState({}, '', `/my-applications/${programId}`);
+      } else {
+        const response = await fetch(`/api/programs/${programId}/application-plan`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.plan && data.plan.steps && Array.isArray(data.plan.steps)) {
+            const validatedPlan = {
+              ...data.plan,
+              criticalRequirements: Array.isArray(data.plan.criticalRequirements) 
+                ? data.plan.criticalRequirements.filter((r: any) => r && typeof r === 'object' && r.type && r.label)
+                : [],
+              profileMatch: data.plan.profileMatch && typeof data.plan.profileMatch === 'object'
+                ? data.plan.profileMatch
+                : null,
+            };
+            setPlan(validatedPlan);
+          }
         }
       }
     } catch (err) {

@@ -249,7 +249,7 @@ export default function MyApplicationsPage() {
                           )}
                         </div>
                         <Link
-                          href={`/my-applications/${item.programId}`}
+                          href={hasPlan ? `/my-applications/${item.programId}` : `/my-applications/${item.programId}?new=1`}
                           style={{
                             display: 'inline-flex', alignItems: 'center', gap: 6,
                             padding: '10px 18px', background: '#dd0000', color: '#fff',
