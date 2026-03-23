@@ -241,6 +241,20 @@ export default function ApplicationPlanPage() {
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [selectedDocInfo, setSelectedDocInfo] = useState<{id: string; label: string; type: 'admission' | 'visa'} | null>(null);
   const [expandedDocs, setExpandedDocs] = useState<string[]>([]);
+  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+  const [questionnaireStep, setQuestionnaireStep] = useState(0);
+  const [questionnaireData, setQuestionnaireData] = useState({
+    nationality: '',
+    currentCountry: '',
+    plannedStart: '',
+    englishLevel: '',
+    englishCert: '',
+    englishScore: '',
+    germanLevel: '',
+    germanCert: '',
+    financialReady: '',
+    additionalNotes: '',
+  });
   
   // Collapsible section states
   const [showRequirements, setShowRequirements] = useState(true);
@@ -386,9 +400,22 @@ export default function ApplicationPlanPage() {
       const sanitizedProgram = buildProgramPayload(programToUse);
       const sanitizedProfilePayload = sanitizeUserProfilePayload(profileToUse);
 
-      const payload = sanitizedProfilePayload
-        ? { program: sanitizedProgram, userProfile: sanitizedProfilePayload }
-        : { program: sanitizedProgram };
+      // Merge questionnaire data into profile
+      const enrichedProfile = {
+        ...(sanitizedProfilePayload || {}),
+        nationality: questionnaireData.nationality || (sanitizedProfilePayload as any)?.nationality,
+        currentCountry: questionnaireData.currentCountry,
+        plannedStart: questionnaireData.plannedStart,
+        englishLevel: questionnaireData.englishLevel || (sanitizedProfilePayload as any)?.englishLevel,
+        englishCert: questionnaireData.englishCert,
+        englishScore: questionnaireData.englishScore,
+        germanLevel: questionnaireData.germanLevel || (sanitizedProfilePayload as any)?.germanLevel,
+        germanCert: questionnaireData.germanCert,
+        financialReady: questionnaireData.financialReady,
+        additionalNotes: questionnaireData.additionalNotes,
+      };
+
+      const payload = { program: sanitizedProgram, userProfile: enrichedProfile };
 
       const generateRes = await fetch(`/api/programs/${programId}/application-plan`, {
         method: 'POST',
@@ -683,7 +710,8 @@ export default function ApplicationPlanPage() {
         {/* Main Content Area */}
         <div className="app-plan-content">
           {!plan ? (
-            /* No Plan - Generate CTA */
+            /* No Plan - Questionnaire then Generate */
+            !showQuestionnaire && !generating ? (
             <div className="app-plan-generate-modern">
               <div className="generate-card">
                 <div className="generate-icon-wrapper">
@@ -693,32 +721,22 @@ export default function ApplicationPlanPage() {
                 
                 <h2 className="generate-title">Start Your Application Journey</h2>
                 <p className="generate-description">
-                  Get a personalized, AI-powered roadmap with document checklists, deadlines, and step-by-step guidance tailored to your profile and this program.
+                  Answer a few quick questions so we can create a personalized roadmap tailored to your background and this program.
                 </p>
                 
                 <button
-                  onClick={generatePlan}
-                  disabled={generating}
+                  onClick={() => { setShowQuestionnaire(true); setQuestionnaireStep(0); }}
                   className="generate-btn"
                 >
-                  {generating ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Analyzing program requirements...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="w-5 h-5" />
-                      <span>Generate My Application Plan</span>
-                    </>
-                  )}
+                  <Zap className="w-5 h-5" />
+                  <span>Get Started</span>
                 </button>
 
                 {generationError && (
                   <div className="generate-error">
                     <AlertCircle className="w-4 h-4" />
                     <span>{generationError}</span>
-                    <button onClick={generatePlan} disabled={generating} className="retry-btn">
+                    <button onClick={() => { setShowQuestionnaire(true); setQuestionnaireStep(0); }} className="retry-btn">
                       Try again
                     </button>
                   </div>
@@ -755,6 +773,244 @@ export default function ApplicationPlanPage() {
                 </div>
               </div>
             </div>
+            ) : showQuestionnaire && !generating ? (
+            /* Questionnaire Form */
+            <div style={{ maxWidth: 640, margin: '0 auto', padding: '40px 0' }}>
+              <div style={{ background: '#fff', borderRadius: 20, border: '1px solid #e5e5e5', overflow: 'hidden' }}>
+                {/* Header */}
+                <div style={{ padding: '24px 28px', borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0a0a0a', margin: '0 0 4px' }}>
+                      {questionnaireStep === 0 ? 'About You' : questionnaireStep === 1 ? 'Language Skills' : 'Financial & Timeline'}
+                    </h2>
+                    <p style={{ fontSize: 13, color: '#737373', margin: 0 }}>
+                      Step {questionnaireStep + 1} of 3
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', gap: 4 }}>
+                    {[0,1,2].map(i => (
+                      <div key={i} style={{ width: 32, height: 4, borderRadius: 2, background: i <= questionnaireStep ? '#dd0000' : '#e5e5e5' }} />
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ padding: '28px' }}>
+                  {/* Step 0: About You */}
+                  {questionnaireStep === 0 && (
+                    <div style={{ display: 'grid', gap: 20 }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 8 }}>
+                          What is your nationality? *
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g. Indian, Pakistani, Nigerian..."
+                          value={questionnaireData.nationality}
+                          onChange={e => setQuestionnaireData(prev => ({ ...prev, nationality: e.target.value }))}
+                          style={{ width: '100%', padding: '12px 14px', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, outline: 'none', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 8 }}>
+                          Which country are you currently in? *
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g. India, Pakistan, Germany..."
+                          value={questionnaireData.currentCountry}
+                          onChange={e => setQuestionnaireData(prev => ({ ...prev, currentCountry: e.target.value }))}
+                          style={{ width: '100%', padding: '12px 14px', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, outline: 'none', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 8 }}>
+                          When do you want to start studying?
+                        </label>
+                        <select
+                          value={questionnaireData.plannedStart}
+                          onChange={e => setQuestionnaireData(prev => ({ ...prev, plannedStart: e.target.value }))}
+                          style={{ width: '100%', padding: '12px 14px', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, outline: 'none', background: '#fff', boxSizing: 'border-box' }}
+                        >
+                          <option value="">Select intake...</option>
+                          <option value="Winter 2025/26">Winter 2025/26 (Oct 2025)</option>
+                          <option value="Summer 2026">Summer 2026 (Apr 2026)</option>
+                          <option value="Winter 2026/27">Winter 2026/27 (Oct 2026)</option>
+                          <option value="Summer 2027">Summer 2027 (Apr 2027)</option>
+                          <option value="Winter 2027/28">Winter 2027/28 (Oct 2027)</option>
+                        </select>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 1: Language Skills */}
+                  {questionnaireStep === 1 && (
+                    <div style={{ display: 'grid', gap: 20 }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 8 }}>
+                          English proficiency level
+                        </label>
+                        <select
+                          value={questionnaireData.englishLevel}
+                          onChange={e => setQuestionnaireData(prev => ({ ...prev, englishLevel: e.target.value }))}
+                          style={{ width: '100%', padding: '12px 14px', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, outline: 'none', background: '#fff', boxSizing: 'border-box' }}
+                        >
+                          <option value="">Select level...</option>
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate (B1-B2)">Intermediate (B1-B2)</option>
+                          <option value="Advanced (C1)">Advanced (C1)</option>
+                          <option value="Fluent / Native (C2)">Fluent / Native (C2)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 8 }}>
+                          Do you have an English test certificate?
+                        </label>
+                        <select
+                          value={questionnaireData.englishCert}
+                          onChange={e => setQuestionnaireData(prev => ({ ...prev, englishCert: e.target.value }))}
+                          style={{ width: '100%', padding: '12px 14px', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, outline: 'none', background: '#fff', boxSizing: 'border-box' }}
+                        >
+                          <option value="">Select...</option>
+                          <option value="IELTS">IELTS</option>
+                          <option value="TOEFL">TOEFL</option>
+                          <option value="Cambridge">Cambridge (CAE/CPE)</option>
+                          <option value="None yet">No certificate yet</option>
+                        </select>
+                      </div>
+                      {questionnaireData.englishCert && questionnaireData.englishCert !== 'None yet' && (
+                        <div>
+                          <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 8 }}>
+                            Your {questionnaireData.englishCert} score
+                          </label>
+                          <input
+                            type="text"
+                            placeholder={questionnaireData.englishCert === 'IELTS' ? 'e.g. 6.5' : questionnaireData.englishCert === 'TOEFL' ? 'e.g. 90' : 'e.g. Grade B'}
+                            value={questionnaireData.englishScore}
+                            onChange={e => setQuestionnaireData(prev => ({ ...prev, englishScore: e.target.value }))}
+                            style={{ width: '100%', padding: '12px 14px', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, outline: 'none', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 8 }}>
+                          German proficiency level
+                        </label>
+                        <select
+                          value={questionnaireData.germanLevel}
+                          onChange={e => setQuestionnaireData(prev => ({ ...prev, germanLevel: e.target.value }))}
+                          style={{ width: '100%', padding: '12px 14px', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, outline: 'none', background: '#fff', boxSizing: 'border-box' }}
+                        >
+                          <option value="">Select level...</option>
+                          <option value="None">No German</option>
+                          <option value="A1-A2">Beginner (A1-A2)</option>
+                          <option value="B1-B2">Intermediate (B1-B2)</option>
+                          <option value="C1-C2">Advanced (C1-C2)</option>
+                        </select>
+                      </div>
+                      {questionnaireData.germanLevel && questionnaireData.germanLevel !== 'None' && (
+                        <div>
+                          <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 8 }}>
+                            German certificate (if any)
+                          </label>
+                          <select
+                            value={questionnaireData.germanCert}
+                            onChange={e => setQuestionnaireData(prev => ({ ...prev, germanCert: e.target.value }))}
+                            style={{ width: '100%', padding: '12px 14px', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, outline: 'none', background: '#fff', boxSizing: 'border-box' }}
+                          >
+                            <option value="">Select...</option>
+                            <option value="Goethe-Zertifikat">Goethe-Zertifikat</option>
+                            <option value="TestDaF">TestDaF</option>
+                            <option value="DSH">DSH</option>
+                            <option value="telc">telc</option>
+                            <option value="None yet">No certificate yet</option>
+                          </select>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Step 2: Financial & Timeline */}
+                  {questionnaireStep === 2 && (
+                    <div style={{ display: 'grid', gap: 20 }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 8 }}>
+                          Financial readiness
+                        </label>
+                        <select
+                          value={questionnaireData.financialReady}
+                          onChange={e => setQuestionnaireData(prev => ({ ...prev, financialReady: e.target.value }))}
+                          style={{ width: '100%', padding: '12px 14px', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, outline: 'none', background: '#fff', boxSizing: 'border-box' }}
+                        >
+                          <option value="">Select...</option>
+                          <option value="Ready - have blocked account or proof">Ready - I have blocked account / proof of funds</option>
+                          <option value="In progress - saving up">In progress - saving up</option>
+                          <option value="Need scholarship">Need scholarship or financial aid</option>
+                          <option value="Not started">Not started yet</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#0a0a0a', marginBottom: 8 }}>
+                          Anything else we should know? (optional)
+                        </label>
+                        <textarea
+                          placeholder="e.g. I have work experience in this field, I need a visa, I already live in Germany..."
+                          value={questionnaireData.additionalNotes}
+                          onChange={e => setQuestionnaireData(prev => ({ ...prev, additionalNotes: e.target.value }))}
+                          rows={3}
+                          style={{ width: '100%', padding: '12px 14px', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Navigation */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28 }}>
+                    <button
+                      onClick={() => questionnaireStep === 0 ? setShowQuestionnaire(false) : setQuestionnaireStep(prev => prev - 1)}
+                      style={{ padding: '10px 20px', background: '#fff', border: '1px solid #d4d4d4', borderRadius: 10, fontSize: 14, fontWeight: 600, color: '#525252', cursor: 'pointer' }}
+                    >
+                      {questionnaireStep === 0 ? 'Cancel' : 'Back'}
+                    </button>
+                    {questionnaireStep < 2 ? (
+                      <button
+                        onClick={() => setQuestionnaireStep(prev => prev + 1)}
+                        disabled={questionnaireStep === 0 && (!questionnaireData.nationality || !questionnaireData.currentCountry)}
+                        style={{
+                          padding: '10px 24px', background: '#dd0000', color: '#fff',
+                          border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600,
+                          cursor: (questionnaireStep === 0 && (!questionnaireData.nationality || !questionnaireData.currentCountry)) ? 'not-allowed' : 'pointer',
+                          opacity: (questionnaireStep === 0 && (!questionnaireData.nationality || !questionnaireData.currentCountry)) ? 0.5 : 1,
+                        }}
+                      >
+                        Next
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => { setShowQuestionnaire(false); generatePlan(); }}
+                        style={{
+                          padding: '10px 24px', background: '#dd0000', color: '#fff',
+                          border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 700,
+                          cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
+                        }}
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        Generate My Plan
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            ) : generating ? (
+            /* Generating state */
+            <div style={{ textAlign: 'center', padding: '80px 24px' }}>
+              <GermanPulseLoader
+                headline="Creating your personalized roadmap..."
+                progressLabel="Analyzing program requirements"
+                subline="This takes about 15-30 seconds"
+              />
+            </div>
+          ) : null
           ) : (
             /* Has Plan - Simplified Layout */
             <div className="app-plan-simple">
