@@ -12,7 +12,6 @@ import {
   AlertTriangle, PenTool
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
-import { GermanPulseLoader } from '@/components/GermanPulseLoader';
 import { CourseAssistantChat } from '@/components/CourseAssistantChat';
 
 // ─── Types ────────────────────────────────────────────────────
@@ -217,22 +216,35 @@ function PlanPageInner() {
         additionalNotes: qData.additionalNotes,
       };
 
-      const res = await fetch(`/api/programs/${programId}/application-plan`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ program: buildProgramPayload(prog), userProfile: enrichedProfile }),
-      });
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 65000);
 
-      if (res.ok) {
-        const data = await res.json();
-        if (data.plan?.steps?.length) { setPlan(data.plan); setPageState('plan'); return; }
+      let res;
+      try {
+        res = await fetch(`/api/programs/${programId}/application-plan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ program: buildProgramPayload(prog), userProfile: enrichedProfile }),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeout);
       }
-      const err = await res.json().catch(() => ({}));
-      setErrorMsg(err?.error || err?.message || 'Failed to generate plan. Try again.');
+
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.plan?.steps?.length) {
+        setPlan(data.plan);
+        setPageState('plan');
+        return;
+      }
+      setErrorMsg(data?.error || data?.message || 'Failed to generate plan. Try again.');
       setPageState('questionnaire');
-    } catch (err) {
+    } catch (err: any) {
       console.error('Generate error:', err);
-      setErrorMsg('Something went wrong. Please try again.');
+      const msg = err?.name === 'AbortError'
+        ? 'Request timed out. The AI is busy — please try again.'
+        : 'Something went wrong. Please try again.';
+      setErrorMsg(msg);
       setPageState('questionnaire');
     }
   };
@@ -412,7 +424,54 @@ function PlanPageInner() {
 
   // ─── RENDER: Generating ────────────────────────────────
   if (pageState === 'generating') {
-    return (<><SiteNav /><div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><GermanPulseLoader headline="Creating your personalized roadmap..." progressLabel="Analyzing requirements, visa & APS needs" subline="This takes about 15-30 seconds" /></div></>);
+    return (
+      <>
+        <SiteNav />
+        <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+            <div className="plan-spinner">
+              <div className="plan-spinner-ring" />
+              <div className="plan-spinner-ring" />
+              <div className="plan-spinner-ring" />
+            </div>
+            <div>
+              <p style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: '0 0 8px' }}>Creating your personalized roadmap...</p>
+              <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px' }}>Analyzing requirements, visa &amp; APS needs</p>
+              <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>This takes about 15-30 seconds</p>
+            </div>
+            <style jsx>{`
+              .plan-spinner {
+                position: relative;
+                width: 56px;
+                height: 56px;
+              }
+              .plan-spinner-ring {
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                border: 3px solid transparent;
+              }
+              .plan-spinner-ring:nth-child(1) {
+                border-top-color: #0a0a0a;
+                animation: plan-spin 1.2s ease-in-out infinite;
+              }
+              .plan-spinner-ring:nth-child(2) {
+                border-right-color: #dd0000;
+                animation: plan-spin 1.2s ease-in-out infinite 0.15s;
+              }
+              .plan-spinner-ring:nth-child(3) {
+                border-bottom-color: #f4c300;
+                animation: plan-spin 1.2s ease-in-out infinite 0.3s;
+              }
+              @keyframes plan-spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+            `}</style>
+          </div>
+        </div>
+      </>
+    );
   }
 
   // ─── RENDER: Plan ──────────────────────────────────────
