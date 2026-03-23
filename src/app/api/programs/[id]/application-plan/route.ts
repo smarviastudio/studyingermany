@@ -48,6 +48,13 @@ const ApplicationPlanRequestSchema = z.object({
     targetDegreeLevel: z.string().optional(),
     hasScholarship: z.boolean().optional(),
     maxTuitionEur: z.number().nullable().optional(),
+    currentCountry: z.string().optional(),
+    plannedStart: z.string().optional(),
+    englishCert: z.string().optional(),
+    englishScore: z.string().optional(),
+    germanCert: z.string().optional(),
+    financialReady: z.string().optional(),
+    additionalNotes: z.string().optional(),
   }).optional(),
 });
 
@@ -61,7 +68,17 @@ const MODEL = 'openai/gpt-4o-mini';
 
 const SYSTEM_PROMPT = `You are an expert German university application advisor with deep knowledge of German higher education. Your role is to analyze program requirements comprehensively and create a detailed, personalized application roadmap.
 
-FIRST: Generate a comprehensive AI-powered program analysis summary that covers:
+CRITICAL PERSONALIZATION RULES:
+- The user has answered a questionnaire. Use their answers to deeply personalize the plan.
+- If they provided their NATIONALITY, tailor advice for that country (e.g. APS certificate for India/China/Vietnam, embassy locations, typical processing times for their country).
+- If they provided their CURRENT COUNTRY, calculate realistic timelines for document legalization, embassy appointments, travel, etc.
+- If they provided PLANNED START semester, reverse-engineer all deadlines from that date. Show exactly how many months/weeks they have left and what to do when.
+- If they provided ENGLISH/GERMAN LEVEL and CERTIFICATES, compare with program requirements and give specific advice (e.g. "You have IELTS 6.5 but program needs 7.0 - here's how to improve in X months").
+- If they said FINANCIAL READINESS is "Not started", emphasize blocked account steps urgently. If "Ready", mark financial steps as lower priority.
+- Use their ADDITIONAL NOTES for any extra personalization.
+- Make the timeline SPECIFIC to their situation: "As a Pakistani student applying from Pakistan for Winter 2026/27, you need to start APS process by March 2026..."
+
+Generate a comprehensive AI-powered program analysis summary that covers:
 1. Program Overview: What this program is about, its focus areas, and what makes it unique
 2. Academic Requirements: Detailed analysis of admission criteria, prerequisites, and academic standards
 3. Language Requirements: Exact language proficiency needed and how to meet it
@@ -343,15 +360,23 @@ ${program.application_channel_notes || ''}
 ${userProfile ? `
 Name: ${userProfile.fullName || 'Not provided'}
 Nationality: ${userProfile.nationality || 'Not specified'}
-German Language Level: ${userProfile.germanLevel || 'Not specified'}
+Currently Located In: ${(userProfile as any).currentCountry || 'Not specified'}
+Planned Start Semester: ${(userProfile as any).plannedStart || 'Not specified'}
+
 English Language Level: ${userProfile.englishLevel || 'Not specified'}
-IELTS Score: ${userProfile.ieltsScore || 'Not taken'}
-TOEFL Score: ${userProfile.toeflScore || 'Not taken'}
+English Certificate: ${(userProfile as any).englishCert || 'None'}
+English Test Score: ${(userProfile as any).englishScore || userProfile.ieltsScore || userProfile.toeflScore || 'Not provided'}
+German Language Level: ${userProfile.germanLevel || 'Not specified'}
+German Certificate: ${(userProfile as any).germanCert || 'None'}
+
+Financial Readiness: ${(userProfile as any).financialReady || 'Not specified'}
 Academic Background: ${userProfile.academicBackground || 'Not specified'}
 Background Summary: ${userProfile.backgroundSummary || 'Not provided'}
 Target Degree: ${userProfile.targetDegreeLevel || 'Not specified'}
 Has Scholarship: ${userProfile.hasScholarship ? 'Yes' : 'No'}
-Max Tuition Budget: ${userProfile.maxTuitionEur ? `€${userProfile.maxTuitionEur}` : 'Not specified'}
+Max Tuition Budget: ${userProfile.maxTuitionEur ? '€' + userProfile.maxTuitionEur : 'Not specified'}
+
+Additional Notes from User: ${(userProfile as any).additionalNotes || 'None'}
 ` : 'No user profile provided - assume international student needing all steps'}
 
 INSTRUCTIONS:
@@ -361,6 +386,9 @@ INSTRUCTIONS:
 4. Create personalized steps - mark steps as autoCompleted if user already meets requirement
 5. Use ONLY the verified URLs from your instructions
 6. Replace {PROGRAM_ID} with: ${program.id}
+7. IMPORTANT: Use the user's nationality, current country, planned start semester, and financial readiness to create SPECIFIC, TIME-BOUND steps. For example: "As a [nationality] student in [country], you should apply for APS by [date] to meet the [planned start] deadline."
+8. If the user has a planned start semester, reverse-engineer ALL deadlines from that date.
+9. Tailor visa advice, document legalization, and embassy information to the user's nationality and current country.
 
 Generate a comprehensive, personalized application plan.`;
 
