@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
 import {
   Loader2, Calendar, AlertTriangle, ArrowRight,
-  GraduationCap, Building2, CheckCircle2, Circle, Clock, Target
+  GraduationCap, Building2, Circle, Clock, Target
 } from 'lucide-react';
 
 interface ProgramPlan {
@@ -31,7 +31,7 @@ interface TimelineEvent {
 }
 
 export default function MyApplicationsPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const [plans, setPlans] = useState<ProgramPlan[]>([]);
   const [loading, setLoading] = useState(true);
