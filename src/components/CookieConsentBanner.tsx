@@ -44,6 +44,18 @@ export function CookieConsentBanner() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!visible || typeof document === 'undefined') return;
+
+    const { body } = document;
+    const previousOverflow = body.style.overflow;
+    body.style.overflow = 'hidden';
+
+    return () => {
+      body.style.overflow = previousOverflow;
+    };
+  }, [visible]);
+
   const acceptAll = () => {
     const state: ConsentState = { essential: true, analytics: true, preferences: true };
     saveConsent(state);
@@ -70,13 +82,21 @@ export function CookieConsentBanner() {
   return (
     <div style={{
       position: 'fixed',
-      bottom: 0,
+      inset: 0,
+      display: 'flex',
+      alignItems: 'flex-end',
+      justifyContent: 'center',
+      background: 'rgba(17, 24, 39, 0.52)',
+      backdropFilter: 'blur(6px)',
       left: 0,
       right: 0,
       zIndex: 9999,
       padding: '0 16px 16px',
       animation: 'slideUpCookie 0.35s ease',
-    }}>
+      pointerEvents: 'auto',
+    }}
+    aria-hidden={false}
+    >
       <style>{`
         @keyframes slideUpCookie {
           from { opacity: 0; transform: translateY(32px); }
@@ -90,16 +110,21 @@ export function CookieConsentBanner() {
         boxShadow: '0 8px 40px rgba(0,0,0,0.18)',
         border: '1px solid #e5e7eb',
         maxWidth: 620,
+        width: '100%',
         margin: '0 auto',
         overflow: 'hidden',
-      }}>
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cookie-consent-title"
+      >
         {/* Header */}
         <div style={{ padding: '20px 24px 0', display: 'flex', alignItems: 'flex-start', gap: 14 }}>
           <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <Cookie size={20} color="#fff" />
           </div>
           <div style={{ flex: 1 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>We use cookies</h3>
+            <h3 id="cookie-consent-title" style={{ fontSize: 15, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>We use cookies</h3>
             <p style={{ fontSize: 13, color: '#6b7280', margin: 0, lineHeight: 1.6 }}>
               We use essential cookies to make our site work, and optional analytics cookies to improve your experience.
               See our{' '}
