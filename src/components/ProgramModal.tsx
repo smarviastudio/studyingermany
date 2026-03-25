@@ -7,10 +7,12 @@ import {
   ExternalLink, FileText, Star, CheckCircle,
   Bookmark, ArrowRight, Loader2, ChevronDown, ChevronUp, Euro,
   BookOpen, ShieldCheck, Coins, Building2, Briefcase, Home,
-  Users, Languages, TrendingUp, Sparkles, AlertCircle
+  Users, Languages, TrendingUp, Sparkles, AlertCircle, LogIn, UserPlus
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { createPortal } from 'react-dom';
 
 interface ProgramModalProps {
   programId: string;
@@ -22,12 +24,12 @@ interface ProgramModalProps {
 type Tab = 'overview' | 'city' | 'requirements' | 'costs';
 
 export function ProgramModal({ programId, onClose, isShortlisted = false, onToggleShortlist }: ProgramModalProps) {
+  const { status } = useSession();
   const [program, setProgram] = useState<Program | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [shortlistLoading, setShortlistLoading] = useState(false);
   const [isShortlistedState, setIsShortlistedState] = useState(isShortlisted);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [showAllModules, setShowAllModules] = useState(false);
   const [signInMessage, setSignInMessage] = useState(false);
@@ -55,30 +57,30 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
   }, [programId]);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    if (status !== 'authenticated') {
+      setIsShortlistedState(isShortlisted);
+      return;
+    }
+
+    const loadShortlist = async () => {
       try {
-        const response = await fetch('/api/auth/session');
-        const session = await response.json();
-        setIsAuthenticated(!!session?.user);
-        if (session?.user) {
-          const shortlistResponse = await fetch('/api/shortlist');
-          if (shortlistResponse.ok) {
-            const shortlistData = await shortlistResponse.json();
-            const isInShortlist = shortlistData.shortlists?.some((item: any) => item.programId === programId);
-            setIsShortlistedState(isInShortlist);
-          }
-        }
+        const shortlistResponse = await fetch('/api/shortlist');
+        if (!shortlistResponse.ok) return;
+
+        const shortlistData = await shortlistResponse.json();
+        const isInShortlist = shortlistData.shortlists?.some((item: { programId: string }) => item.programId === programId);
+        setIsShortlistedState(!!isInShortlist);
       } catch (err) {
-        console.error('Auth check failed:', err);
+        console.error('Shortlist preload failed:', err);
       }
     };
-    checkAuth();
-  }, [programId]);
+
+    loadShortlist();
+  }, [programId, isShortlisted, status]);
 
   const handleToggleShortlist = async () => {
-    if (!isAuthenticated) {
+    if (status !== 'authenticated') {
       setSignInMessage(true);
-      setTimeout(() => setSignInMessage(false), 4000);
       return;
     }
     if (!program) return;
@@ -236,24 +238,64 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
       `}</style>
 
       <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl text-[#171717] overflow-hidden modal-scroll" onClick={(e) => e.stopPropagation()}>
-        {signInMessage && (
-          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
-            <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white border border-[#f0f0f0] shadow-2xl shadow-black/15">
-              <div className="w-8 h-8 rounded-full bg-[#fff0f0] flex items-center justify-center flex-shrink-0">
-                <Bookmark className="w-4 h-4 text-[#dd0000]" />
+        {signInMessage && typeof document !== 'undefined' && createPortal(
+          <div
+            className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/45 backdrop-blur-sm p-4"
+            onClick={() => setSignInMessage(false)}
+          >
+            <div
+              className="max-h-[calc(100vh-32px)] w-full max-w-lg overflow-y-auto rounded-[28px] border border-white/70 bg-white shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-gradient-to-r from-[#fff4f4] via-white to-[#f6f0ff] px-6 pb-5 pt-6">
+                <div className="mb-5 flex items-start gap-4">
+                  <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#dd0000] to-[#7c3aed] shadow-lg shadow-[#dd0000]/15">
+                    <Bookmark className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#dd0000]">Shortlist</p>
+                    <p className="mt-1 text-[30px] font-semibold leading-none text-[#171717]">Save this program</p>
+                    <p className="mt-3 text-base leading-7 text-[#6b6b6b]">
+                      Sign in or create a free account to save programs, build your shortlist, and come back later.
+                    </p>
+                  </div>
+                  <button onClick={() => setSignInMessage(false)} className="text-[#a3a3a3] transition-colors hover:text-[#171717]">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                <div className="grid gap-3 rounded-2xl border border-black/5 bg-white/80 p-4 sm:grid-cols-3">
+                  <div className="rounded-2xl bg-[#fafafa] px-4 py-3 text-sm font-medium text-[#404040]">Save favorites</div>
+                  <div className="rounded-2xl bg-[#fafafa] px-4 py-3 text-sm font-medium text-[#404040]">Track later</div>
+                  <div className="rounded-2xl bg-[#fafafa] px-4 py-3 text-sm font-medium text-[#404040]">Free account</div>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-semibold">Sign in to shortlist</p>
-                <p className="text-xs text-[#6b6b6b]">Create a free account to save programs</p>
+              <div className="px-6 pb-6 pt-5">
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Link
+                    href="/auth/signin"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#dd0000] px-5 py-4 text-center text-base font-semibold text-white transition-colors hover:bg-[#c10000]"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    Sign in
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-[#e5e5e5] bg-white px-5 py-4 text-center text-base font-semibold text-[#171717] transition-colors hover:bg-[#f8f8f8]"
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    Sign up
+                  </Link>
+                </div>
+                <button
+                  onClick={() => setSignInMessage(false)}
+                  className="mt-3 w-full rounded-2xl px-4 py-3 text-sm font-semibold text-[#7a7a7a] transition-colors hover:bg-[#f8f8f8] hover:text-[#171717]"
+                >
+                  Maybe later
+                </button>
               </div>
-              <Link href="/auth/signin" className="ml-3 px-3 py-1.5 rounded-lg bg-[#dd0000] text-white text-xs font-semibold hover:bg-[#c10000] transition-colors flex-shrink-0">
-                Sign in
-              </Link>
-              <button onClick={() => setSignInMessage(false)} className="ml-1 text-[#a3a3a3] hover:text-[#171717] transition-colors">
-                <X className="w-3.5 h-3.5" />
-              </button>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
 
         <div className="relative">

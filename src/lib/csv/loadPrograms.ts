@@ -83,6 +83,7 @@ export class CSVLoader {
   private static instance: CSVLoader;
   private programs: Program[] = [];
   private lastLoaded: Date | null = null;
+  private loadingPromise: Promise<Program[]> | null = null;
 
   private constructor() {}
 
@@ -98,11 +99,12 @@ export class CSVLoader {
       return this.programs;
     }
 
+    if (this.loadingPromise && !forceReload) {
+      return this.loadingPromise;
+    }
+
     const csvPath = path.join(process.cwd(), 'data', 'programs_with_ai.csv');
-    
-    console.log(`[CSVLoader] Attempting to load CSV from: ${csvPath}`);
-    console.log(`[CSVLoader] Current working directory: ${process.cwd()}`);
-    
+
     let finalPath = csvPath;
     
     if (!fs.existsSync(csvPath)) {
@@ -129,8 +131,8 @@ export class CSVLoader {
     }
 
     const rawRows: RawCSVRow[] = [];
-    
-    return new Promise((resolve, reject) => {
+
+    this.loadingPromise = new Promise((resolve, reject) => {
       fs.createReadStream(finalPath, { encoding: 'utf8' })
         .pipe(csv())
         .on('data', (row: RawCSVRow) => {
@@ -143,10 +145,18 @@ export class CSVLoader {
             console.log(`Loaded ${this.programs.length} programs from CSV`);
             resolve(this.programs);
           } catch (error) {
+            this.loadingPromise = null;
             reject(error);
           }
         })
-        .on('error', reject);
+        .on('error', (error) => {
+          this.loadingPromise = null;
+          reject(error);
+        });
+    });
+
+    return this.loadingPromise.finally(() => {
+      this.loadingPromise = null;
     });
   }
 
@@ -335,17 +345,6 @@ export class CSVLoader {
       how_to_apply: fixEncoding(row.how_to_apply || ''),
       subjects: row.subjects || undefined,
     };
-
-    // Debug: Log if AI fields are present
-    if (row.city_expats_overview || row.accommodation_outlook || row.job_market_demand || row.university_profile) {
-      console.log(`[CSVLoader] Program ${id} has AI fields:`, {
-        city_expats_overview: !!row.city_expats_overview,
-        accommodation_outlook: !!row.accommodation_outlook,
-        job_market_demand: !!row.job_market_demand,
-        university_profile: !!row.university_profile
-      });
-    }
-
     // Validate with schema
     return ProgramSchema.parse(program);
   }

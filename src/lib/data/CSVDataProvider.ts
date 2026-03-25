@@ -5,8 +5,10 @@ import { TfIdf } from 'natural';
 
 export class CSVDataProvider implements DataProvider {
   private programs: Program[] = [];
+  private programIndex = new Map<string, Program>();
   private tfidf: TfIdf;
   private initialized = false;
+  private initializePromise: Promise<void> | null = null;
 
   constructor() {
     this.tfidf = new TfIdf();
@@ -14,10 +16,20 @@ export class CSVDataProvider implements DataProvider {
 
   async initialize(): Promise<void> {
     if (this.initialized) return;
-    
-    this.programs = await csvLoader.loadPrograms();
-    this.buildSearchIndex();
-    this.initialized = true;
+    if (this.initializePromise) return this.initializePromise;
+
+    this.initializePromise = (async () => {
+      this.programs = await csvLoader.loadPrograms();
+      this.programIndex = new Map(this.programs.map((program) => [program.id, program]));
+      this.buildSearchIndex();
+      this.initialized = true;
+    })();
+
+    try {
+      await this.initializePromise;
+    } finally {
+      this.initializePromise = null;
+    }
   }
 
   private buildSearchIndex(): void {
@@ -256,7 +268,7 @@ export class CSVDataProvider implements DataProvider {
 
   async getProgram(id: string): Promise<Program | null> {
     await this.initialize();
-    return this.programs.find(p => p.id === id) || null;
+    return this.programIndex.get(id) || null;
   }
 
   async getAllPrograms(): Promise<Program[]> {
@@ -266,6 +278,7 @@ export class CSVDataProvider implements DataProvider {
 
   async reloadData(): Promise<void> {
     this.programs = await csvLoader.reloadPrograms();
+    this.programIndex = new Map(this.programs.map((program) => [program.id, program]));
     this.buildSearchIndex();
   }
 }
