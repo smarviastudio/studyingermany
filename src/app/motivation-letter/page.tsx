@@ -516,8 +516,8 @@ function MotivationLetterContent() {
       <PaywallModal isOpen={paywallOpen} onClose={() => setPaywallOpen(false)} feature="motivation letter generations" currentUsage={paywallData?.current} limit={paywallData?.limit} />
 
       {signInPrompt && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)', zIndex: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }} onClick={() => setSignInPrompt(false)}>
-          <div style={{ background: '#fff', borderRadius: 24, padding: '40px 36px', maxWidth: 400, width: '100%', textAlign: 'center', boxShadow: '0 32px 80px rgba(0,0,0,0.22)' }} onClick={e => e.stopPropagation()}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)', zIndex: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 16px', overflowY: 'auto' }} onClick={() => setSignInPrompt(false)}>
+          <div style={{ background: '#fff', borderRadius: 24, padding: '40px 36px', maxWidth: 400, width: '100%', maxHeight: 'calc(100vh - 48px)', overflowY: 'auto', textAlign: 'center', boxShadow: '0 32px 80px rgba(0,0,0,0.22)', margin: 'auto 0' }} onClick={e => e.stopPropagation()}>
             <div style={{ width: 60, height: 60, borderRadius: 18, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}><FileText size={26} color="#fff" /></div>
             <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111', margin: '0 0 8px' }}>Sign in to generate</h2>
             <p style={{ fontSize: 14, color: '#666', lineHeight: 1.6, margin: '0 0 24px' }}>Free account gives you 3 motivation letters per month — no credit card needed.</p>

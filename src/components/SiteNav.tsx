@@ -207,11 +207,11 @@ export function SiteNav() {
     <>
       {navAllOpen && (
         <div
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 70, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '60px 20px', overflowY: 'auto' }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 70, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 20px', overflowY: 'auto' }}
           onClick={() => setNavAllOpen(false)}
         >
           <div
-            style={{ background: '#fff', borderRadius: 24, maxWidth: 600, width: '100%', maxHeight: 'calc(100vh - 120px)', overflowY: 'auto', boxShadow: '0 30px 80px rgba(0,0,0,0.35)', padding: '28px 32px' }}
+            style={{ background: '#fff', borderRadius: 24, maxWidth: 600, width: '100%', maxHeight: 'min(720px, calc(100vh - 48px))', overflowY: 'auto', boxShadow: '0 30px 80px rgba(0,0,0,0.35)', padding: '28px 32px', margin: 'auto 0' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
