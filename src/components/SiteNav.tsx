@@ -313,7 +313,7 @@ export function SiteNav() {
           ) : (
             <>
               <Link href="/auth/signin" className="sitenav-drawer-btn secondary" onClick={() => setDrawerOpen(false)}>Sign in</Link>
-              <Link href="/cv-maker" className="sitenav-drawer-btn primary" onClick={() => setDrawerOpen(false)}>Free CV Maker</Link>
+              <Link href="/cv-maker/landing" className="sitenav-drawer-btn primary" onClick={() => setDrawerOpen(false)}>Free CV Maker</Link>
             </>
           )}
         </div>

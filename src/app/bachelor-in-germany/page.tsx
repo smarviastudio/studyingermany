@@ -1,10 +1,11 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { GraduationCap, Search, ArrowRight } from 'lucide-react';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Bachelor\'s Programs in Germany - Guide for International Students | German Path',
+export const metadata = buildPageMetadata({
+  title: 'Bachelor\'s Programs in Germany - Guide for International Students',
   description: 'Find English-taught bachelor\'s programs in Germany. Learn about admission requirements, Studienkolleg, tuition fees, and how to apply as an international student.',
+  path: '/bachelor-in-germany',
   keywords: [
     'bachelor in Germany',
     'undergraduate studies Germany',
@@ -13,10 +14,7 @@ export const metadata: Metadata = {
     'BSc Germany',
     'BA Germany',
   ],
-  alternates: {
-    canonical: 'https://germanpath.com/bachelor-in-germany',
-  },
-};
+});
 
 export default function BachelorInGermanyPage() {
   return (

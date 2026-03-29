@@ -4,6 +4,7 @@ import { Clock, ChevronRight, ArrowLeft, Calendar } from 'lucide-react';
 import { BLOG_POSTS, CATEGORIES, getPostBySlug, type BlogPost } from '@/content/blog';
 import type { Metadata } from 'next';
 import { SiteNav } from '@/components/SiteNav';
+import { buildPageMetadata, SITE_URL } from '@/lib/seo';
 
 type WpPost = {
   id: number;
@@ -75,33 +76,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const staticPost = getPostBySlug(slug);
   if (staticPost) {
-    return {
-      title: `${staticPost.title} — StudyGermany`,
+    return buildPageMetadata({
+      title: staticPost.title,
       description: staticPost.excerpt,
-      openGraph: {
-        title: staticPost.title,
-        description: staticPost.excerpt,
-        type: 'article',
-        publishedTime: staticPost.publishedAt,
-        modifiedTime: staticPost.updatedAt,
-      },
-    };
+      path: `/blog/${staticPost.slug}`,
+      type: 'article',
+      publishedTime: staticPost.publishedAt,
+      modifiedTime: staticPost.updatedAt || staticPost.publishedAt,
+    });
   }
   const wpPost = await fetchWpPost(slug);
   if (!wpPost) return { title: 'Not Found' };
   const title = wpPost.title.rendered.replace(/<[^>]*>/g, '');
   const excerpt = wpPost.excerpt.rendered.replace(/<[^>]*>/g, '').trim();
-  return {
-    title: `${title} — StudyGermany`,
+  return buildPageMetadata({
+    title,
     description: excerpt,
-    openGraph: {
-      title,
-      description: excerpt,
-      type: 'article',
-      publishedTime: wpPost.date,
-      modifiedTime: wpPost.modified,
-    },
-  };
+    path: `/blog/${slug}`,
+    type: 'article',
+    publishedTime: wpPost.date,
+    modifiedTime: wpPost.modified,
+  });
 }
 
 function renderMarkdown(md: string): string {
@@ -220,26 +215,26 @@ export default async function BlogPostPage({ params }: Props) {
             '@type': 'Article',
             headline: post.title,
             description: post.excerpt,
-            image: 'https://germanpath.com/og-image.jpg',
+            image: `${SITE_URL}/og-image.jpg`,
             datePublished: post.publishedAt,
             dateModified: post.updatedAt || post.publishedAt,
             author: {
               '@type': 'Organization',
               name: 'German Path',
-              url: 'https://germanpath.com',
+              url: SITE_URL,
             },
             publisher: {
               '@type': 'Organization',
               name: 'German Path',
-              url: 'https://germanpath.com',
+              url: SITE_URL,
               logo: {
                 '@type': 'ImageObject',
-                url: 'https://germanpath.com/logo.png',
+                url: `${SITE_URL}/logo.png`,
               },
             },
             mainEntityOfPage: {
               '@type': 'WebPage',
-              '@id': `https://germanpath.com/blog/${post.slug}`,
+              '@id': `${SITE_URL}/blog/${post.slug}`,
             },
           }),
         }}
@@ -353,26 +348,26 @@ export default async function BlogPostPage({ params }: Props) {
             '@type': 'Article',
             headline: stripHtml(title),
             description: stripHtml(wpPost.excerpt.rendered),
-            image: wpPost.featuredImage || 'https://germanpath.com/og-image.jpg',
+            image: wpPost.featuredImage || `${SITE_URL}/og-image.jpg`,
             datePublished: wpPost.date,
             dateModified: wpPost.modified,
             author: {
               '@type': 'Organization',
               name: 'German Path',
-              url: 'https://germanpath.com',
+              url: SITE_URL,
             },
             publisher: {
               '@type': 'Organization',
               name: 'German Path',
-              url: 'https://germanpath.com',
+              url: SITE_URL,
               logo: {
                 '@type': 'ImageObject',
-                url: 'https://germanpath.com/logo.png',
+                url: `${SITE_URL}/logo.png`,
               },
             },
             mainEntityOfPage: {
               '@type': 'WebPage',
-              '@id': `https://germanpath.com/blog/${slug}`,
+              '@id': `${SITE_URL}/blog/${slug}`,
             },
           }),
         }}

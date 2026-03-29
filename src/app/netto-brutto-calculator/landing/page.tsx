@@ -2,14 +2,13 @@
 
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
+import { ToolLandingRedirect } from '@/components/ToolLandingRedirect';
 import { 
   Calculator, Euro, CheckCircle2, 
   ArrowRight, Briefcase, PiggyBank, FileText,
   ChevronDown, Building2, TrendingUp, Wallet
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const FEATURES = [
   {
@@ -68,37 +67,11 @@ const STATS = [
 ];
 
 export default function SalaryCalculatorLanding() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (status === 'authenticated' && session) {
-      router.push('/netto-brutto-calculator');
-    }
-  }, [status, session, router]);
-
-  // Show loading while checking auth status
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-sm text-gray-500 tracking-[0.2em] uppercase">Loading...</p>
-      </div>
-    );
-  }
-
-  // Don't render landing page if already authenticated
-  if (status === 'authenticated') {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-sm text-gray-500 tracking-[0.2em] uppercase">Redirecting to Salary Calculator...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white">
+      <ToolLandingRedirect target="/netto-brutto-calculator" />
       <SiteNav />
 
       {/* Hero Section */}

@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { BLOG_POSTS } from '@/content/blog';
+import { SITE_URL } from '@/lib/seo';
 
-const BASE_URL = 'https://germanpath.com';
+const BASE_URL = SITE_URL;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
@@ -12,11 +13,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     
     // Tools (high priority - main product)
     { url: `${BASE_URL}/tools`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${BASE_URL}/cv-maker`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${BASE_URL}/cover-letter`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/motivation-letter`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/gpa-converter`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/netto-brutto-calculator`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE_URL}/cv-maker/landing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${BASE_URL}/cover-letter/landing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/motivation-letter/landing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/gpa-converter/landing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/netto-brutto-calculator/landing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     
     // SEO hub pages
     { url: `${BASE_URL}/study-in-germany`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },

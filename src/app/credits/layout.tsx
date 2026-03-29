@@ -1,12 +1,11 @@
-import { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  robots: {
-    index: false,
-    follow: false,
-  },
-  title: 'AI Credits - German Path',
-};
+export const metadata = buildPageMetadata({
+  title: 'AI Credits',
+  description: 'Manage AI credits for German Path tools.',
+  path: '/credits',
+  noIndex: true,
+});
 
 export default function CreditsLayout({
   children,

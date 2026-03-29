@@ -1,10 +1,11 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { GraduationCap, Euro, Globe, FileText, Plane, Briefcase, ArrowRight, CheckCircle, Search } from 'lucide-react';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Study in Germany - Complete Guide for International Students | German Path',
+export const metadata = buildPageMetadata({
+  title: 'Study in Germany - Complete Guide for International Students',
   description: 'Complete guide to studying in Germany for international students. Learn about tuition-free universities, English-taught programs, student visa requirements, blocked accounts, and more.',
+  path: '/study-in-germany',
   keywords: [
     'study in Germany',
     'study in Germany for international students',
@@ -14,10 +15,7 @@ export const metadata: Metadata = {
     'blocked account Germany',
     'study abroad Germany',
   ],
-  alternates: {
-    canonical: 'https://germanpath.com/study-in-germany',
-  },
-};
+});
 
 const QUICK_FACTS = [
   { label: 'Tuition Fees', value: 'Free at public universities', icon: Euro },

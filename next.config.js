@@ -1,5 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.germanpath.com',
+          },
+        ],
+        destination: 'https://germanpath.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

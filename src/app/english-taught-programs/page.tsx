@@ -1,10 +1,11 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { Globe, Search, ArrowRight } from 'lucide-react';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'English-Taught Programs in Germany - Study Without German | German Path',
+export const metadata = buildPageMetadata({
+  title: 'English-Taught Programs in Germany - Study Without German',
   description: 'Find 2,000+ English-taught bachelor\'s and master\'s programs in Germany. Study at German universities without speaking German.',
+  path: '/english-taught-programs',
   keywords: [
     'English-taught programs Germany',
     'study in Germany in English',
@@ -12,10 +13,7 @@ export const metadata: Metadata = {
     'English bachelor Germany',
     'no German required',
   ],
-  alternates: {
-    canonical: 'https://germanpath.com/english-taught-programs',
-  },
-};
+});
 
 export default function EnglishTaughtProgramsPage() {
   return (

@@ -1,10 +1,11 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { GraduationCap, Euro, FileText, Plane, CheckCircle, Search, ArrowRight, Globe, Briefcase } from 'lucide-react';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Study in Germany from Pakistan - 2026 Complete Guide | German Path',
+export const metadata = buildPageMetadata({
+  title: 'Study in Germany from Pakistan - 2026 Complete Guide',
   description: 'Complete guide for Pakistani students to study in Germany. Learn about visa requirements, blocked account, HEC attestation, IELTS scores, tuition-free universities, and step-by-step application process.',
+  path: '/study-in-germany-from-pakistan',
   keywords: [
     'study in Germany from Pakistan',
     'Pakistani students Germany',
@@ -14,10 +15,7 @@ export const metadata: Metadata = {
     'DAAD scholarship Pakistan',
     'tuition-free Germany Pakistan',
   ],
-  alternates: {
-    canonical: 'https://germanpath.com/study-in-germany-from-pakistan',
-  },
-};
+});
 
 export default function StudyFromPakistanPage() {
   return (

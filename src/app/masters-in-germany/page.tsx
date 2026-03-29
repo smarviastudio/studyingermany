@@ -1,10 +1,11 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { GraduationCap, Search, ArrowRight } from 'lucide-react';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Master\'s Programs in Germany - Guide for International Students | German Path',
+export const metadata = buildPageMetadata({
+  title: 'Master\'s Programs in Germany - Guide for International Students',
   description: 'Find English-taught master\'s programs in Germany. Learn about admission requirements, tuition fees, application deadlines, and how to apply as an international student.',
+  path: '/masters-in-germany',
   keywords: [
     'masters in Germany',
     'master programs Germany',
@@ -13,10 +14,7 @@ export const metadata: Metadata = {
     'MS in Germany',
     'MBA Germany',
   ],
-  alternates: {
-    canonical: 'https://germanpath.com/masters-in-germany',
-  },
-};
+});
 
 export default function MastersInGermanyPage() {
   return (

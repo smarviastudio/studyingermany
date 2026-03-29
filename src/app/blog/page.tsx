@@ -1,16 +1,14 @@
 import Link from 'next/link';
 import { GraduationCap, Clock, ArrowRight, ChevronRight } from 'lucide-react';
 import { BLOG_POSTS, CATEGORIES, type BlogPost } from '@/content/blog';
-import type { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Blog & Guides — StudyGermany',
+export const metadata = buildPageMetadata({
+  title: 'Blog & Guides',
   description: 'Free guides, tips, and resources for international students planning to study in Germany. Visa, costs, scholarships, student life, and more.',
-  openGraph: {
-    title: 'Blog & Guides — StudyGermany',
-    description: 'Free guides, tips, and resources for international students planning to study in Germany.',
-  },
-};
+  path: '/blog',
+  openGraphDescription: 'Free guides, tips, and resources for international students planning to study in Germany.',
+});
 
 function PostCard({ post, featured = false }: { post: BlogPost; featured?: boolean }) {
   const cat = CATEGORIES[post.category];
@@ -66,7 +64,7 @@ export default function BlogPage() {
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
               <GraduationCap className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="text-white font-semibold text-sm">StudyGermany</span>
+            <span className="text-white font-semibold text-sm">German Path</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="text-white/40 hover:text-white/70 text-sm transition-colors">Dashboard</Link>

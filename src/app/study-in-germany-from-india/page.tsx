@@ -1,10 +1,11 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { GraduationCap, Euro, FileText, Plane, CheckCircle, Search, ArrowRight, Globe, Briefcase } from 'lucide-react';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Study in Germany from India - 2026 Complete Guide | German Path',
+export const metadata = buildPageMetadata({
+  title: 'Study in Germany from India - 2026 Complete Guide',
   description: 'Complete guide for Indian students to study in Germany. Learn about APS certificate, blocked account, IELTS requirements, tuition-free universities, and step-by-step visa process.',
+  path: '/study-in-germany-from-india',
   keywords: [
     'study in Germany from India',
     'Indian students Germany',
@@ -14,10 +15,7 @@ export const metadata: Metadata = {
     'DAAD scholarship India',
     'tuition-free Germany India',
   ],
-  alternates: {
-    canonical: 'https://germanpath.com/study-in-germany-from-india',
-  },
-};
+});
 
 export default function StudyFromIndiaPage() {
   return (

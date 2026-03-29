@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { SITE_URL } from '@/lib/seo';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,9 +7,21 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/auth/'],
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/dashboard',
+          '/dashboard/',
+          '/my-shortlist',
+          '/credits',
+          '/credits/',
+          '/auth/',
+          '/detail/',
+          '/sample-page',
+          '/uncategorized',
+        ],
       },
     ],
-    sitemap: 'https://studygermany.com/sitemap.xml',
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

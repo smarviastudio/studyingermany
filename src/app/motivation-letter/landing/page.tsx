@@ -2,14 +2,13 @@
 
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
+import { ToolLandingRedirect } from '@/components/ToolLandingRedirect';
 import { 
   FileText, Sparkles, Download, CheckCircle2, 
   ArrowRight, GraduationCap, Target, Lightbulb,
   ChevronDown, BookOpen, Award, Globe
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const FEATURES = [
   {
@@ -68,37 +67,11 @@ const STATS = [
 ];
 
 export default function MotivationLetterLanding() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (status === 'authenticated' && session) {
-      router.push('/motivation-letter');
-    }
-  }, [status, session, router]);
-
-  // Show loading while checking auth status
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-sm text-gray-500 tracking-[0.2em] uppercase">Loading...</p>
-      </div>
-    );
-  }
-
-  // Don't render landing page if already authenticated
-  if (status === 'authenticated') {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-sm text-gray-500 tracking-[0.2em] uppercase">Redirecting to Motivation Letter...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white">
+      <ToolLandingRedirect target="/motivation-letter" />
       <SiteNav />
 
       {/* Hero Section */}
