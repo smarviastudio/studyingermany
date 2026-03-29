@@ -15,14 +15,17 @@ export async function POST(request: NextRequest) {
       return unauthorizedResponse;
     }
 
-    const {
-      title,
-      content,
-      excerpt,
-      tags,
-      status,
-      slug,
-      featuredMediaId,
+	    const {
+	      title,
+	      content,
+	      excerpt,
+	      seoTitle,
+	      metaDescription,
+	      canonicalUrl,
+	      tags,
+	      status,
+	      slug,
+	      featuredMediaId,
       categoryName,
       showInTicker,
       faqs,
@@ -52,7 +55,7 @@ export async function POST(request: NextRequest) {
           .slice(0, 5)
       : [];
 
-    const faqSection = sanitizedFaqs.length
+	    const faqSection = sanitizedFaqs.length
       ? `\n<section class="sig-faqs">\n  <h2>Frequently Asked Questions</h2>\n  <div class="sig-faqs__items">\n    ${sanitizedFaqs
         .map((faq, idx) => {
           const safeQuestion = faq.question.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -63,16 +66,47 @@ export async function POST(request: NextRequest) {
         .join('\n')}\n  </div>\n</section>`
       : '';
 
-    const finalContent = `${content}${faqSection}`;
+	    const finalContent = `${content}${faqSection}`;
+	    const normalizedSeoTitle =
+	      typeof seoTitle === 'string' && seoTitle.trim() ? seoTitle.trim() : '';
+	    const normalizedMetaDescription =
+	      typeof metaDescription === 'string' && metaDescription.trim() ? metaDescription.trim() : '';
+	    const normalizedCanonicalUrl =
+	      typeof canonicalUrl === 'string' && canonicalUrl.trim() ? canonicalUrl.trim() : '';
 
-    const postBody: Record<string, unknown> = {
-      api_token: wpCustomApiToken,
-      title,
+	    const postBody: Record<string, unknown> = {
+	      api_token: wpCustomApiToken,
+	      title,
       content: finalContent,
       excerpt: excerpt || '',
       status: status || 'draft',
-      tags: Array.isArray(tags) ? tags : [],
-    };
+	      tags: Array.isArray(tags) ? tags : [],
+	    };
+
+	    if (normalizedSeoTitle) {
+	      postBody.seo_title = normalizedSeoTitle;
+	    }
+
+	    if (normalizedMetaDescription) {
+	      postBody.meta_description = normalizedMetaDescription;
+	    }
+
+	    if (normalizedCanonicalUrl) {
+	      postBody.canonical_url = normalizedCanonicalUrl;
+	    }
+
+	    if (normalizedSeoTitle || normalizedMetaDescription || normalizedCanonicalUrl) {
+	      postBody.seo = {
+	        title: normalizedSeoTitle || undefined,
+	        description: normalizedMetaDescription || undefined,
+	        canonical_url: normalizedCanonicalUrl || undefined,
+	      };
+	      postBody.meta = {
+	        germanpath_seo_title: normalizedSeoTitle || undefined,
+	        germanpath_meta_description: normalizedMetaDescription || undefined,
+	        germanpath_canonical_url: normalizedCanonicalUrl || undefined,
+	      };
+	    }
 
     if (slug) {
       postBody.slug = slug;

@@ -14,10 +14,13 @@ type MetadataInput = {
   description: string;
   path: string;
   keywords?: string[];
+  canonicalUrl?: string;
   openGraphTitle?: string;
   openGraphDescription?: string;
   twitterTitle?: string;
   twitterDescription?: string;
+  imageUrl?: string;
+  imageAlt?: string;
   type?: 'website' | 'article';
   publishedTime?: string;
   modifiedTime?: string;
@@ -33,18 +36,29 @@ export function buildPageMetadata({
   description,
   path,
   keywords,
+  canonicalUrl,
   openGraphTitle,
   openGraphDescription,
   twitterTitle,
   twitterDescription,
+  imageUrl,
+  imageAlt,
   type = 'website',
   publishedTime,
   modifiedTime,
   noIndex = false,
 }: MetadataInput): Metadata {
-  const url = buildCanonicalUrl(path);
+  const url = canonicalUrl ?? buildCanonicalUrl(path);
   const pageOpenGraphTitle = openGraphTitle ?? title;
   const pageOpenGraphDescription = openGraphDescription ?? description;
+  const pageImage = imageUrl
+    ? {
+        url: imageUrl,
+        width: 1200,
+        height: 630,
+        alt: imageAlt ?? pageOpenGraphTitle,
+      }
+    : DEFAULT_OG_IMAGE;
 
   return {
     title,
@@ -68,7 +82,7 @@ export function buildPageMetadata({
       title: pageOpenGraphTitle,
       description: pageOpenGraphDescription,
       url,
-      images: [DEFAULT_OG_IMAGE],
+      images: [pageImage],
       ...(publishedTime ? { publishedTime } : {}),
       ...(modifiedTime ? { modifiedTime } : {}),
     },
@@ -76,7 +90,7 @@ export function buildPageMetadata({
       card: 'summary_large_image',
       title: twitterTitle ?? pageOpenGraphTitle,
       description: twitterDescription ?? pageOpenGraphDescription,
-      images: [DEFAULT_OG_IMAGE.url],
+      images: [pageImage.url],
     },
   };
 }

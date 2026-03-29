@@ -16,7 +16,137 @@ type WpPost = {
   modified: string;
   categories: number[];
   featuredImage: string | null;
+  seo: {
+    title?: string;
+    description?: string;
+    canonicalUrl?: string;
+    openGraphTitle?: string;
+    openGraphDescription?: string;
+    twitterTitle?: string;
+    twitterDescription?: string;
+    image?: string;
+    imageAlt?: string;
+  };
 };
+
+function asObject(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function asString(value: unknown): string | undefined {
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    return trimmed || undefined;
+  }
+
+  if (Array.isArray(value) && value.length > 0) {
+    return asString(value[0]);
+  }
+
+  return undefined;
+}
+
+function pickString(...values: Array<string | undefined>): string | undefined {
+  return values.find((value) => Boolean(value?.trim()));
+}
+
+function getNestedString(
+  source: Record<string, unknown> | null,
+  ...keys: string[]
+): string | undefined {
+  let current: unknown = source;
+
+  for (const key of keys) {
+    const record = asObject(current);
+    if (!record) return undefined;
+    current = record[key];
+  }
+
+  return asString(current);
+}
+
+function getFieldString(source: Record<string, unknown> | null, key: string): string | undefined {
+  return source ? asString(source[key]) : undefined;
+}
+
+function extractWpSeo(post: Record<string, unknown>) {
+  const yoast = asObject(post.yoast_head_json);
+  const meta = asObject(post.meta);
+  const acf = asObject(post.acf);
+  const ogImageEntries = Array.isArray(yoast?.og_image) ? yoast.og_image : [];
+  const firstOgImage = asObject(ogImageEntries[0]);
+
+  return {
+    title: pickString(
+      getNestedString(yoast, 'title'),
+      getFieldString(meta, 'seo_title'),
+      getFieldString(meta, 'meta_title'),
+      getFieldString(meta, 'germanpath_seo_title'),
+      getFieldString(meta, 'rank_math_title'),
+      getFieldString(acf, 'seo_title'),
+      getFieldString(acf, 'meta_title'),
+    ),
+    description: pickString(
+      getNestedString(yoast, 'description'),
+      getFieldString(meta, 'meta_description'),
+      getFieldString(meta, 'seo_description'),
+      getFieldString(meta, 'germanpath_meta_description'),
+      getFieldString(meta, 'rank_math_description'),
+      getFieldString(acf, 'meta_description'),
+      getFieldString(acf, 'seo_description'),
+    ),
+    canonicalUrl: pickString(
+      getNestedString(yoast, 'canonical'),
+      getFieldString(meta, 'canonical_url'),
+      getFieldString(meta, 'seo_canonical_url'),
+      getFieldString(meta, 'germanpath_canonical_url'),
+      getFieldString(meta, 'rank_math_canonical_url'),
+      getFieldString(acf, 'canonical_url'),
+    ),
+    openGraphTitle: pickString(
+      getNestedString(yoast, 'og_title'),
+      getFieldString(meta, 'open_graph_title'),
+      getFieldString(meta, 'og_title'),
+      getFieldString(meta, 'germanpath_og_title'),
+      getFieldString(acf, 'open_graph_title'),
+      getFieldString(acf, 'og_title'),
+    ),
+    openGraphDescription: pickString(
+      getNestedString(yoast, 'og_description'),
+      getFieldString(meta, 'open_graph_description'),
+      getFieldString(meta, 'og_description'),
+      getFieldString(meta, 'germanpath_og_description'),
+      getFieldString(acf, 'open_graph_description'),
+      getFieldString(acf, 'og_description'),
+    ),
+    twitterTitle: pickString(
+      getNestedString(yoast, 'twitter_title'),
+      getFieldString(meta, 'twitter_title'),
+      getFieldString(meta, 'germanpath_twitter_title'),
+      getFieldString(acf, 'twitter_title'),
+    ),
+    twitterDescription: pickString(
+      getNestedString(yoast, 'twitter_description'),
+      getFieldString(meta, 'twitter_description'),
+      getFieldString(meta, 'germanpath_twitter_description'),
+      getFieldString(acf, 'twitter_description'),
+    ),
+    image: pickString(
+      getFieldString(firstOgImage, 'url'),
+      getFieldString(meta, 'open_graph_image'),
+      getFieldString(meta, 'og_image'),
+      getFieldString(acf, 'open_graph_image'),
+      getFieldString(acf, 'og_image'),
+    ),
+    imageAlt: pickString(
+      getFieldString(firstOgImage, 'alt'),
+      getFieldString(meta, 'open_graph_image_alt'),
+      getFieldString(acf, 'open_graph_image_alt'),
+    ),
+  };
+}
 
 async function fetchWpPost(slug: string): Promise<WpPost | null> {
   const wpUrl = process.env.WP_URL || (process.env.NODE_ENV === 'production' ? 'https://cms.germanpath.com' : 'http://localhost:8000');
@@ -45,6 +175,7 @@ async function fetchWpPost(slug: string): Promise<WpPost | null> {
       (typeof featuredSizes?.full?.source_url === 'string' && featuredSizes.full.source_url) ||
       (typeof featuredSizes?.medium_large?.source_url === 'string' && featuredSizes.medium_large.source_url) ||
       (featuredMedia && typeof featuredMedia.source_url === 'string' ? featuredMedia.source_url : null);
+    const seo = extractWpSeo(post);
 
     return {
       id: post.id,
@@ -56,6 +187,7 @@ async function fetchWpPost(slug: string): Promise<WpPost | null> {
       modified: post.modified,
       categories: post.categories,
       featuredImage,
+      seo,
     };
   } catch {
     return null;
@@ -87,15 +219,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   const wpPost = await fetchWpPost(slug);
   if (!wpPost) return { title: 'Not Found' };
-  const title = wpPost.title.rendered.replace(/<[^>]*>/g, '');
-  const excerpt = wpPost.excerpt.rendered.replace(/<[^>]*>/g, '').trim();
+  const title = stripHtml(wpPost.title.rendered);
+  const excerpt = stripHtml(wpPost.excerpt.rendered);
+  const seoTitle = wpPost.seo.title ?? title;
+  const seoDescription = wpPost.seo.description ?? excerpt;
   return buildPageMetadata({
-    title,
-    description: excerpt,
+    title: seoTitle,
+    description: seoDescription,
     path: `/blog/${slug}`,
+    canonicalUrl: wpPost.seo.canonicalUrl,
     type: 'article',
     publishedTime: wpPost.date,
     modifiedTime: wpPost.modified,
+    openGraphTitle: wpPost.seo.openGraphTitle ?? seoTitle,
+    openGraphDescription: wpPost.seo.openGraphDescription ?? seoDescription,
+    twitterTitle: wpPost.seo.twitterTitle ?? wpPost.seo.openGraphTitle ?? seoTitle,
+    twitterDescription: wpPost.seo.twitterDescription ?? wpPost.seo.openGraphDescription ?? seoDescription,
+    imageUrl: wpPost.seo.image ?? wpPost.featuredImage ?? undefined,
+    imageAlt: wpPost.seo.imageAlt ?? title,
   });
 }
 
@@ -333,6 +474,8 @@ export default async function BlogPostPage({ params }: Props) {
 
   const title = wpPost.title.rendered;
   const content = renderWordPressHtml(wpPost.content.rendered);
+  const seoDescription = wpPost.seo.description || stripHtml(wpPost.excerpt.rendered);
+  const seoImage = wpPost.seo.image || wpPost.featuredImage || `${SITE_URL}/og-image.jpg`;
   const publishedAt = new Date(wpPost.date);
   const updatedAt = wpPost.modified ? new Date(wpPost.modified) : null;
   const wordCount = wpPost.content.rendered.replace(/<[^>]*>/g, '').split(/\s+/).length;
@@ -343,13 +486,13 @@ export default async function BlogPostPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Article',
-            headline: stripHtml(title),
-            description: stripHtml(wpPost.excerpt.rendered),
-            image: wpPost.featuredImage || `${SITE_URL}/og-image.jpg`,
-            datePublished: wpPost.date,
+	          __html: JSON.stringify({
+	            '@context': 'https://schema.org',
+	            '@type': 'Article',
+	            headline: stripHtml(title),
+	            description: seoDescription,
+	            image: seoImage,
+	            datePublished: wpPost.date,
             dateModified: wpPost.modified,
             author: {
               '@type': 'Organization',

@@ -10,6 +10,7 @@ import {
   RefreshCcw
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
+import { SITE_URL } from '@/lib/seo';
 
 type FAQItem = {
   question: string;
@@ -19,6 +20,8 @@ type FAQItem = {
 type GeneratedPost = {
   title: string;
   excerpt: string;
+  seo_title?: string;
+  meta_description?: string;
   content: string;
   tags: string[];
   seo_slug: string;
@@ -146,6 +149,8 @@ const formatPostDate = (value?: string) => {
   return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 };
 
+const buildCanonicalUrl = (slug: string) => `${SITE_URL}/blog/${slug}`;
+
 export default function BlogGeneratorPage() {
   // Form state
   const [contentType, setContentType] = useState<'blog' | 'news'>('blog');
@@ -193,6 +198,9 @@ export default function BlogGeneratorPage() {
   const [editExcerpt, setEditExcerpt] = useState('');
   const [editContent, setEditContent] = useState('');
   const [editTags, setEditTags] = useState('');
+  const [seoTitle, setSeoTitle] = useState('');
+  const [metaDescription, setMetaDescription] = useState('');
+  const [canonicalUrl, setCanonicalUrl] = useState('');
   const [faqs, setFaqs] = useState<FAQItem[]>([]);
 
   const loadExistingPosts = async (query?: string) => {
@@ -327,6 +335,9 @@ export default function BlogGeneratorPage() {
     setSelectedImage(null);
     setFeaturedMediaId(null);
     setShowInTicker(false);
+    setSeoTitle('');
+    setMetaDescription('');
+    setCanonicalUrl('');
     setFaqs([]);
 
     try {
@@ -344,6 +355,9 @@ export default function BlogGeneratorPage() {
       setEditExcerpt(p.excerpt);
       setEditContent(p.content);
       setEditTags(p.tags.join(', '));
+      setSeoTitle(p.seo_title || p.title);
+      setMetaDescription(p.meta_description || p.excerpt);
+      setCanonicalUrl(buildCanonicalUrl(p.seo_slug));
       const generatedFaqs = Array.isArray(p.faqs) ? p.faqs : [];
       setFaqs(
         generatedFaqs.length
@@ -400,6 +414,9 @@ export default function BlogGeneratorPage() {
           title: editTitle,
           content: editContent,
           excerpt: editExcerpt,
+          seoTitle,
+          metaDescription,
+          canonicalUrl,
           tags: editTags.split(',').map((t) => t.trim()).filter(Boolean),
           status: publishStatus,
           slug: post.seo_slug,
@@ -823,18 +840,68 @@ export default function BlogGeneratorPage() {
                           style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical' }}
                         />
                       </div>
-                      <div>
-                        <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Tags (comma-separated)</label>
-                        <input
-                          type="text"
+	                      <div>
+	                        <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Tags (comma-separated)</label>
+	                        <input
+	                          type="text"
                           value={editTags}
                           onChange={(e) => setEditTags(e.target.value)}
                           placeholder="visa, germany, student"
-                          style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
-                        />
-                      </div>
-                      <div style={{ border: '1px solid #f0f4f8', borderRadius: 12, padding: 16, background: '#fafbfc' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+	                          style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+	                        />
+	                      </div>
+	                      <div style={{ border: '1px solid #f0f4f8', borderRadius: 16, padding: 16, background: '#fafbfc' }}>
+	                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
+	                          <div>
+	                            <p style={{ fontSize: 12, color: '#475569', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>SEO Metadata</p>
+	                            <p style={{ fontSize: 12, color: '#64748b', margin: '4px 0 0' }}>These values are sent to WordPress and used by the Next.js blog renderer when available.</p>
+	                          </div>
+	                        </div>
+	                        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+	                          <div>
+	                            <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
+	                              SEO Title
+	                            </label>
+	                            <input
+	                              type="text"
+	                              value={seoTitle}
+	                              onChange={(e) => setSeoTitle(e.target.value)}
+	                              style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+	                            />
+	                            <p style={{ fontSize: 11, color: seoTitle.length > 60 ? '#dc2626' : '#94a3b8', margin: '6px 0 0' }}>
+	                              {seoTitle.length}/60 characters
+	                            </p>
+	                          </div>
+	                          <div>
+	                            <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
+	                              Meta Description
+	                            </label>
+	                            <textarea
+	                              value={metaDescription}
+	                              onChange={(e) => setMetaDescription(e.target.value)}
+	                              rows={3}
+	                              style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical' }}
+	                            />
+	                            <p style={{ fontSize: 11, color: metaDescription.length > 155 ? '#dc2626' : '#94a3b8', margin: '6px 0 0' }}>
+	                              {metaDescription.length}/155 characters
+	                            </p>
+	                          </div>
+	                          <div>
+	                            <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
+	                              Canonical URL
+	                            </label>
+	                            <input
+	                              type="url"
+	                              value={canonicalUrl}
+	                              onChange={(e) => setCanonicalUrl(e.target.value)}
+	                              placeholder={`${SITE_URL}/blog/${post?.seo_slug || 'your-post-slug'}`}
+	                              style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+	                            />
+	                          </div>
+	                        </div>
+	                      </div>
+	                      <div style={{ border: '1px solid #f0f4f8', borderRadius: 12, padding: 16, background: '#fafbfc' }}>
+	                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                           <input
                             type="checkbox"
                             id="showInTicker"
@@ -1015,6 +1082,9 @@ export default function BlogGeneratorPage() {
                           setEditExcerpt('');
                           setEditContent('');
                           setEditTags('');
+                          setSeoTitle('');
+                          setMetaDescription('');
+                          setCanonicalUrl('');
                           setFaqs([]);
                           setSelectedImage(null);
                           setFeaturedMediaId(null);

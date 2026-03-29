@@ -91,13 +91,15 @@ Requirements:
 - FAQ requirement: include 3-5 unique FAQs aligned with the topic. Each answer must be practical (2-3 sentences) and avoid repeating previous answers.
 
 Format your response as valid JSON with this exact structure:
-{
-  "title": "SEO-optimized, compelling title (max 70 chars)",
-  "excerpt": "A 1-2 sentence summary for SEO meta description (max 160 chars)",
-  "content": "Full HTML blog post content using <h2>, <h3>, <p>, <ul>, <li>, <strong>, <blockquote> tags. No <html>, <body>, or <head> tags. Start directly with content.",
-  "tags": ["tag1", "tag2", "tag3"],
-  "seo_slug": "url-friendly-slug-with-hyphens",
-  "faqs": [
+	{
+	  "title": "SEO-optimized, compelling title (max 70 chars)",
+	  "excerpt": "A 1-2 sentence summary for SEO meta description (max 160 chars)",
+	  "seo_title": "Search title optimized for Google (max 60 chars)",
+	  "meta_description": "Search meta description optimized for Google (max 155 chars)",
+	  "content": "Full HTML blog post content using <h2>, <h3>, <p>, <ul>, <li>, <strong>, <blockquote> tags. No <html>, <body>, or <head> tags. Start directly with content.",
+	  "tags": ["tag1", "tag2", "tag3"],
+	  "seo_slug": "url-friendly-slug-with-hyphens",
+	  "faqs": [
     {"question":"Specific reader question #1 about the topic","answer":"Helpful answer in 2-3 sentences"},
     {"question":"Specific reader question #2 about the topic","answer":"Helpful answer in 2-3 sentences"},
     {"question":"Specific reader question #3 about the topic","answer":"Helpful answer in 2-3 sentences"}
@@ -134,16 +136,28 @@ Return ONLY the JSON, no markdown code blocks, no extra text.`;
     // Strip markdown code fences if present
     const cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
 
-    let parsed;
-    try {
-      parsed = JSON.parse(cleaned);
-    } catch {
-      return NextResponse.json({ error: 'Failed to parse AI response', raw }, { status: 500 });
-    }
+	    let parsed;
+	    try {
+	      parsed = JSON.parse(cleaned);
+	    } catch {
+	      return NextResponse.json({ error: 'Failed to parse AI response', raw }, { status: 500 });
+	    }
 
-    parsed.faqs = normalizeFaqs(parsed?.faqs, topic.trim(), category || 'Guides');
+	    parsed.seo_title =
+	      typeof parsed?.seo_title === 'string' && parsed.seo_title.trim()
+	        ? parsed.seo_title.trim()
+	        : typeof parsed?.title === 'string'
+	          ? parsed.title.trim()
+	          : '';
+	    parsed.meta_description =
+	      typeof parsed?.meta_description === 'string' && parsed.meta_description.trim()
+	        ? parsed.meta_description.trim()
+	        : typeof parsed?.excerpt === 'string'
+	          ? parsed.excerpt.trim()
+	          : '';
+	    parsed.faqs = normalizeFaqs(parsed?.faqs, topic.trim(), category || 'Guides');
 
-    return NextResponse.json({ post: parsed });
+	    return NextResponse.json({ post: parsed });
   } catch (error) {
     console.error('Generate error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
