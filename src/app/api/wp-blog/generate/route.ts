@@ -67,28 +67,67 @@ export async function POST(request: NextRequest) {
       return unauthorizedResponse;
     }
 
-    const { topic, tone, length, keywords, category, model } = await request.json();
+    const {
+      topic,
+      tone,
+      length,
+      focusKeyword,
+      semanticKeywords,
+      category,
+      model,
+    } = await request.json();
 
     if (!topic?.trim()) {
       return NextResponse.json({ error: 'Topic is required' }, { status: 400 });
     }
 
     const selectedModel = model || 'google/gemini-2.0-flash-001';
+    const normalizedTopic = topic.trim();
+    const normalizedFocusKeyword =
+      typeof focusKeyword === 'string' && focusKeyword.trim()
+        ? focusKeyword.trim()
+        : normalizedTopic;
+    const semanticKeywordList = Array.isArray(semanticKeywords)
+      ? semanticKeywords
+          .map((keyword) => (typeof keyword === 'string' ? keyword.trim() : ''))
+          .filter(Boolean)
+      : typeof semanticKeywords === 'string'
+        ? semanticKeywords
+            .split(',')
+            .map((keyword) => keyword.trim())
+            .filter(Boolean)
+        : [];
 
     const wordTarget =
       length === 'short' ? '400–600' : length === 'long' ? '1200–1800' : '700–1000';
 
     const prompt = `You are an expert content writer for "Students in Germany" — a website helping international students move to, study, and live in Germany.
 
-Write a complete, engaging blog post about: "${topic}"
+Write a complete, engaging, SEO-focused blog post about: "${normalizedTopic}"
 
 Requirements:
 - Tone: ${tone || 'informative and friendly'}
 - Length: ${wordTarget} words
 - Category: ${category || 'Guides'}
-- Keywords to include naturally: ${keywords || topic}
+- Focus keyword: ${normalizedFocusKeyword}
+- Semantic keywords to include naturally: ${semanticKeywordList.length ? semanticKeywordList.join(', ') : 'None provided. Infer the best semantically related terms from the topic and audience.'}
 - Target audience: international students planning to study in Germany
 - FAQ requirement: include 3-5 unique FAQs aligned with the topic. Each answer must be practical (2-3 sentences) and avoid repeating previous answers.
+- Search intent: informational, practical, and action-oriented
+
+SEO instructions:
+- Make the article genuinely useful first, not keyword-stuffed.
+- Use the focus keyword naturally in the title, SEO title, meta description, slug, opening paragraph, and at least one subheading.
+- Use semantic keywords naturally across subheadings and body copy without forcing exact repetition.
+- Start with a concise introduction that answers the core query quickly.
+- Structure the article with clear <h2> and <h3> sections that match real search intent.
+- Use short paragraphs, scannable formatting, and practical steps where relevant.
+- Add 1-2 short bullet lists only where they improve clarity.
+- Do not repeat the exact same phrase unnaturally.
+- Do not invent statistics, legal rules, deadlines, or policy updates unless the topic explicitly provides them.
+- If mentioning time-sensitive requirements, keep wording careful and evergreen.
+- Do not include an <h1> inside the content because the page title will already serve as the H1.
+- Where relevant, include 1-2 natural internal links using relative URLs such as /course-finder, /motivation-letter, /cv-maker, /gpa-converter, or /blog.
 
 Format your response as valid JSON with this exact structure:
 	{
@@ -96,7 +135,7 @@ Format your response as valid JSON with this exact structure:
 	  "excerpt": "A 1-2 sentence summary for SEO meta description (max 160 chars)",
 	  "seo_title": "Search title optimized for Google (max 60 chars)",
 	  "meta_description": "Search meta description optimized for Google (max 155 chars)",
-	  "content": "Full HTML blog post content using <h2>, <h3>, <p>, <ul>, <li>, <strong>, <blockquote> tags. No <html>, <body>, or <head> tags. Start directly with content.",
+	  "content": "Full HTML blog post content using <h2>, <h3>, <p>, <ul>, <li>, <strong>, <blockquote>, <a> tags. No <html>, <body>, or <head> tags. Start directly with content.",
 	  "tags": ["tag1", "tag2", "tag3"],
 	  "seo_slug": "url-friendly-slug-with-hyphens",
 	  "faqs": [
@@ -105,6 +144,12 @@ Format your response as valid JSON with this exact structure:
     {"question":"Specific reader question #3 about the topic","answer":"Helpful answer in 2-3 sentences"}
   ]
 }
+
+Output quality rules:
+- Ensure the title and SEO title are distinct if that improves CTR, but both must stay aligned with the focus keyword.
+- Make the meta description compelling, human-readable, and action-oriented.
+- Build the slug around the focus keyword when natural.
+- Choose tags from the focus keyword, semantic keywords, and the main subtopics covered.
 
 Return ONLY the JSON, no markdown code blocks, no extra text.`;
 
@@ -155,7 +200,7 @@ Return ONLY the JSON, no markdown code blocks, no extra text.`;
 	        : typeof parsed?.excerpt === 'string'
 	          ? parsed.excerpt.trim()
 	          : '';
-	    parsed.faqs = normalizeFaqs(parsed?.faqs, topic.trim(), category || 'Guides');
+    parsed.faqs = normalizeFaqs(parsed?.faqs, normalizedTopic, category || 'Guides');
 
 	    return NextResponse.json({ post: parsed });
   } catch (error) {

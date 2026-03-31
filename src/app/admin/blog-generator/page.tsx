@@ -157,7 +157,8 @@ export default function BlogGeneratorPage() {
   const [topic, setTopic] = useState('');
   const [tone, setTone] = useState('informative and friendly');
   const [length, setLength] = useState('medium');
-  const [keywords, setKeywords] = useState('');
+  const [focusKeyword, setFocusKeyword] = useState('');
+  const [semanticKeywords, setSemanticKeywords] = useState('');
   const [category, setCategory] = useState('Guides');
   const [selectedModel] = useState('google/gemini-2.0-flash-001');
   const [wpCategories, setWpCategories] = useState<string[]>(CATEGORIES);
@@ -202,6 +203,9 @@ export default function BlogGeneratorPage() {
   const [metaDescription, setMetaDescription] = useState('');
   const [canonicalUrl, setCanonicalUrl] = useState('');
   const [faqs, setFaqs] = useState<FAQItem[]>([]);
+  
+  // Tab state
+  const [activeTab, setActiveTab] = useState<'content' | 'wordpress' | 'seo'>('content');
 
   const loadExistingPosts = async (query?: string) => {
     setPostsLoading(true);
@@ -344,7 +348,15 @@ export default function BlogGeneratorPage() {
       const res = await fetch('/api/wp-blog/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, tone, length, keywords, category, model: selectedModel }),
+        body: JSON.stringify({
+          topic,
+          tone,
+          length,
+          focusKeyword,
+          semanticKeywords,
+          category,
+          model: selectedModel,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Generation failed');
@@ -665,16 +677,34 @@ export default function BlogGeneratorPage() {
                   </div>
                 </div>
 
-                {/* Keywords */}
+                {/* Focus Keyword */}
                 <div>
-                  <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Keywords (optional)</label>
+                  <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Focus Keyword</label>
                   <input
                     type="text"
-                    value={keywords}
-                    onChange={(e) => setKeywords(e.target.value)}
-                    placeholder="visa, Germany, student, 2025"
+                    value={focusKeyword}
+                    onChange={(e) => setFocusKeyword(e.target.value)}
+                    placeholder="e.g. student visa Germany"
                     style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                   />
+                  <p style={{ fontSize: 11, color: '#94a3b8', margin: '6px 0 0' }}>
+                    Used as the primary SEO keyword for title, slug, intro, and headings.
+                  </p>
+                </div>
+
+                {/* Semantic Keywords */}
+                <div>
+                  <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Semantic Keywords</label>
+                  <input
+                    type="text"
+                    value={semanticKeywords}
+                    onChange={(e) => setSemanticKeywords(e.target.value)}
+                    placeholder="e.g. blocked account, embassy appointment, visa documents"
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+                  />
+                  <p style={{ fontSize: 11, color: '#94a3b8', margin: '6px 0 0' }}>
+                    Add comma-separated supporting terms to cover related search intent naturally.
+                  </p>
                 </div>
 
                 {/* Generate Button */}
@@ -820,178 +850,240 @@ export default function BlogGeneratorPage() {
                       </div>
                     </div>
 
-                    {/* Editable Fields */}
+                    {/* Tabs */}
+                    <div style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: '2px solid #f0f0f0' }}>
+                      <button
+                        onClick={() => setActiveTab('content')}
+                        style={{
+                          padding: '10px 20px',
+                          border: 'none',
+                          background: 'transparent',
+                          fontSize: 14,
+                          fontWeight: 600,
+                          color: activeTab === 'content' ? '#dd0000' : '#666',
+                          cursor: 'pointer',
+                          borderBottom: activeTab === 'content' ? '2px solid #dd0000' : '2px solid transparent',
+                          marginBottom: -2,
+                        }}
+                      >
+                        Content
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('wordpress')}
+                        style={{
+                          padding: '10px 20px',
+                          border: 'none',
+                          background: 'transparent',
+                          fontSize: 14,
+                          fontWeight: 600,
+                          color: activeTab === 'wordpress' ? '#dd0000' : '#666',
+                          cursor: 'pointer',
+                          borderBottom: activeTab === 'wordpress' ? '2px solid #dd0000' : '2px solid transparent',
+                          marginBottom: -2,
+                        }}
+                      >
+                        WordPress
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('seo')}
+                        style={{
+                          padding: '10px 20px',
+                          border: 'none',
+                          background: 'transparent',
+                          fontSize: 14,
+                          fontWeight: 600,
+                          color: activeTab === 'seo' ? '#dd0000' : '#666',
+                          cursor: 'pointer',
+                          borderBottom: activeTab === 'seo' ? '2px solid #dd0000' : '2px solid transparent',
+                          marginBottom: -2,
+                        }}
+                      >
+                        SEO
+                      </button>
+                    </div>
+
+                    {/* Tab Content */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                      <div>
-                        <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Title</label>
-                        <input
-                          type="text"
-                          value={editTitle}
-                          onChange={(e) => setEditTitle(e.target.value)}
-                          style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
-                        />
-                      </div>
-                      <div>
-                        <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Excerpt</label>
-                        <textarea
-                          value={editExcerpt}
-                          onChange={(e) => setEditExcerpt(e.target.value)}
-                          rows={2}
-                          style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical' }}
-                        />
-                      </div>
-	                      <div>
-	                        <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Tags (comma-separated)</label>
-	                        <input
-	                          type="text"
-                          value={editTags}
-                          onChange={(e) => setEditTags(e.target.value)}
-                          placeholder="visa, germany, student"
-	                          style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
-	                        />
-	                      </div>
-	                      <div style={{ border: '1px solid #f0f4f8', borderRadius: 16, padding: 16, background: '#fafbfc' }}>
-	                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
-	                          <div>
-	                            <p style={{ fontSize: 12, color: '#475569', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>SEO Metadata</p>
-	                            <p style={{ fontSize: 12, color: '#64748b', margin: '4px 0 0' }}>These values are sent to WordPress and used by the Next.js blog renderer when available.</p>
-	                          </div>
-	                        </div>
-	                        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-	                          <div>
-	                            <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
-	                              SEO Title
-	                            </label>
-	                            <input
-	                              type="text"
-	                              value={seoTitle}
-	                              onChange={(e) => setSeoTitle(e.target.value)}
-	                              style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
-	                            />
-	                            <p style={{ fontSize: 11, color: seoTitle.length > 60 ? '#dc2626' : '#94a3b8', margin: '6px 0 0' }}>
-	                              {seoTitle.length}/60 characters
-	                            </p>
-	                          </div>
-	                          <div>
-	                            <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
-	                              Meta Description
-	                            </label>
-	                            <textarea
-	                              value={metaDescription}
-	                              onChange={(e) => setMetaDescription(e.target.value)}
-	                              rows={3}
-	                              style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical' }}
-	                            />
-	                            <p style={{ fontSize: 11, color: metaDescription.length > 155 ? '#dc2626' : '#94a3b8', margin: '6px 0 0' }}>
-	                              {metaDescription.length}/155 characters
-	                            </p>
-	                          </div>
-	                          <div>
-	                            <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
-	                              Canonical URL
-	                            </label>
-	                            <input
-	                              type="url"
-	                              value={canonicalUrl}
-	                              onChange={(e) => setCanonicalUrl(e.target.value)}
-	                              placeholder={`${SITE_URL}/blog/${post?.seo_slug || 'your-post-slug'}`}
-	                              style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
-	                            />
-	                          </div>
-	                        </div>
-	                      </div>
-	                      <div style={{ border: '1px solid #f0f4f8', borderRadius: 12, padding: 16, background: '#fafbfc' }}>
-	                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <input
-                            type="checkbox"
-                            id="showInTicker"
-                            checked={showInTicker}
-                            onChange={(e) => setShowInTicker(e.target.checked)}
-                            style={{ width: 18, height: 18, cursor: 'pointer' }}
-                          />
+                      {activeTab === 'content' && (
+                        <>
                           <div>
-                            <label htmlFor="showInTicker" style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', margin: 0, cursor: 'pointer' }}>
-                              📰 Show in News Ticker
-                            </label>
-                            <p style={{ fontSize: 12, color: '#64748b', margin: '4px 0 0' }}>
-                              {showInTicker 
-                                ? 'This content will appear in the news ticker on the homepage' 
-                                : 'This content will only appear in the blog/articles section'}
-                            </p>
+                            <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Title</label>
+                            <input
+                              type="text"
+                              value={editTitle}
+                              onChange={(e) => setEditTitle(e.target.value)}
+                              style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+                            />
                           </div>
-                        </div>
-                      </div>
-                      <div style={{ border: '1px solid #f5f5f5', borderRadius: 16, padding: 16, background: '#fff' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <ImageIcon className="w-4 h-4" style={{ color: '#dd0000' }} />
-                            <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#737373' }}>Featured Image</span>
+                          <div>
+                            <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Excerpt</label>
+                            <textarea
+                              value={editExcerpt}
+                              onChange={(e) => setEditExcerpt(e.target.value)}
+                              rows={2}
+                              style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical' }}
+                            />
                           </div>
-                          {selectedImage && (
-                            <button
-                              onClick={clearSelectedImage}
-                              style={{ fontSize: 12, color: '#dd0000', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
-                            >
-                              Remove
-                            </button>
-                          )}
-                        </div>
-                        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                          <div style={{ flex: 1, minWidth: 220 }}>
-                            <div style={{ display: 'flex', gap: 8 }}>
+                          <div>
+                            <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Tags (comma-separated)</label>
+                            <input
+                              type="text"
+                              value={editTags}
+                              onChange={(e) => setEditTags(e.target.value)}
+                              placeholder="visa, germany, student"
+                              style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+                            />
+                          </div>
+                        </>
+                      )}
+
+                      {activeTab === 'wordpress' && (
+                        <>
+                          <div style={{ border: '1px solid #f0f4f8', borderRadius: 12, padding: 16, background: '#fafbfc' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                               <input
-                                type="text"
-                                value={imageQuery}
-                                onChange={(e) => setImageQuery(e.target.value)}
-                                placeholder="Search Unsplash (e.g. German campus)"
-                                style={{ flex: 1, padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 13 }}
+                                type="checkbox"
+                                id="showInTicker"
+                                checked={showInTicker}
+                                onChange={(e) => setShowInTicker(e.target.checked)}
+                                style={{ width: 18, height: 18, cursor: 'pointer' }}
                               />
-                              <button
-                                type="button"
-                                onClick={() => handleUnsplashSearch()}
-                                disabled={imageLoading}
-                                style={{ padding: '10px 16px', borderRadius: 10, border: 'none', background: '#111', color: '#fff', fontWeight: 600, cursor: imageLoading ? 'not-allowed' : 'pointer' }}
-                              >
-                                {imageLoading ? 'Searching…' : 'Search'}
-                              </button>
+                              <div>
+                                <label htmlFor="showInTicker" style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', margin: 0, cursor: 'pointer' }}>
+                                  📰 Show in News Ticker
+                                </label>
+                                <p style={{ fontSize: 12, color: '#64748b', margin: '4px 0 0' }}>
+                                  {showInTicker 
+                                    ? 'This content will appear in the news ticker on the homepage' 
+                                    : 'This content will only appear in the blog/articles section'}
+                                </p>
+                              </div>
                             </div>
-                            {imageError && <p style={{ color: '#dc2626', fontSize: 12, marginTop: 8 }}>{imageError}</p>}
-                            {selectedImage && (
-                              <div style={{ marginTop: 12, border: '1px solid #e5e5e5', borderRadius: 12, overflow: 'hidden' }}>
-                                <img src={selectedImage.urls.small} alt={selectedImage.alt_description || ''} style={{ width: '100%', display: 'block' }} />
-                                {formatPhotographer(selectedImage) && (
-                                  <p style={{ fontSize: 11, color: '#71717a', margin: 0, padding: '6px 10px', background: '#fafafa' }}>
-                                    {formatPhotographer(selectedImage)} · Unsplash
-                                  </p>
+                          </div>
+                          <div style={{ border: '1px solid #f5f5f5', borderRadius: 16, padding: 16, background: '#fff' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <ImageIcon className="w-4 h-4" style={{ color: '#dd0000' }} />
+                                <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#737373' }}>Featured Image</span>
+                              </div>
+                              {selectedImage && (
+                                <button
+                                  onClick={clearSelectedImage}
+                                  style={{ fontSize: 12, color: '#dd0000', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
+                                >
+                                  Remove
+                                </button>
+                              )}
+                            </div>
+                            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                              <div style={{ flex: 1, minWidth: 220 }}>
+                                <div style={{ display: 'flex', gap: 8 }}>
+                                  <input
+                                    type="text"
+                                    value={imageQuery}
+                                    onChange={(e) => setImageQuery(e.target.value)}
+                                    placeholder="Search Unsplash (e.g. German campus)"
+                                    style={{ flex: 1, padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 13 }}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => handleUnsplashSearch()}
+                                    disabled={imageLoading}
+                                    style={{ padding: '10px 16px', borderRadius: 10, border: 'none', background: '#111', color: '#fff', fontWeight: 600, cursor: imageLoading ? 'not-allowed' : 'pointer' }}
+                                  >
+                                    {imageLoading ? 'Searching…' : 'Search'}
+                                  </button>
+                                </div>
+                                {imageError && <p style={{ color: '#dc2626', fontSize: 12, marginTop: 8 }}>{imageError}</p>}
+                                {selectedImage && (
+                                  <div style={{ marginTop: 12, border: '1px solid #e5e5e5', borderRadius: 12, overflow: 'hidden' }}>
+                                    <img src={selectedImage.urls.small} alt={selectedImage.alt_description || ''} style={{ width: '100%', display: 'block' }} />
+                                    {formatPhotographer(selectedImage) && (
+                                      <p style={{ fontSize: 11, color: '#71717a', margin: 0, padding: '6px 10px', background: '#fafafa' }}>
+                                        {formatPhotographer(selectedImage)} · Unsplash
+                                      </p>
+                                    )}
+                                  </div>
                                 )}
                               </div>
-                            )}
-                          </div>
-                          <div style={{ flex: 1, minWidth: 220, maxHeight: 220, overflowY: 'auto', border: '1px solid #f4f4f5', borderRadius: 12, padding: 10, background: '#fafafa' }}>
-                            {imageResults.length === 0 && !imageLoading ? (
-                              <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>Search Unsplash to pick a hero image.</p>
-                            ) : (
-                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 8 }}>
-                                {imageResults.map((img) => (
-                                  <button
-                                    key={img.id}
-                                    onClick={() => handleSelectImage(img)}
-                                    style={{
-                                      border: selectedImage?.id === img.id ? '2px solid #dd0000' : '2px solid transparent',
-                                      borderRadius: 10,
-                                      padding: 0,
-                                      background: 'none',
-                                      cursor: 'pointer'
-                                    }}
-                                  >
-                                    <img src={img.urls.small} alt={img.alt_description || ''} style={{ width: '100%', height: 70, objectFit: 'cover', borderRadius: 8 }} />
-                                  </button>
-                                ))}
+                              <div style={{ flex: 1, minWidth: 220, maxHeight: 220, overflowY: 'auto', border: '1px solid #f4f4f5', borderRadius: 12, padding: 10, background: '#fafafa' }}>
+                                {imageResults.length === 0 && !imageLoading ? (
+                                  <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>Search Unsplash to pick a hero image.</p>
+                                ) : (
+                                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 8 }}>
+                                    {imageResults.map((img) => (
+                                      <button
+                                        key={img.id}
+                                        onClick={() => handleSelectImage(img)}
+                                        style={{
+                                          border: selectedImage?.id === img.id ? '2px solid #dd0000' : '2px solid transparent',
+                                          borderRadius: 10,
+                                          padding: 0,
+                                          background: 'none',
+                                          cursor: 'pointer'
+                                        }}
+                                      >
+                                        <img src={img.urls.small} alt={img.alt_description || ''} style={{ width: '100%', height: 70, objectFit: 'cover', borderRadius: 8 }} />
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
-                            )}
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {activeTab === 'seo' && (
+                        <div style={{ border: '1px solid #f0f4f8', borderRadius: 16, padding: 16, background: '#fafbfc' }}>
+                          <div style={{ marginBottom: 14 }}>
+                            <p style={{ fontSize: 12, color: '#475569', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>SEO Metadata</p>
+                            <p style={{ fontSize: 12, color: '#64748b', margin: '4px 0 0' }}>These values are sent to WordPress and used by the Next.js blog renderer.</p>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                            <div>
+                              <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
+                                SEO Title
+                              </label>
+                              <input
+                                type="text"
+                                value={seoTitle}
+                                onChange={(e) => setSeoTitle(e.target.value)}
+                                style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+                              />
+                              <p style={{ fontSize: 11, color: seoTitle.length > 60 ? '#dc2626' : '#94a3b8', margin: '6px 0 0' }}>
+                                {seoTitle.length}/60 characters
+                              </p>
+                            </div>
+                            <div>
+                              <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
+                                Meta Description
+                              </label>
+                              <textarea
+                                value={metaDescription}
+                                onChange={(e) => setMetaDescription(e.target.value)}
+                                rows={3}
+                                style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical' }}
+                              />
+                              <p style={{ fontSize: 11, color: metaDescription.length > 155 ? '#dc2626' : '#94a3b8', margin: '6px 0 0' }}>
+                                {metaDescription.length}/155 characters
+                              </p>
+                            </div>
+                            <div>
+                              <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
+                                Canonical URL
+                              </label>
+                              <input
+                                type="url"
+                                value={canonicalUrl}
+                                onChange={(e) => setCanonicalUrl(e.target.value)}
+                                placeholder={`${SITE_URL}/blog/${post?.seo_slug || 'your-post-slug'}`}
+                                style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
 

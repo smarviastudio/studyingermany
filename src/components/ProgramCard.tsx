@@ -10,10 +10,62 @@ interface ProgramCardProps {
 }
 
 export function ProgramCard({ program, onClick }: ProgramCardProps) {
-  const formatTuition = (amount: number | null) => {
-    if (amount === null || amount === undefined) return 'Contact';
+  const parseEuroAmount = (value?: string | number | null) => {
+    if (value === null || value === undefined) return null;
+    if (typeof value === 'number') {
+      if (!Number.isFinite(value)) return null;
+      // Some CSV rows use German thousands shorthand like 1.5 for 1,500 EUR.
+      if (value > 0 && value < 10) return Math.round(value * 1000);
+      return Math.round(value);
+    }
+
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+
+    const cleaned = trimmed.replace(/[^0-9.,]/g, '');
+    if (!cleaned) return null;
+
+    if (/^\d+[.,]\d{1,2}$/.test(cleaned)) {
+      return Math.round(parseFloat(cleaned.replace(',', '.')) * 1000);
+    }
+
+    const normalized = cleaned.replace(/\./g, '').replace(',', '.');
+    const parsed = parseFloat(normalized);
+    return Number.isFinite(parsed) ? Math.round(parsed) : null;
+  };
+
+  const formatEuro = (amount: number | null) => {
+    if (amount === null || amount === undefined) return null;
     if (amount === 0) return 'Free';
-    return `€${amount.toLocaleString()}`;
+    return `€${amount.toLocaleString('en-US')}`;
+  };
+
+  const getCostLabel = () => {
+    const exactTuition = parseEuroAmount(program.tuition_exact_eur ?? null);
+    const minTuition = parseEuroAmount(program.tuition_eur_min);
+    const maxTuition = parseEuroAmount(program.tuition_eur_max);
+    const fallbackTuition = parseEuroAmount(program.tuition_fee_number);
+
+    if (program.is_free || exactTuition === 0 || fallbackTuition === 0) {
+      return 'No tuition';
+    }
+
+    if (exactTuition !== null) {
+      return formatEuro(exactTuition) ?? 'Tuition info';
+    }
+
+    if (minTuition !== null && maxTuition !== null) {
+      if (minTuition === maxTuition) {
+        return formatEuro(minTuition) ?? 'Tuition info';
+      }
+      return `${formatEuro(minTuition)}-${formatEuro(maxTuition)}`;
+    }
+
+    if (fallbackTuition !== null) {
+      return formatEuro(fallbackTuition) ?? 'Tuition info';
+    }
+
+    return 'Tuition info';
   };
 
   const matchScore = program.match_score ? Math.round(program.match_score * 100) : null;
@@ -22,6 +74,7 @@ export function ProgramCard({ program, onClick }: ProgramCardProps) {
   const isBachelor = degreeLevel.includes('bachelor');
   const degreeLabel = isMaster ? 'Master' : isBachelor ? 'Bachelor' : program.degree_level;
   const languageLabel = program.languages_array?.[0] || 'English';
+  const costLabel = getCostLabel();
 
   return (
     <div
@@ -174,7 +227,7 @@ export function ProgramCard({ program, onClick }: ProgramCardProps) {
           )}
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <Euro style={{ width: 13, height: 13 }} />
-            <span style={{ fontWeight: 600 }}>{formatTuition(program.tuition_fee_number)}</span>
+            <span style={{ fontWeight: 600 }}>{costLabel}</span>
           </div>
         </div>
 

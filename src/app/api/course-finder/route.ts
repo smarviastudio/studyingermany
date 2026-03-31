@@ -264,6 +264,16 @@ function sanitizeExplicitConstraintFilters(
   return nextFilters;
 }
 
+function normalizeAiFilters(rawFilters: unknown): Partial<z.infer<typeof SearchFiltersSchema>> {
+  if (!rawFilters || typeof rawFilters !== 'object' || Array.isArray(rawFilters)) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(rawFilters).filter(([, value]) => value !== null)
+  ) as Partial<z.infer<typeof SearchFiltersSchema>>;
+}
+
 async function callOpenRouter(query: string): Promise<CourseFinderAIResponse | null> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
@@ -360,7 +370,7 @@ export async function POST(request: NextRequest) {
     let excludedSubjects: string[] = [];
     
     if (aiResult) {
-      filters = aiResult.filters ? SearchFiltersSchema.parse(aiResult.filters) : {};
+      filters = aiResult.filters ? SearchFiltersSchema.parse(normalizeAiFilters(aiResult.filters)) : {};
       queryText = aiResult.query_text?.trim() || query;
       reasoning = aiResult.reasoning || null;
       excludedSubjects = aiResult.excluded_subjects || [];
