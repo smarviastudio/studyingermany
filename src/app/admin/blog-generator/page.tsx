@@ -294,9 +294,7 @@ export default function BlogGeneratorPage() {
   const [length, setLength] = useState('medium');
   const [focusKeyword, setFocusKeyword] = useState('');
   const [semanticKeywords, setSemanticKeywords] = useState('');
-  const [focusKeywordTouched, setFocusKeywordTouched] = useState(false);
-  const [semanticKeywordsTouched, setSemanticKeywordsTouched] = useState(false);
-  const [category, setCategory] = useState('Guides');
+    const [category, setCategory] = useState('Guides');
   const [selectedModel] = useState('google/gemini-2.0-flash-001');
   const [wpCategories, setWpCategories] = useState<string[]>(CATEGORIES);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -369,36 +367,7 @@ export default function BlogGeneratorPage() {
     loadExistingPosts();
   }, []);
 
-  useEffect(() => {
-    const suggestedFocusKeyword = buildFocusKeywordSuggestion(topic, contentType);
-    const suggestedSemanticKeywords = buildSemanticKeywordSuggestion(
-      topic,
-      category,
-      contentType,
-      suggestedFocusKeyword
-    );
-
-    if ((!focusKeywordTouched || !focusKeyword.trim()) && suggestedFocusKeyword && focusKeyword !== suggestedFocusKeyword) {
-      setFocusKeyword(suggestedFocusKeyword);
-    }
-
-    if (
-      (!semanticKeywordsTouched || !semanticKeywords.trim()) &&
-      suggestedSemanticKeywords &&
-      semanticKeywords !== suggestedSemanticKeywords
-    ) {
-      setSemanticKeywords(suggestedSemanticKeywords);
-    }
-  }, [
-    topic,
-    category,
-    contentType,
-    focusKeywordTouched,
-    semanticKeywordsTouched,
-    focusKeyword,
-    semanticKeywords,
-  ]);
-
+  
   const handleDeletePost = async (id: number) => {
     if (!window.confirm('Delete this WordPress post? This cannot be undone.')) return;
     setDeletingPostId(id);
@@ -498,42 +467,8 @@ export default function BlogGeneratorPage() {
     setFeaturedMediaId(null);
   };
 
-  const handleAutoFillKeywords = () => {
-    const suggestedFocusKeyword = buildFocusKeywordSuggestion(topic, contentType);
-    const suggestedSemanticKeywords = buildSemanticKeywordSuggestion(
-      topic,
-      category,
-      contentType,
-      suggestedFocusKeyword
-    );
-
-    setFocusKeyword(suggestedFocusKeyword);
-    setSemanticKeywords(suggestedSemanticKeywords);
-    setFocusKeywordTouched(false);
-    setSemanticKeywordsTouched(false);
-  };
-
   const handleGenerate = async () => {
     if (!topic.trim()) return;
-    const suggestedFocusKeyword = buildFocusKeywordSuggestion(topic, contentType);
-    const suggestedSemanticKeywords = buildSemanticKeywordSuggestion(
-      topic,
-      category,
-      contentType,
-      focusKeyword.trim() || suggestedFocusKeyword
-    );
-    const effectiveFocusKeyword = focusKeyword.trim() || suggestedFocusKeyword;
-    const effectiveSemanticKeywords = semanticKeywords.trim() || suggestedSemanticKeywords;
-
-    if (!focusKeyword.trim() && effectiveFocusKeyword) {
-      setFocusKeyword(effectiveFocusKeyword);
-      setFocusKeywordTouched(false);
-    }
-
-    if (!semanticKeywords.trim() && effectiveSemanticKeywords) {
-      setSemanticKeywords(effectiveSemanticKeywords);
-      setSemanticKeywordsTouched(false);
-    }
 
     setGenerating(true);
     setGenError(null);
@@ -555,8 +490,8 @@ export default function BlogGeneratorPage() {
           topic,
           tone,
           length,
-          focusKeyword: effectiveFocusKeyword,
-          semanticKeywords: effectiveSemanticKeywords,
+          focusKeyword,
+          semanticKeywords,
           category,
           model: selectedModel,
         }),
@@ -881,30 +816,16 @@ export default function BlogGeneratorPage() {
 
                 {/* Focus Keyword */}
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 6 }}>
-                    <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block' }}>Focus Keyword</label>
-                    <button
-                      type="button"
-                      onClick={handleAutoFillKeywords}
-                      disabled={!topic.trim()}
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid #e5e5e5', background: '#fff', color: '#475569', borderRadius: 999, padding: '6px 10px', fontSize: 11, fontWeight: 700, cursor: !topic.trim() ? 'not-allowed' : 'pointer', opacity: !topic.trim() ? 0.5 : 1 }}
-                    >
-                      <RefreshCcw size={12} />
-                      Auto-fill
-                    </button>
-                  </div>
+                  <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Focus Keyword</label>
                   <input
                     type="text"
                     value={focusKeyword}
-                    onChange={(e) => {
-                      setFocusKeyword(e.target.value);
-                      setFocusKeywordTouched(true);
-                    }}
+                    onChange={(e) => setFocusKeyword(e.target.value)}
                     placeholder="e.g. student visa Germany"
                     style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                   />
                   <p style={{ fontSize: 11, color: '#94a3b8', margin: '6px 0 0' }}>
-                    Auto-filled from the topic. You can edit it before generating.
+                    Optional - AI will generate appropriate keywords if left empty
                   </p>
                 </div>
 
@@ -914,15 +835,12 @@ export default function BlogGeneratorPage() {
                   <input
                     type="text"
                     value={semanticKeywords}
-                    onChange={(e) => {
-                      setSemanticKeywords(e.target.value);
-                      setSemanticKeywordsTouched(true);
-                    }}
+                    onChange={(e) => setSemanticKeywords(e.target.value)}
                     placeholder="e.g. blocked account, embassy appointment, visa documents"
                     style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                   />
                   <p style={{ fontSize: 11, color: '#94a3b8', margin: '6px 0 0' }}>
-                    Auto-filled supporting terms for related search intent. You can refine them if needed.
+                    Optional - AI will generate supporting terms if left empty
                   </p>
                 </div>
 
