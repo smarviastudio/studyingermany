@@ -11,6 +11,7 @@ import {
   Settings, Filter, Sparkles
 } from 'lucide-react';
 import { ProgramModal } from '@/components/ProgramModal';
+import { ProgramCard } from '@/components/ProgramCard';
 import type { ProgramSummary } from '@/lib/types';
 import { SiteNav } from '@/components/SiteNav';
 
@@ -501,100 +502,13 @@ export default function HomePage() {
                     </div>
                   )}
                   <div className="program-list">
-                      {filteredResults.map(program => {
-                    const degreeLevel = program.degree_level?.toLowerCase() || '';
-                    const isBachelor = degreeLevel.includes('bachelor');
-                    const isMaster = degreeLevel.includes('master');
-                    const isPhd = degreeLevel.includes('phd') || degreeLevel.includes('doctor');
-                    const degreeLabel = isBachelor ? 'Bachelor' : isMaster ? 'Master' : isPhd ? 'PhD' : program.degree_level;
-                    const languageLabel = program.languages_array?.[0] || 'English';
-                    const durationLabel = program.duration_months ? `${Math.round(program.duration_months / 6)} sem` : null;
-                    
-                    return (
-                      <div key={program.id} className="program-card-v2" onClick={() => handleProgramCardClick(program.id)}>
-                        <div className="program-card-v2-image">
-                          {program.image_url ? (
-                            <Image 
-                              src={program.image_url} 
-                              alt={program.program_name} 
-                              fill 
-                              className="object-cover"
-                              unoptimized
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <GraduationCap className="w-12 h-12" style={{ color: 'rgba(255,255,255,0.15)' }} />
-                            </div>
-                          )}
-                          <div className="program-card-v2-image-overlay" />
-                          <div className="program-card-v2-badges">
-                            {degreeLabel && <span className="program-card-v2-badge program-card-v2-badge-degree">{degreeLabel}</span>}
-                            {languageLabel && <span className="program-card-v2-badge program-card-v2-badge-lang">{languageLabel}</span>}
-                          </div>
-                          {program.city && (
-                            <div className="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between gap-3">
-                              <div className="inline-flex min-w-0 max-w-[calc(100%-96px)] items-center gap-2 rounded-xl border border-white/70 bg-white/96 px-3.5 py-2 shadow-[0_10px_25px_rgba(15,23,42,0.18)] backdrop-saturate-150">
-                                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 text-slate-700">
-                                  <MapPin className="h-3.5 w-3.5" />
-                                </div>
-                                <span className="truncate text-[15px] font-extrabold tracking-[-0.01em] text-slate-900">{program.city}</span>
-                              </div>
-                              {program.is_free && (
-                                <span className="inline-flex flex-shrink-0 items-center rounded-xl border border-emerald-300 bg-gradient-to-br from-emerald-500 to-green-600 px-4 py-2 shadow-[0_10px_22px_rgba(22,163,74,0.35)]">
-                                  <span className="text-[15px] font-black tracking-[-0.01em] text-white">Free</span>
-                                </span>
-                              )}
-                            </div>
-                          )}
-                          <button 
-                            onClick={e => { e.stopPropagation(); handleShortlist(program); }} 
-                            disabled={shortlistingId === program.id} 
-                            className={`program-card-v2-bookmark ${shortlistedPrograms.includes(program.id) ? 'active' : ''}`}
-                          >
-                            {shortlistingId === program.id ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <Bookmark className="w-4 h-4" style={{ fill: shortlistedPrograms.includes(program.id) ? 'currentColor' : 'none' }} />
-                            )}
-                          </button>
-                        </div>
-                        <div className="program-card-v2-body">
-                          <h4 className="program-card-v2-title">{program.program_name}</h4>
-                          <p className="program-card-v2-uni">
-                            <GraduationCap />
-                            {program.university}
-                          </p>
-                          <div className="program-card-v2-meta">
-                            {durationLabel && (
-                              <span className="program-card-v2-meta-item">
-                                <Clock />
-                                {durationLabel}
-                              </span>
-                            )}
-                            {program.beginning_normalized && (
-                              <span className="program-card-v2-meta-item">
-                                <Calendar />
-                                {program.beginning_normalized.charAt(0).toUpperCase() + program.beginning_normalized.slice(1)}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="program-card-v2-footer">
-                          {program.match_reason && program.match_reason !== 'General match' ? (
-                            <span className="program-card-v2-match">
-                              <Star />
-                              {program.match_reason.length > 25 ? program.match_reason.substring(0, 25) + '...' : program.match_reason}
-                            </span>
-                          ) : (
-                            <span />
-                          )}
-                          <span className="program-card-v2-view">
-                            View Details <ArrowRight />
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
+                      {filteredResults.map(program => (
+                        <ProgramCard 
+                          key={program.id}
+                          program={program}
+                          onClick={() => handleProgramCardClick(program.id)}
+                        />
+                      ))}
                 </div>
                 </>
               )}
