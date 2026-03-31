@@ -1,4 +1,4 @@
-import { DataProvider, SearchResult } from './DataProvider';
+import { DataProvider } from './DataProvider';
 import { Program, ProgramSummary, SearchFilters } from '../types';
 import { csvLoader } from '../csv/loadPrograms';
 import { TfIdf } from 'natural';
@@ -6,6 +6,7 @@ import { TfIdf } from 'natural';
 export class CSVDataProvider implements DataProvider {
   private programs: Program[] = [];
   private programIndex = new Map<string, Program>();
+  private programSearchIndex = new Map<string, number>();
   private tfidf: TfIdf;
   private initialized = false;
   private initializePromise: Promise<void> | null = null;
@@ -21,6 +22,7 @@ export class CSVDataProvider implements DataProvider {
     this.initializePromise = (async () => {
       this.programs = await csvLoader.loadPrograms();
       this.programIndex = new Map(this.programs.map((program) => [program.id, program]));
+      this.programSearchIndex = new Map(this.programs.map((program, index) => [program.id, index]));
       this.buildSearchIndex();
       this.initialized = true;
     })();
@@ -65,12 +67,87 @@ export class CSVDataProvider implements DataProvider {
     }
     
     // Apply ranking
-    const rankedPrograms = this.rankPrograms(filteredPrograms, filters, queryText);
+    const rankedPrograms = this.rankPrograms(filteredPrograms, filters);
     
     return rankedPrograms.slice(0, limit).map(program => this.toProgramSummary(program));
   }
 
+  private normalizeSearchText(value?: string | null): string {
+    return (value || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  private subjectMatchesText(subject: string, text?: string | null): boolean {
+    const normalizedSubject = this.normalizeSearchText(subject);
+    const normalizedText = this.normalizeSearchText(text);
+    if (!normalizedSubject || !normalizedText) return false;
+
+    const subjectWords = normalizedSubject.split(' ').filter(Boolean);
+    const textWords = normalizedText.split(' ').filter(Boolean);
+    const textWordSet = new Set(textWords);
+
+    if (subjectWords.length === 1) {
+      const [word] = subjectWords;
+      if (word.length <= 2) {
+        return textWordSet.has(word);
+      }
+      return normalizedText.includes(normalizedSubject) || textWordSet.has(word);
+    }
+
+    if (normalizedText.includes(normalizedSubject)) {
+      return true;
+    }
+
+    const significantWords = subjectWords.filter(word => word.length > 2);
+    if (significantWords.length === 0) {
+      return subjectWords.every(word => textWordSet.has(word));
+    }
+
+    return significantWords.every(word => textWordSet.has(word));
+  }
+
+  private programMatchesSubject(program: Program, subject: string): boolean {
+    return [
+      program.program_name,
+      program.subject_area || '',
+      ...program.subject_tags,
+      ...program.tags_array,
+    ].some(value => this.subjectMatchesText(subject, value));
+  }
+
   private applyFilters(programs: Program[], filters: SearchFilters): Program[] {
+    const parseScore = (value?: string | null) => {
+      if (!value) return null;
+      const match = value.match(/[\d.]+/);
+      if (!match) return null;
+      const parsed = parseFloat(match[0]);
+      return Number.isFinite(parsed) ? parsed : null;
+    };
+
+    const parseNumber = (value?: string | null) => {
+      if (!value) return null;
+      const match = value.match(/[\d.]+/);
+      if (!match) return null;
+      const parsed = parseFloat(match[0]);
+      return Number.isFinite(parsed) ? parsed : null;
+    };
+
+    const hasEnglishProofRequirement = (program: Program) =>
+      !!program.english_min_level ||
+      !!program.ielts_min_score ||
+      !!program.toefl_min_score ||
+      ((program.language_notes || '').toLowerCase().includes('english'));
+
+    const hasGermanProofRequirement = (program: Program) =>
+      !!program.german_min_level ||
+      ((program.language_notes || '').toLowerCase().includes('german'));
+
+    const normalizeChannel = (value?: string | null) =>
+      (value || '')
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/_/g, '-')
+        .trim();
+
     return programs.filter(program => {
       // Degree level filter
       if (filters.degree_level && filters.degree_level !== 'any') {
@@ -79,35 +156,7 @@ export class CSVDataProvider implements DataProvider {
       
       // Subject filter - searches in program name, subject area, subject_tags, AND tags_array
       if (filters.subjects && filters.subjects.length > 0) {
-        const normalizeSubject = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
-        const hasSubjectMatch = filters.subjects.some(subject => {
-          const normalizedFilter = normalizeSubject(subject);
-          const filterWords = normalizedFilter.split(/\s+/).filter(w => w.length > 2);
-          
-          // Check subject_tags
-          const matchesTags = program.subject_tags.some(tag => {
-            const normalizedTag = normalizeSubject(tag);
-            return normalizedTag.includes(normalizedFilter) || 
-                   filterWords.some(word => normalizedTag.includes(word));
-          });
-          
-          // Check tags_array (subjects column)
-          const matchesTagsArray = program.tags_array.some(tag => {
-            const normalizedTag = normalizeSubject(tag);
-            return normalizedTag.includes(normalizedFilter) || 
-                   filterWords.some(word => normalizedTag.includes(word));
-          });
-          
-          // Check subject_area
-          const matchesSubjectArea = normalizeSubject(program.subject_area || '').includes(normalizedFilter) ||
-                                     filterWords.some(word => normalizeSubject(program.subject_area || '').includes(word));
-          
-          // Check program_name
-          const matchesProgramName = normalizeSubject(program.program_name).includes(normalizedFilter) ||
-                                     filterWords.some(word => normalizeSubject(program.program_name).includes(word));
-          
-          return matchesTags || matchesTagsArray || matchesSubjectArea || matchesProgramName;
-        });
+        const hasSubjectMatch = filters.subjects.some(subject => this.programMatchesSubject(program, subject));
         if (!hasSubjectMatch) return false;
       }
       
@@ -141,6 +190,111 @@ export class CSVDataProvider implements DataProvider {
         ) || program.beginning_normalized?.toLowerCase().includes(filters.intake_term!.toLowerCase());
         if (!hasIntake) return false;
       }
+
+      // Online / e-learning filter
+      if (filters.online_only) {
+        if (!program.is_elearning && !program.is_complete_online_possible) {
+          return false;
+        }
+      }
+
+      // Scholarship / funding filter
+      if (filters.scholarship_available) {
+        if (!program.scholarship_available && !(program.financial_support || '').trim()) {
+          return false;
+        }
+      }
+
+      // English proof filter
+      if (filters.requires_english_proof !== undefined) {
+        const hasRequirement = hasEnglishProofRequirement(program);
+        if (filters.requires_english_proof ? !hasRequirement : hasRequirement) {
+          return false;
+        }
+      }
+
+      // German proof filter
+      if (filters.requires_german_proof !== undefined) {
+        const hasRequirement = hasGermanProofRequirement(program);
+        if (filters.requires_german_proof ? !hasRequirement : hasRequirement) {
+          return false;
+        }
+      }
+
+      // IELTS filter
+      if (filters.max_ielts_score !== undefined) {
+        const requiredIelts = parseScore(program.ielts_min_score);
+        if (requiredIelts === null || requiredIelts > filters.max_ielts_score) {
+          return false;
+        }
+      }
+
+      // TOEFL filter
+      if (filters.max_toefl_score !== undefined) {
+        const requiredToefl = parseScore(program.toefl_min_score);
+        if (requiredToefl === null || requiredToefl > filters.max_toefl_score) {
+          return false;
+        }
+      }
+
+      // GPA filter
+      if (filters.max_minimum_gpa !== undefined) {
+        const requiredGpa = parseNumber(program.minimum_gpa);
+        if (requiredGpa === null || requiredGpa > filters.max_minimum_gpa) {
+          return false;
+        }
+      }
+
+      // Work experience filter
+      if (filters.requires_work_experience !== undefined) {
+        const requiresExperience = program.work_experience_required === true;
+        if (filters.requires_work_experience ? !requiresExperience : requiresExperience) {
+          return false;
+        }
+      }
+
+      // ECTS filter
+      if (filters.max_min_ects !== undefined) {
+        const requiredEcts = parseNumber(program.min_ects_required || program.ects_credits);
+        if (requiredEcts === null || requiredEcts > filters.max_min_ects) {
+          return false;
+        }
+      }
+
+      // Deadline filter
+      if (filters.deadline_after) {
+        const programDeadline = program.registration_deadline_date || program.application_deadline;
+        const requiredDeadline = Date.parse(filters.deadline_after);
+        const actualDeadline = programDeadline ? Date.parse(programDeadline) : NaN;
+        if (Number.isNaN(requiredDeadline) || Number.isNaN(actualDeadline) || actualDeadline < requiredDeadline) {
+          return false;
+        }
+      }
+
+      // Application channel filter
+      if (filters.application_channel) {
+        const requestedChannel = normalizeChannel(filters.application_channel);
+        const programChannel = normalizeChannel(program.application_channel);
+        if (!programChannel || !programChannel.includes(requestedChannel)) {
+          return false;
+        }
+      }
+
+      // Semester fee filter
+      if (filters.max_semester_fee !== undefined) {
+        const semesterFee = parseNumber(program.semester_fee_eur);
+        if (semesterFee === null || semesterFee > filters.max_semester_fee) {
+          return false;
+        }
+      }
+
+      // Living expenses filter
+      if (filters.max_living_expenses !== undefined) {
+        const livingCosts = parseNumber(program.living_expenses_month_eur);
+        if (livingCosts === null || livingCosts > filters.max_living_expenses) {
+          return false;
+        }
+      }
       
       // Confidence filter
       if (filters.min_confidence !== undefined) {
@@ -157,8 +311,11 @@ export class CSVDataProvider implements DataProvider {
     const queryDoc = queryText.toLowerCase();
     const scoredPrograms: Array<Program & { relevanceScore: number }> = [];
     
-    programs.forEach((program, index) => {
-      const score = this.tfidf.tfidf(queryDoc.split(' '), index);
+    programs.forEach((program) => {
+      const documentIndex = this.programSearchIndex.get(program.id);
+      const score = documentIndex !== undefined
+        ? this.tfidf.tfidf(queryDoc.split(' '), documentIndex)
+        : 0;
       scoredPrograms.push({
         ...program,
         relevanceScore: score
@@ -167,10 +324,14 @@ export class CSVDataProvider implements DataProvider {
     
     return scoredPrograms
       .sort((a, b) => b.relevanceScore - a.relevanceScore)
-      .map(({ relevanceScore, ...program }) => program);
+      .map((scoredProgram) => {
+        const program = { ...scoredProgram };
+        delete (program as Program & { relevanceScore?: number }).relevanceScore;
+        return program;
+      });
   }
 
-  private rankPrograms(programs: Program[], filters: SearchFilters, queryText?: string): Array<Program & { matchScore: number; matchReason: string }> {
+  private rankPrograms(programs: Program[], filters: SearchFilters): Array<Program & { matchScore: number; matchReason: string }> {
     return programs.map(program => {
       let score = 0;
       const reasons: string[] = [];
@@ -180,9 +341,8 @@ export class CSVDataProvider implements DataProvider {
       
       // Subject match scoring
       if (filters.subjects && filters.subjects.length > 0) {
-        const subjectMatches = filters.subjects.filter(subject => 
-          program.subject_tags.some(tag => tag.toLowerCase().includes(subject.toLowerCase())) ||
-          program.subject_area?.toLowerCase().includes(subject.toLowerCase())
+        const subjectMatches = filters.subjects.filter(subject =>
+          this.programMatchesSubject(program, subject)
         ).length;
         score += (subjectMatches / filters.subjects.length) * 0.3;
         if (subjectMatches > 0) reasons.push(`Matches ${subjectMatches} subject(s)`);
@@ -279,6 +439,7 @@ export class CSVDataProvider implements DataProvider {
   async reloadData(): Promise<void> {
     this.programs = await csvLoader.reloadPrograms();
     this.programIndex = new Map(this.programs.map((program) => [program.id, program]));
+    this.programSearchIndex = new Map(this.programs.map((program, index) => [program.id, index]));
     this.buildSearchIndex();
   }
 }

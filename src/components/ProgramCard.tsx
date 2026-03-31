@@ -1,7 +1,7 @@
 'use client';
 
 import { ProgramSummary } from '@/lib/types';
-import { MapPin, GraduationCap, Euro, Calendar, AlertTriangle, ArrowRight, Sparkles } from 'lucide-react';
+import { MapPin, GraduationCap, Euro, Calendar, AlertTriangle, Bookmark } from 'lucide-react';
 import Image from 'next/image';
 
 interface ProgramCardProps {
@@ -16,147 +16,215 @@ export function ProgramCard({ program, onClick }: ProgramCardProps) {
     return `€${amount.toLocaleString()}/year`;
   };
 
+  const matchScore = program.match_score ? Math.round(program.match_score * 100) : null;
+
   return (
     <div
       onClick={onClick}
-      className="group bg-white/90 backdrop-blur-xl border border-gray-200/60 rounded-3xl hover:bg-white hover:border-blue-200 hover:shadow-2xl hover:shadow-blue-100/50 transition-all duration-500 cursor-pointer overflow-hidden relative transform hover:-translate-y-1"
+      style={{
+        background: '#fff',
+        border: '1px solid #e5e5e5',
+        borderRadius: 12,
+        overflow: 'hidden',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = '#dd0000';
+        e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)';
+        e.currentTarget.style.transform = 'translateY(-2px)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = '#e5e5e5';
+        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.transform = 'translateY(0)';
+      }}
     >
-      {/* Program Image */}
-      <div className="relative h-40 w-full overflow-hidden">
-        {/* Always show fallback first */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-          
-          {/* Animated background elements */}
-          <div className="absolute top-6 left-6 w-20 h-20 bg-white/15 rounded-full blur-2xl animate-pulse"></div>
-          <div className="absolute bottom-6 right-6 w-16 h-16 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
-          
-          {/* University Icon */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <GraduationCap className="w-12 h-12 text-white/60" />
-          </div>
-        </div>
-
-        {/* Try to load actual image on top */}
-        {program.image_url && program.image_url.trim() !== '' && (
+      {/* Image */}
+      <div style={{ position: 'relative', height: 180, width: '100%', background: '#f5f5f5', overflow: 'hidden' }}>
+        {program.image_url && program.image_url.trim() !== '' ? (
           <Image
             src={program.image_url}
             alt={program.program_name}
             fill
-            className="object-cover group-hover:scale-110 transition-transform duration-700 z-10"
+            style={{ objectFit: 'cover' }}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             unoptimized={true}
-            onLoad={(e) => {
-              console.log('Image loaded successfully:', program.image_url);
-            }}
             onError={(e) => {
-              console.log('Image failed to load, keeping fallback:', program.image_url);
-              const target = e.currentTarget;
-              target.style.display = 'none';
+              e.currentTarget.style.display = 'none';
             }}
           />
+        ) : (
+          <div style={{ 
+            position: 'absolute', 
+            inset: 0, 
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <GraduationCap style={{ width: 48, height: 48, color: 'rgba(255,255,255,0.5)' }} />
+          </div>
         )}
 
         {/* Match Score Badge */}
-        {program.match_score && (
-          <div className="absolute top-3 right-3 z-20">
-            <div className="px-3 py-1 rounded-full text-xs font-bold bg-black/20 backdrop-blur-md text-white border border-white/20">
-              {Math.round(program.match_score * 100)}% match
-            </div>
+        {matchScore && (
+          <div style={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            background: 'rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(8px)',
+            color: '#fff',
+            padding: '6px 12px',
+            borderRadius: 6,
+            fontSize: 13,
+            fontWeight: 700,
+          }}>
+            {matchScore}% match
           </div>
         )}
       </div>
 
-      <div className="p-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 mb-2 leading-tight">
-            {program.program_name}
-          </h3>
-          
-          <div className="flex items-center text-gray-500 text-sm mb-3">
-            <span className="font-medium">{program.university}</span>
-            {program.city && (
-              <>
-                <span className="mx-2">•</span>
-                <MapPin className="w-3 h-3 mr-1" />
+      {/* Content */}
+      <div style={{ padding: 20 }}>
+        {/* Title */}
+        <h3 style={{
+          fontSize: 18,
+          fontWeight: 700,
+          color: '#111',
+          margin: '0 0 8px',
+          lineHeight: 1.3,
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+        }}>
+          {program.program_name}
+        </h3>
+
+        {/* University & Location */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, fontSize: 14, color: '#666' }}>
+          <span style={{ fontWeight: 500 }}>{program.university}</span>
+          {program.city && (
+            <>
+              <span style={{ color: '#ddd' }}>•</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <MapPin style={{ width: 14, height: 14 }} />
                 <span>{program.city}</span>
-              </>
-            )}
-          </div>
-
-          {/* No image fallback match score */}
-          {!program.image_url && program.match_score && (
-            <div className="mb-3">
-              <div className="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700">
-                {Math.round(program.match_score * 100)}% match
               </div>
-            </div>
+            </>
           )}
         </div>
 
-        {/* Key Details - Simplified */}
-        <div className="space-y-3 mb-6">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center text-gray-600">
-              <GraduationCap className="w-4 h-4 mr-2" />
-              <span className="capitalize">{program.degree_level || 'Not specified'}</span>
+        {/* Key Info Grid */}
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: '1fr 1fr', 
+          gap: 12,
+          padding: '16px 0',
+          borderTop: '1px solid #f0f0f0',
+          borderBottom: '1px solid #f0f0f0',
+          marginBottom: 16
+        }}>
+          <div>
+            <div style={{ fontSize: 11, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4, fontWeight: 600 }}>
+              Degree
             </div>
-            <div className="flex items-center text-gray-900 font-semibold">
-              <Euro className="w-4 h-4 mr-1" />
-              <span>{formatTuition(program.tuition_fee_number, program.tuition_fee_currency)}</span>
+            <div style={{ fontSize: 14, fontWeight: 600, color: '#111', textTransform: 'capitalize' }}>
+              {program.degree_level || 'Not specified'}
             </div>
           </div>
-
+          <div>
+            <div style={{ fontSize: 11, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4, fontWeight: 600 }}>
+              Tuition
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: '#111' }}>
+              {formatTuition(program.tuition_fee_number, program.tuition_fee_currency)}
+            </div>
+          </div>
           {program.beginning_normalized && (
-            <div className="flex items-center text-sm text-gray-600">
-              <Calendar className="w-4 h-4 mr-2" />
-              <span className="capitalize">Starts {program.beginning_normalized}</span>
-            </div>
+            <>
+              <div>
+                <div style={{ fontSize: 11, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4, fontWeight: 600 }}>
+                  Start
+                </div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#111', textTransform: 'capitalize' }}>
+                  {program.beginning_normalized}
+                </div>
+              </div>
+            </>
           )}
-
           {program.subject_area && (
-            <div className="text-sm text-gray-600">
-              <span className="font-medium">{program.subject_area}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Match Reason - Enhanced */}
-        {program.match_reason && (
-          <div className="mb-4">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl p-4">
-              <div className="flex items-start">
-                <Sparkles className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-blue-900 leading-relaxed font-medium">
-                  {program.match_reason}
-                </p>
+            <div style={{ gridColumn: program.beginning_normalized ? 'auto' : '1 / -1' }}>
+              <div style={{ fontSize: 11, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4, fontWeight: 600 }}>
+                Subject
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#111' }}>
+                {program.subject_area}
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Quality Warnings - Enhanced */}
-        {program.quality_warnings && program.quality_warnings.length > 0 && (
-          <div className="mb-4">
-            <div className="flex items-center text-amber-700 text-xs bg-amber-50 rounded-lg px-3 py-2">
-              <AlertTriangle className="w-3 h-3 mr-2" />
-              <span className="font-medium">{program.quality_warnings.length} data note{program.quality_warnings.length !== 1 ? 's' : ''}</span>
+        {/* Match Reason */}
+        {program.match_reason && (
+          <div style={{
+            background: '#f8f9fa',
+            border: '1px solid #e9ecef',
+            borderRadius: 8,
+            padding: 12,
+            marginBottom: 12,
+          }}>
+            <div style={{ fontSize: 13, color: '#495057', lineHeight: 1.5 }}>
+              {program.match_reason}
             </div>
           </div>
         )}
 
-        {/* Action - Enhanced */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100/80">
-          <span className="text-xs text-gray-600 font-medium">View full details</span>
-          <div className="flex items-center text-blue-600 group-hover:text-blue-700">
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-all duration-300" />
+        {/* Quality Warnings */}
+        {program.quality_warnings && program.quality_warnings.length > 0 && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '8px 12px',
+            background: '#fff9e6',
+            border: '1px solid #ffe066',
+            borderRadius: 6,
+            marginBottom: 12,
+          }}>
+            <AlertTriangle style={{ width: 14, height: 14, color: '#f59e0b', flexShrink: 0 }} />
+            <span style={{ fontSize: 12, color: '#92400e', fontWeight: 600 }}>
+              {program.quality_warnings.length} data note{program.quality_warnings.length !== 1 ? 's' : ''}
+            </span>
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* Subtle hover glow */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-500 pointer-events-none"></div>
+        {/* Action Button */}
+        <button
+          style={{
+            width: '100%',
+            padding: '12px 16px',
+            background: '#dd0000',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 8,
+            fontSize: 14,
+            fontWeight: 700,
+            cursor: 'pointer',
+            transition: 'background 0.2s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#c20000';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#dd0000';
+          }}
+        >
+          View Details
+        </button>
+      </div>
     </div>
   );
 }

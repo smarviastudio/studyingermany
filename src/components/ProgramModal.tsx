@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { Program } from '@/lib/types';
 import {
   X, MapPin, GraduationCap, Calendar, Globe, Clock,
   ExternalLink, FileText, Star, CheckCircle,
   Bookmark, ArrowRight, Loader2, ChevronDown, ChevronUp, Euro,
-  BookOpen, ShieldCheck, Coins, Building2, Briefcase, Home,
-  Users, Languages, TrendingUp, Sparkles, AlertCircle, LogIn, UserPlus
+  BookOpen, ShieldCheck, Coins, Briefcase, Home,
+  Users, Languages, TrendingUp, Sparkles, AlertCircle, LogIn, UserPlus,
+  type LucideIcon
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,6 +23,43 @@ interface ProgramModalProps {
 }
 
 type Tab = 'overview' | 'city' | 'requirements' | 'costs';
+
+interface DetailSectionCardProps {
+  icon: LucideIcon;
+  title: string;
+  subtitle: string;
+  children: ReactNode;
+  containerClassName?: string;
+  iconClassName?: string;
+  titleClassName?: string;
+  subtitleClassName?: string;
+}
+
+function DetailSectionCard({
+  icon: Icon,
+  title,
+  subtitle,
+  children,
+  containerClassName = 'border-gray-200 bg-white',
+  iconClassName = 'from-slate-500 to-slate-600 shadow-slate-500/20',
+  titleClassName = 'text-gray-900',
+  subtitleClassName = 'text-gray-500',
+}: DetailSectionCardProps) {
+  return (
+    <div className={`rounded-2xl border p-5 shadow-sm ${containerClassName}`}>
+      <div className="flex items-center gap-3 mb-4">
+        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${iconClassName} flex items-center justify-center shadow-lg`}>
+          <Icon className="w-5 h-5 text-white" />
+        </div>
+        <div>
+          <h3 className={`font-bold ${titleClassName}`}>{title}</h3>
+          <p className={`text-xs ${subtitleClassName}`}>{subtitle}</p>
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+}
 
 export function ProgramModal({ programId, onClose, isShortlisted = false, onToggleShortlist }: ProgramModalProps) {
   const { status } = useSession();
@@ -194,7 +232,7 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
     { icon: Globe, label: 'Language', value: languageDisplay },
     tuitionDisplay && { icon: Euro, label: 'Tuition', value: tuitionDisplay },
     program?.beginning_normalized && { icon: Calendar, label: 'Intake', value: capitalize(program.beginning_normalized) },
-  ].filter(Boolean) as { icon: any; label: string; value: string }[];
+  ].filter(Boolean) as { icon: LucideIcon; label: string; value: string }[];
 
   if (loading) {
     return (
@@ -225,8 +263,6 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
       </div>
     );
   }
-
-  const cardClass = 'rounded-2xl border border-[#ececec] bg-white shadow-sm';
 
   return (
     <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[9999] flex items-start justify-center overflow-y-auto py-8 px-4" onClick={onClose}>
@@ -424,8 +460,8 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
           </div>
         </div>
 
-        <div className="sticky top-0 z-20 bg-white border-b border-[#ececec] px-6 pt-3 pb-2">
-          <div className="flex gap-1 bg-[#f5f5f5] rounded-full p-1">
+        <div className="sticky top-0 z-20 bg-white/96 backdrop-blur-sm border-b border-[#e7e7e7] px-6 pt-3 pb-3 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
+          <div className="flex gap-1.5 rounded-[22px] border border-[#e5e7eb] bg-gradient-to-b from-[#f8fafc] to-[#eef2f7] p-1.5 shadow-inner">
             {[
               { key: 'overview' as Tab, label: 'Overview', icon: Sparkles, color: '#8b5cf6' },
               { key: 'requirements' as Tab, label: 'Requirements', icon: ShieldCheck, color: '#7c3aed' },
@@ -438,12 +474,14 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold transition-all ${
-                    isActive ? 'text-white shadow-sm' : 'text-[#7c7c7c]'
+                  className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+                    isActive
+                      ? 'text-white shadow-[0_6px_18px_rgba(15,23,42,0.16)] ring-1 ring-black/5'
+                      : 'text-[#4b5563] hover:text-[#111827] hover:bg-white/80'
                   }`}
                   style={isActive ? { backgroundColor: tab.color } : { backgroundColor: 'transparent' }}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#b5b5b5]'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#6b7280]'}`} />
                   <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               );
@@ -455,33 +493,41 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
           {activeTab === 'overview' && (
             <div className="space-y-5">
               {aiSummary?.overview && (
-                <div className="rounded-2xl border border-[#e9d5ff] bg-[#faf5ff] p-5 shadow-sm">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-7 h-7 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center">
-                      <Star className="w-4 h-4 text-[#8b5cf6]" />
-                    </div>
-                    <span className="text-xs font-bold tracking-wider text-[#7c3aed] uppercase">AI Summary</span>
-                  </div>
+                <DetailSectionCard
+                  icon={Star}
+                  title="Program Snapshot"
+                  subtitle="AI summary of the course"
+                  containerClassName="border-violet-100 bg-gradient-to-br from-violet-50 to-fuchsia-50"
+                  iconClassName="from-violet-500 to-fuchsia-600 shadow-violet-500/25"
+                  titleClassName="text-violet-950"
+                  subtitleClassName="text-violet-600"
+                >
                   <p className="text-[15px] leading-relaxed text-[#2d2d2d]">{aiSummary.overview}</p>
-                </div>
+                </DetailSectionCard>
               )}
 
-              {/* University Profile */}
               {program?.university_profile && (
-                <div className="rounded-2xl border border-[#dcfce7] bg-[#f0fdf4] p-5 shadow-sm">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-7 h-7 rounded-lg bg-[#22c55e]/10 flex items-center justify-center">
-                      <GraduationCap className="w-4 h-4 text-[#22c55e]" />
-                    </div>
-                    <span className="text-xs font-bold tracking-wider text-[#16a34a] uppercase">University Profile</span>
-                  </div>
+                <DetailSectionCard
+                  icon={GraduationCap}
+                  title="University Profile"
+                  subtitle="What the institution feels like"
+                  containerClassName="border-emerald-100 bg-gradient-to-br from-emerald-50 to-green-50"
+                  iconClassName="from-emerald-500 to-green-600 shadow-emerald-500/25"
+                  titleClassName="text-emerald-950"
+                  subtitleClassName="text-emerald-600"
+                >
                   <p className="text-[14px] leading-relaxed text-[#2d2d2d]">{program.university_profile}</p>
-                </div>
+                </DetailSectionCard>
               )}
 
               {summaryModules.length > 0 && (
-                <div>
-                  <p className="text-xs font-bold tracking-wider text-[#a3a3a3] uppercase mb-3">Key Modules</p>
+                <DetailSectionCard
+                  icon={BookOpen}
+                  title="Key Modules"
+                  subtitle="Topics you are likely to study"
+                  containerClassName="border-slate-200 bg-white"
+                  iconClassName="from-slate-700 to-slate-900 shadow-slate-500/20"
+                >
                   <div className="flex flex-wrap gap-2">
                     {(showAllModules ? summaryModules : summaryModules.slice(0, 6)).map((mod, idx) => (
                       <span key={`mod-${idx}`} className="px-3 py-1.5 rounded-lg bg-[#f4f4f0] text-[#2d2d2d] text-xs font-semibold border border-[#ececec]">
@@ -497,12 +543,19 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                       </button>
                     )}
                   </div>
-                </div>
+                </DetailSectionCard>
               )}
 
               {summaryTakeaways.length > 0 && (
-                <div className="rounded-2xl border border-[#ececec] bg-white p-5 shadow-sm">
-                  <p className="text-xs font-bold tracking-wider text-[#a3a3a3] uppercase mb-3">Why this program</p>
+                <DetailSectionCard
+                  icon={TrendingUp}
+                  title="Why This Program"
+                  subtitle="Highlights worth noticing"
+                  containerClassName="border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50"
+                  iconClassName="from-amber-500 to-orange-600 shadow-amber-500/25"
+                  titleClassName="text-amber-950"
+                  subtitleClassName="text-amber-600"
+                >
                   <ul className="space-y-2.5">
                     {summaryTakeaways.map((tip, idx) => (
                       <li key={`tip-${idx}`} className="flex items-start gap-2.5 text-[#2d2d2d] text-sm leading-relaxed">
@@ -511,21 +564,33 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                       </li>
                     ))}
                   </ul>
-                </div>
+                </DetailSectionCard>
               )}
 
               {!aiSummary && (program.tab_course_details || program.tab_overview || program.description) && (
-                <div className="rounded-2xl border border-[#ececec] bg-white p-5 shadow-sm">
-                  <p className="text-xs font-bold tracking-wider text-[#a3a3a3] uppercase mb-3">Course details</p>
+                <DetailSectionCard
+                  icon={Sparkles}
+                  title="Course Details"
+                  subtitle="Overview of the curriculum"
+                  containerClassName="border-slate-200 bg-white"
+                  iconClassName="from-violet-500 to-indigo-600 shadow-violet-500/25"
+                >
                   <p className="text-[#2d2d2d] text-sm leading-relaxed font-medium">
                     {program.tab_course_details || program.tab_overview || program.description}
                   </p>
-                </div>
+                </DetailSectionCard>
               )}
 
               {supportServices.length > 0 && (
-                <div>
-                  <p className="text-xs font-bold tracking-wider text-[#a3a3a3] uppercase mb-3">Student support</p>
+                <DetailSectionCard
+                  icon={Users}
+                  title="Student Support"
+                  subtitle="Services available during your studies"
+                  containerClassName="border-blue-100 bg-gradient-to-br from-blue-50 to-cyan-50"
+                  iconClassName="from-blue-500 to-cyan-600 shadow-blue-500/25"
+                  titleClassName="text-blue-950"
+                  subtitleClassName="text-blue-600"
+                >
                   <div className="flex flex-wrap gap-2">
                     {supportServices.map((service: string, idx: number) => (
                       <span key={idx} className="px-3 py-1.5 rounded-lg bg-[#f9f9f7] border border-[#ececec] text-[#2d2d2d] text-xs font-semibold">
@@ -533,7 +598,7 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                       </span>
                     ))}
                   </div>
-                </div>
+                </DetailSectionCard>
               )}
             </div>
           )}
@@ -659,20 +724,34 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
           {activeTab === 'requirements' && (
             <div className="space-y-5">
               {(aiSummary?.requirements?.academic_background || program.academic_background_requirements) && (
-                <div className="rounded-2xl border border-[#ececec] bg-white p-5 shadow-sm">
-                  <p className="text-xs font-bold tracking-wider text-[#a3a3a3] uppercase mb-3">Academic Background</p>
+                <DetailSectionCard
+                  icon={ShieldCheck}
+                  title="Academic Background"
+                  subtitle="Eligibility and prior study expectations"
+                  containerClassName="border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50"
+                  iconClassName="from-blue-500 to-indigo-600 shadow-blue-500/25"
+                  titleClassName="text-blue-950"
+                  subtitleClassName="text-blue-600"
+                >
                   <p className="text-[#2d2d2d] text-sm leading-relaxed font-medium">
                     {aiSummary?.requirements?.academic_background || program.academic_background_requirements}
                   </p>
                   {program.min_ects_required && (
                     <p className="text-[#6b6b6b] text-xs mt-3">Minimum ECTS: <strong className="text-[#171717]">{program.min_ects_required}</strong></p>
                   )}
-                </div>
+                </DetailSectionCard>
               )}
 
               {(aiSummary?.requirements?.language || program.language_proficiency_required) && (
-                <div className="rounded-2xl border border-[#ececec] bg-white p-5 shadow-sm">
-                  <p className="text-xs font-bold tracking-wider text-[#a3a3a3] uppercase mb-3">Language Requirements</p>
+                <DetailSectionCard
+                  icon={Languages}
+                  title="Language Requirements"
+                  subtitle="Tests and minimum proficiency"
+                  containerClassName="border-violet-100 bg-gradient-to-br from-violet-50 to-purple-50"
+                  iconClassName="from-violet-500 to-purple-600 shadow-violet-500/25"
+                  titleClassName="text-violet-950"
+                  subtitleClassName="text-violet-600"
+                >
                   {aiSummary?.requirements?.language && (
                     <p className="text-[#2d2d2d] text-sm leading-relaxed font-medium mb-4">{aiSummary.requirements.language}</p>
                   )}
@@ -712,12 +791,19 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                   {program.language_notes && (
                     <p className="text-[#6b6b6b] text-xs mt-3 leading-relaxed">{program.language_notes}</p>
                   )}
-                </div>
+                </DetailSectionCard>
               )}
 
               {(summaryDocuments.length > 0 || documentsRequired.length > 0) && (
-                <div className="rounded-2xl border border-[#ececec] bg-white p-5 shadow-sm">
-                  <p className="text-xs font-bold tracking-wider text-[#a3a3a3] uppercase mb-3">Required Documents</p>
+                <DetailSectionCard
+                  icon={FileText}
+                  title="Required Documents"
+                  subtitle="What you will likely need to submit"
+                  containerClassName="border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50"
+                  iconClassName="from-amber-500 to-orange-600 shadow-amber-500/25"
+                  titleClassName="text-amber-950"
+                  subtitleClassName="text-amber-600"
+                >
                   <ul className="space-y-2">
                     {(summaryDocuments.length > 0 ? summaryDocuments : documentsRequired).map((doc: string, idx: number) => (
                       <li key={idx} className="flex items-start gap-2.5 text-[#2d2d2d] text-sm">
@@ -726,12 +812,19 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                       </li>
                     ))}
                   </ul>
-                </div>
+                </DetailSectionCard>
               )}
 
               {(program.application_channel || program.registration_deadline_date) && (
-                <div className="rounded-2xl border border-[#ececec] bg-white p-5 shadow-sm">
-                  <p className="text-xs font-bold tracking-wider text-[#a3a3a3] uppercase mb-3">Application Process</p>
+                <DetailSectionCard
+                  icon={Calendar}
+                  title="Application Process"
+                  subtitle="Portal and key timeline details"
+                  containerClassName="border-emerald-100 bg-gradient-to-br from-emerald-50 to-green-50"
+                  iconClassName="from-emerald-500 to-green-600 shadow-emerald-500/25"
+                  titleClassName="text-emerald-950"
+                  subtitleClassName="text-emerald-600"
+                >
                   <div className="space-y-3">
                     {program.application_channel && program.application_channel !== 'unknown' && (
                       <div className="flex items-center justify-between">
@@ -749,19 +842,34 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                   {program.application_channel_notes && (
                     <p className="text-[#6b6b6b] text-xs mt-3 leading-relaxed">{program.application_channel_notes}</p>
                   )}
-                </div>
+                </DetailSectionCard>
               )}
 
               {aiSummary?.requirements?.extra && (
-                <p className="text-[#8a8a8a] text-xs leading-relaxed px-1">{aiSummary.requirements.extra}</p>
+                <DetailSectionCard
+                  icon={AlertCircle}
+                  title="Additional Notes"
+                  subtitle="Extra requirement details"
+                  containerClassName="border-slate-200 bg-[#fafafa]"
+                  iconClassName="from-slate-500 to-slate-700 shadow-slate-500/20"
+                >
+                  <p className="text-[#5f5f5f] text-sm leading-relaxed">{aiSummary.requirements.extra}</p>
+                </DetailSectionCard>
               )}
             </div>
           )}
 
           {activeTab === 'costs' && (
             <div className="space-y-5">
-              <div className="rounded-2xl border border-[#ececec] bg-white p-5 shadow-sm">
-                <p className="text-xs font-bold tracking-wider text-[#a3a3a3] uppercase mb-4">Fee Breakdown</p>
+              <DetailSectionCard
+                icon={Coins}
+                title="Fee Breakdown"
+                subtitle="Main costs to budget for"
+                containerClassName="border-emerald-100 bg-gradient-to-br from-emerald-50 to-green-50"
+                iconClassName="from-emerald-500 to-green-600 shadow-emerald-500/25"
+                titleClassName="text-emerald-950"
+                subtitleClassName="text-emerald-600"
+              >
                 <div className="space-y-3">
                   {(program.tuition_exact_eur || tuitionDisplay) && (
                     <div className="flex items-center justify-between py-2 border-b border-[#f1f1f1]">
@@ -791,7 +899,7 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                 {program.tuition_notes && (
                   <p className="text-[#8a8a8a] text-xs mt-3 leading-relaxed">{program.tuition_notes}</p>
                 )}
-              </div>
+              </DetailSectionCard>
 
               {aiSummary?.costs && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -805,25 +913,35 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
                       funding: 'Funding & Scholarships',
                     };
                     return (
-                      <div key={key} className="rounded-2xl border border-[#ececec] bg-white p-4 shadow-sm">
-                        <p className="text-[11px] font-bold tracking-wider text-[#a3a3a3] uppercase mb-2">{labels[key]}</p>
+                      <DetailSectionCard
+                        key={key}
+                        icon={key === 'funding' ? CheckCircle : key === 'living_expenses' ? Home : Euro}
+                        title={labels[key]}
+                        subtitle={key === 'funding' ? 'Scholarship and funding context' : key === 'living_expenses' ? 'Monthly spending guidance' : 'AI-generated cost note'}
+                        containerClassName="border-slate-200 bg-white"
+                        iconClassName={key === 'funding' ? 'from-emerald-500 to-green-600 shadow-emerald-500/25' : key === 'living_expenses' ? 'from-amber-500 to-orange-600 shadow-amber-500/25' : 'from-slate-700 to-slate-900 shadow-slate-500/20'}
+                      >
                         <p className="text-[#2d2d2d] text-sm leading-relaxed font-medium">{value}</p>
-                      </div>
+                      </DetailSectionCard>
                     );
                   })}
                 </div>
               )}
 
               {program.scholarship_available && (
-                <div className="p-4 rounded-2xl border border-emerald-200 bg-emerald-50">
-                  <div className="flex items-center gap-2 mb-1">
-                    <CheckCircle className="w-4 h-4 text-emerald-600" />
-                    <span className="text-emerald-700 text-sm font-semibold">Scholarships Available</span>
-                  </div>
+                <DetailSectionCard
+                  icon={CheckCircle}
+                  title="Scholarships Available"
+                  subtitle="Funding support may be offered"
+                  containerClassName="border-emerald-200 bg-emerald-50"
+                  iconClassName="from-emerald-500 to-green-600 shadow-emerald-500/25"
+                  titleClassName="text-emerald-950"
+                  subtitleClassName="text-emerald-700"
+                >
                   {program.scholarship_notes && (
-                    <p className="text-emerald-900 text-sm leading-relaxed ml-6">{program.scholarship_notes}</p>
+                    <p className="text-emerald-900 text-sm leading-relaxed">{program.scholarship_notes}</p>
                   )}
-                </div>
+                </DetailSectionCard>
               )}
             </div>
           )}

@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import https from 'https';
 import { csvDataProvider } from '@/lib/data/CSVDataProvider';
 import { SearchFiltersSchema } from '@/lib/types';
 
 const CourseFinderRequestSchema = z.object({
   query: z.string().min(5, 'Please describe what you want to study'),
-  limit: z.number().min(1).max(20).optional(),
+  limit: z.number().min(1).max(50).optional(),
   timestamp: z.number().optional()
 });
+
+const DEFAULT_RESULTS_LIMIT = 24;
 
 type CourseFinderAIResponse = {
   query_text?: string;
@@ -40,7 +41,20 @@ If the query IS about finding a university program, return:
     "language": "english|german|either",
     "cities": ["berlin", "munich"],
     "max_tuition": 0,
-    "intake_term": "winter|summer|any"
+    "intake_term": "winter|summer|any",
+    "online_only": true,
+    "scholarship_available": true,
+    "requires_english_proof": true,
+    "requires_german_proof": false,
+    "max_ielts_score": 5.5,
+    "max_toefl_score": 80,
+    "max_minimum_gpa": 2.5,
+    "requires_work_experience": false,
+    "max_min_ects": 180,
+    "deadline_after": "2026-07-01",
+    "application_channel": "uni-assist|direct-university|centralized-portal",
+    "max_semester_fee": 350,
+    "max_living_expenses": 950
   },
   "excluded_subjects": ["agriculture", "medicine"],
   "reasoning": "short explanation"
@@ -53,6 +67,10 @@ IMPORTANT RULES:
 4. LANGUAGE COURSES: If user searches for "language course", "German language course", "language program", etc., this IS a course query. Set degree_level to "language_course" and subjects to ["german", "language"].
 5. NON-course queries are: general questions about "how to learn German" (without mentioning course/program), "visa process", "accommodation tips", "blocked account", "health insurance", "living costs", etc.
 6. The search will match against program names, subject areas, AND subject tags (like "software engineering", "mechanical engineering", etc.), so include relevant keywords.
+7. If the user mentions an IELTS or TOEFL score they have, convert it into a maximum acceptable requirement. Example: "IELTS 5.5" means set "max_ielts_score": 5.5.
+8. If the user asks for online, scholarship-funded, no-work-experience, GPA, ECTS, deadline, direct application, uni-assist, living-cost, or semester-fee constraints, put them in filters.
+9. For GPA and ECTS, treat the user's value as the maximum required by the program. Example: "I have 180 ECTS" => "max_min_ects": 180.
+10. For "still open", "deadline after now", or "open now", set deadline_after to today's date or a concrete date inferred from the query.
 
 Do not include any text outside of JSON.`;
 
@@ -68,6 +86,182 @@ function stripCodeFences(text: string) {
     return lines.join('\n');
   }
   return trimmed;
+}
+
+function extractScoreFiltersFromQuery(query: string) {
+  const queryLower = query.toLowerCase();
+  const filters: Partial<z.infer<typeof SearchFiltersSchema>> = {};
+
+  const ieltsMatch =
+    queryLower.match(/ielts(?:\s+score)?(?:\s+of)?\s+(\d(?:\.\d)?)/) ||
+    queryLower.match(/(\d(?:\.\d)?)\s+ielts/);
+  if (ieltsMatch) {
+    filters.max_ielts_score = parseFloat(ieltsMatch[1]);
+  }
+
+  const toeflMatch =
+    queryLower.match(/toefl(?:\s+(?:ibt|score))?(?:\s+of)?\s+(\d{2,3})/) ||
+    queryLower.match(/(\d{2,3})\s+toefl/);
+  if (toeflMatch) {
+    filters.max_toefl_score = parseInt(toeflMatch[1], 10);
+  }
+
+  return filters;
+}
+
+function extractAdditionalFiltersFromQuery(query: string) {
+  const queryLower = query.toLowerCase();
+  const filters: Partial<z.infer<typeof SearchFiltersSchema>> = {};
+
+  if (/(online|remote|distance learning|distance-learning|e-learning|elearning)/.test(queryLower)) {
+    filters.online_only = true;
+  }
+
+  if (/(scholarship|scholarships|funding|financial support)/.test(queryLower)) {
+    filters.scholarship_available = true;
+  }
+
+  if (/(english proficiency|english certificate|english test|ielts|toefl|pte|cambridge)/.test(queryLower)) {
+    filters.requires_english_proof = true;
+  }
+
+  if (/(german required|german proficiency|german certificate|testdaf|telc|goethe|dsh|german level)/.test(queryLower)) {
+    filters.requires_german_proof = true;
+  }
+
+  if (/(no work experience|without work experience|freshers|fresher|no experience required)/.test(queryLower)) {
+    filters.requires_work_experience = false;
+  } else if (/(work experience|required experience|experience required|with experience|mba)/.test(queryLower)) {
+    filters.requires_work_experience = true;
+  }
+
+  const gpaMatch =
+    queryLower.match(/(?:gpa|cgpa)(?:\s*(?:of|under|below|upto|up to|maximum|max)?)\s*(\d(?:\.\d+)?)/) ||
+    queryLower.match(/(\d(?:\.\d+)?)\s*(?:gpa|cgpa)/);
+  if (gpaMatch) {
+    filters.max_minimum_gpa = parseFloat(gpaMatch[1]);
+  }
+
+  const ectsMatch =
+    queryLower.match(/(?:ects)(?:\s*(?:of|under|below|upto|up to|maximum|max)?)\s*(\d{2,3})/) ||
+    queryLower.match(/(\d{2,3})\s*ects/);
+  if (ectsMatch) {
+    filters.max_min_ects = parseInt(ectsMatch[1], 10);
+  }
+
+  const semesterFeeMatch = queryLower.match(/semester fee(?:\s*(?:under|below|upto|up to|max|maximum|of))?\s*€?\s*(\d+(?:\.\d+)?)/);
+  if (semesterFeeMatch) {
+    filters.max_semester_fee = parseFloat(semesterFeeMatch[1]);
+  }
+
+  const livingCostMatch = queryLower.match(/(?:living expenses|living costs|monthly costs)(?:\s*(?:under|below|upto|up to|max|maximum|of))?\s*€?\s*(\d+(?:\.\d+)?)/);
+  if (livingCostMatch) {
+    filters.max_living_expenses = parseFloat(livingCostMatch[1]);
+  }
+
+  if (/(uni-assist|uni assist)/.test(queryLower)) {
+    filters.application_channel = 'uni-assist';
+  } else if (/(direct application|direct university|apply direct|directly to university)/.test(queryLower)) {
+    filters.application_channel = 'direct-university';
+  } else if (/(centralized portal|central portal)/.test(queryLower)) {
+    filters.application_channel = 'centralized-portal';
+  }
+
+  if (/(still open|open now|deadline after now|applications still open)/.test(queryLower)) {
+    filters.deadline_after = new Date().toISOString().slice(0, 10);
+  } else {
+    const deadlineAfterMatch = query.match(/deadline(?:s)?\s+(?:after|from)\s+([A-Za-z0-9,\-./ ]+)/i);
+    if (deadlineAfterMatch) {
+      const parsed = Date.parse(deadlineAfterMatch[1].trim());
+      if (!Number.isNaN(parsed)) {
+        filters.deadline_after = new Date(parsed).toISOString().slice(0, 10);
+      }
+    }
+  }
+
+  return filters;
+}
+
+function sanitizeLanguageScoreFilters(
+  filters: Partial<z.infer<typeof SearchFiltersSchema>>,
+  query: string
+) {
+  const queryLower = query.toLowerCase();
+  const nextFilters = { ...filters };
+
+  if (!/ielts/.test(queryLower)) {
+    delete nextFilters.max_ielts_score;
+  }
+
+  if (!/toefl/.test(queryLower)) {
+    delete nextFilters.max_toefl_score;
+  }
+
+  if (nextFilters.max_ielts_score !== undefined && nextFilters.max_ielts_score <= 0) {
+    delete nextFilters.max_ielts_score;
+  }
+
+  if (nextFilters.max_toefl_score !== undefined && nextFilters.max_toefl_score <= 0) {
+    delete nextFilters.max_toefl_score;
+  }
+
+  return nextFilters;
+}
+
+function sanitizeExplicitConstraintFilters(
+  filters: Partial<z.infer<typeof SearchFiltersSchema>>,
+  query: string
+) {
+  const queryLower = query.toLowerCase();
+  const nextFilters = { ...filters };
+
+  const mentionsTuition = /(tuition|fee|fees|budget|free|scholarship|funding|cost)/.test(queryLower);
+  const mentionsOnline = /(online|remote|distance learning|distance-learning|e-learning|elearning)/.test(queryLower);
+  const mentionsScholarship = /(scholarship|scholarships|funding|financial support)/.test(queryLower);
+  const mentionsEnglishProof = /(english proficiency|english certificate|english test|ielts|toefl|pte|cambridge)/.test(queryLower);
+  const mentionsGermanProof = /(german required|german proficiency|german certificate|testdaf|telc|goethe|dsh|german level)/.test(queryLower);
+  const mentionsGpa = /(?:gpa|cgpa)/.test(queryLower);
+  const mentionsWorkExperience = /(work experience|experience required|no work experience|without work experience|freshers|fresher|mba)/.test(queryLower);
+  const mentionsEcts = /\bects\b/.test(queryLower);
+  const mentionsDeadline = /(deadline|deadlines|still open|open now|applications still open)/.test(queryLower);
+  const mentionsChannel = /(uni-assist|uni assist|direct application|direct university|apply direct|centralized portal|central portal)/.test(queryLower);
+  const mentionsSemesterFee = /semester fee/.test(queryLower);
+  const mentionsLivingExpenses = /(living expenses|living costs|monthly costs)/.test(queryLower);
+
+  if (!mentionsTuition) delete nextFilters.max_tuition;
+  if (!mentionsOnline) delete nextFilters.online_only;
+  if (!mentionsScholarship) delete nextFilters.scholarship_available;
+  if (!mentionsEnglishProof) delete nextFilters.requires_english_proof;
+  if (!mentionsGermanProof) delete nextFilters.requires_german_proof;
+  if (!mentionsGpa) delete nextFilters.max_minimum_gpa;
+  if (!mentionsWorkExperience) delete nextFilters.requires_work_experience;
+  if (!mentionsEcts) delete nextFilters.max_min_ects;
+  if (!mentionsDeadline) delete nextFilters.deadline_after;
+  if (!mentionsChannel) delete nextFilters.application_channel;
+  if (!mentionsSemesterFee) delete nextFilters.max_semester_fee;
+  if (!mentionsLivingExpenses) delete nextFilters.max_living_expenses;
+
+  if (nextFilters.max_minimum_gpa !== undefined && nextFilters.max_minimum_gpa <= 0) {
+    delete nextFilters.max_minimum_gpa;
+  }
+
+  if (nextFilters.max_min_ects !== undefined && nextFilters.max_min_ects <= 0) {
+    delete nextFilters.max_min_ects;
+  }
+
+  if (nextFilters.max_semester_fee !== undefined && nextFilters.max_semester_fee <= 0) {
+    delete nextFilters.max_semester_fee;
+  }
+
+  if (nextFilters.max_living_expenses !== undefined && nextFilters.max_living_expenses <= 0) {
+    delete nextFilters.max_living_expenses;
+  }
+
+  if (nextFilters.application_channel === 'any') {
+    delete nextFilters.application_channel;
+  }
+
+  return nextFilters;
 }
 
 async function callOpenRouter(query: string): Promise<CourseFinderAIResponse | null> {
@@ -133,7 +327,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log(`[Course Finder ${requestId}] Request body:`, JSON.stringify(body));
     
-    const { query, limit = 8, timestamp } = CourseFinderRequestSchema.parse(body);
+    const { query, limit = DEFAULT_RESULTS_LIMIT, timestamp } = CourseFinderRequestSchema.parse(body);
     console.log(`[Course Finder ${requestId}] Parsed query: "${query}", limit: ${limit}, timestamp: ${timestamp}`);
 
     console.log(`[Course Finder ${requestId}] Calling OpenRouter with fresh query...`);
@@ -194,9 +388,24 @@ export async function POST(request: NextRequest) {
       // Extract intake
       if (queryLower.includes('winter')) filters = { ...filters, intake_term: 'winter' };
       else if (queryLower.includes('summer')) filters = { ...filters, intake_term: 'summer' };
+
+      filters = {
+        ...filters,
+        ...extractScoreFiltersFromQuery(query),
+        ...extractAdditionalFiltersFromQuery(query),
+      };
       
       reasoning = 'Manual extraction (AI unavailable)';
     }
+
+    // Preserve AI understanding, but enforce explicit score constraints from the raw query.
+    filters = {
+      ...filters,
+      ...extractScoreFiltersFromQuery(query),
+      ...extractAdditionalFiltersFromQuery(query),
+    };
+    filters = sanitizeLanguageScoreFilters(filters, query);
+    filters = sanitizeExplicitConstraintFilters(filters, query);
     
     console.log(`\n========== [Course Finder ${requestId}] ==========`);
     console.log(`Original Query: "${query}"`);

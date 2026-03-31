@@ -15,6 +15,7 @@ import type { ProgramSummary } from '@/lib/types';
 import { SiteNav } from '@/components/SiteNav';
 
 const RED = '#dd0000';
+const SEARCH_RESULTS_LIMIT = 24;
 
 const HERO_SUGGESTIONS = [
   'English-taught master in AI',
@@ -294,13 +295,17 @@ export default function HomePage() {
       if (advancedFilters.intake) queryParts.push(`${advancedFilters.intake} intake`);
       if (advancedFilters.onlineAvailable) queryParts.push('online');
       if (advancedFilters.scholarshipAvailable) queryParts.push('with scholarships');
+      if (advancedFilters.englishRequired) queryParts.push('english proficiency required');
+      if (advancedFilters.germanRequired) queryParts.push('german proficiency required');
+      if (advancedFilters.ieltsRequired) queryParts.push('ielts required');
+      if (advancedFilters.toeflRequired) queryParts.push('toefl required');
       
       const constructedQuery = queryParts.length > 0 ? queryParts.join(' ') : 'programs in Germany';
       
       const res = await fetch('/api/course-finder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: constructedQuery, limit: 12 }),
+        body: JSON.stringify({ query: constructedQuery, limit: SEARCH_RESULTS_LIMIT }),
       });
       
       if (!res.ok) throw new Error('Search failed');
@@ -332,7 +337,7 @@ export default function HomePage() {
       const res = await fetch('/api/course-finder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: query.trim(), limit: 9 }),
+        body: JSON.stringify({ query: query.trim(), limit: SEARCH_RESULTS_LIMIT }),
       });
       if (!res.ok) throw new Error((await res.json().catch(() => null))?.error || 'Something went wrong');
       const data = await res.json();
@@ -527,14 +532,16 @@ export default function HomePage() {
                             {languageLabel && <span className="program-card-v2-badge program-card-v2-badge-lang">{languageLabel}</span>}
                           </div>
                           {program.city && (
-                            <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2">
-                              <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/95 backdrop-blur-sm border border-slate-200 shadow-sm">
-                                <MapPin className="w-3.5 h-3.5 text-slate-600" />
-                                <span className="text-xs font-bold text-slate-800">{program.city}</span>
+                            <div className="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between gap-3">
+                              <div className="inline-flex min-w-0 max-w-[calc(100%-96px)] items-center gap-2 rounded-xl border border-white/70 bg-white/96 px-3.5 py-2 shadow-[0_10px_25px_rgba(15,23,42,0.18)] backdrop-saturate-150">
+                                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 text-slate-700">
+                                  <MapPin className="h-3.5 w-3.5" />
+                                </div>
+                                <span className="truncate text-[15px] font-extrabold tracking-[-0.01em] text-slate-900">{program.city}</span>
                               </div>
                               {program.is_free && (
-                                <span className="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-green-500/95 backdrop-blur-sm border border-green-600 shadow-sm">
-                                  <span className="text-xs font-bold text-white">Free</span>
+                                <span className="inline-flex flex-shrink-0 items-center rounded-xl border border-emerald-300 bg-gradient-to-br from-emerald-500 to-green-600 px-4 py-2 shadow-[0_10px_22px_rgba(22,163,74,0.35)]">
+                                  <span className="text-[15px] font-black tracking-[-0.01em] text-white">Free</span>
                                 </span>
                               )}
                             </div>
