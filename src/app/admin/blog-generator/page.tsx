@@ -342,6 +342,7 @@ export default function BlogGeneratorPage() {
   // Collapsible sections state
   const [showWordPressSettings, setShowWordPressSettings] = useState(false);
   const [showSEOSettings, setShowSEOSettings] = useState(false);
+  const [showRecentPosts, setShowRecentPosts] = useState(false);
 
   const loadExistingPosts = async (query?: string) => {
     setPostsLoading(true);
@@ -897,10 +898,27 @@ export default function BlogGeneratorPage() {
               </div>
             </section>
 
-          {/* Recent WordPress Posts */}
-          <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, marginTop: 24 }}>
+          {/* Recent WordPress Posts - Collapsible */}
+          <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, overflow: 'hidden', marginTop: 24 }}>
+            <button
+              onClick={() => setShowRecentPosts(!showRecentPosts)}
+              style={{
+                width: '100%',
+                padding: '16px 24px',
+                background: '#fafafa',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+              }}
+            >
+              <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Recent WordPress Posts (optional)</h2>
+              <ChevronDown style={{ width: 16, height: 16, transform: showRecentPosts ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }} />
+            </button>
+            {showRecentPosts && (
+              <div style={{ padding: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Recent WordPress Posts</h2>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button
                     onClick={() => loadExistingPosts(postsSearch)}
@@ -964,7 +982,9 @@ export default function BlogGeneratorPage() {
                   })
                 )}
               </div>
-            </section>
+              </div>
+            )}
+          </section>
             {post && (
               <>
                 {/* Generated Content */}
@@ -1235,28 +1255,47 @@ export default function BlogGeneratorPage() {
                             {contentType === 'news' ? 'News Article Preview' : 'Blog Preview'}
                           </span>
                         </div>
-                        <article style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        <article style={{ padding: 24 }}>
                           {selectedImage && (
                             <img
                               src={selectedImage.urls.small}
                               alt={selectedImage.alt_description || 'Preview image'}
-                              style={{ width: '100%', borderRadius: 12, objectFit: 'cover', maxHeight: 220 }}
+                              style={{ width: '100%', borderRadius: 12, objectFit: 'cover', maxHeight: 220, marginBottom: 20 }}
                             />
                           )}
                           <div>
                             <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 8px' }}>
                               {contentType === 'news' ? 'Breaking Update · Germany' : category}
                             </p>
-                            <h3 style={{ fontSize: 22, fontWeight: 700, color: '#111', margin: '0 0 10px' }}>
+                            <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', margin: '0 0 12px', lineHeight: 1.3 }}>
                               {editTitle || post.title}
-                            </h3>
-                            <p style={{ fontSize: 14, color: '#4b5563', margin: 0 }}>
-                              {stripHtmlTags(editExcerpt || post.excerpt).slice(0, 200)}{(editExcerpt || post.excerpt).length > 200 ? '…' : ''}
+                            </h1>
+                            <p style={{ fontSize: 15, color: '#4b5563', margin: '0 0 24px', lineHeight: 1.6 }}>
+                              {stripHtmlTags(editExcerpt || post.excerpt)}
                             </p>
                           </div>
-                          <div style={{ borderTop: '1px solid #f4f4f5', paddingTop: 12, color: '#374151', fontSize: 14, lineHeight: 1.7 }}
-                            dangerouslySetInnerHTML={{ __html: editContent || post.content }}
+                          <div style={{ color: '#374151', fontSize: 16, lineHeight: 1.8 }}
+                            dangerouslySetInnerHTML={{ __html: (editContent || post.content)
+                              .replace(/<h2>/g, '<h2 style="font-size: 22px; font-weight: 700; color: #111; margin: 32px 0 16px; line-height: 1.3;">')
+                              .replace(/<h3>/g, '<h3 style="font-size: 19px; font-weight: 600; color: #111; margin: 24px 0 12px; line-height: 1.4;">')
+                              .replace(/<p>/g, '<p style="margin: 16px 0; line-height: 1.8;">')
+                              .replace(/<ul>/g, '<ul style="margin: 16px 0; padding-left: 28px; line-height: 1.8;">')
+                              .replace(/<ol>/g, '<ol style="margin: 16px 0; padding-left: 28px; line-height: 1.8;">')
+                              .replace(/<li>/g, '<li style="margin: 8px 0;">')
+                              .replace(/<strong>/g, '<strong style="font-weight: 600; color: #111;">')
+                            }}
                           />
+                          {faqs && faqs.length > 0 && (
+                            <div style={{ marginTop: 40, padding: 24, background: '#f9fafb', borderRadius: 16, border: '1px solid #e5e7eb' }}>
+                              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: '0 0 20px' }}>Frequently Asked Questions</h2>
+                              {faqs.map((faq, idx) => (
+                                <div key={idx} style={{ marginBottom: 20, paddingBottom: 20, borderBottom: idx < faqs.length - 1 ? '1px solid #e5e7eb' : 'none' }}>
+                                  <h3 style={{ fontSize: 17, fontWeight: 600, color: '#111', margin: '0 0 10px' }}>{faq.question}</h3>
+                                  <p style={{ fontSize: 15, color: '#4b5563', margin: 0, lineHeight: 1.7 }}>{faq.answer}</p>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </article>
                       </div>
                     ) : (
