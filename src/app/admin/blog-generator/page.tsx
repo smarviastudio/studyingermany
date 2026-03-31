@@ -340,7 +340,7 @@ export default function BlogGeneratorPage() {
   const [faqs, setFaqs] = useState<FAQItem[]>([]);
   
   // Collapsible sections state
-  const [showWordPressSettings, setShowWordPressSettings] = useState(false);
+  const [showWordPressSettings, setShowWordPressSettings] = useState(true);
   const [showSEOSettings, setShowSEOSettings] = useState(false);
   const [showRecentPosts, setShowRecentPosts] = useState(false);
 
@@ -1086,7 +1086,7 @@ export default function BlogGeneratorPage() {
                               </div>
                             </div>
                             <div style={{ border: '1px solid #f5f5f5', borderRadius: 16, padding: 16, background: '#fff' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                   <ImageIcon className="w-4 h-4" style={{ color: '#dd0000' }} />
                                   <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#737373' }}>Featured Image</span>
@@ -1100,61 +1100,71 @@ export default function BlogGeneratorPage() {
                                   </button>
                                 )}
                               </div>
-                              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                                <div style={{ flex: 1, minWidth: 220 }}>
-                                  <div style={{ display: 'flex', gap: 8 }}>
-                                    <input
-                                      type="text"
-                                      value={imageQuery}
-                                      onChange={(e) => setImageQuery(e.target.value)}
-                                      placeholder="Search Unsplash (e.g. German campus)"
-                                      style={{ flex: 1, padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 13 }}
-                                    />
-                                    <button
-                                      type="button"
-                                      onClick={() => handleUnsplashSearch()}
-                                      disabled={imageLoading}
-                                      style={{ padding: '10px 16px', borderRadius: 10, border: 'none', background: '#111', color: '#fff', fontWeight: 600, cursor: imageLoading ? 'not-allowed' : 'pointer' }}
-                                    >
-                                      {imageLoading ? 'Searching…' : 'Search'}
-                                    </button>
-                                  </div>
-                                  {imageError && <p style={{ color: '#dc2626', fontSize: 12, marginTop: 8 }}>{imageError}</p>}
-                                  {selectedImage && (
-                                    <div style={{ marginTop: 12, border: '1px solid #e5e5e5', borderRadius: 12, overflow: 'hidden' }}>
-                                      <img src={selectedImage.urls.small} alt={selectedImage.alt_description || ''} style={{ width: '100%', display: 'block' }} />
-                                      {formatPhotographer(selectedImage) && (
-                                        <p style={{ fontSize: 11, color: '#71717a', margin: 0, padding: '6px 10px', background: '#fafafa' }}>
-                                          {formatPhotographer(selectedImage)} · Unsplash
-                                        </p>
-                                      )}
-                                    </div>
+                              
+                              {/* Search Input */}
+                              <div style={{ marginBottom: 16 }}>
+                                <div style={{ display: 'flex', gap: 8 }}>
+                                  <input
+                                    type="text"
+                                    value={imageQuery}
+                                    onChange={(e) => setImageQuery(e.target.value)}
+                                    placeholder="Search Unsplash (e.g. German campus)"
+                                    style={{ flex: 1, padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 13 }}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => handleUnsplashSearch()}
+                                    disabled={imageLoading}
+                                    style={{ padding: '10px 16px', borderRadius: 10, border: 'none', background: '#111', color: '#fff', fontWeight: 600, cursor: imageLoading ? 'not-allowed' : 'pointer' }}
+                                  >
+                                    {imageLoading ? 'Searching…' : 'Search'}
+                                  </button>
+                                </div>
+                                {imageError && <p style={{ color: '#dc2626', fontSize: 12, marginTop: 8 }}>{imageError}</p>}
+                              </div>
+
+                              {/* Selected Image Preview */}
+                              {selectedImage && (
+                                <div style={{ marginBottom: 16, border: '1px solid #e5e5e5', borderRadius: 12, overflow: 'hidden', maxWidth: 400 }}>
+                                  <img src={selectedImage.urls.small} alt={selectedImage.alt_description || ''} style={{ width: '100%', display: 'block' }} />
+                                  {formatPhotographer(selectedImage) && (
+                                    <p style={{ fontSize: 11, color: '#71717a', margin: 0, padding: '6px 10px', background: '#fafafa' }}>
+                                      {formatPhotographer(selectedImage)} · Unsplash
+                                    </p>
                                   )}
                                 </div>
-                                <div style={{ flex: 1, minWidth: 220, maxHeight: 220, overflowY: 'auto', border: '1px solid #f4f4f5', borderRadius: 12, padding: 10, background: '#fafafa' }}>
-                                  {imageResults.length === 0 && !imageLoading ? (
-                                    <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>Search Unsplash to pick a hero image.</p>
-                                  ) : (
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 8 }}>
+                              )}
+
+                              {/* Image Results Grid */}
+                              {imageResults.length > 0 && (
+                                <div>
+                                  <p style={{ fontSize: 12, color: '#737373', fontWeight: 600, marginBottom: 10 }}>Select an image:</p>
+                                  <div style={{ maxHeight: 280, overflowY: 'auto', border: '1px solid #f4f4f5', borderRadius: 12, padding: 12, background: '#fafafa' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
                                       {imageResults.map((img) => (
                                         <button
                                           key={img.id}
                                           onClick={() => handleSelectImage(img)}
                                           style={{
-                                            border: selectedImage?.id === img.id ? '2px solid #dd0000' : '2px solid transparent',
+                                            border: selectedImage?.id === img.id ? '3px solid #dd0000' : '2px solid transparent',
                                             borderRadius: 10,
                                             padding: 0,
                                             background: 'none',
-                                            cursor: 'pointer'
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
                                           }}
                                         >
-                                          <img src={img.urls.small} alt={img.alt_description || ''} style={{ width: '100%', height: 70, objectFit: 'cover', borderRadius: 8 }} />
+                                          <img src={img.urls.small} alt={img.alt_description || ''} style={{ width: '100%', height: 90, objectFit: 'cover', borderRadius: 8 }} />
                                         </button>
                                       ))}
                                     </div>
-                                  )}
+                                  </div>
                                 </div>
-                              </div>
+                              )}
+                              
+                              {imageResults.length === 0 && !imageLoading && (
+                                <p style={{ fontSize: 12, color: '#9ca3af', margin: 0, textAlign: 'center', padding: '20px 0' }}>Search Unsplash to pick a featured image for your post.</p>
+                              )}
                             </div>
                           </div>
                         )}
