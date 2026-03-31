@@ -46,85 +46,105 @@ export async function GET(request: NextRequest) {
     
     // Parse query parameters into filters
     const filters: Partial<SearchFilters> = {};
+    const degreeLevel = searchParams.get('degree_level') ?? undefined;
+    const subjects = searchParams.get('subjects') ?? undefined;
+    const language = searchParams.get('language') ?? undefined;
+    const cities = searchParams.get('cities') ?? undefined;
+    const maxTuition = searchParams.get('max_tuition') ?? undefined;
+    const intakeTerm = searchParams.get('intake_term') ?? undefined;
+    const onlineOnly = searchParams.get('online_only') ?? undefined;
+    const scholarshipAvailable = searchParams.get('scholarship_available') ?? undefined;
+    const requiresEnglishProof = searchParams.get('requires_english_proof') ?? undefined;
+    const requiresGermanProof = searchParams.get('requires_german_proof') ?? undefined;
+    const maxIeltsScore = searchParams.get('max_ielts_score') ?? undefined;
+    const maxToeflScore = searchParams.get('max_toefl_score') ?? undefined;
+    const maxMinimumGpa = searchParams.get('max_minimum_gpa') ?? undefined;
+    const requiresWorkExperience = searchParams.get('requires_work_experience') ?? undefined;
+    const maxMinEcts = searchParams.get('max_min_ects') ?? undefined;
+    const deadlineAfter = searchParams.get('deadline_after') ?? undefined;
+    const applicationChannel = searchParams.get('application_channel') ?? undefined;
+    const maxSemesterFee = searchParams.get('max_semester_fee') ?? undefined;
+    const maxLivingExpenses = searchParams.get('max_living_expenses') ?? undefined;
+    const minConfidence = searchParams.get('min_confidence') ?? undefined;
     
-    if (searchParams.get('degree_level')) {
-      filters.degree_level = searchParams.get('degree_level');
-    }
-    
-    if (searchParams.get('subjects')) {
-      filters.subjects = searchParams.get('subjects')?.split(',') || [];
-    }
-    
-    if (searchParams.get('language')) {
-      filters.language = searchParams.get('language');
-    }
-    
-    if (searchParams.get('cities')) {
-      filters.cities = searchParams.get('cities')?.split(',') || [];
-    }
-    
-    if (searchParams.get('max_tuition')) {
-      filters.max_tuition = parseInt(searchParams.get('max_tuition') || '0');
-    }
-    
-    if (searchParams.get('intake_term')) {
-      filters.intake_term = searchParams.get('intake_term');
-    }
-
-    if (searchParams.get('online_only')) {
-      filters.online_only = searchParams.get('online_only') === 'true';
-    }
-
-    if (searchParams.get('scholarship_available')) {
-      filters.scholarship_available = searchParams.get('scholarship_available') === 'true';
-    }
-
-    if (searchParams.get('requires_english_proof')) {
-      filters.requires_english_proof = searchParams.get('requires_english_proof') === 'true';
-    }
-
-    if (searchParams.get('requires_german_proof')) {
-      filters.requires_german_proof = searchParams.get('requires_german_proof') === 'true';
-    }
-
-    if (searchParams.get('max_ielts_score')) {
-      filters.max_ielts_score = parseFloat(searchParams.get('max_ielts_score') || '0');
-    }
-
-    if (searchParams.get('max_toefl_score')) {
-      filters.max_toefl_score = parseFloat(searchParams.get('max_toefl_score') || '0');
-    }
-
-    if (searchParams.get('max_minimum_gpa')) {
-      filters.max_minimum_gpa = parseFloat(searchParams.get('max_minimum_gpa') || '0');
-    }
-
-    if (searchParams.get('requires_work_experience')) {
-      filters.requires_work_experience = searchParams.get('requires_work_experience') === 'true';
-    }
-
-    if (searchParams.get('max_min_ects')) {
-      filters.max_min_ects = parseFloat(searchParams.get('max_min_ects') || '0');
-    }
-
-    if (searchParams.get('deadline_after')) {
-      filters.deadline_after = searchParams.get('deadline_after');
-    }
-
-    if (searchParams.get('application_channel')) {
-      filters.application_channel = searchParams.get('application_channel');
-    }
-
-    if (searchParams.get('max_semester_fee')) {
-      filters.max_semester_fee = parseFloat(searchParams.get('max_semester_fee') || '0');
-    }
-
-    if (searchParams.get('max_living_expenses')) {
-      filters.max_living_expenses = parseFloat(searchParams.get('max_living_expenses') || '0');
+    if (degreeLevel) {
+      filters.degree_level = degreeLevel;
     }
     
-    if (searchParams.get('min_confidence')) {
-      filters.min_confidence = parseFloat(searchParams.get('min_confidence') || '0');
+    if (subjects) {
+      filters.subjects = subjects.split(',');
+    }
+    
+    if (language) {
+      filters.language = language;
+    }
+    
+    if (cities) {
+      filters.cities = cities.split(',');
+    }
+    
+    if (maxTuition) {
+      filters.max_tuition = parseInt(maxTuition || '0');
+    }
+    
+    if (intakeTerm) {
+      filters.intake_term = intakeTerm;
+    }
+
+    if (onlineOnly) {
+      filters.online_only = onlineOnly === 'true';
+    }
+
+    if (scholarshipAvailable) {
+      filters.scholarship_available = scholarshipAvailable === 'true';
+    }
+
+    if (requiresEnglishProof) {
+      filters.requires_english_proof = requiresEnglishProof === 'true';
+    }
+
+    if (requiresGermanProof) {
+      filters.requires_german_proof = requiresGermanProof === 'true';
+    }
+
+    if (maxIeltsScore) {
+      filters.max_ielts_score = parseFloat(maxIeltsScore || '0');
+    }
+
+    if (maxToeflScore) {
+      filters.max_toefl_score = parseFloat(maxToeflScore || '0');
+    }
+
+    if (maxMinimumGpa) {
+      filters.max_minimum_gpa = parseFloat(maxMinimumGpa || '0');
+    }
+
+    if (requiresWorkExperience) {
+      filters.requires_work_experience = requiresWorkExperience === 'true';
+    }
+
+    if (maxMinEcts) {
+      filters.max_min_ects = parseFloat(maxMinEcts || '0');
+    }
+
+    if (deadlineAfter) {
+      filters.deadline_after = deadlineAfter;
+    }
+
+    if (applicationChannel) {
+      filters.application_channel = applicationChannel;
+    }
+
+    if (maxSemesterFee) {
+      filters.max_semester_fee = parseFloat(maxSemesterFee || '0');
+    }
+
+    if (maxLivingExpenses) {
+      filters.max_living_expenses = parseFloat(maxLivingExpenses || '0');
+    }
+    
+    if (minConfidence) {
+      filters.min_confidence = parseFloat(minConfidence || '0');
     }
     
     const query_text = searchParams.get('query') || undefined;
