@@ -296,7 +296,8 @@ export default function BlogGeneratorPage() {
   const [semanticKeywords, setSemanticKeywords] = useState('');
     const [category, setCategory] = useState('Guides');
   const [selectedModel] = useState('google/gemini-2.0-flash-001');
-  const [wpCategories, setWpCategories] = useState<string[]>(CATEGORIES);
+  const [wpCategories, setWpCategories] = useState<Array<{id: number; name: string}>>(CATEGORIES.map((name, idx) => ({ id: idx + 1, name })));
+  const [categoryId, setCategoryId] = useState<number | null>(null);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [publishStatus] = useState<'draft' | 'publish'>('draft');
   const [showInTicker, setShowInTicker] = useState(false);
@@ -394,15 +395,19 @@ export default function BlogGeneratorPage() {
         const res = await fetch('/api/wp-blog/categories');
         const data = await res.json();
         if (res.ok && Array.isArray(data.categories)) {
-          const uniqueNames = Array.from(
-            new Set([
-              ...CATEGORIES,
-              ...data.categories.map((cat: { name: string }) => cat.name),
-            ])
-          );
-          setWpCategories(uniqueNames);
-          if (!uniqueNames.includes(category)) {
-            setCategory(uniqueNames[0] || 'Guides');
+          const wpCats = data.categories.map((cat: { id: number; name: string }) => ({
+            id: cat.id,
+            name: cat.name,
+          }));
+          setWpCategories(wpCats);
+          
+          // Set initial category ID
+          const currentCat = wpCats.find((cat: { name: string }) => cat.name === category);
+          if (currentCat) {
+            setCategoryId(currentCat.id);
+          } else if (wpCats.length > 0) {
+            setCategory(wpCats[0].name);
+            setCategoryId(wpCats[0].id);
           }
         }
       } catch (error) {
@@ -410,15 +415,17 @@ export default function BlogGeneratorPage() {
       }
     };
     loadCategories();
-  }, [category]);
+  }, []);
 
   const handleAddCategory = () => {
     const next = newCategoryName.trim();
     if (!next) return;
-    if (!wpCategories.includes(next)) {
-      setWpCategories((prev) => [...prev, next]);
+    if (!wpCategories.find(cat => cat.name === next)) {
+      const newCat = { id: Date.now(), name: next };
+      setWpCategories((prev) => [...prev, newCat]);
+      setCategory(next);
+      setCategoryId(newCat.id);
     }
-    setCategory(next);
     setNewCategoryName('');
   };
 
@@ -572,7 +579,7 @@ export default function BlogGeneratorPage() {
           status: publishStatus,
           slug: post.seo_slug,
           featuredMediaId: mediaId ?? undefined,
-          categoryName: category,
+          categoryId: categoryId,
           showInTicker,
           faqs,
         }),
@@ -738,12 +745,18 @@ export default function BlogGeneratorPage() {
                   <div style={{ position: 'relative' }}>
                     <select
                       value={category}
-                      onChange={(e) => setCategory(e.target.value)}
+                      onChange={(e) => {
+                        const selectedCat = wpCategories.find(cat => cat.name === e.target.value);
+                        setCategory(e.target.value);
+                        if (selectedCat) {
+                          setCategoryId(selectedCat.id);
+                        }
+                      }}
                       style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', cursor: 'pointer', fontWeight: 600, appearance: 'none' }}
                     >
                       {wpCategories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
+                        <option key={cat.id} value={cat.name}>
+                          {cat.name}
                         </option>
                       ))}
                     </select>

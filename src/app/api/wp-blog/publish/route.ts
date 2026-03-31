@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 	      status,
 	      slug,
 	      featuredMediaId,
-      categoryName,
+      categoryId,
       showInTicker,
       faqs,
     } = await request.json();
@@ -116,8 +116,8 @@ export async function POST(request: NextRequest) {
       postBody.featured_media = Number(featuredMediaId);
     }
 
-    if (categoryName?.trim()) {
-      postBody.categories = [categoryName.trim()];
+    if (categoryId) {
+      postBody.categories = [Number(categoryId)];
     }
 
     if (typeof showInTicker === 'boolean') {
