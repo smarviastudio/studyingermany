@@ -7,7 +7,7 @@ import {
   FileText, Tag, Globe, Eye, EyeOff,
   ChevronDown, Copy, Check, Pencil,
   Home, Image as ImageIcon, Trash2,
-  RefreshCcw
+  RefreshCcw, Code
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { SITE_URL } from '@/lib/seo';
@@ -310,7 +310,7 @@ export default function BlogGeneratorPage() {
   // Result state
   const [post, setPost] = useState<GeneratedPost | null>(null);
   const [publishResult, setPublishResult] = useState<PublishResult | null>(null);
-  const [previewHtml, setPreviewHtml] = useState(false);
+  const [previewHtml, setPreviewHtml] = useState(true);
   const [copied, setCopied] = useState(false);
 
   // Unsplash state
@@ -1207,7 +1207,27 @@ export default function BlogGeneratorPage() {
                   </div>
 
                   <div style={{ padding: 24 }}>
-                    <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Content</label>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                      <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block' }}>Content Preview</label>
+                      <button
+                        onClick={() => setPreviewHtml(!previewHtml)}
+                        style={{ 
+                          padding: '6px 12px', 
+                          borderRadius: 8, 
+                          border: '1px solid #e5e5e5', 
+                          background: '#fff', 
+                          fontSize: 12, 
+                          fontWeight: 600, 
+                          color: '#666', 
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 6
+                        }}
+                      >
+                        {previewHtml ? <><Code className="w-3 h-3" /> Edit HTML</> : <><Eye className="w-3 h-3" /> Preview</>}
+                      </button>
+                    </div>
                     {previewHtml ? (
                       <div style={{ border: '1px solid #e5e5e5', borderRadius: 16, overflow: 'hidden', background: '#fff' }}>
                         <div style={{ padding: 20, background: '#fdf2f2', borderBottom: '1px solid #ffe4e6' }}>
