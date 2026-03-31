@@ -132,6 +132,141 @@ const NEWS_IDEAS = [
   'German universities extend application deadlines',
 ];
 
+const CATEGORY_SEMANTIC_KEYWORDS: Record<string, string[]> = {
+  Guides: ['study in Germany', 'international students Germany', 'Germany student guide'],
+  'Visa & Immigration': ['student visa Germany', 'residence permit Germany', 'visa documents Germany'],
+  Housing: ['student housing Germany', 'WG Germany', 'renting in Germany as a student'],
+  'University Life': ['student life Germany', 'international students Germany', 'German university life'],
+  'Jobs & Career': ['student jobs Germany', 'working in Germany as a student', 'career opportunities Germany'],
+  Language: ['German language requirements', 'learn German for university', 'language certificate Germany'],
+  Finance: ['cost of living Germany', 'student finances Germany', 'budget for students in Germany'],
+  News: ['Germany news for students', 'latest Germany updates', 'international students Germany'],
+};
+
+function normalizeKeywordSuggestion(value: string) {
+  return value
+    .replace(/[()]/g, ' ')
+    .replace(/[^A-Za-z0-9&/\-\s]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getTopicLocation(topic: string) {
+  const match = topic.match(/\bin\s+([A-Z][A-Za-z-]+(?:\s+[A-Z][A-Za-z-]+)*)/);
+  return match?.[1]?.trim() ?? '';
+}
+
+function uniqueKeywordSuggestions(values: string[]) {
+  return Array.from(
+    new Set(
+      values
+        .map((value) => normalizeKeywordSuggestion(value))
+        .filter(Boolean)
+    )
+  );
+}
+
+function buildFocusKeywordSuggestion(
+  topic: string,
+  contentType: 'blog' | 'news'
+) {
+  const cleanedTopic = normalizeKeywordSuggestion(topic);
+  if (!cleanedTopic) return '';
+
+  if (contentType === 'news') {
+    return cleanedTopic.replace(/\b20\d{2}\b/g, '').replace(/\s+/g, ' ').trim();
+  }
+
+  const parenthetical = topic.match(/\(([^)]+)\)/)?.[1]?.trim() ?? '';
+  const location = getTopicLocation(topic);
+  const lowered = cleanedTopic.toLowerCase();
+
+  if (parenthetical && /register your address|address registration|anmeldung/.test(lowered)) {
+    return normalizeKeywordSuggestion(`${parenthetical}${location ? ` in ${location}` : ' Germany'}`);
+  }
+
+  const simplified = cleanedTopic
+    .replace(/^(how to|guide to|complete guide to|understanding|best|top \d+|what is|how can|steps to|changes to)\s+/i, '')
+    .replace(/\b20\d{2}\b/g, '')
+    .replace(/\b(for|in|on|at|with)$/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return simplified || cleanedTopic;
+}
+
+function buildSemanticKeywordSuggestion(
+  topic: string,
+  category: string,
+  contentType: 'blog' | 'news',
+  focusKeyword: string
+) {
+  const cleanedTopic = normalizeKeywordSuggestion(topic);
+  if (!cleanedTopic) return '';
+
+  const location = getTopicLocation(topic);
+  const parenthetical = topic.match(/\(([^)]+)\)/)?.[1]?.trim() ?? '';
+  const lowered = cleanedTopic.toLowerCase();
+  const suggestions: string[] = [];
+
+  suggestions.push(
+    ...(contentType === 'news'
+      ? ['Germany news', 'international students Germany']
+      : ['study in Germany', 'international students Germany'])
+  );
+
+  if (location) {
+    suggestions.push(`${location} international students`, `${location} student life`);
+  }
+
+  if (parenthetical) {
+    suggestions.push(parenthetical);
+  }
+
+  if (/visa/.test(lowered)) {
+    suggestions.push('student visa Germany', 'visa documents Germany', 'blocked account Germany', 'German embassy appointment');
+  }
+
+  if (/blocked account|sperrkonto/.test(lowered)) {
+    suggestions.push('blocked account Germany', 'student visa finances Germany', 'Expatrio blocked account', 'Fintiba blocked account');
+  }
+
+  if (/register your address|address registration|anmeldung/.test(lowered)) {
+    suggestions.push('address registration Germany', 'Anmeldung Germany', 'Buergeramt appointment', 'Anmeldung documents');
+  }
+
+  if (/bank account/.test(lowered)) {
+    suggestions.push('student bank account Germany', 'documents for bank account Germany', 'German bank account students');
+  }
+
+  if (/health insurance/.test(lowered)) {
+    suggestions.push('student health insurance Germany', 'public health insurance Germany', 'health insurance for international students');
+  }
+
+  if (/housing|apartment|accommodation|wg/.test(lowered)) {
+    suggestions.push('student housing Germany', 'WG Germany', 'shared apartment Germany');
+  }
+
+  if (/scholarship/.test(lowered)) {
+    suggestions.push('scholarships in Germany', 'DAAD scholarship', 'funding for international students Germany');
+  }
+
+  if (/deadline/.test(lowered)) {
+    suggestions.push('German university application deadline', 'winter semester application Germany', 'summer semester application Germany');
+  }
+
+  if (/university|program|master|bachelor/.test(lowered)) {
+    suggestions.push('German universities', 'English taught programs Germany', 'study programs in Germany');
+  }
+
+  suggestions.push(...(CATEGORY_SEMANTIC_KEYWORDS[category] || []));
+
+  return uniqueKeywordSuggestions(suggestions)
+    .filter((keyword) => keyword.toLowerCase() !== focusKeyword.toLowerCase())
+    .slice(0, 6)
+    .join(', ');
+}
+
 function stripHtmlTags(html: string) {
   if (!html) return '';
   return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -159,6 +294,8 @@ export default function BlogGeneratorPage() {
   const [length, setLength] = useState('medium');
   const [focusKeyword, setFocusKeyword] = useState('');
   const [semanticKeywords, setSemanticKeywords] = useState('');
+  const [focusKeywordTouched, setFocusKeywordTouched] = useState(false);
+  const [semanticKeywordsTouched, setSemanticKeywordsTouched] = useState(false);
   const [category, setCategory] = useState('Guides');
   const [selectedModel] = useState('google/gemini-2.0-flash-001');
   const [wpCategories, setWpCategories] = useState<string[]>(CATEGORIES);
@@ -231,6 +368,36 @@ export default function BlogGeneratorPage() {
   useEffect(() => {
     loadExistingPosts();
   }, []);
+
+  useEffect(() => {
+    const suggestedFocusKeyword = buildFocusKeywordSuggestion(topic, contentType);
+    const suggestedSemanticKeywords = buildSemanticKeywordSuggestion(
+      topic,
+      category,
+      contentType,
+      suggestedFocusKeyword
+    );
+
+    if ((!focusKeywordTouched || !focusKeyword.trim()) && suggestedFocusKeyword && focusKeyword !== suggestedFocusKeyword) {
+      setFocusKeyword(suggestedFocusKeyword);
+    }
+
+    if (
+      (!semanticKeywordsTouched || !semanticKeywords.trim()) &&
+      suggestedSemanticKeywords &&
+      semanticKeywords !== suggestedSemanticKeywords
+    ) {
+      setSemanticKeywords(suggestedSemanticKeywords);
+    }
+  }, [
+    topic,
+    category,
+    contentType,
+    focusKeywordTouched,
+    semanticKeywordsTouched,
+    focusKeyword,
+    semanticKeywords,
+  ]);
 
   const handleDeletePost = async (id: number) => {
     if (!window.confirm('Delete this WordPress post? This cannot be undone.')) return;
@@ -331,8 +498,43 @@ export default function BlogGeneratorPage() {
     setFeaturedMediaId(null);
   };
 
+  const handleAutoFillKeywords = () => {
+    const suggestedFocusKeyword = buildFocusKeywordSuggestion(topic, contentType);
+    const suggestedSemanticKeywords = buildSemanticKeywordSuggestion(
+      topic,
+      category,
+      contentType,
+      suggestedFocusKeyword
+    );
+
+    setFocusKeyword(suggestedFocusKeyword);
+    setSemanticKeywords(suggestedSemanticKeywords);
+    setFocusKeywordTouched(false);
+    setSemanticKeywordsTouched(false);
+  };
+
   const handleGenerate = async () => {
     if (!topic.trim()) return;
+    const suggestedFocusKeyword = buildFocusKeywordSuggestion(topic, contentType);
+    const suggestedSemanticKeywords = buildSemanticKeywordSuggestion(
+      topic,
+      category,
+      contentType,
+      focusKeyword.trim() || suggestedFocusKeyword
+    );
+    const effectiveFocusKeyword = focusKeyword.trim() || suggestedFocusKeyword;
+    const effectiveSemanticKeywords = semanticKeywords.trim() || suggestedSemanticKeywords;
+
+    if (!focusKeyword.trim() && effectiveFocusKeyword) {
+      setFocusKeyword(effectiveFocusKeyword);
+      setFocusKeywordTouched(false);
+    }
+
+    if (!semanticKeywords.trim() && effectiveSemanticKeywords) {
+      setSemanticKeywords(effectiveSemanticKeywords);
+      setSemanticKeywordsTouched(false);
+    }
+
     setGenerating(true);
     setGenError(null);
     setPost(null);
@@ -353,8 +555,8 @@ export default function BlogGeneratorPage() {
           topic,
           tone,
           length,
-          focusKeyword,
-          semanticKeywords,
+          focusKeyword: effectiveFocusKeyword,
+          semanticKeywords: effectiveSemanticKeywords,
           category,
           model: selectedModel,
         }),
@@ -556,7 +758,10 @@ export default function BlogGeneratorPage() {
               </div>
               <textarea
                 value={topic}
-                onChange={(e) => setTopic(e.target.value)}
+                onChange={(e) => {
+                  setTopic(e.target.value);
+                  console.log('Topic changed:', e.target.value);
+                }}
                 placeholder={contentType === 'news' ? 'e.g. Germany announces new visa rules for international students' : 'e.g. How to apply for a student visa in Germany'}
                 rows={3}
                 style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical', fontFamily: 'inherit', transition: 'all 0.2s' }}
@@ -676,16 +881,30 @@ export default function BlogGeneratorPage() {
 
                 {/* Focus Keyword */}
                 <div>
-                  <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Focus Keyword</label>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 6 }}>
+                    <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block' }}>Focus Keyword</label>
+                    <button
+                      type="button"
+                      onClick={handleAutoFillKeywords}
+                      disabled={!topic.trim()}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid #e5e5e5', background: '#fff', color: '#475569', borderRadius: 999, padding: '6px 10px', fontSize: 11, fontWeight: 700, cursor: !topic.trim() ? 'not-allowed' : 'pointer', opacity: !topic.trim() ? 0.5 : 1 }}
+                    >
+                      <RefreshCcw size={12} />
+                      Auto-fill
+                    </button>
+                  </div>
                   <input
                     type="text"
                     value={focusKeyword}
-                    onChange={(e) => setFocusKeyword(e.target.value)}
+                    onChange={(e) => {
+                      setFocusKeyword(e.target.value);
+                      setFocusKeywordTouched(true);
+                    }}
                     placeholder="e.g. student visa Germany"
                     style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                   />
                   <p style={{ fontSize: 11, color: '#94a3b8', margin: '6px 0 0' }}>
-                    Used as the primary SEO keyword for title, slug, intro, and headings.
+                    Auto-filled from the topic. You can edit it before generating.
                   </p>
                 </div>
 
@@ -695,18 +914,24 @@ export default function BlogGeneratorPage() {
                   <input
                     type="text"
                     value={semanticKeywords}
-                    onChange={(e) => setSemanticKeywords(e.target.value)}
+                    onChange={(e) => {
+                      setSemanticKeywords(e.target.value);
+                      setSemanticKeywordsTouched(true);
+                    }}
                     placeholder="e.g. blocked account, embassy appointment, visa documents"
                     style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
                   />
                   <p style={{ fontSize: 11, color: '#94a3b8', margin: '6px 0 0' }}>
-                    Add comma-separated supporting terms to cover related search intent naturally.
+                    Auto-filled supporting terms for related search intent. You can refine them if needed.
                   </p>
                 </div>
 
                 {/* Generate Button */}
                 <button
-                  onClick={handleGenerate}
+                  onClick={() => {
+                    console.log('Generate clicked, topic:', topic);
+                    handleGenerate();
+                  }}
                   disabled={!topic.trim() || generating}
                   style={{
                     width: '100%',
@@ -739,6 +964,11 @@ export default function BlogGeneratorPage() {
                     </>
                   )}
                 </button>
+
+                {/* Debug info */}
+                <div style={{ fontSize: 11, color: '#999', marginTop: 8 }}>
+                  Debug: Topic length = {topic.length}, Topic = "{topic}"
+                </div>
 
                 {genError && (
                   <div style={{ padding: '12px 16px', borderRadius: 12, border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.1)', color: '#dc2626', fontSize: 13 }}>
