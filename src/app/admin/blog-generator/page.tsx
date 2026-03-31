@@ -489,68 +489,64 @@ export default function BlogGeneratorPage() {
           </div>
         </header>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '400px 1fr', gap: 32, alignItems: 'start' }}>
-          {/* LEFT PANEL: Controls */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            {/* Content Type Toggle */}
-            <div style={{ display: 'flex', background: '#f4f4f5', borderRadius: 12, padding: 4 }}>
-              <button
-                onClick={() => {
-                  setContentType('blog');
-                  setCategory('Guides');
-                  setLength('medium');
-                  setTone('informative and friendly');
-                  // Only set ticker to false if user hasn't explicitly set it
-                  if (showInTicker && contentType === 'news') {
-                    setShowInTicker(false);
-                  }
-                  setPreviewHtml(false);
-                }}
-                style={{
-                  flex: 1,
-                  padding: '12px 16px',
-                  borderRadius: 10,
-                  border: 'none',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  background: contentType === 'blog' ? '#fff' : 'transparent',
-                  color: contentType === 'blog' ? '#111' : '#737373',
-                  boxShadow: contentType === 'blog' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none'
-                }}
-              >
-                📝 Blog Post
-              </button>
-              <button
-                onClick={() => {
-                  setContentType('news');
-                  setCategory('News');
-                  setLength('short');
-                  setTone('professional');
-                  // Only auto-enable ticker for news if user hasn't explicitly disabled it
-                  if (!showInTicker && contentType === 'blog') {
-                    setShowInTicker(true);
-                  }
-                  setPreviewHtml(true);
-                }}
-                style={{
-                  flex: 1,
-                  padding: '12px 16px',
-                  borderRadius: 10,
-                  border: 'none',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  background: contentType === 'news' ? '#fff' : 'transparent',
-                  color: contentType === 'news' ? '#dd0000' : '#737373',
-                  boxShadow: contentType === 'news' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none'
-                }}
-              >
-                📰 News Article
-              </button>
-            </div>
+        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+          {/* Content Type Toggle */}
+          <div style={{ display: 'flex', background: '#f4f4f5', borderRadius: 12, padding: 4, marginBottom: 24 }}>
+            <button
+              onClick={() => {
+                setContentType('blog');
+                setCategory('Guides');
+                setLength('medium');
+                setTone('informative and friendly');
+                if (showInTicker && contentType === 'news') {
+                  setShowInTicker(false);
+                }
+                setPreviewHtml(false);
+              }}
+              style={{
+                flex: 1,
+                padding: '12px 16px',
+                borderRadius: 10,
+                border: 'none',
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                background: contentType === 'blog' ? '#fff' : 'transparent',
+                color: contentType === 'blog' ? '#111' : '#737373',
+                boxShadow: contentType === 'blog' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none'
+              }}
+            >
+              📝 Blog Post
+            </button>
+            <button
+              onClick={() => {
+                setContentType('news');
+                setCategory('News');
+                setLength('short');
+                setTone('professional');
+                if (!showInTicker && contentType === 'blog') {
+                  setShowInTicker(true);
+                }
+                setPreviewHtml(true);
+              }}
+              style={{
+                flex: 1,
+                padding: '12px 16px',
+                borderRadius: 10,
+                border: 'none',
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                background: contentType === 'news' ? '#fff' : 'transparent',
+                color: contentType === 'news' ? '#dd0000' : '#737373',
+                boxShadow: contentType === 'news' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none'
+              }}
+            >
+              📰 News Article
+            </button>
+          </div>
 
             {/* Topic Input */}
             <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
@@ -752,11 +748,9 @@ export default function BlogGeneratorPage() {
                 )}
               </div>
             </section>
-          </div>
 
-          {/* RIGHT PANEL: Results */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
+          {/* Recent WordPress Posts */}
+          <section style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24, marginTop: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                 <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>Recent WordPress Posts</h2>
                 <div style={{ display: 'flex', gap: 8 }}>
@@ -1224,7 +1218,6 @@ export default function BlogGeneratorPage() {
                 </p>
               </section>
             )}
-          </div>
         </div>
       </main>
     </div>
