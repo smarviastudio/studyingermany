@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-
-const FREE_LIMIT = 5; // 5 AI generations per month on free plan
+import { getAiGenerationLimit } from '@/lib/plans';
 
 export async function GET() {
   try {
@@ -24,7 +23,7 @@ export async function GET() {
     });
 
     const planType = user.subscription?.planType ?? 'free';
-    const limit = planType === 'pro' ? 999 : planType === 'student' ? 30 : FREE_LIMIT;
+    const limit = getAiGenerationLimit(planType);
 
     const used = usage
       ? (usage.cvGenerations ?? 0) +

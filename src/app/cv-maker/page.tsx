@@ -18,6 +18,7 @@ import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
 import { templates as TEMPLATE_LIBRARY } from '@/lib/cv-maker/templates';
 import { useProfileData } from '@/hooks/useProfileData';
 import type { Program } from '@/lib/types';
+import { canAccessCvTemplate, getTemplateAccessLabel } from '@/lib/plans';
 
 interface ShortlistItem {
   id: string;
@@ -622,7 +623,7 @@ function CVMakerContent() {
   
   const [phase, setPhase] = useState<'templates' | 'editor'>('templates');
   const [tplId, setTplId] = useState('professional');
-  const [isPremiumTemplate, setIsPremiumTemplate] = useState(false);
+  const [planType, setPlanType] = useState('free');
   const [accent, setAccent] = useState('#2563EB');
   const [fontFamily, setFontFamily] = useState('Inter');
   const [fontSize, setFontSize] = useState<'small' | 'normal' | 'large'>('normal');
@@ -655,6 +656,8 @@ function CVMakerContent() {
   
   const cvRef = useRef<HTMLDivElement>(null);
   const tpl = TEMPLATES.find(t => t.id === tplId) || TEMPLATES[0];
+  const selectedTemplateIndex = Math.max(TEMPLATES.findIndex((template) => template.id === tplId), 0);
+  const isPremiumTemplate = !canAccessCvTemplate(planType, selectedTemplateIndex);
 
   const up = useCallback((f: keyof CVData, v: CVData[keyof CVData]) => setCv(p => ({ ...p, [f]: v })), []);
   const upExp = useCallback((i: number, f: keyof CVExperience, v: string) => setCv(p => ({ ...p, experience: p.experience.map((e, idx) => idx === i ? { ...e, [f]: v } : e) })), []);
@@ -686,6 +689,18 @@ function CVMakerContent() {
       .then(data => setUser(data))
       .catch(() => setUser(null));
   }, []);
+
+  useEffect(() => {
+    if (status !== 'authenticated') {
+      setPlanType('free');
+      return;
+    }
+
+    fetch('/api/user/subscription')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setPlanType(data?.subscription?.planType || 'free'))
+      .catch(() => setPlanType('free'));
+  }, [status]);
 
   // Fetch shortlist
   useEffect(() => {
@@ -1041,10 +1056,11 @@ function CVMakerContent() {
           {/* Template Grid */}
           <div className="cvmaker-template-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16, paddingBottom: 100 }}>
             {TEMPLATES.map((t, idx) => {
-              const isPremium = idx >= 3;
+              const isPremium = !canAccessCvTemplate(planType, idx);
+              const accessLabel = getTemplateAccessLabel(idx);
               return (
                 <button key={t.id} onClick={() => {
-                  setTplId(t.id); setAccent(t.accent); setIsPremiumTemplate(isPremium);
+                  setTplId(t.id); setAccent(t.accent);
                 }} className="cv-template-card" style={{ position: 'relative', textAlign: 'left', borderRadius: 16, overflow: 'hidden', border: `2px solid ${isPremium ? 'rgba(234,179,8,0.4)' : tplId === t.id ? '#dd0000' : '#ebebeb'}`, background: '#fff', cursor: 'pointer', transition: 'all 0.3s', boxShadow: tplId === t.id && !isPremium ? '0 8px 24px rgba(221,0,0,0.15)' : 'none' }}>
                   <div style={{ background: '#fff', overflow: 'hidden', display: 'flex', justifyContent: 'center', height: 180, position: 'relative' }}>
                     <MiniCV tpl={t} />
@@ -1066,7 +1082,7 @@ function CVMakerContent() {
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
                       <div style={{ minWidth: 0, flex: 1 }}>
                         <p style={{ fontSize: 13, fontWeight: 700, color: '#111', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</p>
-                        <p style={{ fontSize: 11, color: isPremium ? '#a16207' : '#999', margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{isPremium ? '✦ Student / Pro plan' : t.description}</p>
+                        <p style={{ fontSize: 11, color: isPremium ? '#a16207' : '#999', margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{isPremium ? `✦ ${accessLabel}` : t.description}</p>
                       </div>
                       {isPremium
                         ? <Crown size={14} color="#f59e0b" style={{ flexShrink: 0 }} />
@@ -2134,20 +2150,19 @@ function CVMakerContent() {
 
           {/* Template Section */}
           <div style={{ padding: 16, borderBottom: '1px solid #f5f5f5' }}>
-            <h4 style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <FolderOpen className="w-3.5 h-3.5" /> Template
-            </h4>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-              {TEMPLATES.slice(0, 6).map((t, idx) => {
-                const isSidebarPremium = idx >= 3;
-                return (
-                  <button
-                    key={t.id}
-                    onClick={() => {
-                      setTplId(t.id);
-                      setAccent(t.accent);
-                      setIsPremiumTemplate(isSidebarPremium);
-                    }}
+              <h4 style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <FolderOpen className="w-3.5 h-3.5" /> Template
+              </h4>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                {TEMPLATES.slice(0, 6).map((t, idx) => {
+                  const isSidebarPremium = !canAccessCvTemplate(planType, idx);
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        setTplId(t.id);
+                        setAccent(t.accent);
+                      }}
                     style={{ textAlign: 'left', padding: 8, borderRadius: 8, border: `1px solid ${isSidebarPremium ? 'rgba(234,179,8,0.4)' : tplId === t.id ? '#dd0000' : '#e5e5e5'}`, background: isSidebarPremium ? '#fefce8' : tplId === t.id ? 'rgba(221,0,0,0.05)' : '#fff', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}
                   >
                     <p style={{ fontSize: 11, fontWeight: 600, color: isSidebarPremium ? '#a16207' : tplId === t.id ? '#dd0000' : '#666', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{t.name}</p>
@@ -2283,10 +2298,11 @@ function CVMakerContent() {
             <div className="flex-1 overflow-y-auto p-6">
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {TEMPLATES.map((t, idx) => {
-                  const isPremium = idx >= 3;
+                  const isPremium = !canAccessCvTemplate(planType, idx);
+                  const accessLabel = getTemplateAccessLabel(idx);
                   return (
                     <button key={t.id} onClick={() => {
-                      setTplId(t.id); setAccent(t.accent); setIsPremiumTemplate(isPremium); setShowTemplatesModal(false);
+                      setTplId(t.id); setAccent(t.accent); setShowTemplatesModal(false);
                     }}
                       className={`group relative text-left rounded-lg overflow-hidden border-2 transition-all hover:scale-[1.02] hover:shadow-lg ${
                         isPremium ? 'border-yellow-500/40 hover:border-yellow-400/60 hover:shadow-yellow-500/10'
@@ -2311,7 +2327,7 @@ function CVMakerContent() {
                           <p className="text-white font-medium text-[11px] truncate flex-1">{t.name}</p>
                           {isPremium && <Crown className="w-3 h-3 text-yellow-400 flex-shrink-0" />}
                         </div>
-                        <p className="text-white/30 text-[9px] mt-0.5 truncate">{isPremium ? '✦ Student / Pro plan' : t.description}</p>
+                        <p className="text-white/30 text-[9px] mt-0.5 truncate">{isPremium ? `✦ ${accessLabel}` : t.description}</p>
                       </div>
                       {tplId === t.id && !isPremium && <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center shadow-lg"><Check className="w-3 h-3 text-white" /></div>}
                     </button>

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { hasUnlimitedAi } from '@/lib/plans';
 
 export async function GET() {
   try {
@@ -22,7 +23,7 @@ export async function GET() {
     }
 
     const planType = user.subscription?.planType ?? 'free';
-    const hasUnlimited = planType === 'student' || planType === 'pro';
+    const hasUnlimited = hasUnlimitedAi(planType);
 
     return NextResponse.json({ 
       credits: user.aiCredits,

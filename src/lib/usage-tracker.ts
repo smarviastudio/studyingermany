@@ -1,5 +1,6 @@
 import { prisma } from './prisma';
 import { FREE_LIMITS, FREE_MONTHLY_TOTAL } from './stripe';
+import { getAiGenerationLimit, getRawPlanType, hasUnlimitedAi } from './plans';
 
 type FeatureType = 'cv' | 'motivation' | 'cover' | 'search';
 
@@ -14,12 +15,12 @@ function getCurrentMonth(): string {
   return new Date().toISOString().slice(0, 7); // "2025-03"
 }
 
-async function getUserPlanType(userId: string): Promise<'free' | 'student' | 'pro'> {
+async function getUserPlanType(userId: string): Promise<string> {
   const subscription = await prisma.subscription.findUnique({
     where: { userId },
   });
   if (!subscription || subscription.status !== 'active') return 'free';
-  return subscription.planType as 'free' | 'student' | 'pro';
+  return getRawPlanType(subscription.planType);
 }
 
 export async function checkUsageLimit(
@@ -28,7 +29,7 @@ export async function checkUsageLimit(
 ): Promise<{ allowed: boolean; current: number; limit: number; planType: string; credits?: number }> {
   const planType = await getUserPlanType(userId);
 
-  if (planType !== 'free') {
+  if (hasUnlimitedAi(planType)) {
     return { allowed: true, current: 0, limit: -1, planType };
   }
 
@@ -40,6 +41,11 @@ export async function checkUsageLimit(
 
   if (user && user.aiCredits > 0) {
     return { allowed: true, current: 0, limit: -1, planType, credits: user.aiCredits };
+  }
+
+  if (planType === 'starter') {
+    const limit = getAiGenerationLimit(planType);
+    return { allowed: false, current: limit, limit, planType, credits: 0 };
   }
 
   const month = getCurrentMonth();

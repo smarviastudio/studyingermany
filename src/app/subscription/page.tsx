@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
 import { Crown, Zap, Calendar, CreditCard, AlertCircle, Check, X, Loader2, ExternalLink } from 'lucide-react';
+import { getPlanDisplayName, hasUnlimitedAi, normalizePlanType } from '@/lib/plans';
 
 const RED = '#dd0000';
 
@@ -129,14 +130,10 @@ export default function SubscriptionPage() {
     return null;
   }
 
-  const planNames: Record<string, string> = {
-    free: 'Free',
-    starter: 'Starter',
-    essential: 'Essential',
-    pro: 'Pro',
-  };
-
-  const planName = planNames[userData.subscription?.planType || 'free'] || 'Free';
+  const rawPlanType = userData.subscription?.planType || 'free';
+  const normalizedPlanType = normalizePlanType(rawPlanType);
+  const planName = getPlanDisplayName(rawPlanType);
+  const unlimitedAi = hasUnlimitedAi(rawPlanType);
   const isActive = userData.subscription?.status === 'active';
   const willCancel = userData.subscription?.cancelAtPeriodEnd;
 
@@ -193,7 +190,7 @@ export default function SubscriptionPage() {
             )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 20 }}>
-              {userData.subscription?.planType !== 'free' && isActive && !willCancel && (
+              {normalizedPlanType !== 'free' && isActive && !willCancel && (
                 <button
                   onClick={handleCancelSubscription}
                   disabled={actionLoading}
@@ -241,7 +238,7 @@ export default function SubscriptionPage() {
                 </button>
               )}
 
-              {userData.subscription?.planType !== 'free' && (
+              {normalizedPlanType !== 'free' && (
                 <button
                   onClick={handleManageBilling}
                   disabled={actionLoading}
@@ -283,7 +280,7 @@ export default function SubscriptionPage() {
                 }}
               >
                 <ExternalLink size={16} />
-                {userData.subscription?.planType === 'free' ? 'Upgrade Plan' : 'Change Plan'}
+                {normalizedPlanType === 'free' ? 'Upgrade Plan' : 'Change Plan'}
               </Link>
             </div>
           </div>
@@ -296,14 +293,16 @@ export default function SubscriptionPage() {
               </div>
               <div>
                 <p style={{ fontSize: 14, color: '#666', margin: 0 }}>AI Credits</p>
-                <h2 style={{ fontSize: 24, fontWeight: 900, color: '#111', margin: 0 }}>{userData.aiCredits}</h2>
+                <h2 style={{ fontSize: 24, fontWeight: 900, color: '#111', margin: 0 }}>
+                  {unlimitedAi ? 'Unlimited' : userData.aiCredits}
+                </h2>
               </div>
             </div>
 
             <p style={{ fontSize: 14, color: '#666', marginBottom: 20, lineHeight: 1.6 }}>
-              {userData.subscription?.planType === 'free'
+              {normalizedPlanType === 'free'
                 ? 'Free plan includes 3 AI generations per month. Upgrade for unlimited generations or buy credit packs.'
-                : userData.subscription?.planType === 'starter'
+                : normalizedPlanType === 'starter'
                 ? 'Starter plan includes 30 AI generations per month. Buy credit packs for additional generations.'
                 : 'Your plan includes unlimited AI generations!'}
             </p>
@@ -338,7 +337,7 @@ export default function SubscriptionPage() {
           </h3>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
-            {getPlanFeatures(userData.subscription?.planType || 'free').map((feature, i) => (
+            {getPlanFeatures(rawPlanType).map((feature, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                 <Check size={20} color="#22c55e" style={{ flexShrink: 0, marginTop: 2 }} />
                 <span style={{ fontSize: 14, color: '#555', lineHeight: 1.6 }}>{feature}</span>
@@ -370,6 +369,16 @@ function getPlanFeatures(planType: string): string[] {
       'All free features included',
     ],
     essential: [
+      'Unlimited AI generations',
+      'All 20+ CV templates (ATS-optimized)',
+      'Unlimited program saves',
+      'Unlimited application tracking',
+      'Deadline reminders',
+      '5 AI Chat messages/day',
+      'AI program recommendations',
+      'Email support (24h)',
+    ],
+    student: [
       'Unlimited AI generations',
       'All 20+ CV templates (ATS-optimized)',
       'Unlimited program saves',

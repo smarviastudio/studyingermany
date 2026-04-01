@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe, getPlanTypeFromPriceId } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 import Stripe from 'stripe';
+import { getIncludedAiCredits } from '@/lib/plans';
 
 export const config = { api: { bodyParser: false } };
 
@@ -37,6 +38,31 @@ async function upsertSubscription(
       updatedAt: new Date(),
     },
   });
+}
+
+async function syncSubscriptionBenefits(
+  userId: string,
+  stripeSubscription: Stripe.Subscription
+) {
+  const priceId = stripeSubscription.items.data[0]?.price?.id ?? '';
+  const planType = getPlanTypeFromPriceId(priceId);
+  const includedCredits = getIncludedAiCredits(planType);
+
+  if (includedCredits === null) return;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { aiCredits: true },
+  });
+
+  if (!user || user.aiCredits >= includedCredits) return;
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { aiCredits: includedCredits },
+  });
+
+  console.log(`[Webhook] Synced ${includedCredits} starter credits for user ${userId}`);
 }
 
 export async function POST(req: NextRequest) {
@@ -116,25 +142,7 @@ export async function POST(req: NextRequest) {
           });
           
           await upsertSubscription(userId, subscription);
-          
-          // Give initial credits based on plan
-          const priceId = subscription.items.data[0]?.price?.id;
-          const planCredits: Record<string, number> = {
-            'price_1THN5NBhIRngoSRXiAUcKhva': 30, // Starter monthly
-            'price_1THN5NBhIRngoSRX93yw0Txf': 30, // Starter yearly
-            'price_1THN89BhIRngoSRXQc7qKse': 999999, // Essential monthly (unlimited)
-            'price_1THN89BhIRngoSRXlqKJkqhj': 999999, // Essential yearly (unlimited)
-            'price_1THNGmBhIRngoSRX4WNCJEX0': 999999, // Pro monthly (unlimited)
-            'price_1THNGmBhIRngoSRXlNk14xBe': 999999, // Pro yearly (unlimited)
-          };
-          
-          if (priceId && planCredits[priceId]) {
-            await prisma.user.update({
-              where: { id: userId },
-              data: { aiCredits: planCredits[priceId] },
-            });
-            console.log(`[Webhook] Set ${planCredits[priceId]} credits for plan ${priceId}`);
-          }
+          await syncSubscriptionBenefits(userId, subscription);
           
           console.log(`[Webhook] Subscription created for user ${userId}`);
         }
@@ -194,6 +202,7 @@ export async function POST(req: NextRequest) {
           });
           if (existing) {
             await upsertSubscription(existing.userId, subscription);
+            await syncSubscriptionBenefits(existing.userId, subscription);
           }
         }
         break;

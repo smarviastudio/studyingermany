@@ -55,7 +55,7 @@ export function getPlans() {
   } as const;
 }
 
-export function getPlanTypeFromPriceId(priceId: string): 'starter' | 'essential' | 'pro' | 'free' {
+export function getPlanTypeFromPriceId(priceId: string): 'starter' | 'essential' | 'student' | 'pro' | 'free' {
   // Map test price IDs to plan types
   const priceIdMap: Record<string, 'starter' | 'essential' | 'pro'> = {
     'price_1THN5NBhIRngoSRXiAUcKhva': 'starter', // Starter monthly
@@ -73,7 +73,7 @@ export function getPlanTypeFromPriceId(priceId: string): 'starter' | 'essential'
   // Fallback to old logic
   const plans = getPlans();
   for (const plan of Object.values(plans)) {
-    if (plan.priceId === priceId) return plan.planType as 'starter' | 'essential' | 'pro';
+    if (plan.priceId === priceId) return plan.planType as 'student' | 'pro';
   }
   return 'free';
 }
