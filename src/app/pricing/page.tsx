@@ -215,8 +215,8 @@ export default function PricingPage() {
               <button
                 onClick={() => handleCheckout(
                   billingPeriod === 'monthly' 
-                    ? process.env.NEXT_PUBLIC_STRIPE_STARTER_MONTHLY_PRICE_ID || '' 
-                    : process.env.NEXT_PUBLIC_STRIPE_STARTER_YEARLY_PRICE_ID || '',
+                    ? 'price_1THMg9BhIRngoSRXuAF4cOig' 
+                    : 'price_1THMg9BhIRngoSRXHPAOCeLp',
                   'subscription'
                 )}
                 disabled={loading !== null}
@@ -280,8 +280,8 @@ export default function PricingPage() {
               <button
                 onClick={() => handleCheckout(
                   billingPeriod === 'monthly' 
-                    ? process.env.NEXT_PUBLIC_STRIPE_ESSENTIAL_MONTHLY_PRICE_ID || '' 
-                    : process.env.NEXT_PUBLIC_STRIPE_ESSENTIAL_YEARLY_PRICE_ID || '',
+                    ? 'price_1THMhjBhIRngoSRXvbQyNKcE' 
+                    : 'price_1THMhjBhIRngoSRXNhX1dcad',
                   'subscription'
                 )}
                 disabled={loading !== null}
@@ -344,8 +344,8 @@ export default function PricingPage() {
               <button
                 onClick={() => handleCheckout(
                   billingPeriod === 'monthly' 
-                    ? process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PRICE_ID || '' 
-                    : process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PRICE_ID || '',
+                    ? 'price_1THMj0BhIRngoSRXUxFgCUdS' 
+                    : 'price_1THMj0BhIRngoSRXLxEVsAmJ',
                   'subscription'
                 )}
                 disabled={loading !== null}
@@ -386,9 +386,9 @@ export default function PricingPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24, maxWidth: 900, margin: '0 auto' }}>
             {[
-              { credits: 20, price: 2.99, priceId: process.env.NEXT_PUBLIC_STRIPE_CREDITS_20_PRICE_ID, perCredit: 0.15, label: 'Best for trying' },
-              { credits: 100, price: 9.99, priceId: process.env.NEXT_PUBLIC_STRIPE_CREDITS_100_PRICE_ID, perCredit: 0.10, label: 'Most popular', popular: true },
-              { credits: 300, price: 24.99, priceId: process.env.NEXT_PUBLIC_STRIPE_CREDITS_300_PRICE_ID, perCredit: 0.08, label: 'Best value 🔥', badge: true },
+              { credits: 20, price: 2.99, priceId: 'price_1THMl6BhIRngoSRXMBbRuS2m', perCredit: 0.15, label: 'Best for trying' },
+              { credits: 100, price: 9.99, priceId: 'price_1THMl6BhIRngoSRXEH2UHrYP', perCredit: 0.10, label: 'Most popular', popular: true },
+              { credits: 300, price: 24.99, priceId: 'price_1THMl6BhIRngoSRXrR48BBwX', perCredit: 0.08, label: 'Best value 🔥', badge: true },
             ].map((pack) => (
               <div
                 key={pack.credits}
