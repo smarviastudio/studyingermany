@@ -13,16 +13,24 @@ export default function PricingPage() {
   const [loading, setLoading] = useState<string | null>(null);
 
   const handleCheckout = async (priceId: string, mode: 'subscription' | 'payment') => {
+    console.log('handleCheckout called with:', { priceId, mode });
     setLoading(priceId);
     try {
+      const body = JSON.stringify({ priceId, mode });
+      console.log('Sending body:', body);
+      
       const res = await fetch('/api/stripe/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId, mode }),
+        body,
       });
       const data = await res.json();
+      console.log('Response:', data);
+      
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        alert('Error: ' + (data.error || 'Unknown error'));
       }
     } catch (error) {
       console.error('Checkout error:', error);

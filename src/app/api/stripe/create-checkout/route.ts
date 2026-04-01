@@ -5,11 +5,14 @@ import Stripe from 'stripe';
 
 export async function POST(request: NextRequest) {
   try {
-    const { priceId, mode = 'subscription' } = await request.json();
+    const body = await request.json();
+    console.log('Request body:', body);
+    
+    const { priceId, mode = 'subscription' } = body;
 
     if (!priceId) {
       return NextResponse.json(
-        { error: 'Price ID is required' },
+        { error: 'Price ID is required', receivedBody: body },
         { status: 400 }
       );
     }
