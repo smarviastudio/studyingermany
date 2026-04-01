@@ -34,7 +34,7 @@ export default function TermsPage() {
           </Section>
 
           <Section title="3. Subscriptions & Billing">
-            <P>We offer monthly and annual subscription plans ("Student Plan" and "Pro Plan"). By subscribing:</P>
+            <P>We offer monthly and annual subscription plans ("Starter", "Essential", and "Pro"). By subscribing:</P>
             <UL items={[
               'You authorise us to charge your payment method via Stripe on a recurring basis (monthly or annually).',
               'Prices shown include applicable VAT unless stated otherwise.',

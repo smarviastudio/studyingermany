@@ -3,6 +3,11 @@ export type NormalizedPlanType = 'free' | 'starter' | 'essential' | 'pro';
 
 const FREE_TEMPLATE_COUNT = 2;
 const STARTER_TEMPLATE_COUNT = 10;
+const FREE_SHORTLIST_LIMIT = 10;
+const STARTER_SHORTLIST_LIMIT = 50;
+const FREE_APPLICATION_LIMIT = 3;
+const STARTER_APPLICATION_LIMIT = 15;
+const ESSENTIAL_DAILY_CHAT_LIMIT = 5;
 
 export function getRawPlanType(planType?: string | null): RawPlanType {
   switch (planType) {
@@ -30,9 +35,8 @@ export function getPlanDisplayName(planType?: string | null): string {
     case 'starter':
       return 'Starter';
     case 'essential':
-      return 'Essential';
     case 'student':
-      return 'Student';
+      return 'Essential';
     case 'pro':
       return 'Pro';
     default:
@@ -63,6 +67,47 @@ export function getIncludedAiCredits(planType?: string | null): number | null {
   return normalizePlanType(planType) === 'starter' ? 30 : null;
 }
 
+export function getShortlistLimit(planType?: string | null): number | null {
+  const normalizedPlanType = normalizePlanType(planType);
+
+  switch (normalizedPlanType) {
+    case 'starter':
+      return STARTER_SHORTLIST_LIMIT;
+    case 'essential':
+    case 'pro':
+      return null;
+    default:
+      return FREE_SHORTLIST_LIMIT;
+  }
+}
+
+export function getApplicationTrackingLimit(planType?: string | null): number | null {
+  const normalizedPlanType = normalizePlanType(planType);
+
+  switch (normalizedPlanType) {
+    case 'starter':
+      return STARTER_APPLICATION_LIMIT;
+    case 'essential':
+    case 'pro':
+      return null;
+    default:
+      return FREE_APPLICATION_LIMIT;
+  }
+}
+
+export function getAiChatDailyLimit(planType?: string | null): number | null {
+  const normalizedPlanType = normalizePlanType(planType);
+
+  switch (normalizedPlanType) {
+    case 'essential':
+      return ESSENTIAL_DAILY_CHAT_LIMIT;
+    case 'pro':
+      return null;
+    default:
+      return 0;
+  }
+}
+
 export function getAccessibleTemplateCount(planType?: string | null): number {
   const normalizedPlanType = normalizePlanType(planType);
 
@@ -84,5 +129,5 @@ export function canAccessCvTemplate(planType: string | null | undefined, templat
 export function getTemplateAccessLabel(templateIndex: number): string | null {
   if (templateIndex < FREE_TEMPLATE_COUNT) return null;
   if (templateIndex < STARTER_TEMPLATE_COUNT) return 'Starter+ plan';
-  return 'Essential / Student / Pro';
+  return 'Essential / Pro';
 }

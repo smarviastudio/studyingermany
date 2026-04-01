@@ -11,21 +11,24 @@ interface PaywallModalProps {
   limit?: number;
 }
 
-const STUDENT_BENEFITS = [
+const ESSENTIAL_BENEFITS = [
   'Unlimited AI document generations',
   'All 20+ professional CV templates',
   'Unlimited program saves',
   'Unlimited application tracking',
+  'Deadline reminders',
+  '5 AI Chat messages/day',
+  'AI program recommendations',
   'Email support (24h response)',
-  'Priority program recommendations',
-  'AI Chat Consultant (limited)',
 ];
 
 const PRO_BENEFITS = [
-  'Everything in Student Plan',
+  'Everything in Essential',
   'AI Chat Consultant (unlimited)',
-  'Priority email support (12h)',
-  'Dedicated application guidance',
+  'Personalized visa & admission roadmap',
+  'AI application document review',
+  'Downloadable offline guides (PDF)',
+  'Priority support (8h response)',
   'Early access to new features',
 ];
 
@@ -60,7 +63,7 @@ export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: 
     }
   };
 
-  const studentKey = billingInterval === 'month' ? 'student_monthly' : 'student_yearly';
+  const essentialKey = billingInterval === 'month' ? 'student_monthly' : 'student_yearly';
   const proKey = billingInterval === 'month' ? 'pro_monthly' : 'pro_yearly';
 
   return (
@@ -248,7 +251,7 @@ export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: 
           gap: 'clamp(16px, 3vw, 24px)',
           padding: '24px clamp(20px,4vw,40px) 36px',
         }}>
-          {/* Student Plan */}
+          {/* Essential Plan */}
           <div style={{
             border: '1px solid rgba(221,0,0,0.25)',
             borderRadius: 24,
@@ -263,7 +266,7 @@ export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: 
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
                 <Zap size={18} color="#dd0000" />
-                <span style={{ fontSize: 16, fontWeight: 700, color: '#111' }}>Student Plan</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: '#111' }}>Essential</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
                 <span style={{ fontSize: 36, fontWeight: 800, color: '#dd0000' }}>
@@ -280,7 +283,7 @@ export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: 
 
             <div style={{ padding: '22px 26px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
-                {STUDENT_BENEFITS.map((b, i) => (
+                {ESSENTIAL_BENEFITS.map((b, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                     <div style={{ width: 18, height: 18, borderRadius: '50%', background: 'rgba(221,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
                       <Check size={10} color="#dd0000" strokeWidth={3} />
@@ -290,14 +293,14 @@ export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: 
                 ))}
               </div>
               <button
-                onClick={() => handleUpgrade(studentKey)}
+                onClick={() => handleUpgrade(essentialKey)}
                 disabled={loading !== null}
                 style={{
                   width: '100%',
                   padding: '14px',
                   borderRadius: 14,
                   border: 'none',
-                  background: loading === studentKey ? '#ccc' : 'linear-gradient(135deg, #dd0000, #b91c1c)',
+                  background: loading === essentialKey ? '#ccc' : 'linear-gradient(135deg, #dd0000, #b91c1c)',
                   color: '#fff',
                   fontSize: 15,
                   fontWeight: 700,
@@ -310,8 +313,8 @@ export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: 
                   transition: 'all 0.2s',
                 }}
               >
-                {loading === studentKey ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
-                {loading === studentKey ? 'Redirecting...' : 'Get Student Plan'}
+                {loading === essentialKey ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
+                {loading === essentialKey ? 'Redirecting...' : 'Get Essential'}
               </button>
             </div>
           </div>

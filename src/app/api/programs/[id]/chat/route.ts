@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { getAiChatDailyLimit, getPlanDisplayName, normalizePlanType } from '@/lib/plans';
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'openai/gpt-4o-mini';
@@ -57,32 +58,42 @@ export async function POST(
       }
     });
 
-    const tier = user?.subscription?.planType || 'free';
-    const limits = {
-      free: 3,
-      student: 10,
-      pro: 50
-    };
-    const dailyLimit = limits[tier as keyof typeof limits] || 3;
+    const rawPlanType = user?.subscription?.planType || 'free';
+    const tier = user?.subscription ? normalizePlanType(rawPlanType) : 'free';
+    const dailyLimit = getAiChatDailyLimit(rawPlanType);
 
-    // Check today's message count
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const messageCount = await prisma.chatMessage.count({
-      where: {
-        userId: session.user.id,
-        createdAt: { gte: today }
-      }
-    });
-
-    if (messageCount >= dailyLimit) {
-      return NextResponse.json({ 
-        error: 'Daily message limit reached',
-        limit: dailyLimit,
+    if (dailyLimit === 0) {
+      return NextResponse.json({
+        error: 'Upgrade required',
+        message: 'AI Chat Consultant is available on Essential and Pro plans.',
         tier,
-        remainingMessages: 0
-      }, { status: 429 });
+        planName: getPlanDisplayName(rawPlanType),
+      }, { status: 403 });
+    }
+
+    let messageCount = 0;
+
+    if (dailyLimit !== null) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      messageCount = await prisma.chatMessage.count({
+        where: {
+          userId: session.user.id,
+          createdAt: { gte: today }
+        }
+      });
+
+      if (messageCount >= dailyLimit) {
+        return NextResponse.json({ 
+          error: 'Daily message limit reached',
+          message: `Your ${getPlanDisplayName(rawPlanType)} plan includes ${dailyLimit} AI Chat messages per day.`,
+          limit: dailyLimit,
+          tier,
+          planName: getPlanDisplayName(rawPlanType),
+          remainingMessages: 0
+        }, { status: 429 });
+      }
     }
 
     const { id: programId } = await params;
@@ -181,7 +192,7 @@ Academic Background: ${userProfile.academicBackground || 'Not specified'}
         }
       });
 
-      const remaining = dailyLimit - messageCount - 1;
+      const remaining = dailyLimit === null ? null : dailyLimit - messageCount - 1;
 
       return NextResponse.json({
         reply,

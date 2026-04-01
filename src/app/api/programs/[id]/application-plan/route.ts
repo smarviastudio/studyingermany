@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
+import { getApplicationTrackingLimit, getPlanDisplayName, normalizePlanType } from '@/lib/plans';
 
 const ApplicationPlanRequestSchema = z.object({
   program: z.object({
@@ -633,10 +634,11 @@ export async function POST(
         }
       });
 
-      const tier = user?.subscription?.planType || 'free';
-      
-      // Check plan count for free users - only count plans that still exist in shortlist
-      if (tier === 'free') {
+      const rawPlanType = user?.subscription?.planType || 'free';
+      const tier = user?.subscription ? normalizePlanType(rawPlanType) : 'free';
+      const planLimit = getApplicationTrackingLimit(rawPlanType);
+
+      if (planLimit !== null) {
         // Get user's current shortlist
         const shortlistItems = await prisma.shortlist.findMany({
           where: { userId: session.user.id },
@@ -653,13 +655,13 @@ export async function POST(
           }
         });
 
-        if (planCount >= 3) {
+        if (planCount >= planLimit) {
           return NextResponse.json({
-            error: 'Free plan limit reached',
-            message: 'You have reached the maximum of 3 application plans on the free tier. Please upgrade to generate more plans.',
-            limit: 3,
+            error: `${getPlanDisplayName(rawPlanType)} plan limit reached`,
+            message: `Your ${getPlanDisplayName(rawPlanType)} plan allows up to ${planLimit} tracked applications. Upgrade to create more plans.`,
+            limit: planLimit,
             current: planCount,
-            tier: 'free'
+            tier,
           }, { status: 403 });
         }
       }

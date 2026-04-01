@@ -88,6 +88,16 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
         if (data.remainingMessages === 0) {
           setLimitReached(true);
         }
+      } else if (response.status === 403) {
+        const data = await response.json();
+        setLimitReached(true);
+        setTier(data.tier || 'free');
+        setRemainingMessages(null);
+        setDailyLimit(null);
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: data.message || 'AI Chat Consultant is available on Essential and Pro plans.',
+        }]);
       } else if (response.status === 429) {
         const data = await response.json();
         setLimitReached(true);
@@ -96,7 +106,7 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
         setTier(data.tier);
         setMessages(prev => [...prev, { 
           role: 'assistant', 
-          content: `You've reached your daily message limit (${data.limit} messages for ${data.tier} plan). Upgrade to get more messages per day!` 
+          content: data.message || `You've reached your daily message limit (${data.limit} messages for ${data.planName || data.tier} plan). Upgrade to get more messages per day!`
         }]);
       } else {
         setMessages(prev => [...prev, { 
@@ -203,7 +213,9 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
           <div>
             <h3>Course Assistant</h3>
             <span>
-              {remainingMessages !== null && dailyLimit !== null ? (
+              {dailyLimit === null && tier === 'pro' ? (
+                <span className="chat-limit-badge">Unlimited AI Chat</span>
+              ) : remainingMessages !== null && dailyLimit !== null ? (
                 <span className="chat-limit-badge">
                   {remainingMessages}/{dailyLimit} messages left today
                 </span>
@@ -273,11 +285,11 @@ export function CourseAssistantChat({ programId, programContext, userProfile }: 
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ask about this program..."
-              disabled={loading}
+              disabled={loading || limitReached}
             />
             <button 
               onClick={sendMessage} 
-              disabled={!input.trim() || loading}
+              disabled={!input.trim() || loading || limitReached}
               aria-label="Send message"
             >
               <Send className="w-4 h-4" />

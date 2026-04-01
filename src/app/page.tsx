@@ -361,13 +361,27 @@ export default function HomePage() {
     setShortlistingId(program.id);
     try {
       if (already) {
-        await fetch(`/api/shortlist?programId=${program.id}`, { method: 'DELETE' });
+        const response = await fetch(`/api/shortlist?programId=${program.id}`, { method: 'DELETE' });
+        if (!response.ok) {
+          const error = await response.json().catch(() => null);
+          throw new Error(error?.message || error?.error || 'Failed to remove from shortlist');
+        }
         setShortlistedPrograms(p => p.filter(id => id !== program.id));
       } else {
-        await fetch('/api/shortlist', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ programId: program.id, programName: program.program_name, university: program.university, notes: '' }) });
+        const response = await fetch('/api/shortlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ programId: program.id, programName: program.program_name, university: program.university, notes: '' }),
+        });
+        if (!response.ok) {
+          const error = await response.json().catch(() => null);
+          throw new Error(error?.message || error?.error || 'Failed to save program');
+        }
         setShortlistedPrograms(p => [...p, program.id]);
       }
-    } catch { /* silent */ } finally { setShortlistingId(null); }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Failed to update shortlist');
+    } finally { setShortlistingId(null); }
   };
 
   const closeSearchModal = () => {

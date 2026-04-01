@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
+import { getPlanDisplayName, getShortlistLimit } from '@/lib/plans';
 
 const AddToShortlistSchema = z.object({
   programId: z.string(),
@@ -77,6 +78,30 @@ export async function POST(request: NextRequest) {
 
     if (existing) {
       return NextResponse.json({ error: 'Program already in shortlist' }, { status: 409 });
+    }
+
+    const subscription = await prisma.subscription.findUnique({
+      where: { userId: session.user.id },
+      select: { planType: true, status: true },
+    });
+
+    const planType = subscription?.status === 'active' ? subscription.planType : 'free';
+    const shortlistLimit = getShortlistLimit(planType);
+
+    if (shortlistLimit !== null) {
+      const shortlistCount = await prisma.shortlist.count({
+        where: { userId: session.user.id },
+      });
+
+      if (shortlistCount >= shortlistLimit) {
+        return NextResponse.json({
+          error: `${getPlanDisplayName(planType)} plan limit reached`,
+          message: `Your ${getPlanDisplayName(planType)} plan allows up to ${shortlistLimit} saved programs. Upgrade to save more.`,
+          limit: shortlistLimit,
+          current: shortlistCount,
+          planType,
+        }, { status: 403 });
+      }
     }
 
     const shortlist = await prisma.shortlist.create({

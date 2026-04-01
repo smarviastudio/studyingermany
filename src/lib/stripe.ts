@@ -26,15 +26,15 @@ export function getPlans() {
   return {
     student_monthly: {
       priceId: process.env.STRIPE_PRICE_STUDENT_MONTHLY!,
-      planType: 'student',
-      label: 'Student Plan',
+      planType: 'essential',
+      label: 'Essential Plan',
       interval: 'month',
       amount: 999,
     },
     student_yearly: {
       priceId: process.env.STRIPE_PRICE_STUDENT_YEARLY!,
-      planType: 'student',
-      label: 'Student Plan',
+      planType: 'essential',
+      label: 'Essential Plan',
       interval: 'year',
       amount: 7999,
     },
@@ -55,7 +55,7 @@ export function getPlans() {
   } as const;
 }
 
-export function getPlanTypeFromPriceId(priceId: string): 'starter' | 'essential' | 'student' | 'pro' | 'free' {
+export function getPlanTypeFromPriceId(priceId: string): 'starter' | 'essential' | 'pro' | 'free' {
   // Map test price IDs to plan types
   const priceIdMap: Record<string, 'starter' | 'essential' | 'pro'> = {
     'price_1THN5NBhIRngoSRXiAUcKhva': 'starter', // Starter monthly
@@ -73,7 +73,7 @@ export function getPlanTypeFromPriceId(priceId: string): 'starter' | 'essential'
   // Fallback to old logic
   const plans = getPlans();
   for (const plan of Object.values(plans)) {
-    if (plan.priceId === priceId) return plan.planType as 'student' | 'pro';
+    if (plan.priceId === priceId) return plan.planType as 'essential' | 'pro';
   }
   return 'free';
 }

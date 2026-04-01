@@ -378,16 +378,6 @@ function getPlanFeatures(planType: string): string[] {
       'AI program recommendations',
       'Email support (24h)',
     ],
-    student: [
-      'Unlimited AI generations',
-      'All 20+ CV templates (ATS-optimized)',
-      'Unlimited program saves',
-      'Unlimited application tracking',
-      'Deadline reminders',
-      '5 AI Chat messages/day',
-      'AI program recommendations',
-      'Email support (24h)',
-    ],
     pro: [
       'Everything in Essential',
       'Unlimited AI Chat Consultant',
@@ -399,5 +389,6 @@ function getPlanFeatures(planType: string): string[] {
     ],
   };
 
-  return features[planType] || features.free;
+  const normalizedPlanType = planType === 'student' ? 'essential' : planType;
+  return features[normalizedPlanType] || features.free;
 }
