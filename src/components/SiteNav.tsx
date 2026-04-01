@@ -295,7 +295,7 @@ export function SiteNav() {
           <a href="/#tools" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Wrench size={20} />Free AI Tools</a>
           <a href="/pricing" className="sitenav-drawer-link red" onClick={() => setDrawerOpen(false)}><Tag size={20} />Pricing</a>
           {isAuthenticated && <Link href="/dashboard" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><LayoutDashboard size={20} />Dashboard</Link>}
-          {isAuthenticated && <Link href="/my-applications" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Bookmark size={20} />My Applications</Link>}
+          {isAuthenticated && <Link href="/my-shortlist" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Bookmark size={20} />My Shortlist</Link>}
         </div>
         <div className="sitenav-drawer-auth">
           {isAuthenticated ? (

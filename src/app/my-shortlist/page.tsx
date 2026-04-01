@@ -8,7 +8,7 @@ import Link from 'next/link';
 import {
   Loader2, Bookmark, Trash2, ArrowRight, Search,
   GraduationCap, MapPin, Calendar, FileText, Sparkles,
-  BookOpen, ExternalLink, X, Euro, Clock, Globe, Award, CheckCircle2, Info
+  BookOpen, ExternalLink, X, Euro, Clock, Globe, Award, Info
 } from 'lucide-react';
 import type { Program } from '@/lib/types';
 import { SiteNav } from '@/components/SiteNav';
@@ -22,12 +22,6 @@ interface ShortlistItem {
   notes?: string;
 }
 
-type PlanProgress = {
-  completed: number;
-  total: number;
-  updatedAt?: string;
-};
-
 export default function MyShortlistPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -35,7 +29,6 @@ export default function MyShortlistPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [programDetails, setProgramDetails] = useState<Record<string, Program>>({});
-  const [planProgress, setPlanProgress] = useState<Record<string, PlanProgress>>({});
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [navigatingId, setNavigatingId] = useState<string | null>(null);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
@@ -69,50 +62,6 @@ export default function MyShortlistPage() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (status !== 'authenticated') return;
-
-    let cancelled = false;
-    const loadPlans = async () => {
-      try {
-        const response = await fetch('/api/application-plans', { cache: 'no-store' });
-        if (!response.ok) return;
-        const data = await response.json();
-        if (cancelled) return;
-
-        const progressMap: Record<string, PlanProgress> = {};
-        (data.plans || []).forEach((planRecord: any) => {
-          if (!planRecord?.programId || !planRecord?.planData) return;
-          try {
-            const parsed = JSON.parse(planRecord.planData);
-            const steps = Array.isArray(parsed?.steps) ? parsed.steps : [];
-            const total = steps.length;
-            const completed = steps.filter((step: any) => step?.completed).length;
-            if (total > 0) {
-              progressMap[planRecord.programId] = {
-                completed,
-                total,
-                updatedAt: planRecord.updatedAt,
-              };
-            }
-          } catch (parseError) {
-            console.error('Failed to parse plan progress', parseError);
-          }
-        });
-
-        setPlanProgress(progressMap);
-      } catch (planError) {
-        console.error('Plan progress fetch error', planError);
-      }
-    };
-
-    loadPlans();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [status]);
 
   useEffect(() => {
     if (shortlist.length === 0) return;
@@ -201,8 +150,6 @@ export default function MyShortlistPage() {
       </div>
     );
   }
-
-  const progressPct = (p: PlanProgress) => Math.round((p.completed / p.total) * 100);
 
   return (
     <>
@@ -384,7 +331,6 @@ export default function MyShortlistPage() {
           <div className="shortlist-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 20 }}>
             {shortlist.map((item) => {
               const prog = programDetails[item.programId];
-              const plan = planProgress[item.programId];
               const isRemoving = removingId === item.programId;
 
               return (
@@ -433,32 +379,17 @@ export default function MyShortlistPage() {
                       )}
                     </div>
 
-                    {/* Progress bar or status */}
-                    {plan ? (
-                      <div style={{ padding: '10px 12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Application Progress
-                          </span>
-                          <span style={{ fontSize: 11, color: '#16a34a', fontWeight: 600 }}>{plan.completed}/{plan.total} steps</span>
-                        </div>
-                        <div style={{ height: 5, background: '#dcfce7', borderRadius: 99, overflow: 'hidden' }}>
-                          <div style={{ height: '100%', background: 'linear-gradient(90deg, #16a34a, #22c55e)', borderRadius: 99, transition: 'width 0.3s ease', width: `${progressPct(plan)}%` }} />
-                        </div>
-                      </div>
-                    ) : (
-                      <div style={{ padding: '10px 12px', background: '#fef3f2', border: '1px solid #fecaca', borderRadius: 10 }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: '#dc2626', display: 'flex', alignItems: 'center', gap: 4 }}>
-                          <Info className="w-3.5 h-3.5" /> Application not started
-                        </span>
-                      </div>
-                    )}
+                    <div style={{ padding: '10px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10 }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: '#475569', display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <Info className="w-3.5 h-3.5" /> Saved to shortlist
+                      </span>
+                    </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 'auto' }}>
-                      <button onClick={() => handleNavigate(item.programId, `/my-applications/${item.programId}?new=1`)} disabled={navigatingId === item.programId + `/my-applications/${item.programId}?new=1`} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 20px', background: '#dd0000', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: 'pointer', transition: 'all 0.2s' }}
+                      <button onClick={() => prog && setSelectedProgram(prog)} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 20px', background: '#dd0000', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: 'pointer', transition: 'all 0.2s' }}
                         onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
-                        {navigatingId === item.programId + `/my-applications/${item.programId}?new=1` ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Start Application'}
+                        View Details
                       </button>
 
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>

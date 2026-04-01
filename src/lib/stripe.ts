@@ -20,48 +20,33 @@ export const stripe = new Proxy({} as Stripe, {
   },
 });
 
-export type PlanKey = 'student_monthly' | 'student_yearly' | 'pro_monthly' | 'pro_yearly';
+export type PlanKey = 'pro_monthly' | 'pro_yearly';
 
 export function getPlans() {
   return {
-    student_monthly: {
-      priceId: process.env.STRIPE_PRICE_STUDENT_MONTHLY!,
-      planType: 'essential',
-      label: 'Essential Plan',
+    pro_monthly: {
+      priceId: process.env.STRIPE_PRICE_STUDENT_MONTHLY || 'price_1THN89BhIRngoSRXQc7qKse',
+      planType: 'pro',
+      label: 'Pro Plan',
       interval: 'month',
       amount: 999,
     },
-    student_yearly: {
-      priceId: process.env.STRIPE_PRICE_STUDENT_YEARLY!,
-      planType: 'essential',
-      label: 'Essential Plan',
+    pro_yearly: {
+      priceId: process.env.STRIPE_PRICE_STUDENT_YEARLY || 'price_1THN89BhIRngoSRXlqKJkqhj',
+      planType: 'pro',
+      label: 'Pro Plan',
       interval: 'year',
       amount: 7999,
-    },
-    pro_monthly: {
-      priceId: process.env.STRIPE_PRICE_PRO_MONTHLY!,
-      planType: 'pro',
-      label: 'Pro Plan',
-      interval: 'month',
-      amount: 2499,
-    },
-    pro_yearly: {
-      priceId: process.env.STRIPE_PRICE_PRO_YEARLY!,
-      planType: 'pro',
-      label: 'Pro Plan',
-      interval: 'year',
-      amount: 19999,
     },
   } as const;
 }
 
-export function getPlanTypeFromPriceId(priceId: string): 'starter' | 'essential' | 'pro' | 'free' {
-  // Map test price IDs to plan types
-  const priceIdMap: Record<string, 'starter' | 'essential' | 'pro'> = {
-    'price_1THN5NBhIRngoSRXiAUcKhva': 'starter', // Starter monthly
-    'price_1THN5NBhIRngoSRX93yw0Txf': 'starter', // Starter yearly
-    'price_1THN89BhIRngoSRXQc7qKse': 'essential', // Essential monthly
-    'price_1THN89BhIRngoSRXlqKJkqhj': 'essential', // Essential yearly
+export function getPlanTypeFromPriceId(priceId: string): 'pro' | 'free' {
+  const priceIdMap: Record<string, 'pro'> = {
+    'price_1THN5NBhIRngoSRXiAUcKhva': 'pro',
+    'price_1THN5NBhIRngoSRX93yw0Txf': 'pro',
+    'price_1THN89BhIRngoSRXQc7qKse': 'pro',
+    'price_1THN89BhIRngoSRXlqKJkqhj': 'pro',
     'price_1THNGmBhIRngoSRX4WNCJEX0': 'pro', // Pro monthly
     'price_1THNGmBhIRngoSRXlNk14xBe': 'pro', // Pro yearly
   };
@@ -73,19 +58,19 @@ export function getPlanTypeFromPriceId(priceId: string): 'starter' | 'essential'
   // Fallback to old logic
   const plans = getPlans();
   for (const plan of Object.values(plans)) {
-    if (plan.priceId === priceId) return plan.planType as 'essential' | 'pro';
+    if (plan.priceId === priceId) return 'pro';
   }
   return 'free';
 }
 
 export const FREE_LIMITS = {
-  cvGenerations: 5,
-  motivationLetterGenerations: 5,
-  coverLetterGenerations: 5,
+  cvGenerations: 3,
+  motivationLetterGenerations: 3,
+  coverLetterGenerations: 3,
   programSearches: 30,
 };
 
-export const FREE_MONTHLY_TOTAL = 5; // shared pool across all AI tools
+export const FREE_MONTHLY_TOTAL = 3; // shared pool across all AI tools
 
 export type CreditBundleKey = 'credits_50' | 'credits_200';
 

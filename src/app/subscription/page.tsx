@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
 import { Crown, Zap, Calendar, CreditCard, AlertCircle, Check, X, Loader2, ExternalLink } from 'lucide-react';
-import { getPlanDisplayName, hasUnlimitedAi, normalizePlanType } from '@/lib/plans';
+import { getPlanDisplayName, normalizePlanType } from '@/lib/plans';
 
 const RED = '#dd0000';
 
@@ -21,6 +21,8 @@ type Subscription = {
 type UserData = {
   email: string;
   aiCredits: number;
+  displayCredits: number;
+  normalizedPlanType: 'free' | 'pro';
   subscription: Subscription | null;
 };
 
@@ -131,9 +133,8 @@ export default function SubscriptionPage() {
   }
 
   const rawPlanType = userData.subscription?.planType || 'free';
-  const normalizedPlanType = normalizePlanType(rawPlanType);
+  const normalizedPlanType = userData.normalizedPlanType || normalizePlanType(rawPlanType);
   const planName = getPlanDisplayName(rawPlanType);
-  const unlimitedAi = hasUnlimitedAi(rawPlanType);
   const isActive = userData.subscription?.status === 'active';
   const willCancel = userData.subscription?.cancelAtPeriodEnd;
 
@@ -294,17 +295,15 @@ export default function SubscriptionPage() {
               <div>
                 <p style={{ fontSize: 14, color: '#666', margin: 0 }}>AI Credits</p>
                 <h2 style={{ fontSize: 24, fontWeight: 900, color: '#111', margin: 0 }}>
-                  {unlimitedAi ? 'Unlimited' : userData.aiCredits}
+                  {userData.displayCredits}
                 </h2>
               </div>
             </div>
 
             <p style={{ fontSize: 14, color: '#666', marginBottom: 20, lineHeight: 1.6 }}>
               {normalizedPlanType === 'free'
-                ? 'Free plan includes 3 AI generations per month. Upgrade for unlimited generations or buy credit packs.'
-                : normalizedPlanType === 'starter'
-                ? 'Starter plan includes 30 AI generations per month. Buy credit packs for additional generations.'
-                : 'Your plan includes unlimited AI generations!'}
+                ? 'Free plan includes 3 AI credits after login. Buy a credit pack or upgrade to Pro for more.'
+                : 'Pro includes 20 AI credits every month. Credit packs stack on top if you need more.'}
             </p>
 
             <Link
@@ -353,42 +352,21 @@ export default function SubscriptionPage() {
 function getPlanFeatures(planType: string): string[] {
   const features: Record<string, string[]> = {
     free: [
-      '3 AI document generations/month',
+      'Sign in to get 3 AI credits',
       '2 CV templates',
-      'Save up to 10 programs',
-      'Track 3 applications',
+      'Save programs to your shortlist',
       'GPA converter (free forever)',
       'Salary calculator (free forever)',
     ],
-    starter: [
-      '30 AI generations/month',
-      '10 CV templates',
-      'Save up to 50 programs',
-      'Track 15 applications',
-      'Email support (48h)',
-      'All free features included',
-    ],
-    essential: [
-      'Unlimited AI generations',
-      'All 20+ CV templates (ATS-optimized)',
-      'Unlimited program saves',
-      'Unlimited application tracking',
-      'Deadline reminders',
-      '5 AI Chat messages/day',
-      'AI program recommendations',
-      'Email support (24h)',
-    ],
     pro: [
-      'Everything in Essential',
-      'Unlimited AI Chat Consultant',
-      'Personalized visa & admission roadmap',
-      'AI application document review',
-      'Downloadable offline guides (PDF)',
-      'Priority support (8h response)',
-      'Early access to new tools',
+      '20 AI credits every month',
+      'All 20+ CV templates',
+      'Premium access to CV, motivation letter, and cover letter tools',
+      'Save programs to your shortlist',
+      'Priority support',
+      'All free features included',
     ],
   };
 
-  const normalizedPlanType = planType === 'student' ? 'essential' : planType;
-  return features[normalizedPlanType] || features.free;
+  return features[normalizePlanType(planType)] || features.free;
 }

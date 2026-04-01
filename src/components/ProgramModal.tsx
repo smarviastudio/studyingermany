@@ -449,10 +449,10 @@ export function ProgramModal({ programId, onClose, isShortlisted = false, onTogg
 
                 {isShortlistedState && (
                   <Link
-                    href={`/my-applications/${programId}?new=1`}
+                    href="/my-shortlist"
                     className={`flex-1 md:flex-none min-w-[160px] flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#dd0000] text-white text-sm font-bold shadow-lg shadow-[#dd0000]/25 hover:bg-[#c20000] transition-colors`}
                   >
-                    Start Application <ArrowRight className="w-3.5 h-3.5" />
+                    Open Shortlist <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 )}
               </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Check, X, Zap, Star, Crown, Shield, RefreshCw, Globe, MessageCircle, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { Check, Shield, RefreshCw, Globe, MessageCircle, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
 const RED = '#dd0000';
@@ -79,12 +79,12 @@ export default function PricingPage() {
       a: 'Visa, Mastercard, PayPal, iDEAL, and more via Stripe.',
     },
     {
-      q: 'Is there a student discount?',
-      a: 'Our Starter plan at €4.99/month IS our student discount. It\'s designed to be affordable for students worldwide.',
+      q: 'What do I get on the free plan?',
+      a: 'After signing in, Free users get 3 AI credits, can save programs to their shortlist, and can use the free templates and calculators.',
     },
     {
       q: 'What happens when I run out of AI credits?',
-      a: 'You can buy credit packs anytime or upgrade your plan for unlimited generations.',
+      a: 'You can buy credit packs anytime or upgrade to Pro for 20 monthly AI credits and all premium templates.',
     },
     {
       q: 'Do you offer refunds?',
@@ -155,12 +155,12 @@ export default function PricingPage() {
 
         {/* PRICING CARDS */}
         <section style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px 80px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24, maxWidth: 900, margin: '0 auto' }}>
             
             {/* FREE */}
             <div style={{ background: '#fff', border: '1.5px solid #e5e5e5', borderRadius: 20, padding: 32, display: 'flex', flexDirection: 'column' }}>
               <div style={{ marginBottom: 24 }}>
-                <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', margin: '0 0 8px' }}>Get Started</p>
+                <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', margin: '0 0 8px' }}>Free</p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
                   <span style={{ fontSize: 48, fontWeight: 900, color: '#111' }}>€0</span>
                 </div>
@@ -169,10 +169,9 @@ export default function PricingPage() {
 
               <div style={{ flex: 1, marginBottom: 24 }}>
                 {[
-                  '3 AI document generations/month',
+                  'Sign in to get 3 AI credits',
                   '2 CV templates',
-                  'Save up to 10 programs',
-                  'Track 3 applications',
+                  'Save programs to your shortlist',
                   'GPA converter (free forever)',
                   'Salary calculator (free forever)',
                 ].map((feature, i) => (
@@ -184,7 +183,7 @@ export default function PricingPage() {
               </div>
 
               <Link
-                href="/register"
+                href="/auth/signin"
                 style={{
                   display: 'block',
                   textAlign: 'center',
@@ -202,7 +201,7 @@ export default function PricingPage() {
               </Link>
             </div>
 
-            {/* STARTER - MOST POPULAR */}
+            {/* PRO */}
             <div style={{ 
               background: '#fff', 
               border: `3px solid ${RED}`, 
@@ -215,31 +214,31 @@ export default function PricingPage() {
               transform: 'scale(1.05)',
             }}>
               <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: RED, borderRadius: 50, padding: '6px 20px' }}>
-                <span style={{ fontSize: 12, fontWeight: 800, color: '#fff', textTransform: 'uppercase', letterSpacing: '0.05em' }}>🏆 Most Popular</span>
+                <span style={{ fontSize: 12, fontWeight: 800, color: '#fff', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Best Value</span>
               </div>
 
               <div style={{ marginBottom: 24, marginTop: 8 }}>
-                <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: RED, margin: '0 0 8px' }}>Starter</p>
+                <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: RED, margin: '0 0 8px' }}>Pro</p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
                   <span style={{ fontSize: 48, fontWeight: 900, color: RED }}>
-                    {billingPeriod === 'monthly' ? '€4.99' : '€3.33'}
+                    {billingPeriod === 'monthly' ? '€9.99' : '€6.66'}
                   </span>
                   <span style={{ fontSize: 16, color: '#888' }}>/month</span>
                 </div>
                 {billingPeriod === 'yearly' && (
                   <p style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, margin: 0 }}>
-                    Billed €39.99/year
+                    Billed €79.99/year
                   </p>
                 )}
               </div>
 
               <div style={{ flex: 1, marginBottom: 24 }}>
                 {[
-                  '30 AI generations/month',
-                  '10 CV templates',
-                  'Save up to 50 programs',
-                  'Track 15 applications',
-                  'Email support (48h)',
+                  '20 AI credits every month',
+                  'All 20+ CV templates',
+                  'Premium access to CV, motivation letter, and cover letter tools',
+                  'Save programs to your shortlist',
+                  'Priority support',
                   'All free features included',
                 ].map((feature, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
@@ -252,8 +251,8 @@ export default function PricingPage() {
               <button
                 onClick={() => handleCheckout(
                   billingPeriod === 'monthly' 
-                    ? 'price_1THN5NBhIRngoSRXiAUcKhva' 
-                    : 'price_1THN5NBhIRngoSRX93yw0Txf',
+                    ? 'price_1THN89BhIRngoSRXQc7qKse' 
+                    : 'price_1THN89BhIRngoSRXlqKJkqhj',
                   'subscription'
                 )}
                 disabled={loading !== null}
@@ -275,135 +274,6 @@ export default function PricingPage() {
                 }}
               >
                 {loading ? <Loader2 size={18} className="animate-spin" /> : null}
-                Get Starter
-              </button>
-            </div>
-
-            {/* ESSENTIAL */}
-            <div style={{ background: '#fff', border: '1.5px solid #e5e5e5', borderRadius: 20, padding: 32, display: 'flex', flexDirection: 'column' }}>
-              <div style={{ marginBottom: 24 }}>
-                <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', margin: '0 0 8px' }}>Essential</p>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-                  <span style={{ fontSize: 48, fontWeight: 900, color: '#111' }}>
-                    {billingPeriod === 'monthly' ? '€9.99' : '€6.66'}
-                  </span>
-                  <span style={{ fontSize: 16, color: '#888' }}>/month</span>
-                </div>
-                {billingPeriod === 'yearly' && (
-                  <p style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, margin: 0 }}>
-                    Billed €79.99/year
-                  </p>
-                )}
-              </div>
-
-              <div style={{ flex: 1, marginBottom: 24 }}>
-                {[
-                  'Unlimited AI generations',
-                  'All 20+ CV templates (ATS-optimized)',
-                  'Unlimited program saves',
-                  'Unlimited application tracking',
-                  'Deadline reminders',
-                  '5 AI Chat messages/day',
-                  'AI program recommendations',
-                  'Email support (24h)',
-                ].map((feature, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
-                    <Check size={18} color="#22c55e" style={{ flexShrink: 0, marginTop: 2 }} />
-                    <span style={{ fontSize: 14, color: '#555', lineHeight: 1.5 }}>{feature}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={() => handleCheckout(
-                  billingPeriod === 'monthly' 
-                    ? 'price_1THN89BhIRngoSRXQc7qKse' 
-                    : 'price_1THN89BhIRngoSRXlqKJkqhj',
-                  'subscription'
-                )}
-                disabled={loading !== null}
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  borderRadius: 12,
-                  border: '2px solid #111',
-                  background: loading ? '#ccc' : '#111',
-                  color: '#fff',
-                  fontSize: 15,
-                  fontWeight: 700,
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  transition: 'all 0.2s',
-                }}
-              >
-                {loading ? <Loader2 size={18} className="animate-spin" /> : null}
-                Get Essential
-              </button>
-            </div>
-
-            {/* PRO */}
-            <div style={{ background: '#fff', border: '1.5px solid #e5e5e5', borderRadius: 20, padding: 32, display: 'flex', flexDirection: 'column' }}>
-              <div style={{ marginBottom: 24 }}>
-                <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', margin: '0 0 8px' }}>Pro</p>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-                  <span style={{ fontSize: 48, fontWeight: 900, color: '#111' }}>
-                    {billingPeriod === 'monthly' ? '€19.99' : '€12.49'}
-                  </span>
-                  <span style={{ fontSize: 16, color: '#888' }}>/month</span>
-                </div>
-                {billingPeriod === 'yearly' && (
-                  <p style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, margin: 0 }}>
-                    Billed €149.99/year
-                  </p>
-                )}
-              </div>
-
-              <div style={{ flex: 1, marginBottom: 24 }}>
-                {[
-                  'Everything in Essential',
-                  'Unlimited AI Chat Consultant',
-                  'Personalized visa & admission roadmap',
-                  'AI application document review',
-                  'Downloadable offline guides (PDF)',
-                  'Priority support (8h response)',
-                  'Early access to new tools',
-                ].map((feature, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
-                    <Check size={18} color="#22c55e" style={{ flexShrink: 0, marginTop: 2 }} />
-                    <span style={{ fontSize: 14, color: '#555', lineHeight: 1.5 }}>{feature}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={() => handleCheckout(
-                  billingPeriod === 'monthly' 
-                    ? 'price_1THNGmBhIRngoSRX4WNCJEX0' 
-                    : 'price_1THNGmBhIRngoSRXlNk14xBe',
-                  'subscription'
-                )}
-                disabled={loading !== null}
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  borderRadius: 12,
-                  border: '2px solid #111',
-                  background: loading ? '#ccc' : '#111',
-                  color: '#fff',
-                  fontSize: 15,
-                  fontWeight: 700,
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  transition: 'all 0.2s',
-                }}
-              >
-                {loading ? <Loader2 size={18} className="animate-spin" /> : null}
                 Get Pro
               </button>
             </div>
@@ -416,9 +286,9 @@ export default function PricingPage() {
             <h2 style={{ fontSize: 36, fontWeight: 900, color: '#111', margin: '0 0 12px' }}>
               Need more AI credits? Top up anytime.
             </h2>
-            <p style={{ fontSize: 16, color: '#666', margin: 0 }}>
-              One-time purchases. Credits never expire.
-            </p>
+          <p style={{ fontSize: 16, color: '#666', margin: 0 }}>
+              One-time purchases. Credits stack on top of your free or Pro monthly credits.
+          </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24, maxWidth: 900, margin: '0 auto' }}>

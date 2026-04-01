@@ -62,7 +62,7 @@ async function syncSubscriptionBenefits(
     data: { aiCredits: includedCredits },
   });
 
-  console.log(`[Webhook] Synced ${includedCredits} starter credits for user ${userId}`);
+  console.log(`[Webhook] Synced ${includedCredits} Pro credits for user ${userId}`);
 }
 
 export async function POST(req: NextRequest) {

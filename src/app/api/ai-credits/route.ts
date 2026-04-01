@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { getAiGenerationLimit } from '@/lib/plans';
+import { getAiGenerationLimit, normalizePlanType } from '@/lib/plans';
 
 export async function GET() {
   try {
@@ -12,7 +12,7 @@ export async function GET() {
 
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { id: true, subscription: { select: { planType: true } } },
+      select: { id: true, aiCredits: true, subscription: { select: { planType: true } } },
     });
 
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -22,7 +22,7 @@ export async function GET() {
       where: { userId_month: { userId: user.id, month } },
     });
 
-    const planType = user.subscription?.planType ?? 'free';
+    const planType = normalizePlanType(user.subscription?.planType ?? 'free');
     const limit = getAiGenerationLimit(planType);
 
     const used = usage
@@ -30,6 +30,17 @@ export async function GET() {
         (usage.motivationLetterGenerations ?? 0) +
         (usage.coverLetterGenerations ?? 0)
       : 0;
+
+    if (planType === 'pro') {
+      const remaining = Math.max(0, user.aiCredits);
+      return NextResponse.json({
+        used: Math.max(0, limit - remaining),
+        limit,
+        remaining,
+        planType,
+        month,
+      });
+    }
 
     return NextResponse.json({ used, limit, remaining: Math.max(0, limit - used), planType, month });
   } catch (err) {

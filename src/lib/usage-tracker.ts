@@ -1,6 +1,6 @@
 import { prisma } from './prisma';
 import { FREE_LIMITS, FREE_MONTHLY_TOTAL } from './stripe';
-import { getAiGenerationLimit, getRawPlanType, hasUnlimitedAi } from './plans';
+import { getAiGenerationLimit, getIncludedAiCredits, getRawPlanType, normalizePlanType } from './plans';
 
 type FeatureType = 'cv' | 'motivation' | 'cover' | 'search';
 
@@ -27,11 +27,8 @@ export async function checkUsageLimit(
   userId: string,
   feature: FeatureType
 ): Promise<{ allowed: boolean; current: number; limit: number; planType: string; credits?: number }> {
-  const planType = await getUserPlanType(userId);
-
-  if (hasUnlimitedAi(planType)) {
-    return { allowed: true, current: 0, limit: -1, planType };
-  }
+  const rawPlanType = await getUserPlanType(userId);
+  const planType = normalizePlanType(rawPlanType);
 
   // Check AI credits first
   const user = await prisma.user.findUnique({
@@ -40,10 +37,13 @@ export async function checkUsageLimit(
   });
 
   if (user && user.aiCredits > 0) {
-    return { allowed: true, current: 0, limit: -1, planType, credits: user.aiCredits };
+    const limit = getIncludedAiCredits(planType) ?? -1;
+    const current = limit > 0 ? Math.max(0, limit - user.aiCredits) : 0;
+    return { allowed: true, current, limit, planType, credits: user.aiCredits };
   }
 
-  if (planType === 'starter') {
+  const includedCredits = getIncludedAiCredits(planType);
+  if (includedCredits !== null) {
     const limit = getAiGenerationLimit(planType);
     return { allowed: false, current: limit, limit, planType, credits: 0 };
   }
@@ -105,10 +105,11 @@ export async function incrementUsage(userId: string, feature: FeatureType): Prom
 
 export async function getUserUsageStats(userId: string) {
   const month = getCurrentMonth();
-  const [planType, usage] = await Promise.all([
+  const [rawPlanType, usage] = await Promise.all([
     getUserPlanType(userId),
     prisma.usageLimits.findUnique({ where: { userId_month: { userId, month } } }),
   ]);
+  const planType = normalizePlanType(rawPlanType);
 
   return {
     planType,

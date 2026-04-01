@@ -1,13 +1,9 @@
 export type RawPlanType = 'free' | 'starter' | 'essential' | 'student' | 'pro';
-export type NormalizedPlanType = 'free' | 'starter' | 'essential' | 'pro';
+export type NormalizedPlanType = 'free' | 'pro';
 
 const FREE_TEMPLATE_COUNT = 2;
-const STARTER_TEMPLATE_COUNT = 10;
-const FREE_SHORTLIST_LIMIT = 10;
-const STARTER_SHORTLIST_LIMIT = 50;
-const FREE_APPLICATION_LIMIT = 3;
-const STARTER_APPLICATION_LIMIT = 15;
-const ESSENTIAL_DAILY_CHAT_LIMIT = 5;
+const FREE_AI_CREDIT_LIMIT = 3;
+const PRO_AI_CREDIT_LIMIT = 20;
 
 export function getRawPlanType(planType?: string | null): RawPlanType {
   switch (planType) {
@@ -25,101 +21,39 @@ export function getRawPlanType(planType?: string | null): RawPlanType {
 }
 
 export function normalizePlanType(planType?: string | null): NormalizedPlanType {
-  const rawPlanType = getRawPlanType(planType);
-  if (rawPlanType === 'student') return 'essential';
-  return rawPlanType;
+  return getRawPlanType(planType) === 'free' ? 'free' : 'pro';
 }
 
 export function getPlanDisplayName(planType?: string | null): string {
-  switch (getRawPlanType(planType)) {
-    case 'starter':
-      return 'Starter';
-    case 'essential':
-    case 'student':
-      return 'Essential';
-    case 'pro':
-      return 'Pro';
-    default:
-      return 'Free';
-  }
+  return normalizePlanType(planType) === 'pro' ? 'Pro' : 'Free';
 }
 
 export function hasUnlimitedAi(planType?: string | null): boolean {
-  const normalizedPlanType = normalizePlanType(planType);
-  return normalizedPlanType === 'essential' || normalizedPlanType === 'pro';
+  return false;
 }
 
 export function getAiGenerationLimit(planType?: string | null): number {
-  const normalizedPlanType = normalizePlanType(planType);
-
-  switch (normalizedPlanType) {
-    case 'starter':
-      return 30;
-    case 'essential':
-    case 'pro':
-      return 999;
-    default:
-      return 5;
-  }
+  return normalizePlanType(planType) === 'pro' ? PRO_AI_CREDIT_LIMIT : FREE_AI_CREDIT_LIMIT;
 }
 
 export function getIncludedAiCredits(planType?: string | null): number | null {
-  return normalizePlanType(planType) === 'starter' ? 30 : null;
+  return normalizePlanType(planType) === 'pro' ? PRO_AI_CREDIT_LIMIT : null;
 }
 
 export function getShortlistLimit(planType?: string | null): number | null {
-  const normalizedPlanType = normalizePlanType(planType);
-
-  switch (normalizedPlanType) {
-    case 'starter':
-      return STARTER_SHORTLIST_LIMIT;
-    case 'essential':
-    case 'pro':
-      return null;
-    default:
-      return FREE_SHORTLIST_LIMIT;
-  }
+  return null;
 }
 
 export function getApplicationTrackingLimit(planType?: string | null): number | null {
-  const normalizedPlanType = normalizePlanType(planType);
-
-  switch (normalizedPlanType) {
-    case 'starter':
-      return STARTER_APPLICATION_LIMIT;
-    case 'essential':
-    case 'pro':
-      return null;
-    default:
-      return FREE_APPLICATION_LIMIT;
-  }
+  return 0;
 }
 
 export function getAiChatDailyLimit(planType?: string | null): number | null {
-  const normalizedPlanType = normalizePlanType(planType);
-
-  switch (normalizedPlanType) {
-    case 'essential':
-      return ESSENTIAL_DAILY_CHAT_LIMIT;
-    case 'pro':
-      return null;
-    default:
-      return 0;
-  }
+  return 0;
 }
 
 export function getAccessibleTemplateCount(planType?: string | null): number {
-  const normalizedPlanType = normalizePlanType(planType);
-
-  switch (normalizedPlanType) {
-    case 'starter':
-      return STARTER_TEMPLATE_COUNT;
-    case 'essential':
-    case 'pro':
-      return Number.MAX_SAFE_INTEGER;
-    default:
-      return FREE_TEMPLATE_COUNT;
-  }
+  return normalizePlanType(planType) === 'pro' ? Number.MAX_SAFE_INTEGER : FREE_TEMPLATE_COUNT;
 }
 
 export function canAccessCvTemplate(planType: string | null | undefined, templateIndex: number): boolean {
@@ -128,6 +62,5 @@ export function canAccessCvTemplate(planType: string | null | undefined, templat
 
 export function getTemplateAccessLabel(templateIndex: number): string | null {
   if (templateIndex < FREE_TEMPLATE_COUNT) return null;
-  if (templateIndex < STARTER_TEMPLATE_COUNT) return 'Starter+ plan';
-  return 'Essential / Pro';
+  return 'Pro plan';
 }

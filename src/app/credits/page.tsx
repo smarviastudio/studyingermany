@@ -97,23 +97,15 @@ export default function CreditsPage() {
             Buy AI Credits
           </h1>
           <p style={{ fontSize: 18, color: '#737373', maxWidth: 600, margin: '0 auto 24px' }}>
-            Purchase AI credits to generate unlimited CVs, motivation letters, and cover letters
+            Buy extra AI credits for your CV, motivation letter, and cover letter generations
           </p>
           
-          {/* Current Balance */}
-          {hasUnlimited ? (
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: 'linear-gradient(135deg, #1e0a3c, #2d1457)', borderRadius: 16, padding: '14px 24px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
-              <Crown size={20} color="#fff" />
-              <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>Unlimited AI Generations (Active Subscription)</span>
-            </div>
-          ) : (
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fff', border: '2px solid #dd0000', borderRadius: 16, padding: '14px 24px', boxShadow: '0 4px 20px rgba(221,0,0,0.1)' }}>
-              <Zap size={20} color="#dd0000" />
-              <span style={{ fontSize: 15, fontWeight: 700, color: '#0a0a0a' }}>
-                Current Balance: <span style={{ color: '#dd0000' }}>{balance ?? 0} credits</span>
-              </span>
-            </div>
-          )}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fff', border: '2px solid #dd0000', borderRadius: 16, padding: '14px 24px', boxShadow: '0 4px 20px rgba(221,0,0,0.1)' }}>
+            {hasUnlimited ? <Crown size={20} color="#dd0000" /> : <Zap size={20} color="#dd0000" />}
+            <span style={{ fontSize: 15, fontWeight: 700, color: '#0a0a0a' }}>
+              Current Balance: <span style={{ color: '#dd0000' }}>{balance ?? 0} credits</span>
+            </span>
+          </div>
         </div>
 
         {/* Credit Bundles */}
@@ -215,9 +207,9 @@ export default function CreditsPage() {
         {/* Subscription CTA */}
         <div style={{ background: 'linear-gradient(135deg, #1e0a3c, #2d1457)', borderRadius: 24, padding: '40px 32px', textAlign: 'center', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
           <Crown size={40} color="#fff" style={{ margin: '0 auto 16px' }} />
-          <h3 style={{ fontSize: 24, fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>Want Unlimited AI Generations?</h3>
+          <h3 style={{ fontSize: 24, fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>Want 20 Monthly AI Credits?</h3>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.85)', margin: '0 0 24px', maxWidth: 600, marginLeft: 'auto', marginRight: 'auto' }}>
-            Subscribe to our Student or Pro plan for unlimited AI generations, priority support, and all premium features.
+            Upgrade to Pro for 20 monthly AI credits, all templates, and premium access to the document tools.
           </p>
           <Link
             href="/pricing"

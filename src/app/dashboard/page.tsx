@@ -213,7 +213,7 @@ export default function DashboardPage() {
 
         {/* Quick Stats Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <Link href="/my-applications" className="bg-white rounded-2xl p-5 border border-slate-200 hover:border-red-300 hover:shadow-lg transition-all group">
+          <Link href="/my-shortlist" className="bg-white rounded-2xl p-5 border border-slate-200 hover:border-red-300 hover:shadow-lg transition-all group">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
                 <Bookmark className="w-5 h-5 text-red-600" />
@@ -268,9 +268,9 @@ export default function DashboardPage() {
                       <Zap className="w-5 h-5 text-yellow-400" />
                       <span className="text-sm font-medium text-slate-300">Free Plan</span>
                     </div>
-                    <h3 className="text-lg font-semibold mb-1">Upgrade for unlimited AI</h3>
+                    <h3 className="text-lg font-semibold mb-1">Upgrade to Pro</h3>
                     <p className="text-sm text-slate-400">
-                      {usage ? `${usage.cv + usage.motivation + usage.cover}/5 generations used` : 'Get unlimited AI documents & premium templates'}
+                      {usage ? `${usage.cv + usage.motivation + usage.cover}/3 credits used` : 'Get 20 monthly AI credits and all premium templates'}
                     </p>
                   </div>
                   <Link href="/pricing" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-slate-900 rounded-xl font-semibold text-sm hover:bg-slate-100 transition-colors shrink-0">
@@ -342,17 +342,14 @@ export default function DashboardPage() {
               <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
                   <h2 className="font-semibold text-slate-900">Recently Saved</h2>
-                  <Link href="/my-applications" className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-1">
+                  <Link href="/my-shortlist" className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-1">
                     View all <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
                 <div className="divide-y divide-slate-100">
                   {shortlistEntries.slice(0, 3).map((entry) => {
-                    const plan = getPlanFor(entry.programId);
-                    const pct = plan ? Math.round((plan.completed / plan.total) * 100) : 0;
-                    const planLink = plan ? `/my-applications/${entry.programId}` : `/my-applications/${entry.programId}?new=1`;
                     return (
-                      <Link key={entry.id} href={planLink} className="block p-4 hover:bg-slate-50 transition-colors" style={{ textDecoration: 'none' }}>
+                      <Link key={entry.id} href="/my-shortlist" className="block p-4 hover:bg-slate-50 transition-colors" style={{ textDecoration: 'none' }}>
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
                             <GraduationCap className="w-5 h-5 text-slate-600" />
@@ -363,17 +360,6 @@ export default function DashboardPage() {
                           </div>
                           <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
                         </div>
-                        {plan && (
-                          <div className="mt-3 ml-14">
-                            <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-                              <span>Progress</span>
-                              <span className="font-medium">{pct}%</span>
-                            </div>
-                            <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                              <div className="h-full bg-gradient-to-r from-red-500 to-purple-600 rounded-full" style={{ width: `${pct}%` }} />
-                            </div>
-                          </div>
-                        )}
                       </Link>
                     );
                   })}
