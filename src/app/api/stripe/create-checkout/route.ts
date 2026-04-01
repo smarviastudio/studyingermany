@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       apiVersion: '2026-02-25.clover',
     });
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.germanpath.com';
 
     console.log('Creating Stripe session with:', { mode, priceId, baseUrl });
     
@@ -46,7 +46,10 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    const session = await stripe.checkout.sessions.create({
+    // Get userId from session if user is logged in
+    const userId = request.headers.get('x-user-id') || undefined;
+    
+    const sessionConfig: Stripe.Checkout.SessionCreateParams = {
       mode: mode as 'subscription' | 'payment',
       line_items: [
         {
@@ -54,11 +57,29 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${baseUrl}/pricing?success=true`,
+      success_url: `${baseUrl}/dashboard?success=true`,
       cancel_url: `${baseUrl}/pricing?canceled=true`,
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
-    });
+    };
+
+    // Add metadata if userId exists
+    if (userId) {
+      sessionConfig.metadata = { userId };
+      if (mode === 'payment') {
+        // For credit purchases, add credits to metadata
+        const creditsMap: Record<string, string> = {
+          'price_1THNNCBhIRngoSRXEd8VpVkv': '20',
+          'price_1THNNCBhIRngoSRXR97jnrrf': '100',
+          'price_1THNNCBhIRngoSRXROohsxsl': '300',
+        };
+        if (creditsMap[priceId]) {
+          sessionConfig.metadata.credits = creditsMap[priceId];
+        }
+      }
+    }
+    
+    const session = await stripe.checkout.sessions.create(sessionConfig);
 
     console.log('Stripe session created:', session.id);
     return NextResponse.json({ url: session.url });
