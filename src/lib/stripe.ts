@@ -55,10 +55,25 @@ export function getPlans() {
   } as const;
 }
 
-export function getPlanTypeFromPriceId(priceId: string): 'student' | 'pro' | 'free' {
+export function getPlanTypeFromPriceId(priceId: string): 'starter' | 'essential' | 'pro' | 'free' {
+  // Map test price IDs to plan types
+  const priceIdMap: Record<string, 'starter' | 'essential' | 'pro'> = {
+    'price_1THN5NBhIRngoSRXiAUcKhva': 'starter', // Starter monthly
+    'price_1THN5NBhIRngoSRX93yw0Txf': 'starter', // Starter yearly
+    'price_1THN89BhIRngoSRXQc7qKse': 'essential', // Essential monthly
+    'price_1THN89BhIRngoSRXlqKJkqhj': 'essential', // Essential yearly
+    'price_1THNGmBhIRngoSRX4WNCJEX0': 'pro', // Pro monthly
+    'price_1THNGmBhIRngoSRXlNk14xBe': 'pro', // Pro yearly
+  };
+  
+  if (priceIdMap[priceId]) {
+    return priceIdMap[priceId];
+  }
+  
+  // Fallback to old logic
   const plans = getPlans();
   for (const plan of Object.values(plans)) {
-    if (plan.priceId === priceId) return plan.planType as 'student' | 'pro';
+    if (plan.priceId === priceId) return plan.planType as 'starter' | 'essential' | 'pro';
   }
   return 'free';
 }

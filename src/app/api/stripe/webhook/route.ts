@@ -63,8 +63,22 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
-        const userId = session.metadata?.userId;
-        if (!userId) break;
+        
+        // Get userId from metadata or find by email
+        let userId = session.metadata?.userId;
+        
+        if (!userId && session.customer_details?.email) {
+          const user = await prisma.user.findUnique({
+            where: { email: session.customer_details.email },
+            select: { id: true },
+          });
+          userId = user?.id;
+        }
+        
+        if (!userId) {
+          console.error('[Webhook] No userId found for session:', session.id);
+          break;
+        }
 
         // Handle credit purchases (one-time payments)
         if (session.mode === 'payment' && session.metadata?.credits) {
@@ -95,7 +109,33 @@ export async function POST(req: NextRequest) {
           const subscription = await stripe.subscriptions.retrieve(
             session.subscription as string
           );
+          
+          // Add userId to subscription metadata for future webhook events
+          await stripe.subscriptions.update(subscription.id, {
+            metadata: { userId },
+          });
+          
           await upsertSubscription(userId, subscription);
+          
+          // Give initial credits based on plan
+          const priceId = subscription.items.data[0]?.price?.id;
+          const planCredits: Record<string, number> = {
+            'price_1THN5NBhIRngoSRXiAUcKhva': 30, // Starter monthly
+            'price_1THN5NBhIRngoSRX93yw0Txf': 30, // Starter yearly
+            'price_1THN89BhIRngoSRXQc7qKse': 999999, // Essential monthly (unlimited)
+            'price_1THN89BhIRngoSRXlqKJkqhj': 999999, // Essential yearly (unlimited)
+            'price_1THNGmBhIRngoSRX4WNCJEX0': 999999, // Pro monthly (unlimited)
+            'price_1THNGmBhIRngoSRXlNk14xBe': 999999, // Pro yearly (unlimited)
+          };
+          
+          if (priceId && planCredits[priceId]) {
+            await prisma.user.update({
+              where: { id: userId },
+              data: { aiCredits: planCredits[priceId] },
+            });
+            console.log(`[Webhook] Set ${planCredits[priceId]} credits for plan ${priceId}`);
+          }
+          
           console.log(`[Webhook] Subscription created for user ${userId}`);
         }
         break;
