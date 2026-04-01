@@ -34,6 +34,18 @@ export async function POST(request: NextRequest) {
 
     console.log('Creating Stripe session with:', { mode, priceId, baseUrl });
     
+    // First, verify the price exists
+    try {
+      const price = await stripe.prices.retrieve(priceId);
+      console.log('Price retrieved successfully:', { id: price.id, type: price.type, active: price.active });
+    } catch (priceError) {
+      console.error('Failed to retrieve price:', priceError);
+      return NextResponse.json(
+        { error: 'Invalid price ID: ' + (priceError instanceof Error ? priceError.message : 'Unknown error') },
+        { status: 400 }
+      );
+    }
+    
     const session = await stripe.checkout.sessions.create({
       mode: mode as 'subscription' | 'payment',
       line_items: [
