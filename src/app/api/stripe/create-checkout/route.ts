@@ -1,10 +1,21 @@
 export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
 import Stripe from 'stripe';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if user is authenticated
+    const userSession = await auth();
+    
+    if (!userSession?.user?.email || !userSession?.user?.id) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     console.log('Request body:', body);
     
@@ -46,11 +57,13 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Get userId from session if user is logged in
-    const userId = request.headers.get('x-user-id') || undefined;
+    // Use authenticated user's data
+    const userId = userSession.user.id;
+    const userEmail = userSession.user.email;
     
     const sessionConfig: Stripe.Checkout.SessionCreateParams = {
       mode: mode as 'subscription' | 'payment',
+      customer_email: userEmail,
       line_items: [
         {
           price: priceId,
@@ -61,28 +74,25 @@ export async function POST(request: NextRequest) {
       cancel_url: `${baseUrl}/pricing?canceled=true`,
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
+      metadata: { userId },
     };
 
-    // Add metadata if userId exists
-    if (userId) {
-      sessionConfig.metadata = { userId };
-      if (mode === 'payment') {
-        // For credit purchases, add credits to metadata
-        const creditsMap: Record<string, string> = {
-          'price_1THNNCBhIRngoSRXEd8VpVkv': '20',
-          'price_1THNNCBhIRngoSRXR97jnrrf': '100',
-          'price_1THNNCBhIRngoSRXROohsxsl': '300',
-        };
-        if (creditsMap[priceId]) {
-          sessionConfig.metadata.credits = creditsMap[priceId];
-        }
+    // Add credits metadata for one-time purchases
+    if (mode === 'payment') {
+      const creditsMap: Record<string, string> = {
+        'price_1THNNCBhIRngoSRXEd8VpVkv': '20',
+        'price_1THNNCBhIRngoSRXR97jnrrf': '100',
+        'price_1THNNCBhIRngoSRXROohsxsl': '300',
+      };
+      if (creditsMap[priceId]) {
+        sessionConfig.metadata!.credits = creditsMap[priceId];
       }
     }
     
-    const session = await stripe.checkout.sessions.create(sessionConfig);
+    const stripeSession = await stripe.checkout.sessions.create(sessionConfig);
 
-    console.log('Stripe session created:', session.id);
-    return NextResponse.json({ url: session.url });
+    console.log('Stripe session created:', stripeSession.id);
+    return NextResponse.json({ url: stripeSession.url });
   } catch (error) {
     console.error('Stripe checkout error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';

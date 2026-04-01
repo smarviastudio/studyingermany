@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Check, X, Zap, Star, Crown, Shield, RefreshCw, Globe, MessageCircle, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
@@ -8,11 +10,38 @@ import { SiteNav } from '@/components/SiteNav';
 const RED = '#dd0000';
 
 export default function PricingPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('yearly');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [loading, setLoading] = useState<string | null>(null);
 
+  // Handle pending checkout after login
+  useEffect(() => {
+    if (status === 'authenticated') {
+      const pending = sessionStorage.getItem('pendingCheckout');
+      if (pending) {
+        sessionStorage.removeItem('pendingCheckout');
+        const { priceId, mode } = JSON.parse(pending);
+        handleCheckout(priceId, mode);
+      }
+    }
+  }, [status]);
+
   const handleCheckout = async (priceId: string, mode: 'subscription' | 'payment') => {
+    // Check if user is logged in
+    if (status === 'unauthenticated') {
+      // Store the intended purchase in sessionStorage
+      sessionStorage.setItem('pendingCheckout', JSON.stringify({ priceId, mode }));
+      // Redirect to login with callback to pricing page
+      router.push('/auth/signin?callbackUrl=/pricing');
+      return;
+    }
+
+    if (status === 'loading') {
+      return; // Wait for session to load
+    }
+
     console.log('handleCheckout called with:', { priceId, mode });
     setLoading(priceId);
     try {
