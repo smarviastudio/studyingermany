@@ -18,8 +18,37 @@ export async function upsertStripeSubscription(
   const planType = getPlanTypeFromPriceId(priceId);
   
   // Stripe uses Unix timestamps (seconds), convert to milliseconds for Date
-  const currentPeriodStart = new Date((stripeSubscription as any).current_period_start * 1000);
-  const currentPeriodEnd = new Date((stripeSubscription as any).current_period_end * 1000);
+  // Access the properties directly from the object
+  const subscriptionData = stripeSubscription as any;
+  const periodStartTimestamp = subscriptionData.current_period_start || subscriptionData.currentPeriodStart;
+  const periodEndTimestamp = subscriptionData.current_period_end || subscriptionData.currentPeriodEnd;
+  
+  console.log('[Stripe Sync] Subscription data:', {
+    id: stripeSubscription.id,
+    periodStartTimestamp,
+    periodEndTimestamp,
+    keys: Object.keys(stripeSubscription).filter(k => k.includes('period')),
+  });
+  
+  if (!periodStartTimestamp || !periodEndTimestamp) {
+    console.error('[Stripe Sync] Missing period timestamps:', {
+      subscription: stripeSubscription,
+    });
+    throw new Error('Missing period timestamps from Stripe subscription');
+  }
+  
+  const currentPeriodStart = new Date(periodStartTimestamp * 1000);
+  const currentPeriodEnd = new Date(periodEndTimestamp * 1000);
+  
+  if (isNaN(currentPeriodStart.getTime()) || isNaN(currentPeriodEnd.getTime())) {
+    console.error('[Stripe Sync] Invalid dates:', {
+      periodStartTimestamp,
+      periodEndTimestamp,
+      currentPeriodStart,
+      currentPeriodEnd,
+    });
+    throw new Error('Invalid date conversion from Stripe timestamps');
+  }
 
   await prisma.subscription.upsert({
     where: { userId },
