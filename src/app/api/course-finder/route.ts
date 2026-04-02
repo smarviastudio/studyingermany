@@ -5,11 +5,11 @@ import { SearchFiltersSchema } from '@/lib/types';
 
 const CourseFinderRequestSchema = z.object({
   query: z.string().min(5, 'Please describe what you want to study'),
-  limit: z.number().min(1).max(50).optional(),
+  limit: z.number().min(1).max(120).optional(),
   timestamp: z.number().optional()
 });
 
-const DEFAULT_RESULTS_LIMIT = 24;
+const DEFAULT_RESULTS_LIMIT = 120;
 
 type CourseFinderAIResponse = {
   query_text?: string;
