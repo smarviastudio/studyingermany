@@ -17,38 +17,39 @@ export async function upsertStripeSubscription(
   const priceId = stripeSubscription.items.data[0]?.price?.id ?? '';
   const planType = getPlanTypeFromPriceId(priceId);
   
-  // Stripe uses Unix timestamps (seconds), convert to milliseconds for Date
-  // Access the properties directly from the object
+  // Calculate period dates from billing_cycle_anchor and interval
   const subscriptionData = stripeSubscription as any;
-  const periodStartTimestamp = subscriptionData.current_period_start || subscriptionData.currentPeriodStart;
-  const periodEndTimestamp = subscriptionData.current_period_end || subscriptionData.currentPeriodEnd;
+  const startTimestamp = subscriptionData.start_date || subscriptionData.billing_cycle_anchor || subscriptionData.created;
   
-  console.log('[Stripe Sync] Subscription data:', {
+  // Get interval from plan (month, year, etc.)
+  const interval = subscriptionData.plan?.interval || 'month';
+  const intervalCount = subscriptionData.plan?.interval_count || 1;
+  
+  // Calculate end date based on interval
+  const startDate = new Date(startTimestamp * 1000);
+  const endDate = new Date(startDate);
+  
+  if (interval === 'month') {
+    endDate.setMonth(endDate.getMonth() + intervalCount);
+  } else if (interval === 'year') {
+    endDate.setFullYear(endDate.getFullYear() + intervalCount);
+  } else if (interval === 'week') {
+    endDate.setDate(endDate.getDate() + (7 * intervalCount));
+  } else if (interval === 'day') {
+    endDate.setDate(endDate.getDate() + intervalCount);
+  }
+  
+  const currentPeriodStart = startDate;
+  const currentPeriodEnd = endDate;
+  
+  console.log('[Stripe Sync] Calculated periods:', {
     id: stripeSubscription.id,
-    periodStartTimestamp,
-    periodEndTimestamp,
-    keys: Object.keys(stripeSubscription).filter(k => k.includes('period')),
+    startTimestamp,
+    interval,
+    intervalCount,
+    currentPeriodStart: currentPeriodStart.toISOString(),
+    currentPeriodEnd: currentPeriodEnd.toISOString(),
   });
-  
-  if (!periodStartTimestamp || !periodEndTimestamp) {
-    console.error('[Stripe Sync] Missing period timestamps:', {
-      subscription: stripeSubscription,
-    });
-    throw new Error('Missing period timestamps from Stripe subscription');
-  }
-  
-  const currentPeriodStart = new Date(periodStartTimestamp * 1000);
-  const currentPeriodEnd = new Date(periodEndTimestamp * 1000);
-  
-  if (isNaN(currentPeriodStart.getTime()) || isNaN(currentPeriodEnd.getTime())) {
-    console.error('[Stripe Sync] Invalid dates:', {
-      periodStartTimestamp,
-      periodEndTimestamp,
-      currentPeriodStart,
-      currentPeriodEnd,
-    });
-    throw new Error('Invalid date conversion from Stripe timestamps');
-  }
 
   await prisma.subscription.upsert({
     where: { userId },
