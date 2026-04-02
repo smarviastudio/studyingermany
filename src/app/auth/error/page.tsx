@@ -18,6 +18,8 @@ export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps
         return 'Access denied. You do not have permission to sign in.';
       case 'Verification':
         return 'The verification token has expired or has already been used.';
+      case 'InvalidCheck':
+        return 'This login attempt is stale or was started twice. Go back to the sign-in page and try again once.';
       default:
         return 'An error occurred during authentication. Please try again.';
     }
@@ -114,7 +116,7 @@ export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps
           </Link>
         </div>
 
-        {error === 'Configuration' && (
+        {(error === 'Configuration' || error === 'InvalidCheck') && (
           <p style={{
             marginTop: '24px',
             padding: '12px',
@@ -124,7 +126,7 @@ export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps
             color: '#92400e',
             lineHeight: '1.5'
           }}>
-            <strong>Note:</strong> Google OAuth may not be configured properly. Please check your environment variables (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET) and callback URL settings.
+            <strong>Note:</strong> If you see this after clicking Google sign-in, the browser likely reused an old OAuth state cookie. Close the tab, return to sign in, and try again once.
           </p>
         )}
       </div>

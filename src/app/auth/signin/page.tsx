@@ -27,6 +27,7 @@ function SignInPageContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
 
   // Redirect if already authenticated
@@ -79,6 +80,18 @@ function SignInPageContent() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    if (googleLoading) return;
+    setGoogleLoading(true);
+    setError('');
+    try {
+      await signIn('google', { callbackUrl });
+    } catch {
+      setError('Google sign-in could not be started. Please try again.');
+      setGoogleLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f7f7f3] text-[#171717]" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 px-6 py-16 items-center">
@@ -112,11 +125,21 @@ function SignInPageContent() {
           <h2 className="text-xl font-semibold mb-6">Sign in</h2>
           <button
             type="button"
-            onClick={() => signIn('google', { callbackUrl })}
-            className="w-full border border-[#e0e0e0] bg-white text-[#111] font-semibold py-3 rounded-2xl transition-all flex items-center justify-center gap-2 mb-5 hover:border-[#dd0000]/60"
+            onClick={handleGoogleSignIn}
+            disabled={googleLoading}
+            className="w-full border border-[#e0e0e0] bg-white text-[#111] font-semibold py-3 rounded-2xl transition-all flex items-center justify-center gap-2 mb-5 hover:border-[#dd0000]/60 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" className="w-5 h-5" />
-            Continue with Google
+            {googleLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Redirecting...
+              </>
+            ) : (
+              <>
+                <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" className="w-5 h-5" />
+                Continue with Google
+              </>
+            )}
           </button>
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
