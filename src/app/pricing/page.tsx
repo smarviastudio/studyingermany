@@ -10,7 +10,7 @@ import { SiteNav } from '@/components/SiteNav';
 const RED = '#dd0000';
 
 export default function PricingPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('yearly');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -32,7 +32,14 @@ export default function PricingPage() {
     // Check if user is logged in
     if (status === 'unauthenticated') {
       // Store the intended purchase in sessionStorage
-      sessionStorage.setItem('pendingCheckout', JSON.stringify({ planKey: planKeyOrPriceId, mode }));
+      sessionStorage.setItem(
+        'pendingCheckout',
+        JSON.stringify(
+          mode === 'subscription'
+            ? { planKey: planKeyOrPriceId, mode }
+            : { priceId: planKeyOrPriceId, mode }
+        )
+      );
       // Redirect to login with callback to pricing page
       router.push('/auth/signin?callbackUrl=/pricing');
       return;
@@ -45,7 +52,11 @@ export default function PricingPage() {
     console.log('handleCheckout called with:', { planKeyOrPriceId, mode });
     setLoading(planKeyOrPriceId);
     try {
-      const body = JSON.stringify({ planKey: planKeyOrPriceId, mode });
+      const payload =
+        mode === 'subscription'
+          ? { planKey: planKeyOrPriceId, mode }
+          : { priceId: planKeyOrPriceId, mode };
+      const body = JSON.stringify(payload);
       console.log('Sending body:', body);
       
       const res = await fetch('/api/stripe/create-checkout', {
