@@ -1,0 +1,1146 @@
+"�""id""",program_name,university,city,detail_url,image_url,degree_level,degree_level_normalized,degree_type_raw,subject_area,tags_array,tuition_fee_number,tuition_fee_currency,tuition_eur_min,tuition_eur_max,is_free,price_on_request,beginning_normalized,intake_terms,intake_months,application_deadline,duration_months,duration_semesters,ects_credits,languages_array,language_requirements,requirements,documents_required,language_certificates,academic_requirements,minimum_gpa,work_experience_required,description,programme_duration,is_elearning,is_complete_online_possible,financial_support,support_international_students,tab_overview,tab_course_details,tab_costs_funding,tab_requirements_registration,tab_services,scraped_at,api_source,last_updated,quality_warnings,completeness_score,language_proficiency_required,ielts_min_score,toefl_min_score,other_language_tests,german_min_level,english_min_level,language_notes,academic_background_requirements,support_services_summary,support_services_list,tuition_exact_eur,tuition_min_eur,tuition_max_eur,tuition_notes,semester_fee_eur,semester_fee_notes,living_expenses_month_eur,living_expenses_notes,min_ects_required,academic_notes,registration_deadline_date,registration_deadline_text,application_channel,application_channel_notes,scholarship_available,scholarship_notes,documents_required_list,ai_course_summary,city_expats_overview,accommodation_outlook,job_market_demand,city_living_costs,german_daily_life_requirement,english_livability,ai_city_fit_score,university_profile,how_to_apply,subjects,validation_issues
+4889,75th International Summer Course,Kiel University,Kiel,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4889/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/6458c768e4f25441646882.jpeg,language_course,language_course,Language course,arts,"['literature', 'german language course (including literature and culture studies)']",1.3,EUR,1.3,1.3,False,False,,['summer'],[7],2026-05-15,,,,['german'],"{'german': 'B1, B2, C1'}","Teaching language
+German
+Language level of course
+German:
+B1, B2, C1
+Language requirements
+Participants should have good basic German language skills (level A 2.2 should already be completed).
+Submit application to
+Andreas Ritter
+International Center
+Kiel University
+Westring 400
+24118 Kiel
+Germany",[],[],,,False,"Course location Kiel Teaching language German Language level of course German: B1, B2, C1 Date(s) 20 July - 14 August 2026 (Registration deadline of course provider: 15 May 2026) Target group Students and graduates from foreign higher education institutions and universities who want to improve their German language skills and learn more about the city of Kiel and Northern Germany Description/content German language course (approx. 20  25 hours per week): intermediate and advanced courses at fou...",,False,False,,,"Course location
+Kiel
+Teaching language
+German
+Language level of course
+German: B1, B2, C1
+Date(s)
+20 July - 14 August 2026 (Registration deadline of course provider: 15 May 2026)
+Target group
+Students and graduates from foreign higher education institutions and universities who want to improve their German language skills and learn more about the city of Kiel and Northern Germany
+Description/content
+German language course (approx. 20  25 hours per week): intermediate and advanced courses at four different levels conducted in German
+Several city tours in Kiel on selected topics of the city's history
+Regional excursions: excursions led by regional experts, offered to give participants an impression of Northern Germany, its landscape, art, and culture; day trips to the cities of Hamburg and L�beck as well as a trip to the North Sea coast",,"Dates and costs
+20 July - 14 August 2026 (Registration deadline of course provider: 15 May 2026),
+costs: EUR 1,300
+This price includes
+Course fees
+Accommodation
+Accompanying programme","Teaching language
+German
+Language level of course
+German:
+B1, B2, C1
+Language requirements
+Participants should have good basic German language skills (level A 2.2 should already be completed).
+Submit application to
+Andreas Ritter
+International Center
+Kiel University
+Westring 400
+24118 Kiel
+Germany","Is accommodation organised?
+Accommodation is arranged by the organiser.
+Type of accommodation
+Accommodation is provided in a student dormitory. All rooms are single rooms with their own shower and toilet.
+Meals
+No meals are included. For lunch, students can buy inexpensive food at the university cafeteria.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+The course programme is complemented by welcome and farewell receptions and some cultural events in Kiel (included in the course fee).
+Free internet access
+Yes
+Support in visa matters
+No
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818877+00:00,daad_api,2026-02-01T17:42:20.508349,"['Limited course details available', 'Program duration not specified']",0.7000000000000001,True,,,[],C1,,"Participants should have good basic German language skills (level A2.2 should already be completed). Course offered at B1, B2, and C1 levels.",Students and graduates from foreign higher education institutions and universities,"Accommodation arranged in student dormitory with single rooms. Welcome and farewell receptions included. Cultural events in Kiel. City tours and regional excursions to Hamburg, L�beck, and North Sea coast. Free internet access. No visa support or airport pickup.","[""Accommodation in student dormitory"", ""Welcome reception"", ""Farewell reception"", ""Cultural events in Kiel"", ""City tours on Kiel history"", ""Regional excursions to Hamburg and L�beck"", ""Day trip to North Sea coast"", ""Free internet access""]",1300,,,"EUR 1,300 for 4-week summer course (20 July - 14 August 2026). Includes course fees, accommodation, and accompanying programme. Meals not included.",,,,Meals not included; inexpensive food available at university cafeteria,,Target group is students and graduates from foreign higher education institutions,2026-05-15,Registration deadline: 15 May 2026,direct-university,"Submit application to Andreas Ritter, International Center, Kiel University, Westring 400, 24118 Kiel, Germany",False,,"[""Application form""]","{""overview"": ""This 4-week intensive German summer course at Kiel University combines 20-25 hours of weekly language instruction with cultural immersion through city tours and regional excursions. Designed for international students and graduates with intermediate German skills seeking to improve their proficiency while exploring Northern Germany."", ""modules"": [""Intensive German language instruction (B1-C1 levels)"", ""Kiel city tours focusing on local history"", ""Day trips to Hamburg and Lübeck"", ""North Sea coast excursion"", ""Cultural events and social activities""], ""subjects"": [""german language"", ""cultural studies"", ""language education""], ""requirements"": {""academic_background"": ""Current students or graduates from foreign universities; no specific field required"", ""language"": ""Minimum German A2.2 completed; course offers B1, B2, and C1 level instruction"", ""documents"": [""application form"", ""CV/resume"", ""transcript of records"", ""passport copy""], ""extra"": ""Registration deadline: May 15, 2026; no visa support provided""}, ""costs"": {""tuition"": ""€1,300 total (includes course fees, accommodation, and cultural program)"", ""semester_fee"": ""Not applicable for summer course"", ""living_expenses"": ""Food not included; budget €200-300/month for meals and personal expenses"", ""funding"": ""No scholarship information provided""}, ""takeaways"": [""All-inclusive package with single room accommodation and extensive cultural program at competitive price"", ""Perfect blend of intensive language learning with Northern German cultural immersion"", ""Strategic location for exploring Hamburg, Lübeck, and Baltic Sea region""], ""how_to_apply"": ""Submit application directly to Andreas Ritter at International Center, Kiel University, Westring 400, 24118 Kiel, Germany by May 15, 2026."", ""city_expats_overview"": ""Kiel is a maritime university city on the Baltic Sea, known for its sailing culture and relaxed atmosphere. The city has a modest but welcoming international community centered around the university and marine research institutes."", ""accommodation_outlook"": ""Accommodation is included in the program fee - single rooms with private bathroom in student dormitory. Outside the program, Kiel offers affordable housing with WG rooms €300-450/month and studios €500-700/month."", ""job_market_demand"": ""Limited job opportunities for non-German speakers during short summer course. Kiel's economy focuses on maritime industries, renewable energy, and marine sciences, with better prospects for those with strong German skills."", ""city_living_costs"": ""Kiel is relatively affordable with monthly living costs around €800-1,000 including rent. Student cafeterias offer meals for €3-5, and the compact city center reduces transportation costs."", ""german_daily_life_requirement"": ""B1 German minimum recommended for comfortable daily life in Kiel. While the university area is somewhat international, shops, services, and social activities primarily operate in German."", ""english_livability"": ""English-only living is challenging in Kiel outside university settings. Most locals speak some English but German is essential for housing matters, bureaucracy, and integrating into local life beyond campus."", ""ai_city_fit_score"": 3, ""university_profile"": ""Kiel University (CAU) is a respected research university founded in 1665, particularly strong in marine sciences, medicine, and Baltic region studies. The International Center provides good support for international students, though the university maintains a primarily German-language academic environment outside specialized programs.""}","Kiel is a maritime university city on the Baltic Sea, known for its sailing culture and relaxed atmosphere. The city has a modest but welcoming international community centered around the university and marine research institutes.","Accommodation is included in the program fee - single rooms with private bathroom in student dormitory. Outside the program, Kiel offers affordable housing with WG rooms €300-450/month and studios €500-700/month.","Limited job opportunities for non-German speakers during short summer course. Kiel's economy focuses on maritime industries, renewable energy, and marine sciences, with better prospects for those with strong German skills.","Kiel is relatively affordable with monthly living costs around €800-1,000 including rent. Student cafeterias offer meals for €3-5, and the compact city center reduces transportation costs.","B1 German minimum recommended for comfortable daily life in Kiel. While the university area is somewhat international, shops, services, and social activities primarily operate in German.","English-only living is challenging in Kiel outside university settings. Most locals speak some English but German is essential for housing matters, bureaucracy, and integrating into local life beyond campus.",3,"Kiel University (CAU) is a respected research university founded in 1665, particularly strong in marine sciences, medicine, and Baltic region studies. The International Center provides good support for international students, though the university maintains a primarily German-language academic environment outside specialized programs.","Submit application directly to Andreas Ritter at International Center, Kiel University, Westring 400, 24118 Kiel, Germany by May 15, 2026.","[""german language"", ""cultural studies"", ""language education""]",
+10476,52nd Trier International Summer School: Germany and its Neighbouring Countries 2025,Trier University,Trier,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/10476/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/6813b64cd845f.jpeg,short_course,short_course,Short course and language course,languages,"['german as a foreign language', 'language', 'german']",0,EUR,,,True,False,,['summer'],[8],2026-07-15,,,,['german'],"{'german': 'A1, A2, B1, B2, C1'}","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+If you are an absolute beginner in German, then you need to have at least a B1 level of English, so that basic communication is possible for administrative matters.
+Submit application to
+http://www.iss.uni-trier.de",[],[],,,False,"Course location Trier Teaching language German Language level of course German: A1, A2, B1, B2, C1 Date(s) 3 August - 28 August 2026 (Registration deadline of course provider: 15 July 2026) Target group Students and graduates of all subjects Description/content 1. Language courses The language courses cover elementary, intermediate, and advanced levels (A1, A2, B1, B2, C1). There are a total of 75 hours (at 45 min.) of lessons. The main goal is to expand practical language skills in the areas of...",,False,False,,,"Course location
+Trier
+Teaching language
+German
+Language level of course
+German: A1, A2, B1, B2, C1
+Date(s)
+3 August - 28 August 2026 (Registration deadline of course provider: 15 July 2026)
+Target group
+Students and graduates of all subjects
+Description/content
+1. Language courses
+The language courses cover elementary, intermediate, and advanced levels (A1, A2, B1, B2, C1). There are a total of 75 hours (at 45 min.) of lessons. The main goal is to expand practical language skills in the areas of reading and listening comprehension as well as speaking and writing. The courses also focus on improving grammatical, lexical, and idiomatic skills. Authentic real-world texts are used from literature, science, and�media, including TV and radio news. This course helps students learn German so that they can study in Germany.
+All students will take a placement test on the first day of class. The course concludes with a final test, after which a certificate (worth five ECTS points) will be awarded.
+2. Didactics and methodology of teaching and learning German as a foreign language (DaF)
+Special classes are offered for teachers of German and students of German studies with an interest in intercultural subjects. In these classes, current didactic methods and pedagogical concepts in the field of German as a foreign language will be discussed. Among other topics, the focus will be on media didactics, e-learning, intercultural didactics, and new teaching materials (approx. 28 hours).
+If participants additionally attend the language course for advanced learners of German (C1) as well as the academic seminars and lectures, they will be awarded a certificate (""Zertifikat Didaktik und Methodik Deutsch als Fremdsprache"") upon successful completion of the course.
+3. Academic lecture and seminar programme
+An interdisciplinary lecture and seminar programme is provided by the Departments of Language and Literature, Politics and History, Social Science and Economics (approx. 12 hours in total, 45 minutes each).
+(For students at an elementary level (A1, A2, B1), conversation classes are offered instead.)
+4. Cultural programme
+Cultural events and excursions to the Moselle region, Luxembourg, and France complement the language courses and lectures.",,"Dates and costs
+3 August - 28 August 2026 (Registration deadline of course provider: 15 July 2026),
+costs: EUR 790
+This price includes
+Course fees
+Accompanying programme","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+If you are an absolute beginner in German, then you need to have at least a B1 level of English, so that basic communication is possible for administrative matters.
+Submit application to
+http://www.iss.uni-trier.de","Is accommodation organised?
+Accommodation is arranged by the organiser.
+Type of accommodation
+Upon request, accommodation can be provided in one of the university's student accommodation halls.
+Price: 490 EUR for the duration of the summer course
+Meals
+Not included, but available in the university canteens/cafeterias and in the shops nearby
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+Our leisure programme:
+Three full-day excursions
+to the
+Moselle
+(distance from Trier: 50 km), to
+Luxembourg
+(distance approx. 45 km) and
+France
+(e.g. Metz or Nancy)
+Guided tours
+to the sights of Trier (UNESCO World Heritage Site, buildings of the Roman Emperor Constantine), museum visits, city tours
+Walking tours
+/ hikes (e.g. to Cochem Castle on the Moselle), concert visits (e.g. organ music in the Roman Palastaula ""Constantine Basilica""), etc.
+In addition, the tutors of the International Summer Course (IFK) offer
+numerous activities in the evenings
+(sports, pub crawl, barbecue, dance class, beach volleyball, karaoke, game nights, international dinner and many more).
+The excursions, the guided tours and the visit of the organ concert are already included in the course fee. For individual further offers, small additional costs may be incurred under certain circumstances. This will be communicated in time during the course.
+All participants are supervised by our IFK tutors.
+(subject to change)
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818859+00:00,daad_api,2026-02-01T17:42:20.508206,"['Limited course details available', 'Program duration not specified']",0.7000000000000001,True,,,[],C1,B1,"Placement test on first day. If absolute beginner in German, minimum B1 English required for administrative communication. Course levels A1-C1 available.",Students and graduates of all subjects. Special classes for teachers of German and students of German studies with interest in intercultural subjects.,"Accommodation arranged in university student halls upon request. Tutors supervise all participants. Visa support provided. Cultural programme includes three full-day excursions to Moselle, Luxembourg, and France, guided tours of Trier UNESCO sites, walking tours, museum visits, concerts, and evening activities like sports, pub crawls, barbecues, dance classes, beach volleyball, karaoke, game nights, and international dinners.","[""accommodation assistance"", ""visa support"", ""tutor supervision"", ""excursions to Moselle"", ""Luxembourg"", ""France"", ""guided city tours"", ""museum visits"", ""walking tours and hikes"", ""concert visits"", ""evening social activities"", ""sports"", ""pub crawls"", ""barbecues"", ""dance classes"", ""beach volleyball"", ""karaoke"", ""game nights"", ""international dinners""]",790,,,"EUR 790 for 4-week summer course (3 Aug - 28 Aug 2026). Includes course fees, accompanying programme, excursions, guided tours, and organ concert. Does not include accommodation or meals.",,,,Accommodation EUR 490 for duration of course if arranged through organizer. Meals not included but available in university canteens and nearby shops.,,"Certificate worth 5 ECTS points awarded after final test. Additional certificate ""Zertifikat Didaktik und Methodik Deutsch als Fremdsprache"" available for teachers/German studies students who complete C1 course plus academic seminars.",2026-07-15,Registration deadline 15 July 2026 for course starting 3 August 2026,direct-university,Submit application to http://www.iss.uni-trier.de,False,,"[""placement test (administered on first day)""]","{""overview"": ""This 4-week intensive German language summer school offers courses from beginner to advanced levels (A1-C1) with cultural immersion in historic Trier. The program combines 75 hours of language instruction with academic seminars, cultural excursions, and optional teacher training modules for German as a foreign language."", ""modules"": [""German language courses (A1-C1 levels, 75 hours)"", ""Didactics and methodology for teaching German as a foreign language"", ""Interdisciplinary academic lectures and seminars"", ""Cultural excursions to Moselle, Luxembourg, and France"", ""Conversation classes for elementary levels""], ""subjects"": [""german language"", ""language teaching"", ""cultural studies"", ""linguistics""], ""requirements"": {""academic_background"": ""Open to students and graduates of all subjects - no specific field required"", ""language"": ""No German required for beginners, but B1 English needed for administrative communication if starting at A1 German"", ""documents"": [""application form""], ""extra"": ""Registration deadline: July 15, 2026. Placement test on first day determines your level""}, ""costs"": {""tuition"": ""€790 (includes course fees and cultural program)"", ""semester_fee"": ""Not applicable for summer course"", ""living_expenses"": ""€490 for accommodation (optional) plus €200-300 for meals/personal expenses"", ""funding"": ""Check DAAD or home institution for summer school scholarships""}, ""takeaways"": [""• Earn 5 ECTS credits with certificate upon completion"", ""• All-inclusive cultural program with excursions to 3 countries included"", ""• Special teacher training track available for German language educators""], ""how_to_apply"": ""Apply directly through http://www.iss.uni-trier.de by July 15, 2026. The university provides visa support for international students."", ""city_expats_overview"": ""Trier is Germany's oldest city with UNESCO World Heritage sites and a safe, walkable historic center perfect for students. The small-city atmosphere (110,000 residents) offers authentic German immersion with a growing international student community."", ""accommodation_outlook"": ""University accommodation is available for €490 for the entire 4-week program in student halls. This is excellent value and highly recommended as private short-term rentals are harder to find and more expensive (€600-800/month)."", ""job_market_demand"": ""As a short summer course, job opportunities aren't the focus, but Trier's proximity to Luxembourg (45km) offers excellent prospects for German speakers in finance and EU institutions. The wine and tourism industries also value multilingual professionals."", ""city_living_costs"": ""Budget €800-1000 total for the month including accommodation (€490), meals in university cafeterias (€150-200), and personal expenses. Trier is one of Germany's more affordable cities."", ""german_daily_life_requirement"": ""A2-B1 German helps significantly for daily life in Trier as it's less international than major cities. However, the summer school provides support and many locals speak some English, especially near the university."", ""english_livability"": ""The summer school provides English support for beginners, but outside campus, German is helpful for shopping, restaurants, and socializing. The program's tutors assist with daily life challenges, making English-only manageable during the course."", ""ai_city_fit_score"": 4, ""university_profile"": ""Trier University, founded in 1473 and re-established in 1970, excels in humanities, social sciences, and economics with strong international partnerships. The International Summer School has run for over 50 years, demonstrating exceptional expertise in German language education and cultural integration for international students.""}","Trier is Germany's oldest city with UNESCO World Heritage sites and a safe, walkable historic center perfect for students. The small-city atmosphere (110,000 residents) offers authentic German immersion with a growing international student community.",University accommodation is available for €490 for the entire 4-week program in student halls. This is excellent value and highly recommended as private short-term rentals are harder to find and more expensive (€600-800/month).,"As a short summer course, job opportunities aren't the focus, but Trier's proximity to Luxembourg (45km) offers excellent prospects for German speakers in finance and EU institutions. The wine and tourism industries also value multilingual professionals.","Budget €800-1000 total for the month including accommodation (€490), meals in university cafeterias (€150-200), and personal expenses. Trier is one of Germany's more affordable cities.","A2-B1 German helps significantly for daily life in Trier as it's less international than major cities. However, the summer school provides support and many locals speak some English, especially near the university.","The summer school provides English support for beginners, but outside campus, German is helpful for shopping, restaurants, and socializing. The program's tutors assist with daily life challenges, making English-only manageable during the course.",4,"Trier University, founded in 1473 and re-established in 1970, excels in humanities, social sciences, and economics with strong international partnerships. The International Summer School has run for over 50 years, demonstrating exceptional expertise in German language education and cultural integration for international students.","Apply directly through http://www.iss.uni-trier.de by July 15, 2026. The university provides visa support for international students.","[""german language"", ""language teaching"", ""cultural studies"", ""linguistics""]",
+4920,30th International Summer Academy,Martin Luther University Halle-Wittenberg,Lutherstadt Wittenberg,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4920/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/66140a6d7ca68975086405.jpeg,language_course,language_course,Language course,arts,"['literature', 'german language course (including literature and culture studies)']",0,EUR,,,True,False,,['summer'],"[8, 5, 7]",2026-04-30,,,,['german'],"{'german': 'A1, A2, B1, B2, C1, C2'}","Teaching language
+German
+Language level of course
+German:
+All levels
+Language requirements
+A placement test will be taken on the first day of the programme.
+Submit application to
+Institut f�r deutsche Sprache und Kultur�an der Martin-Luther-Universit�t Halle-Wittenberg
+Collegienstra�e 62
+06886 Lutherstadt Wittenberg
+Germany",[],[],,,False,Course location Lutherstadt Wittenberg In cooperation with Institute for German Language and Culture (Institut f�r deutsche Sprache und Kultur e. V.) at the Martin Luther University of Halle-Wittenberg Teaching language German Language level of course German: All levels Date(s) 31 May - 25 June 2026 (Registration deadline of course provider: 30 April 2026) 5 July - 30 July 2026 (Registration deadline of course provider: 29 May 2026) 2 August - 27 August 2026 (Registration deadline of course prov...,,False,False,,,"Course location
+Lutherstadt Wittenberg
+In cooperation with
+Institute for German Language and Culture (Institut f�r deutsche Sprache und Kultur e. V.) at the Martin Luther University of Halle-Wittenberg
+Teaching language
+German
+Language level of course
+German: All levels
+Date(s)
+31 May - 25 June 2026 (Registration deadline of course provider: 30 April 2026)
+5 July - 30 July 2026 (Registration deadline of course provider: 29 May 2026)
+2 August - 27 August 2026 (Registration deadline of course provider: 25 June 2026)
+30 August - 24 September 2026 (Registration deadline of course provider: 17 July 2026)
+Information on dates, prices and mode of study
+Language courses, free time activities in Wittenberg and two day trips are included in the course fee.
+Target group
+This course is open for everyone interested in the German language.
+Description/content
+The goal of the Summer Academy is to impart knowledge combining both the culture of Germany and the German language. Through selected regional topics, the many facets of modern German life will be discovered in activities such as conversations with experts, presentations, excursions, and a final course project. With participants from around the world, knowledge exchange and intercultural learning will be significant aspects of this summer course. All courses have lessons on pronunciation.
+After a full day of learning and gathering new impressions, a variety of free time activities and intercultural get-togethers will help you to enjoy this wonderful summer course.",,"Dates and costs
+31 May - 25 June 2026 (Registration deadline of course provider: 30 April 2026),
+costs: EUR 790
+5 July - 30 July 2026 (Registration deadline of course provider: 29 May 2026),
+costs: EUR 790
+2 August - 27 August 2026 (Registration deadline of course provider: 25 June 2026),
+costs: EUR 790
+30 August - 24 September 2026 (Registration deadline of course provider: 17 July 2026),
+costs: EUR 790
+This price includes
+Course fees
+Accompanying programme
+Information on dates, prices and mode of study
+Language courses, free time activities in Wittenberg and two day trips are included in the course fee.","Teaching language
+German
+Language level of course
+German:
+All levels
+Language requirements
+A placement test will be taken on the first day of the programme.
+Submit application to
+Institut f�r deutsche Sprache und Kultur�an der Martin-Luther-Universit�t Halle-Wittenberg
+Collegienstra�e 62
+06886 Lutherstadt Wittenberg
+Germany","Is accommodation organised?
+Accommodation is arranged by the organiser.
+Type of accommodation
+Accommodation can be arranged by the organiser for an extra cost.
+Accommodation with host families, includes breakfast and dinner (675�EUR)
+Double rooms with Wi-Fi, no meals (500 EUR)
+Single rooms with Wi-Fi, no meals (620 EUR)
+Meals
+With host families: a breakfast and a typical German dinner are included.
+Grocery stores are located close to the accommodations.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+Wittenberg
+is a beautiful little German town filled with
+UNESCO World Heritage
+Sites
+, parks, caf�s and recreation areas along the Elbe River.
+During our language courses,
+two international volunteers
+(ESC) will be organising a wide range of
+free-time
+and
+leisure activities
+.
+In
+Wittenberg:
+Guided tour, conversations with local people
+Workshops (music, theatre, etc.)
+Intercultural get-together
+Bike tours along the Elbe River
+Sports and leisure activities
+Museum visits (Martin Luther's house, Asisi's Panorama Luther 1517)
+Farewell evening with instructors and guests
+Outside of Wittenberg:
+Two day trips to
+Berlin
+and
+Leipzig
+(or other cities), including guided city tours, free-time suggestions
+Afternoon visit to UNESCO World Heritage Site
+Dessau/W�rlitz
+and
+Halle (Saale)
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+Yes",2026-02-01T13:15:06.818816+00:00,daad_api,2026-02-01T17:42:20.508074,"['Limited course details available', 'Program duration not specified']",0.7000000000000001,True,,,[],A1,,All German levels (A1-C2) accepted. Placement test administered on first day of programme to determine appropriate level.,Open to everyone interested in German language. No specific prior degree or academic prerequisites mentioned.,"Accommodation arranged by organizer (host families or dorms), visa support provided, airport/train station pickup available, two international volunteers organize leisure activities, free internet access, guided tours, intercultural events, sports activities, museum visits, day trips to Berlin and Leipzig included.","[""accommodation arrangement"", ""visa support"", ""airport/train pickup"", ""free internet access"", ""guided city tours"", ""intercultural get-togethers"", ""leisure activities coordination"", ""day trips to Berlin and Leipzig"", ""museum visits"", ""sports activities"", ""bike tours"", ""workshops (music, theatre)"", ""farewell evening""]",790,,,"EUR 790 per 4-week course session. Includes course fees, accompanying programme, free time activities in Wittenberg, and two day trips.",,,,"Accommodation options: host family with breakfast and dinner EUR 675, double room no meals EUR 500, single room no meals EUR 620. Grocery stores nearby.",,,2026-04-30,"Multiple sessions with rolling deadlines: 30 April 2026 for May-June session, 29 May 2026 for July session, 25 June 2026 for August session, 17 July 2026 for August-September session.",direct-university,"Submit application directly to Institut f�r deutsche Sprache und Kultur an der Martin-Luther-Universit�t Halle-Wittenberg, Collegienstra�e 62, 06886 Lutherstadt Wittenberg, Germany",False,,"[""application form""]","{""overview"": ""This 4-week German language summer academy combines intensive language learning with cultural immersion through regional topics, expert conversations, and project work. Perfect for international learners at any German proficiency level seeking both linguistic skills and authentic cultural experiences."", ""modules"": [""German language instruction for all levels (beginner to advanced)"", ""Pronunciation workshops and conversation practice"", ""Regional culture and modern German life exploration"", ""Final course project with intercultural exchange"", ""Two day trips to Berlin/Leipzig with guided tours""], ""subjects"": [""german language"", ""cultural studies"", ""linguistics"", ""intercultural communication""], ""requirements"": {""academic_background"": ""Open to all interested learners regardless of academic background or prior German knowledge"", ""language"": ""No prior German required - placement test on first day determines appropriate level"", ""documents"": [""application form""], ""extra"": ""Multiple start dates available (May-September 2026). Registration deadlines vary by session - apply 4-6 weeks before course start""}, ""costs"": {""tuition"": ""€790 per 4-week session"", ""semester_fee"": ""Not applicable for summer course"", ""living_expenses"": ""Accommodation €500-675/month; meals €200-300/month if self-catering"", ""funding"": ""Course fee includes all instruction, activities, and two day trips""}, ""takeaways"": [""• All-inclusive program with accommodation support, meals with host families, and organized leisure activities"", ""• Small historic town setting offers authentic immersion while being less overwhelming than big cities"", ""• Two ESC volunteers provide continuous support and organize free-time activities throughout your stay""], ""how_to_apply"": ""Submit application directly to Institut für deutsche Sprache und Kultur, Collegienstraße 62, 06886 Lutherstadt Wittenberg. Deadlines vary by session (April 30 - July 17, 2026)."", ""city_expats_overview"": ""Lutherstadt Wittenberg is a small, safe UNESCO World Heritage town with a welcoming atmosphere for international students. The compact historic center and university presence create a supportive environment for language learners."", ""accommodation_outlook"": ""Housing is pre-arranged by the organizer with three options: host families (€675 with meals), double rooms (€500), or single rooms (€620). No need to search independently - a major advantage for short-term students."", ""job_market_demand"": ""Limited job opportunities in small-town Wittenberg, but the program's focus is intensive learning rather than work. Nearby cities Halle and Leipzig offer more internship possibilities in education and cultural sectors."", ""city_living_costs"": ""Budget €700-1,000/month total (accommodation €500-675 plus €200-300 for additional meals/expenses). Significantly cheaper than major German cities, with grocery stores conveniently located near accommodations."", ""german_daily_life_requirement"": ""A2-B1 German helpful for independent exploration, but the program provides support structures. Host families and organized activities reduce language barriers for beginners."", ""english_livability"": ""Limited English in this small traditional town - German immersion is unavoidable and beneficial for learning. Program staff and volunteers provide translation support, but daily life requires basic German attempts."", ""ai_city_fit_score"": 4, ""university_profile"": ""Martin Luther University Halle-Wittenberg is one of Germany's oldest universities (founded 1502), renowned for humanities and German studies. The Institute for German Language and Culture specializes in immersive language education with strong cultural programming and personalized support for international learners.""}","Lutherstadt Wittenberg is a compact Elbe River town best known for its Reformation heritage, drawing international students to Martin Luther University’s summer programs amid UNESCO-listed streets. Its manageable size and strong cultural programming make it easy for newcomers to integrate quickly while enjoying frequent excursions to nearby historical sites.","Short-term participants typically stay in university-arranged dorm rooms or vetted host families, with monthly costs ranging from €450-650 including utilities; private rentals are scarce, so early coordination with the program office is essential. Long-term leases in the wider town average €8-10/m², but availability is limited compared with larger cities.","The local job market is small and centered on tourism, education, and municipal services, offering only occasional part-time roles for German-speaking students. Those seeking internships in education or cultural management usually commute to Halle or Leipzig, where Martin Luther University maintains broader networks.","Expect €650-900 per month: €450-650 for housing, €120-180 for food, €30 for local transport or bike upkeep, and €50-80 for leisure and study materials. Costs stay well below big-city levels thanks to short distances and limited nightlife spending.","A2 German is advisable for errands, shopping, and interacting with local services, as many residents prefer German in daily exchanges. Program staff can assist, but basic conversational ability greatly eases integration.","English is understood by university staff and younger residents involved with the summer academy, yet outside academic settings English proficiency drops, so students should not rely on it for everyday tasks. Cultural venues often provide bilingual materials, but administrative offices expect German communication.",4,"Martin Luther University Halle-Wittenberg is one of Germany's oldest universities (founded 1502), renowned for humanities and German studies. The Institute for German Language and Culture specializes in immersive language education with strong cultural programming and personalized support for international learners.","Submit application directly to Institut für deutsche Sprache und Kultur, Collegienstraße 62, 06886 Lutherstadt Wittenberg. Deadlines vary by session (April 30 - July 17, 2026).","[""german language"", ""cultural studies"", ""linguistics"", ""intercultural communication""]","[""generic content"", ""mentions other cities (Halle, Leipzig)""]"
+10522,Academic German Preparation Course Munich: Intensive Courses,Internationale Hochschule SDI M�nchen/International University SDI M�nchen,M�nchen,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/10522/,,preparatory,preparatory,Preparatory course,other,[],0,EUR,,,True,False,,[],[],,,,,['german'],{},"Costs
+2,250 EUR: 24-week course (six months)
+3,750 EUR: 40-week course (one year)
+This price includes
+Course fees
+Course fees for language course
+Language requirements
+Level A2 is required for the language course and lectures in German economics, literature, geography, and politics.
+Level B2 is required for scientific language training and TestDaF preparation courses.
+Technical equipment and programmes
+Headset, internet access, Zoom
+Do applicants require a higher education entrance qualification recognised in Germany?
+No
+Do applicants have to have already been admitted to a study programme at your university?
+No
+Submit application to
+daf@sdi-muenchen.de",[],['TESTDAF'],,,False,"Course location M�nchen Teaching language German Course duration 6 months - 1 year Mode of study Fully on-site with voluntary online elements Phase(s) of attendance in Germany (applies to the entire programme) Yes, compulsory Pace of course Mixed (e.g. fixed exam dates and duration, study content can be studied at any time) Description/content In addition to language instruction for scientific purposes, lectures are offered in German social studies, literature, and geography (""Landeskunde"") (min... | Course duration 6 months - 1 year Course components General preparation for studies Intercultural training Language course Recognised language exams offered (e.g. DSH, TestDaF, TOEFL) Yes Average number of hours per week 24 Do course participants have student status? No Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination? Yes Preparation for degree programmes Bachelor's degree Master's degree State examination ...",,False,False,,,"Course location
+M�nchen
+Teaching language
+German
+Course duration
+6 months - 1 year
+Mode of study
+Fully on-site with voluntary online elements
+Phase(s) of attendance in Germany (applies to the entire programme)
+Yes, compulsory
+Pace of course
+Mixed (e.g. fixed exam dates and duration, study content can be studied at any time)
+Description/content
+In addition to language instruction for scientific purposes, lectures are offered in German social studies, literature, and geography (""Landeskunde"") (minimum number of participants: 15).
+We offer additional preparation courses for TestDaF.
+The courses include 24 classroom hours (45 minutes per classroom hour) per week on levels B1-C1. The programme prepares participants for language and study requirements at German universities. Participants will also obtain an invitation letter in order to apply for a visa.","Course duration
+6 months - 1 year
+Course components
+General preparation for studies
+Intercultural training
+Language course
+Recognised language exams offered (e.g. DSH, TestDaF, TOEFL)
+Yes
+Average number of hours per week
+24
+Do course participants have student status?
+No
+Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination?
+Yes
+Preparation for degree programmes
+Bachelor's degree
+Master's degree
+State examination
+Preparation for subject groups
+Language and Cultural Studies
+Further information on subsequent admission to degree programmes/guaranteed admission
+Students can apply for BA and MA programmes at the International University Munich / SDI M�nchen.
+Average number of participants per group/course
+15",,"Costs
+2,250 EUR: 24-week course (six months)
+3,750 EUR: 40-week course (one year)
+This price includes
+Course fees
+Course fees for language course
+Language requirements
+Level A2 is required for the language course and lectures in German economics, literature, geography, and politics.
+Level B2 is required for scientific language training and TestDaF preparation courses.
+Technical equipment and programmes
+Headset, internet access, Zoom
+Do applicants require a higher education entrance qualification recognised in Germany?
+No
+Do applicants have to have already been admitted to a study programme at your university?
+No
+Submit application to
+daf@sdi-muenchen.de","Is accommodation organised?
+The organiser helps participants look for accommodation.
+Accommodation
+https://www.sdi-muenchen.de/en/wohnen/campus-sdi
+Meals
+Meals (5 to 7 EUR) are offered in the cafeteria.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+July and August:
+excursions to the city, museums, restaurants (with the course)
+international leisure and cultural programmes on the SDI campus
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818911+00:00,daad_api,2026-02-01T17:42:20.509543,"['No program image available', 'Program duration not specified']",0.8,True,,,"[""TestDaF"", ""DSH""]",B2,,"Level A2 required for language course and lectures in German economics, literature, geography, and politics. Level B2 required for scientific language training and TestDaF preparation courses. TestDaF preparation courses offered.","No higher education entrance qualification required. No prior university admission required. Course prepares for Bachelor's, Master's, and State examination programs.","Accommodation search assistance, cafeteria meals available, social and leisure programs including excursions to city/museums/restaurants, international cultural programs on campus, free internet access, visa support provided.","[""Accommodation search assistance"", ""Cafeteria meals (5-7 EUR)"", ""Excursions to city, museums, restaurants"", ""International leisure and cultural programs"", ""Free internet access"", ""Visa support""]",,2250,3750,"2,250 EUR for 24-week course (six months); 3,750 EUR for 40-week course (one year). Price includes course fees for language course.",,,,Meals available in cafeteria for 5-7 EUR per meal.,,No higher education entrance qualification required. Course prepares students for language and study requirements at German universities. Participants receive invitation letter for visa application.,,,direct-university,Submit application to daf@sdi-muenchen.de,False,,"[""Application form""]","{""overview"": ""This intensive German preparation course at SDI München prepares international students for university studies in Germany through language training and cultural orientation. The program offers 24 hours of weekly instruction focusing on academic German (B1-C1 levels) with additional lectures in German social studies, literature, and geography."", ""modules"": [""Academic German language instruction (B1-C1 levels)"", ""TestDaF exam preparation"", ""German social studies and Landeskunde"", ""Intercultural training and study skills"", ""Scientific language training""], ""subjects"": [""german language"", ""cultural studies"", ""literature"", ""geography"", ""social studies""], ""requirements"": {""academic_background"": ""No specific degree required; open to students preparing for Bachelor's, Master's, or State examination programs"", ""language"": ""Minimum German A2 for general courses; B2 required for scientific language training and TestDaF preparation"", ""documents"": [""application form"", ""CV/resume"", ""passport copy"", ""proof of German proficiency (A2 or B2 level)""], ""extra"": ""No German higher education entrance qualification required; visa invitation letter provided upon enrollment""}, ""costs"": {""tuition"": ""€2,250 for 6 months or €3,750 for 1 year"", ""semester_fee"": ""Not applicable (non-degree program)"", ""living_expenses"": ""€1,000-1,500 per month in Munich"", ""funding"": ""No specific scholarships mentioned""}, ""takeaways"": [""• Direct pathway to SDI München's BA and MA programs upon completion"", ""• Small class sizes (average 15 students) ensure personalized attention"", ""• Includes TestDaF preparation and visa support for international students""], ""how_to_apply"": ""Submit your application directly via email to daf@sdi-muenchen.de. No specific deadline mentioned, but apply early for visa processing time."", ""city_expats_overview"": ""Munich is one of Germany's most international cities with a thriving expat community and excellent safety standards. The city offers rich Bavarian culture, world-class museums, and easy access to the Alps, though it's Germany's most expensive city."", ""accommodation_outlook"": ""Housing in Munich is extremely competitive with rents ranging €800-1,200 for a WG room or €1,200-1,800 for a studio. SDI assists with accommodation search and offers campus housing options - apply early as demand far exceeds supply."", ""job_market_demand"": ""Munich hosts major corporations like BMW, Siemens, and Allianz, creating strong demand for multilingual graduates. The city's tech sector and startup scene offer opportunities for international students, though German proficiency significantly improves prospects."", ""city_living_costs"": ""Expect €1,000-1,500 monthly including rent (€800-1,200), food (€250-350), transport (€60 student ticket), and personal expenses. Munich is Germany's priciest city, so budget carefully and consider student discounts."", ""german_daily_life_requirement"": ""B1-B2 German is highly recommended for comfortable daily life in Munich. While central areas have English speakers, German is essential for housing searches, bureaucracy, and integrating with locals."", ""english_livability"": ""English alone is challenging in Munich - while tourist areas and international companies use English, German is needed for administrative tasks, finding housing, and social integration. The university environment is more English-friendly than the broader city."", ""ai_city_fit_score"": 3, ""university_profile"": ""SDI München specializes in languages, communication, and intercultural studies with strong industry connections in translation, interpretation, and international business. The private university offers personalized support for international students and maintains partnerships with companies seeking multilingual professionals.""}","Munich is one of Germany's most international cities with a thriving expat community and excellent safety standards. The city offers rich Bavarian culture, world-class museums, and easy access to the Alps, though it's Germany's most expensive city.","Housing in Munich is extremely competitive with rents ranging €800-1,200 for a WG room or €1,200-1,800 for a studio. SDI assists with accommodation search and offers campus housing options - apply early as demand far exceeds supply.","Munich hosts major corporations like BMW, Siemens, and Allianz, creating strong demand for multilingual graduates. The city's tech sector and startup scene offer opportunities for international students, though German proficiency significantly improves prospects.","Expect €1,000-1,500 monthly including rent (€800-1,200), food (€250-350), transport (€60 student ticket), and personal expenses. Munich is Germany's priciest city, so budget carefully and consider student discounts.","B1-B2 German is highly recommended for comfortable daily life in Munich. While central areas have English speakers, German is essential for housing searches, bureaucracy, and integrating with locals.","English alone is challenging in Munich - while tourist areas and international companies use English, German is needed for administrative tasks, finding housing, and social integration. The university environment is more English-friendly than the broader city.",3,"SDI München specializes in languages, communication, and intercultural studies with strong industry connections in translation, interpretation, and international business. The private university offers personalized support for international students and maintains partnerships with companies seeking multilingual professionals.","Submit your application directly via email to daf@sdi-muenchen.de. No specific deadline mentioned, but apply early for visa processing time.","[""german language"", ""cultural studies"", ""literature"", ""geography"", ""social studies""]",
+4100,a.r.t.e.s. Graduate School for the Humanities Cologne,University of Cologne,K�ln,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4100/,,phd,phd,PhD / Doctorate,other,['history'],0,EUR,,,True,False,summer,['summer'],[],,36,6,,"['german', 'english']",{},"Academic admission requirements
+Applicants must hold an above-average university degree (MA or equivalent) in a discipline that is available as doctoral subject at the University of Cologne's Faculty of Arts and Humanities.
+Language requirements
+International doctoral students who wish to write their dissertations in German can join the programme immediately and improve their German during their studies.
+International doctoral students will have to provide proof of German at the level C1 (Common European Framework of Reference for Languages) by the time they submit their doctoral dissertations in the event that they write the dissertation in German.
+International doctoral students who wish to write the dissertation in English or in another language will have to provide proof of German at the level B2 by the time they submit their doctoral dissertations.
+A full remission of the German language proficiency is possible upon special request.
+Application deadline
+All applicants for the stru",[],[],,,False,"Degree Dr phil Course location K�ln Teaching language German English Languages Courses are held in German and English. Participants can choose to write the doctoral dissertation in German, English, French, Italian, Spanish or Latin. Other languages are also possible (upon individual request). Full-time / part-time full-time Programme duration 6 semesters Beginning Summer semester Additional information on beginning, duration and mode of study Integrated Track (structured doctoral programme) resi... | Course organisation The integrated track of the a.r.t.e.s. Graduate School provides a structured doctoral model with an interdisciplinary approach. The individual doctoral studies are combined with a set of guided courses. Supervision is provided through a mentoring programme during a period of three academic years. The first year of the integrated track focuses on the elaboration of the dissertation topic, which has to be presented in the a.r.t.e.s. colloquium. In the second year, students focu...",6 semesters,False,False,,['Buddy programme | Cultural and linguistic preparation | Support with registration procedures'],"Degree
+Dr phil
+Course location
+K�ln
+Teaching language
+German
+English
+Languages
+Courses are held in German and English. Participants can choose to write the doctoral dissertation in German, English, French, Italian, Spanish or Latin. Other languages are also possible (upon individual request).
+Full-time / part-time
+full-time
+Programme duration
+6 semesters
+Beginning
+Summer semester
+Additional information on beginning, duration and mode of study
+Integrated Track (structured doctoral programme)
+residence in Cologne required
+application deadline: approx. end of October
+programme beginning: April
+programme duration: three years
+Regular Track (individual doctorate)
+residence in Cologne is not required but recommended
+application: at any time (admission procedure four times a year)
+programme beginning: any time after admission
+programme duration: max. 12 semesters/six years (extension on application)
+Application deadline
+All applicants for the structured doctoral programme must apply by the end of October for the following summer semester. The exact date is announced on our website.
+For further information on our application procedure, please see
+http://www.artes.uni-koeln.de
+.
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+No
+Joint degree / double degree programme
+Yes
+Description/content
+The a.r.t.e.s. Graduate School for the Humanities Cologne is the graduate school of the University of Colognes Faculty of Arts and Humanities. The Faculty of Arts and Humanities  one of the largest of its kind in Europe  creates ideal conditions for an intensive, lively, and open-minded exchange of ideas and offers a unique range of subjects in the humanities and cultural studies, including, for example, philosophy, language and literature studies, linguistics, history and art history, ethnology and regional studies, media and theatre studies, musicology, archaeology, and digital humanities.
+Since October 2012, the a.r.t.e.s Graduate School is responsible for every doctoral project at the Faculty of Arts and Humanities. Doctoral students can choose between a regular track and an integrated track. The regular track is the standard model of the individual doctorate, whereas the integrated track is the structured doctoral model that, with regard to the interdisciplinary scope, is designed to allow completion of the doctoral project within a time frame of three years. The integrated track also includes a funding option for the pre-doc phase (six months) and a full scholarship for three years.
+The a.r.t.e.s. Graduate School serves as a platform for the internationalisation of graduate programmes that can build on a formidable existing network of cooperation agreements in the faculty and draw from the experience of a great number of teaching and research centres. The concept of the a.r.t.e.s. Graduate School is completed by a special focus on equality standards.
+The a.r.t.e.s. integrated track addresses graduates who have completed their studies with outstanding academic results in the humanities and who are interested in beginning their doctoral studies shortly after their final examination. The participants are supervised by two graduate class mentors and three academic supervisors, one of whom is from another discipline. In the graduate class colloquia during the semester period, the doctoral candidates periodically discuss the progress of their research with their classmates and the class mentors. The yearly and comprehensive colloquia of the entire graduate school offer the opportunity to discuss topics and advances in research.","Course organisation
+The integrated track of the a.r.t.e.s. Graduate School provides a structured doctoral model with an interdisciplinary approach. The individual doctoral studies are combined with a set of guided courses. Supervision is provided through a mentoring programme during a period of three academic years. The first year of the integrated track focuses on the elaboration of the dissertation topic, which has to be presented in the a.r.t.e.s. colloquium. In the second year, students focus on their own research and can attend additional workshops on transferable skills (e.g. seminars in academic presentation and writing, third party-funding, etc.), while the third year is dedicated to the presentation of results, writing, and the completion of the doctoral dissertation.
+The a.r.t.e.s. collegiate programme offers the opportunity to take part in the integrated track programme without a scholarship from the Graduate School, including the opportunity to attend the graduate classes.
+A Diploma supplement will be issued
+No
+International elements
+International guest lecturers
+Language training provided
+Projects with partners in Germany and abroad
+Content-related regional focus
+Specialist literature in other languages
+Description of other international elements
+The a.r.t.e.s. Graduate School emphasises research, teaching, and networking on an international level. This is apparent not only in the many transcultural and regionally-diverse research projects pursued at the school. It is also evident in the bilateral research and international doctoral models allowed for at a.r.t.e.s. Two examples of these are the binational joint supervision (cotutelle de th�se) and the supplementary qualification Doctor Europaeus, both of which contribute to the internationalisation of academic research.
+The refinement of the international profile of a.r.t.e.s. and that of the entire Faculty of Arts and Humanities is contributed to by its Summer Schools and Graduate Seminars, which are hosted regularly. It cooperates closely with its partner institutions and continually expands its international network.
+Teaching/work obligations or opportunities
+The programme does not include additional teaching or work obligations.
+Course-specific, integrated German language courses
+No
+Course-specific, integrated English language courses
+No","Tuition fees per semester in EUR
+None
+Semester contribution
+The semester contribution amounts to approx. 320 EUR per semester. The fee includes a ""Deutschlandsemesterticket"" that covers public transport in Germany.
+Funding opportunities within the university
+Yes
+Description of the above-mentioned funding opportunities within the university
+Each year, the a.r.t.e.s. Graduate School funds up to eight full scholarships for the integrated track amounting to 1,600 EUR per month for a maximum of six semesters. Students also receive financial aid for travels that benefit the research project.
+In addition and to ensure a quick transition from Masters or similar degrees to doctoral studies, the a.r.t.e.s. Graduate School offers each year up to eight Predoc scholarships for six months (1,200 EUR per month) to help candidates to elaborate a doctoral project.","Academic admission requirements
+Applicants must hold an above-average university degree (MA or equivalent) in a discipline that is available as doctoral subject at the University of Cologne's Faculty of Arts and Humanities.
+Language requirements
+International doctoral students who wish to write their dissertations in German can join the programme immediately and improve their German during their studies.
+International doctoral students will have to provide proof of German at the level C1 (Common European Framework of Reference for Languages) by the time they submit their doctoral dissertations in the event that they write the dissertation in German.
+International doctoral students who wish to write the dissertation in English or in another language will have to provide proof of German at the level B2 by the time they submit their doctoral dissertations.
+A full remission of the German language proficiency is possible upon special request.
+Application deadline
+All applicants for the structured doctoral programme must apply by the end of October for the following summer semester. The exact date is announced on our website.
+For further information on our application procedure, please see
+http://www.artes.uni-koeln.de
+.
+Submit application to
+http://artes.phil-fak.uni-koeln.de/artesaccess.html?&L=1","Accommodation
+Finding accommodation in Cologne is tough and demanding for students, as in other large German cities. The need of housing is high especially in the beginning of the semester, therefore we recommend to begin to search for an accommodation as early as possible from your home country. The International Office has compiled useful information on its
+website
+.
+Structured research and supervision
+Yes
+Research training / discussion
+Yes
+Support for international students and doctoral candidates
+Buddy programme
+Cultural and linguistic preparation
+Support with registration procedures
+General services and support for international students and doctoral candidates
+General services and support for international doctoral candidates is offered via the University of Cologne's International Office.",2026-02-01T13:15:06.818897+00:00,daad_api,2026-02-01T17:42:20.509223,['No program image available'],0.9,True,,,[],C1,,German C1 required if dissertation written in German; B2 if dissertation written in English or other language. Full remission possible upon special request. Students can join immediately and improve German during studies.,Above-average university degree (MA or equivalent) in a discipline available as doctoral subject at University of Cologne's Faculty of Arts and Humanities,"Support includes buddy programme, cultural and linguistic preparation, help with registration procedures, housing search assistance via International Office website, structured mentoring programme with two graduate class mentors and three academic supervisors, graduate class colloquia, yearly comprehensive colloquia, workshops on transferable skills","[""Buddy programme"", ""Cultural and linguistic preparation"", ""Registration procedures support"", ""Housing search assistance"", ""Mentoring programme"", ""Graduate class colloquia"", ""Transferable skills workshops"", ""International Office general services""]",0,,,No tuition fees,320,Includes Deutschlandsemesterticket covering public transport in Germany,,,,Above-average MA or equivalent required in humanities discipline available at Faculty of Arts and Humanities,,End of October for following summer semester (exact date announced on website),direct-university,Apply via http://artes.phil-fak.uni-koeln.de/artesaccess.html?&L=1; further information at http://www.artes.uni-koeln.de,True,"Up to eight full scholarships per year at 1,600 EUR/month for maximum six semesters plus travel funding; up to eight Predoc scholarships at 1,200 EUR/month for six months","[""Application form"", ""MA degree certificate"", ""Academic transcripts"", ""CV"", ""Research proposal"", ""Language certificates"", ""Reference letters""]","{""overview"": ""The a.r.t.e.s. Graduate School offers a structured 3-year PhD program in humanities with interdisciplinary focus and dual mentorship. The program targets outstanding humanities graduates seeking intensive research training with international networking opportunities."", ""modules"": [""Year 1: Dissertation topic development and presentation in colloquia"", ""Year 2: Independent research with transferable skills workshops"", ""Year 3: Results presentation and dissertation completion"", ""Regular graduate class colloquia and annual school-wide symposia"", ""Optional international elements including cotutelle and Doctor Europaeus""], ""subjects"": [""humanities"", ""philosophy"", ""linguistics"", ""history"", ""art history"", ""media studies"", ""digital humanities"", ""cultural studies""], ""requirements"": {""academic_background"": ""Above-average MA or equivalent degree in a humanities discipline offered at University of Cologne's Faculty of Arts and Humanities"", ""language"": ""German C1 required by dissertation submission if writing in German; B2 German if writing in English/other languages. Full remission possible upon request. Dissertations can be written in German, English, French, Italian, Spanish, or Latin."", ""documents"": [""application form"", ""CV/resume"", ""transcript of records"", ""passport copy"", ""proof of German proficiency (if applicable)""], ""extra"": ""Integrated track requires residence in Cologne. Application deadline: end of October for April start. Regular track allows remote participation with max 6-year completion.""}, ""costs"": {""tuition"": ""Free"", ""semester_fee"": ""~320 EUR per semester (includes Deutschlandsemesterticket for public transport across Germany)"", ""living_expenses"": ""800-1,200 EUR per month typical for Cologne"", ""funding"": ""Up to 8 full scholarships available (1,600 EUR/month for 3 years) plus 6-month predoc scholarships (1,200 EUR/month)""}, ""takeaways"": [""• One of Europe's largest humanities faculties with exceptional interdisciplinary opportunities"", ""• Flexible language options for dissertation writing with German requirements that can be fulfilled during studies"", ""• Strong international focus with bilateral research partnerships and Doctor Europaeus qualification option""], ""how_to_apply"": ""Submit application via http://artes.phil-fak.uni-koeln.de/artesaccess.html?&L=1 by end of October for April start. Integrated track applicants apply once yearly; regular track accepts applications quarterly."", ""city_expats_overview"": ""Cologne is Germany's fourth-largest city with a vibrant international community and rich cultural scene centered around its famous cathedral and Rhine riverfront. The city hosts numerous expat groups and has a welcoming, liberal atmosphere that makes integration easier for international students."", ""accommodation_outlook"": ""Housing in Cologne is challenging and competitive, especially at semester start. Expect 400-700 EUR for shared apartments (WG) or 600-900 EUR for studios. Start searching early from abroad using WG-Gesucht, Studierendenwerk dorms, or Facebook groups."", ""job_market_demand"": ""Cologne's media capital status creates strong demand for humanities PhDs in publishing, broadcasting (WDR, RTL), museums, and cultural institutions. The Rhine-Ruhr region offers additional opportunities in education, research institutes, and creative industries."", ""city_living_costs"": ""Budget 900-1,400 EUR monthly total: rent (400-700 EUR), food (200-300 EUR), transport (covered by semester ticket), and personal expenses (200-400 EUR). Cologne is moderately priced compared to Munich or Frankfurt."", ""german_daily_life_requirement"": ""B1-B2 German makes daily life significantly easier in Cologne. While the university community is international, dealing with housing, bureaucracy, and local services requires basic German. The city center and student areas are more English-friendly."", ""english_livability"": ""PhD coursework and supervision can function in English, but German improves quality of life substantially. University administration increasingly accommodates English speakers, but city bureaucracy, housing searches, and social integration benefit greatly from German skills."", ""ai_city_fit_score"": 4, ""university_profile"": ""The University of Cologne is one of Germany's oldest and largest universities, particularly renowned for its Faculty of Arts and Humanities - among Europe's biggest. It excels in interdisciplinary research, offers strong international partnerships, and ranks highly for humanities, social sciences, and its supportive doctoral training environment.""}","Cologne is Germany's fourth-largest city with a vibrant international community and rich cultural scene centered around its famous cathedral and Rhine riverfront. The city hosts numerous expat groups and has a welcoming, liberal atmosphere that makes integration easier for international students.","Housing in Cologne is challenging and competitive, especially at semester start. Expect 400-700 EUR for shared apartments (WG) or 600-900 EUR for studios. Start searching early from abroad using WG-Gesucht, Studierendenwerk dorms, or Facebook groups.","Cologne's media capital status creates strong demand for humanities PhDs in publishing, broadcasting (WDR, RTL), museums, and cultural institutions. The Rhine-Ruhr region offers additional opportunities in education, research institutes, and creative industries.","Budget 900-1,400 EUR monthly total: rent (400-700 EUR), food (200-300 EUR), transport (covered by semester ticket), and personal expenses (200-400 EUR). Cologne is moderately priced compared to Munich or Frankfurt.","B1-B2 German makes daily life significantly easier in Cologne. While the university community is international, dealing with housing, bureaucracy, and local services requires basic German. The city center and student areas are more English-friendly.","PhD coursework and supervision can function in English, but German improves quality of life substantially. University administration increasingly accommodates English speakers, but city bureaucracy, housing searches, and social integration benefit greatly from German skills.",4,"The University of Cologne is one of Germany's oldest and largest universities, particularly renowned for its Faculty of Arts and Humanities - among Europe's biggest. It excels in interdisciplinary research, offers strong international partnerships, and ranks highly for humanities, social sciences, and its supportive doctoral training environment.",Submit application via http://artes.phil-fak.uni-koeln.de/artesaccess.html?&L=1 by end of October for April start. Integrated track applicants apply once yearly; regular track accepts applications quarterly.,"[""humanities"", ""philosophy"", ""linguistics"", ""history"", ""art history"", ""media studies"", ""digital humanities"", ""cultural studies""]",
+4341,Abbe School of Photonics  PhD/Doctoral Programme,Friedrich Schiller University Jena,Jena,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4341/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/5ea99b7be46db119381251.jpeg,phd,phd,PhD / Doctorate,other,['photonics'],0,EUR,,,True,False,any,[],[],,48,8,,"['english', 'german']",{},"Academic admission requirements
+Applicants must have obtained or be about to obtain a Master's degree or equivalent qualification in physics, optics, engineering, or a related field.
+Language requirements
+We request a decent level of English language capabilities, as English is common in the international science community. Test certificates like Cambridge, IELTS or TOEFL are appreciated.
+Knowledge of the German language is NOT a necessary prerequisite to be enrolled in our programme.
+Application deadline
+Check for current openings on our website
+www.asp.uni-jena.de/open_positions
+and apply within the stated deadlines. We also accept unsolicited applications at any time.
+Submit application to
+Applications can be submitted at any time at:
+https://apply2.uni-jena.de/utumg
+.",[],"['IELTS', 'TOEFL', 'CAMBRIDGE']",,,False,"Degree Dr rer nat or Dr Ing Course location Jena In cooperation with University of Berkeley, Australian National University, University of Toronto, Technical University Delft, National Taiwan University, Politecnico di Milano, University of Bordeaux, Universit� Paris-Saclay and many more Teaching language English German Languages Supervision is available in both German and English. Participants can choose to write the doctoral thesis in either language. Programme duration 8 semesters Beginning O... | Course organisation In addition to the regular courses which are part of the ASP programme, a variety of special lectures and workshops is given by world-renowned guest professors . Our open photonics makerspace at the Lichtwerkstatt Jena is always open for young people with creativity and some ideas. Moreover, doctoral candidates benefit from the close collaboration between ASP and some of the world's leading companies in the field of optics and photonics, such as ZEISS, ASML, TRUMPF, SCHOTT or...",8 semesters,False,False,,['Tutors | Visa matters | Specialist counselling | Cultural and linguistic preparation | Buddy programme | Accompanying programme'],"Degree
+Dr rer nat or Dr Ing
+Course location
+Jena
+In cooperation with
+University of Berkeley, Australian National University, University of Toronto, Technical University Delft, National Taiwan University, Politecnico di Milano, University of Bordeaux, Universit� Paris-Saclay and many more
+Teaching language
+English
+German
+Languages
+Supervision is available in both German and English. Participants can choose to write the doctoral thesis�in either language.
+Programme duration
+8 semesters
+Beginning
+Only for doctoral programmes: any time
+Application deadline
+Check for current openings on our website
+www.asp.uni-jena.de/open_positions
+and apply within the stated deadlines. We also accept unsolicited applications at any time.
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+Yes
+Joint degree / double degree programme
+No
+Description/content
+Photonics is one of the main research fields at the Friedrich Schiller University Jena, and about 300 doctoral candidates are currently enrolled in our research-oriented PhD/doctoral programme.
+In our optics /�photonics and quantum technology programme, we offer:
+high-end research and education in a world-class scientific environment with intensive mentoring
+PhD topics at the frontiers of science, giving way to the opportunity to publish in the world's most renowned journals like Nature and Science
+some of the best-equipped optics and photonics labs in the world
+an international programme with modules focusing on scientific and technical skills and equipping you with transferable skills
+access to an elite network of experts in optics and photonics
+One important cornerstone of our philosophy is to regard and value our doctoral candidates as scientists in all respects. The ASP offers an individually adjusted programme to meet each candidate's scientific background and interests. This guarantees an optimal level of preparation for a high-profile career in research or industry.","Course organisation
+In addition to the regular courses which are part of the ASP programme, a variety of special lectures and workshops is given by
+world-renowned guest professors
+. Our open photonics makerspace at the
+Lichtwerkstatt Jena
+is always open for young people with creativity and some ideas. Moreover, doctoral candidates benefit from the close collaboration between ASP and some of the world's leading companies in the field of optics and photonics, such as ZEISS, ASML, TRUMPF, SCHOTT or JENOPTIK, to name just a few.
+Interdisciplinarity is an inherent part of our philosophy. ASP provides a variety of courses that help students acquire additional knowledge in complementary sciences as well as essential transferable skills, e.g., in project management, leadership and developing a scientific career. Furthermore, workshops and courses on the German language, intercultural competences, job application training and good scientific practice are specifically designed to accommodate our international students quickly to their new scientific and private environment in Jena.
+A Diploma supplement will be issued
+Yes
+International elements
+International guest lecturers
+Language training provided
+Projects with partners in Germany and abroad
+Training in intercultural skills
+Courses are led with foreign partners
+Content-related regional focus
+International comparisons and thematic reference to the international context
+Integrated internships
+We are permanently offering the possibility of individual internships with our regional industry partners (e.g., ZEISS, ASML, TRUMPF, SCHOTT, JENOPTIK) as well as research stays abroad with our large network of international partners.
+Teaching/work obligations or opportunities
+Beside top-notch research, teaching undergraduate students is part of the professional experience that each of our doctoral students will gain.
+Special promotion / funding of the programme
+ERASMUS+
+DFG (e.g. Research Training Groups)
+Other (e.g. state level)
+Helmholtz Graduate Schools
+Course-specific, integrated German language courses
+Yes
+Course-specific, integrated English language courses
+Yes","Tuition fees per semester in EUR
+None
+Semester contribution
+Doctoral candidates in Jena have the possibility to enrol at the Friedrich Schiller University. Enrolment is not compulsory but it offers a whole range of advantages like access to student dorms, a ""mensa"" (student dining hall) discount, free public transport, a campus card, and more. The semester fee is approximately 250 EUR.
+https://www.uni-jena.de/en/semesterbeitrag
+Costs of living
+The living costs in Jena are still low compared to other places in Germany or elsewhere. We recommend that you plan for a budget of at least 700 to 770 EUR per month for living expenses. However, if you are accepted to our doctoral programme, you will be contracted and earn an even higher salary. In general, the costs of living are usually not an issue for any of our PhD/doctoral students.
+https://www.uni-jena.de/en/jena-living-international
+Funding opportunities within the university
+Yes
+Description of the above-mentioned funding opportunities within the university
+Once accepted into our programme, our specialised administration will intensively assist you in finding the right funding opportunity.","Academic admission requirements
+Applicants must have obtained or be about to obtain a Master's degree or equivalent qualification in physics, optics, engineering, or a related field.
+Language requirements
+We request a decent level of English language capabilities, as English is common in the international science community. Test certificates like Cambridge, IELTS or TOEFL are appreciated.
+Knowledge of the German language is NOT a necessary prerequisite to be enrolled in our programme.
+Application deadline
+Check for current openings on our website
+www.asp.uni-jena.de/open_positions
+and apply within the stated deadlines. We also accept unsolicited applications at any time.
+Submit application to
+Applications can be submitted at any time at:
+https://apply2.uni-jena.de/utumg
+.","Accommodation
+Once accepted by our programme, support in finding accommodation is available through our local ASP office. For a quick start, the rent for a single room in a university guest house is�between 300 and 500 EUR.
+Structured research and supervision
+Yes
+Research training / discussion
+Yes
+Career advisory services and programmes for future professionals
+ASP offers intensive support to any individual PhD/doctoral candidate, including job application trainings, academic career counselling, start-up support, and access to a vast�network of industry partners and exclusive academic institutions all over the world.
+Support for international students and doctoral candidates
+Tutors
+Visa matters
+Specialist counselling
+Cultural and linguistic preparation
+Buddy programme
+Accompanying programme
+General services and support for international students and doctoral candidates
+ASP strongly and actively pursues gender mainstreaming and family-friendly working conditions. In particular, the competitive support instruments that aim to maximally link doctoral student and postdoctoral career stages are considered to be optimally designed for promoting gender equality and for balancing disadvantages for female candidates. The support of young female scientists is a cross-sectional task for both the ASP and the Friedrich Schiller University, and it is taken seriously by both. It creates and secures conditions of equal opportunity for all its members, regardless of gender and background.",2026-02-01T13:15:06.818905+00:00,daad_api,2026-02-01T17:42:20.509439,[],1.0,True,,,"[""Cambridge""]",,,"Decent level of English requested; Cambridge, IELTS, or TOEFL certificates appreciated but no specific minimum scores stated. German language NOT required. Supervision and thesis writing available in both German and English.","Master's degree or equivalent in physics, optics, engineering, or related field (obtained or about to be obtained)","Accommodation assistance through local ASP office, tutoring, visa support, specialist counseling, cultural and linguistic preparation, buddy program, accompanying program, job application training, academic career counseling, start-up support, access to industry and academic networks, gender mainstreaming and family-friendly working conditions","[""accommodation assistance"", ""tutoring"", ""visa support"", ""specialist counseling"", ""cultural and linguistic preparation"", ""buddy program"", ""accompanying program"", ""job application training"", ""academic career counseling"", ""start-up support"", ""industry and academic network access"", ""gender mainstreaming support"", ""family-friendly working conditions""]",0,,,No tuition fees,250,"Approximately 250 EUR per semester; enrollment optional but provides access to student dorms, mensa discount, free public transport, campus card",735,Recommended budget 700-770 EUR per month; accepted doctoral candidates receive salary that typically exceeds living costs,,"Master's degree in physics, optics, engineering, or related field required",,Check website for current openings and stated deadlines; unsolicited applications accepted at any time,direct-university,Applications submitted directly at https://apply2.uni-jena.de/utumg; check www.asp.uni-jena.de/open_positions for current openings,True,"Funding opportunities available; specialized administration assists accepted candidates in finding appropriate funding. Programme supported by ERASMUS+, DFG Research Training Groups, Helmholtz Graduate Schools, and state-level funding. Accepted candidates receive employment contracts with salary.","[""CV"", ""Master's degree certificate or proof of pending completion"", ""transcripts"", ""English language certificate (Cambridge/IELTS/TOEFL appreciated)"", ""motivation letter"", ""research proposal""]","{""overview"": ""This research-oriented PhD programme at the Abbe School of Photonics focuses on cutting-edge optics, photonics, and quantum technology research. Students work alongside world-renowned professors and industry leaders like ZEISS and ASML in state-of-the-art labs."", ""modules"": [""Core photonics and optics research"", ""Quantum technology specialization"", ""Transferable skills (project management, leadership)"", ""Intercultural competence and German language training"", ""Teaching experience with undergraduate students""], ""subjects"": [""photonics"", ""optics"", ""quantum technology"", ""physics"", ""engineering""], ""requirements"": {""academic_background"": ""Master's degree or equivalent in physics, optics, engineering, or related field"", ""language"": ""Decent English proficiency required (Cambridge, IELTS, or TOEFL appreciated). German NOT required for enrollment"", ""documents"": [""application form"", ""CV/resume"", ""transcript of records"", ""passport copy"", ""proof of English proficiency""], ""extra"": ""Check www.asp.uni-jena.de/open_positions for current openings and specific deadlines. Unsolicited applications accepted anytime""}, ""costs"": {""tuition"": ""Free"", ""semester_fee"": ""Optional enrollment ~250 EUR (includes public transport, mensa discount, student benefits)"", ""living_expenses"": ""700-770 EUR/month recommended budget"", ""funding"": ""PhD candidates receive salary contracts; specialized administration assists with funding opportunities""}, ""takeaways"": [""• Work with industry giants ZEISS, ASML, TRUMPF in world-class photonics labs"", ""• International network with Berkeley, ANU, Toronto, TU Delft partnerships"", ""• PhD candidates treated as full scientists with salary contracts""], ""how_to_apply"": ""Submit applications directly at https://apply2.uni-jena.de/utumg anytime, or check www.asp.uni-jena.de/open_positions for specific openings with deadlines."", ""city_expats_overview"": ""Jena is a compact university city with a strong international research community, particularly in optics and photonics. The city offers a safe, student-friendly environment with lower living costs than major German cities."", ""accommodation_outlook"": ""University guest houses offer single rooms for 300-500 EUR upon acceptance. The ASP office provides dedicated accommodation support, and the smaller city size makes housing more accessible than in larger German cities."", ""job_market_demand"": ""Exceptional job prospects with world-leading optics companies headquartered locally (ZEISS, JENOPTIK, SCHOTT). The region is Germany's photonics hub with strong demand for PhD graduates in both industry and academia."", ""city_living_costs"": ""Monthly budget of 700-770 EUR covers all living expenses including rent. Jena remains one of Germany's most affordable university cities, with PhD salaries easily covering costs."", ""german_daily_life_requirement"": ""A2-B1 German helpful for daily life outside campus, but the international research community and student services make A1 sufficient initially. The program offers integrated German language courses."", ""english_livability"": ""Full English instruction and supervision available for the PhD program. Campus services and research environment fully English-compatible, though basic German helps for city administration and social integration."", ""ai_city_fit_score"": 4, ""university_profile"": ""Friedrich Schiller University Jena is Germany's premier photonics research hub, hosting 300+ doctoral candidates in optics. The university excels in physics and engineering, with world-class facilities including the Lichtwerkstatt Jena makerspace and partnerships with global tech leaders.""}","Jena is a compact university city with a strong international research community, particularly in optics and photonics. The city offers a safe, student-friendly environment with lower living costs than major German cities.","University guest houses offer single rooms for 300-500 EUR upon acceptance. The ASP office provides dedicated accommodation support, and the smaller city size makes housing more accessible than in larger German cities.","Exceptional job prospects with world-leading optics companies headquartered locally (ZEISS, JENOPTIK, SCHOTT). The region is Germany's photonics hub with strong demand for PhD graduates in both industry and academia.","Monthly budget of 700-770 EUR covers all living expenses including rent. Jena remains one of Germany's most affordable university cities, with PhD salaries easily covering costs.","A2-B1 German helpful for daily life outside campus, but the international research community and student services make A1 sufficient initially. The program offers integrated German language courses.","Full English instruction and supervision available for the PhD program. Campus services and research environment fully English-compatible, though basic German helps for city administration and social integration.",4,"Friedrich Schiller University Jena is Germany's premier photonics research hub, hosting 300+ doctoral candidates in optics. The university excels in physics and engineering, with world-class facilities including the Lichtwerkstatt Jena makerspace and partnerships with global tech leaders.","Submit applications directly at https://apply2.uni-jena.de/utumg anytime, or check www.asp.uni-jena.de/open_positions for specific openings with deadlines.","[""photonics"", ""optics"", ""quantum technology"", ""physics"", ""engineering""]",
+5160,Academic German Preparation Course Munich: Intensive Courses at the International University Munich,Internationale Hochschule SDI M�nchen/International University SDI M�nchen,M�nchen,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/5160/,,preparatory,preparatory,Preparatory course,other,[],,EUR,,,False,True,,[],[],,,,,['german'],{},"Costs
+2,250 EUR: 24-week course (six months)
+4,000 EUR: 40-week course (one year)
+This price includes
+Course fees for language course
+Course fees
+Further information regarding the price
+A four-week summer course can be integrated into the regular language courses.
+Academic admission requirements
+Minimum age: 17 years
+Language requirements
+Level A2 is required for the language course and lectures in German economics, literature, geography, and politics.
+Level B2 is required for scientific language training and TestDaF preparation courses.
+Do applicants require a higher education entrance qualification recognised in Germany?
+No
+Do applicants have to have already been admitted to a study programme at your university?
+No
+Submit application to
+SDI M�nchen / Internationale Hochschule SDI M�nchen
+Bereich Deutsch als Fremdsprache
+Baierbrunner Stra�e 28
+81379 M�nchen
+Germany",[],['TESTDAF'],,,False,"Course location M�nchen Teaching language German Course duration 6 months - 1 year Mode of study Less than 50% online Phase(s) of attendance in Germany (applies to the entire programme) Yes, compulsory Pace of course Mixed (e.g. fixed exam dates and duration, study content can be studied at any time) Description/content In addition to language instruction for scientific purposes, lectures are offered in German social studies, literature, and geography ""Landeskunde"" (minimum number of participant... | Course duration 6 months - 1 year Course components General preparation for studies Intercultural training Language course Recognised language exams offered (e.g. DSH, TestDaF, TOEFL) Yes Average number of hours per week 24 Do course participants have student status? No Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination? Yes Preparation for degree programmes Bachelor's degree Master's degree State examination ...",,False,True,,,"Course location
+M�nchen
+Teaching language
+German
+Course duration
+6 months - 1 year
+Mode of study
+Less than 50% online
+Phase(s) of attendance in Germany (applies to the entire programme)
+Yes, compulsory
+Pace of course
+Mixed (e.g. fixed exam dates and duration, study content can be studied at any time)
+Description/content
+In addition to language instruction for scientific purposes, lectures are offered in German social studies, literature, and geography ""Landeskunde"" (minimum number of participants: 15).
+We offer additional test preparation courses for B2.
+The courses include 24 classroom hours (45 minutes per classroom hour) per week on levels B1-C1. The programme prepares participants for language and study requirements at German universities. Participants will also obtain an invitation letter in order to apply for a visa.","Course duration
+6 months - 1 year
+Course components
+General preparation for studies
+Intercultural training
+Language course
+Recognised language exams offered (e.g. DSH, TestDaF, TOEFL)
+Yes
+Average number of hours per week
+24
+Do course participants have student status?
+No
+Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination?
+Yes
+Preparation for degree programmes
+Bachelor's degree
+Master's degree
+State examination
+Preparation for subject groups
+Language and Cultural Studies
+Further information on subsequent admission to degree programmes/guaranteed admission
+Students can apply for BA and MA programmes at the International University Munich / SDI M�nchen.
+Average number of participants per group/course
+15",,"Costs
+2,250 EUR: 24-week course (six months)
+4,000 EUR: 40-week course (one year)
+This price includes
+Course fees for language course
+Course fees
+Further information regarding the price
+A four-week summer course can be integrated into the regular language courses.
+Academic admission requirements
+Minimum age: 17 years
+Language requirements
+Level A2 is required for the language course and lectures in German economics, literature, geography, and politics.
+Level B2 is required for scientific language training and TestDaF preparation courses.
+Do applicants require a higher education entrance qualification recognised in Germany?
+No
+Do applicants have to have already been admitted to a study programme at your university?
+No
+Submit application to
+SDI M�nchen / Internationale Hochschule SDI M�nchen
+Bereich Deutsch als Fremdsprache
+Baierbrunner Stra�e 28
+81379 M�nchen
+Germany","Is accommodation organised?
+The organiser helps participants look for accommodation.
+Accommodation
+We offer rooms to rent�on campus.
+Meals
+Meals (4-5 EUR) are offered in the cafeteria.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+July and August:
+excursions to the city, museums, restaurants (with the course)
+international leisure and cultural programmes on the SDI campus
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818916+00:00,daad_api,2026-02-01T17:42:20.509670,"['Tuition fees not specified - contact university', 'No program image available', 'Program duration not specified']",0.65,True,,,"[""TestDaF"", ""DSH""]",B2,,"Level A2 required for language course and lectures in German economics, literature, geography, and politics. Level B2 required for scientific language training and TestDaF preparation courses. Test preparation courses for B2 offered.",Minimum age 17 years. No higher education entrance qualification required. No prior university admission required.,"The organizer helps participants find accommodation with rooms available on campus. Meals offered in cafeteria at 4-5 EUR. Social and leisure program includes excursions to city, museums, restaurants in July/August, and international cultural programs on campus. Free internet access and visa support provided.","[""accommodation assistance"", ""on-campus housing"", ""cafeteria meals"", ""excursions to city/museums/restaurants"", ""international leisure and cultural programs"", ""free internet access"", ""visa support""]",,2250,4000,"2,250 EUR for 24-week course (six months); 4,000 EUR for 40-week course (one year). Price includes course fees for language course. Optional four-week summer course can be integrated.",,,,Meals available in cafeteria for 4-5 EUR per meal.,,"This is a preparatory language course, not a degree program. Prepares participants for Bachelor's, Master's, and State examination programs. Students can apply for BA and MA programs at International University Munich/SDI M�nchen after completion.",,,direct-university,"Submit application to SDI M�nchen / Internationale Hochschule SDI M�nchen, Bereich Deutsch als Fremdsprache, Baierbrunner Stra�e 28, 81379 M�nchen, Germany",False,,"[""application form"", ""proof of minimum age 17 years""]","{""overview"": ""This intensive German preparation course at SDI München prepares international students for university studies in Germany through 24 hours weekly of language instruction and cultural training. The program targets students needing German proficiency (A2-C1) before entering Bachelor's or Master's programs."", ""modules"": [""German language instruction for academic purposes (B1-C1 levels)"", ""German social studies and Landeskunde (geography/culture)"", ""Literature and politics lectures"", ""TestDaF and DSH exam preparation"", ""Intercultural training components""], ""subjects"": [""german language"", ""language studies"", ""cultural studies"", ""test preparation""], ""requirements"": {""academic_background"": ""Minimum age 17; no specific degree required but students should be planning to pursue Bachelor's or Master's studies in Germany"", ""language"": ""Minimum German A2 for basic courses; B2 required for scientific language training and TestDaF preparation"", ""documents"": [""application form"", ""CV/resume"", ""transcript of records"", ""passport copy"", ""proof of German proficiency (A2 or B2 level)""], ""extra"": ""No formal university entrance qualification needed; visa invitation letter provided upon enrollment""}, ""costs"": {""tuition"": ""€2,250 for 6 months or €4,000 for 1 year"", ""semester_fee"": ""Not applicable (preparatory course)"", ""living_expenses"": ""€1,000-1,500 per month in Munich"", ""funding"": ""No specific scholarships mentioned""}, ""takeaways"": [""• Provides visa invitation letter and support for international students"", ""• Small class sizes (average 15 students) ensure personalized attention"", ""• Direct pathway to SDI München's Bachelor's and Master's programs upon completion""], ""how_to_apply"": ""Submit application directly to SDI München at Baierbrunner Straße 28, 81379 München, Germany. No specific deadline mentioned, apply early for visa processing time."", ""city_expats_overview"": ""Munich is Germany's third-largest city with a vibrant international community and excellent safety record. The city hosts numerous cultural events and has strong English-speaking expat networks, though living costs are among Germany's highest."", ""accommodation_outlook"": ""Munich has Germany's tightest housing market with rooms typically €600-900/month. SDI offers on-campus rooms which is advantageous; otherwise start searching WG-Gesucht and Studenten-WG months in advance."", ""job_market_demand"": ""Munich offers excellent job prospects with major employers like BMW, Siemens, and Allianz, plus a thriving startup scene. Student jobs are competitive but available in hospitality, tutoring, and retail sectors."", ""city_living_costs"": ""Expect €1,000-1,500 monthly total expenses in Munich (rent €600-900, food €200-300, transport €60, miscellaneous €150-250). Budget carefully as Munich is 30-40% more expensive than other German cities."", ""german_daily_life_requirement"": ""B1-B2 German strongly recommended for daily life in Munich. While central areas have English speakers, German is essential for housing searches, bureaucracy, and local integration."", ""english_livability"": ""English-only living is challenging in Munich outside tourist areas and international companies. While many speak English, German is needed for administrative tasks, finding housing, and social integration beyond expat circles."", ""ai_city_fit_score"": 3, ""university_profile"": ""SDI München specializes in languages, communication, and international business with a focus on practical, career-oriented education. The university maintains small class sizes and strong industry connections, particularly in translation, interpreting, and international management fields.""}","Munich is Germany's third-largest city with a vibrant international community and excellent safety record. The city hosts numerous cultural events and has strong English-speaking expat networks, though living costs are among Germany's highest.",Munich has Germany's tightest housing market with rooms typically €600-900/month. SDI offers on-campus rooms which is advantageous; otherwise start searching WG-Gesucht and Studenten-WG months in advance.,"Munich offers excellent job prospects with major employers like BMW, Siemens, and Allianz, plus a thriving startup scene. Student jobs are competitive but available in hospitality, tutoring, and retail sectors.","Expect €1,000-1,500 monthly total expenses in Munich (rent €600-900, food €200-300, transport €60, miscellaneous €150-250). Budget carefully as Munich is 30-40% more expensive than other German cities.","B1-B2 German strongly recommended for daily life in Munich. While central areas have English speakers, German is essential for housing searches, bureaucracy, and local integration.","English-only living is challenging in Munich outside tourist areas and international companies. While many speak English, German is needed for administrative tasks, finding housing, and social integration beyond expat circles.",3,"SDI München specializes in languages, communication, and international business with a focus on practical, career-oriented education. The university maintains small class sizes and strong industry connections, particularly in translation, interpreting, and international management fields.","Submit application directly to SDI München at Baierbrunner Straße 28, 81379 München, Germany. No specific deadline mentioned, apply early for visa processing time.","[""german language"", ""language studies"", ""cultural studies"", ""test preparation""]",
+6324,8th International Winter Academy,Martin Luther University Halle-Wittenberg,Lutherstadt Wittenberg,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/6324/,https://www2.daad.de/app/ip/media/cache/resolve/16_9_300px/uploads/images/image/online/68af0e1b99536.jpeg,language_course,language_course,Language course,arts,"['literature', 'german language course (including literature and culture studies)']",790.0,EUR,790.0,790.0,False,False,,['winter'],[2],2026-01-02,,,,['german'],"{'german': 'A1, A2, B1, B2'}","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2
+Language requirements
+Placement test on the first day of the course
+Submit application to
+Martin-Luther-Universit�t Halle-Wittenberg
+c/o Institut f�r deutsche Sprache und Kultur
+Collegienstra�e 62
+06886 Lutherstadt Wittenberg
+Germany",[],[],,,False,"Course location Lutherstadt Wittenberg In cooperation with Institute for German Language and Culture Teaching language German Language level of course German: A1, A2, B1, B2 Date(s) 1 February - 26 February 2026 (Registration deadline of course provider: 2 January 2026) Target group This course is open to all German language learners. Description/content Come and explore Wittenberg and its UNESCO world heritage sites during the winter months. In this language course, you will not only discover t...",,False,False,,,"Course location
+Lutherstadt Wittenberg
+In cooperation with
+Institute for German Language and Culture
+Teaching language
+German
+Language level of course
+German: A1, A2, B1, B2
+Date(s)
+1 February - 26 February 2026 (Registration deadline of course provider: 2 January 2026)
+Target group
+This course is open to all German language learners.
+Description/content
+Come and explore Wittenberg and its UNESCO world heritage sites during the winter months. In this language course, you will not only discover the history of Luthers town and learn about the citys famous inhabitants but also learn a lot about Germany today.
+Heres what you can expect:
+Class time
+Placement test
+9:00 am  12:15 pm / 1:00 pm  2:30 pm, communicative language classes at different levels
+Training of all four language skills  reading, listening, writing, and speaking
+Lessons in pronunciation by trained specialists
+Learn about current cultural and socio-political topics as well as the history and current reality of the area around Wittenberg
+Work on projects and final exam
+Field trips and free time
+Two days of field trips and lots of free time activities
+Farewell party with everyone involved
+Support and help from international volunteers and student assistants",,"Dates and costs
+1 February - 26 February 2026 (Registration deadline of course provider: 2 January 2026),
+costs: EUR 790
+This price includes
+Course fees
+Accompanying programme","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2
+Language requirements
+Placement test on the first day of the course
+Submit application to
+Martin-Luther-Universit�t Halle-Wittenberg
+c/o Institut f�r deutsche Sprache und Kultur
+Collegienstra�e 62
+06886 Lutherstadt Wittenberg
+Germany","Is accommodation organised?
+Accommodation is arranged by the organiser.
+Type of accommodation
+Accommodation can be arranged by the organiser for an extra cost.
+Accommodation with host families, includes breakfast and dinner (675 EUR)
+Double rooms with Wi-Fi, no meals (500 EUR)
+Single rooms with Wi-Fi, no meals (620 EUR)
+Meals
+Breakfast and dinner are included with the host family.
+No meals with other types of accommodation
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+Wittenberg
+is a beautiful little German town filled with
+UNESCO World Heritage
+Sites
+, parks, caf�s, and recreation areas along the Elbe River.
+During our language courses,
+two international volunteers
+(ESC/FSJ) will be organising a wide range of
+free-time
+and
+leisure activities
+.
+In
+Wittenberg:
+Guided tour, conversations with local people
+Workshops (music, theatre, etc.)
+Intercultural get-together
+Bike tours along the Elbe River
+Sports and leisure activities
+Museum visits (Martin Luther's house, Asisi's Panorama Luther 1517)
+Farewell evening with instructors and guests
+Outside of Wittenberg:
+Two day trips to
+Berlin
+and
+Leipzig
+(or other cities), including guided city tours, free-time suggestions
+Afternoon visit to UNESCO World Heritage Site
+Dessau/W�rlitz
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+Yes",2026-02-01T13:15:06.818889+00:00,daad_api,2026-02-01T17:42:20.508645,"['Limited course details available', 'Program duration not specified']",0.7000000000000001,True,,,[],B2,,"Placement test administered on the first day of the course to determine appropriate level. Course offers instruction at A1, A2, B1, and B2 levels.",Open to all German language learners; no specific prior degree or academic background required.,"Accommodation arranged by organizer (host families or dormitory options), visa support provided, airport/train station pickup service available, support from international volunteers and student assistants, social and leisure program including field trips to Berlin and Leipzig, guided tours, workshops, sports activities, museum visits, and farewell party.","[""Accommodation arrangement"", ""Visa support"", ""Airport/train station pickup"", ""International volunteer support"", ""Student assistant support"", ""Guided city tours"", ""Field trips to Berlin and Leipzig"", ""Museum visits"", ""Workshops (music, theatre)"", ""Sports and leisure activities"", ""Bike tours"", ""Intercultural events"", ""Farewell party"", ""Free internet access""]",790,,,"EUR 790 course fee includes course instruction, accompanying program, and activities. Does not include accommodation.",,,,"Accommodation options range from EUR 500-675 for the 4-week course period. Host family accommodation (EUR 675) includes breakfast and dinner. Double rooms EUR 500, single rooms EUR 620 (no meals included).",,"This is a short-term German language course, not a degree program. No ECTS credits or specific academic prerequisites mentioned.",2026-01-02,Registration deadline is 2 January 2026 for the course running 1 February - 26 February 2026.,direct-university,"Submit application directly to Martin-Luther-Universit�t Halle-Wittenberg c/o Institut f�r deutsche Sprache und Kultur, Collegienstra�e 62, 06886 Lutherstadt Wittenberg, Germany",False,,"[""Application form""]","{""overview"": ""This 4-week winter German language course combines intensive language training with cultural immersion in historic Lutherstadt Wittenberg, a UNESCO World Heritage town. Perfect for learners at any level (A1-B2) seeking to improve German while exploring Luther's legacy and modern German culture."", ""modules"": [""Communicative language classes (reading, listening, writing, speaking)"", ""Pronunciation training with specialists"", ""Cultural and socio-political topics about Germany"", ""Project work and final exam"", ""Field trips to Berlin, Leipzig, and UNESCO sites""], ""subjects"": [""german language"", ""cultural studies"", ""language learning"", ""german culture""], ""requirements"": {""academic_background"": ""Open to all German language learners, no specific academic prerequisites required"", ""language"": ""German levels A1-B2 accepted; placement test on first day determines your class level"", ""documents"": [""application form""], ""extra"": ""Registration deadline: January 2, 2026. Course runs February 1-26, 2026""}, ""costs"": {""tuition"": ""€790 (includes course fees and accompanying programme)"", ""semester_fee"": ""Not applicable for short course"", ""living_expenses"": ""Accommodation €500-675/month depending on type (meals may be included)"", ""funding"": ""No specific funding mentioned""}, ""takeaways"": [""• Small-town immersion with UNESCO World Heritage sites perfect for focused language learning"", ""• Includes organized field trips to major cities like Berlin and Leipzig"", ""• Support from international volunteers and student assistants throughout""], ""how_to_apply"": ""Submit application directly to Martin-Luther-Universität Halle-Wittenberg, Institut für deutsche Sprache und Kultur, Collegienstraße 62, 06886 Lutherstadt Wittenberg by January 2, 2026."", ""city_expats_overview"": ""Lutherstadt Wittenberg is a small, historic German town famous for Martin Luther and the Reformation, offering a peaceful, authentic German experience. The town has UNESCO World Heritage status and provides a safe, traditional German environment ideal for language immersion."", ""accommodation_outlook"": ""Housing is organized by the course provider with three options: host families with meals (€675), double rooms (€500), or single rooms (€620) with Wi-Fi. Since accommodation is pre-arranged, finding housing is hassle-free."", ""job_market_demand"": ""As a short-term language course in a small historic town, job opportunities are limited. Wittenberg's economy focuses on tourism, education, and cultural heritage rather than major industries."", ""city_living_costs"": ""Monthly costs range €500-675 for accommodation (potentially including meals with host families). Small-town living keeps other expenses low, with affordable local cafés and shops typical of eastern German towns."", ""german_daily_life_requirement"": ""A1-A2 German is essential for daily life in this small traditional town. Shops, restaurants, and services primarily operate in German with limited English support outside the university program."", ""english_livability"": ""English-only living is challenging in Wittenberg. While the course provides support through international volunteers, daily interactions require basic German. The immersive environment accelerates language learning but demands German use."", ""ai_city_fit_score"": 3, ""university_profile"": ""Martin Luther University Halle-Wittenberg is one of Germany's oldest universities (founded 1502/1694), renowned for humanities, theology, and German studies. The Institute for German Language and Culture specializes in intensive language programs with strong cultural integration and personalized support for international learners.""}","Lutherstadt Wittenberg is a compact Elbe-side town best known for its Reformation heritage, drawing international students to Martin Luther University’s satellite facilities and cultural institutes. Daily life revolves around the historic Altstadt, where most services, cafés, and student events are within walking distance of the Schloss- and Stadtkirche landmarks.","Short-term program participants typically use university-arranged dorm rooms or vetted host families, with monthly costs around €420–€520 for a furnished single in student housing and €550–€650 for half-board homestays. Private rentals are scarce and often require commuting from Dessau or Halle, so early coordination with the academy is essential.","The local job market is limited to tourism, museum services, and small educational institutions; short-term students usually rely on stipends rather than local employment. Occasional part-time roles exist in visitor services or language tutoring, but German proficiency and prior permits are mandatory.","Expect €850–€1,000 per month including €450 rent, €200 for groceries and dining, €80 for transport or bike upkeep, and €120–€200 for leisure, insurance, and incidentals. Prices remain lower than in Leipzig or Berlin, but specialty goods may require trips to Halle.","A2 German is advisable for errands, medical appointments, and municipal offices, as most staff default to German and signage is rarely bilingual. University staff can assist in English, yet everyday interactions—bakeries, pharmacies, train counters—assume basic German competence.","English is understood within program offices and major museums, but outside tourist hotspots many residents prefer German, making English-only living inconvenient. Students relying solely on English should expect slower service and occasional misunderstandings in shops or public services.",3,"Martin Luther University Halle-Wittenberg is one of Germany's oldest universities (founded 1502/1694), renowned for humanities, theology, and German studies. The Institute for German Language and Culture specializes in intensive language programs with strong cultural integration and personalized support for international learners.","Submit application directly to Martin-Luther-Universität Halle-Wittenberg, Institut für deutsche Sprache und Kultur, Collegienstraße 62, 06886 Lutherstadt Wittenberg by January 2, 2026.","[""german language"", ""cultural studies"", ""language learning"", ""german culture""]","[""generic content lacking city-specific detail""]"
+4960,"Academic Life in Leipzig  Autumn Language Course for International Researchers, Doctoral Candidates, and Students",Leipzig University,Leipzig,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4960/,,language_course,language_course,Language course,arts,"['literature', 'german language course (including literature and culture studies)']",,EUR,,,False,True,,['winter'],[9],,,,,['german'],"{'german': 'A1, A2, B1, B2, C1'}","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+Participation in the course is already possible at beginner level.�Language classes are offered at levels A1 to C1.
+Technical equipment and programmes
+As part of our autumn language course ""Academic Life in Leipzig"", additional material and exercises are provided on a learning platform. Participants will therefore need a notebook or tablet in order to learn successfully.
+It is important that participants can work independently or collaboratively on the online learning platform in addition to face-to-face teaching.
+Submit application to
+If you would like to participate in the language programme at Leipzig University, please send the registration form to interDaF by mail or as an e-mail attachment:
+interDaF am Herder-Institut
+Lumumbastra�e 4
+04105 Leipzig
+E-mail:
+interdaf@uni-leipzig.de",[],[],,,False,"Course location Leipzig Teaching language German Language level of course German: A1, A2, B1, B2, C1 Date(s) 1 September - 26 September 2026 Mode of study Fully on-site with voluntary online elements Phase(s) of attendance in Germany (applies to the entire course) Yes, compulsory Pace of course Instructor-led (Specific due dates for lectures/assignments/exams) Information on dates, prices and mode of study Our courses in Leipzig combine face-to-face learning with modern digital methods. In addit...",,False,False,,,"Course location
+Leipzig
+Teaching language
+German
+Language level of course
+German: A1, A2, B1, B2, C1
+Date(s)
+1 September - 26 September 2026
+Mode of study
+Fully on-site with voluntary online elements
+Phase(s) of attendance in Germany (applies to the entire course)
+Yes, compulsory
+Pace of course
+Instructor-led (Specific due dates for lectures/assignments/exams)
+Information on dates, prices and mode of study
+Our courses in Leipzig combine face-to-face learning with modern digital methods. In addition to varied on-site activities, we supplement the lessons with an intuitive learning platform that serves as a central location for materials and exchange.
+If necessary, learning can take place entirely online: You can take part in live video conferences and deepen your knowledge during independent learning phases.
+Our learning service is there to support you throughout the course.
+Target group
+Our fall course is aimed at international researchers, doctoral candidates, and students who are about to start their academic work or studies in Germany and would like to improve their German language skills in a targeted and practical way.
+Description/content
+Language skills for your studies  discover and experience Leipzig
+The Academic Life in Leipzig autumn course combines intensive German lessons with exciting insights into Leipzig as a centre of science and higher education. This course is ideal for�anyone looking to improve their language skills while gaining first-hand experience of academic life in Germany.
+Learn German  intensively and individually
+Online placement test before the start of the course and personal oral assessment at the start
+Learn in small groups (approx. 14 participants)  from level A1 to C1
+Approx. 25 lessons per week, including phonetics training in individual or small group sessions
+Modern textbook (included in the course fee), up-to-date materials, and access to the Moodle learning platform
+Modules on academic speaking and writing
+Practical explorations on the topic of ""Studying and researching in Leipzig""  in cooperation with Leipzig universities and research institutions
+Written and oral final exam
+Acquisition of five ECTS points possible (can be credited at the home university)
+Certificate of participation with documented test results
+Experience Germany  culture and everyday life up close
+Interactive cultural events with a focus on real-life regional studies  e.g. research and interviews on site
+City walks and exploratory tours in and around Leipzig
+Visits to research institutions in Leipzig
+One full-day excursion
+Personal support from the course team
+Further optional offers (e.g. weekend excursions to Dresden or Weimar)",,"Dates and costs
+1 September - 26 September 2026
+Price only on request
+Yes
+Information on dates, prices and mode of study
+Our courses in Leipzig combine face-to-face learning with modern digital methods. In addition to varied on-site activities, we supplement the lessons with an intuitive learning platform that serves as a central location for materials and exchange.
+If necessary, learning can take place entirely online: You can take part in live video conferences and deepen your knowledge during independent learning phases.
+Our learning service is there to support you throughout the course.","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+Participation in the course is already possible at beginner level.�Language classes are offered at levels A1 to C1.
+Technical equipment and programmes
+As part of our autumn language course ""Academic Life in Leipzig"", additional material and exercises are provided on a learning platform. Participants will therefore need a notebook or tablet in order to learn successfully.
+It is important that participants can work independently or collaboratively on the online learning platform in addition to face-to-face teaching.
+Submit application to
+If you would like to participate in the language programme at Leipzig University, please send the registration form to interDaF by mail or as an e-mail attachment:
+interDaF am Herder-Institut
+Lumumbastra�e 4
+04105 Leipzig
+E-mail:
+interdaf@uni-leipzig.de","Is accommodation organised?
+The organiser helps participants look for accommodation.
+Meals
+Our course participants can eat at the student cafeteria ""Mensa am Park"", which is part of the campus of Leipzig University in the city centre.
+Close to our institute as well as in the nearby city centre, you will also find a wide variety of caf�s, restaurants, and pubs.
+Moreover, there are small kitchens in the accommodation, where you can prepare meals on your own.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+The course price includes a varied accompanying programme that combines learning with shared experiences:
+one full-day excursion, e.g. to Erfurt  exciting impressions and new perspectives outside of the seminar room
+shared opening and closing dinners  a great way to arrive and bring the course to a close together
+selected cultural events, e.g. a concert  for special evenings full of music and encounters
+visits to museums and places of interest, e.g. a guided tour of the Forum of Contemporary History  bringing history to life
+We also offer other interesting excursions, such as an excursion to Dresden. This is bookable for a small surcharge.
+We are happy to give personal tips for your own activities so that you can discover Leipzig and the surrounding area in your own way.
+Free internet access
+Yes
+Support in visa matters
+Yes
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818929+00:00,daad_api,2026-02-01T17:42:20.509914,"['Tuition fees not specified - contact university', 'No program image available', 'Limited course details available', 'Program duration not specified']",0.45000000000000007,False,,,[],,,Participation possible at beginner level. Language classes offered at levels A1 to C1. Online placement test before course start and personal oral assessment at the beginning.,"Aimed at international researchers, doctoral candidates, and students about to start academic work or studies in Germany.","The organizer helps participants find accommodation. Participants can eat at the student cafeteria Mensa am Park. Social and leisure program includes full-day excursion, opening and closing dinners, cultural events, museum visits, and guided tours. Optional weekend excursions to Dresden or Weimar available. Personal support from course team throughout. Visa support provided. Free internet access available.","[""Accommodation search assistance"", ""Student cafeteria access"", ""Full-day excursion"", ""Opening and closing dinners"", ""Cultural events and concerts"", ""Museum visits and guided tours"", ""Optional weekend excursions"", ""Personal course team support"", ""Visa support"", ""Free internet access"", ""Personal tips for exploring Leipzig""]",,,,Price only on request. Modern textbook included in course fee.,,,,,,Acquisition of 5 ECTS points possible (can be credited at home university).,,,direct-university,"Send registration form to interDaF by mail or email attachment. Address: interDaF am Herder-Institut, Lumumbastra�e 4, 04105 Leipzig. Email: interdaf@uni-leipzig.de",False,,"[""Registration form""]","{""overview"": ""This 4-week intensive German language course prepares international researchers, doctoral candidates, and students for academic life in Germany through practical language training and cultural immersion. The program combines 25 weekly lessons with hands-on exploration of Leipzig's academic institutions and research centers."", ""modules"": [""German language instruction (A1-C1 levels)"", ""Academic speaking and writing modules"", ""Phonetics training in small groups"", ""Research institution visits and practical explorations"", ""Cultural events and regional studies projects""], ""subjects"": [""german language"", ""academic writing"", ""cultural studies"", ""language education""], ""requirements"": {""academic_background"": ""Open to international researchers, doctoral candidates, and students preparing for academic work in Germany"", ""language"": ""No prior German required - courses offered from complete beginner (A1) to advanced (C1) levels"", ""documents"": [""registration form""], ""extra"": ""Participants need a laptop or tablet for online learning platform access. Placement test and oral assessment conducted at course start""}, ""costs"": {""tuition"": ""Price only on request - contact interDaF for details"", ""semester_fee"": ""Not applicable for short course"", ""living_expenses"": ""€800-1,200/month estimated for Leipzig"", ""funding"": ""5 ECTS credits available for transfer to home university""}, ""takeaways"": [""• Small groups (~14 students) ensure personalized attention and rapid progress"", ""• Includes textbook, learning materials, cultural program, and one full-day excursion"", ""• Flexible hybrid format allows online participation if needed""], ""how_to_apply"": ""Send the registration form to interDaF by mail (Lumumbastraße 4, 04105 Leipzig) or email (interdaf@uni-leipzig.de). Contact them directly for pricing and specific deadlines."", ""city_expats_overview"": ""Leipzig is a vibrant student city with a thriving international community and rich cultural scene, known for its affordable living costs compared to other German cities. The city offers excellent public transport and a welcoming atmosphere for international students and researchers."", ""accommodation_outlook"": ""The organizer assists with accommodation search. Student housing typically ranges €300-500/month for shared flats (WG) or €400-700 for studios. Book early as September is peak arrival time for students."", ""job_market_demand"": ""Leipzig has growing opportunities in research, tech startups, and logistics sectors. The city hosts major research institutions and universities, creating demand for academic positions and research assistants, especially for German speakers."", ""city_living_costs"": ""Monthly costs range €800-1,200 including rent (€350-600), food (€200-300), transport (€60), and personal expenses. Leipzig remains one of Germany's most affordable major cities for students."", ""german_daily_life_requirement"": ""A2-B1 German helps significantly for daily tasks like shopping, bureaucracy, and socializing. Leipzig locals are generally patient with learners, but basic German improves quality of life considerably."", ""english_livability"": ""Academic environments often accommodate English speakers, but German is essential for administrative tasks, housing searches, and social integration. The course specifically addresses this gap by combining language learning with practical orientation."", ""ai_city_fit_score"": 4, ""university_profile"": ""Leipzig University, founded in 1409, is one of Germany's oldest universities with strong programs in humanities, sciences, and medicine. The university ranks well nationally and offers excellent support for international students through programs like interDaF, with a particularly strong reputation in German studies and cultural research.""}","Leipzig combines a historic university tradition with a lively arts scene centered around the Südvorstadt and Plagwitz districts, making it attractive to international researchers and students. The city’s compact layout and strong cycling culture help newcomers integrate quickly into academic and social life.","Shared flats (WGs) in Leipzig typically cost €320-450 per month, while small studios range €500-650, with highest demand near the city center and Schleußig. University housing services and the Studentenwerk offer limited dorm rooms, so early applications are essential, especially for autumn arrivals.","Leipzig’s job market favors research assistants in the life sciences, digital humanities, and environmental studies thanks to institutions like the Helmholtz and Max Planck centers, while the city’s growing media and logistics sectors offer part-time roles for German-speaking students. English-only positions exist mainly in international research projects but remain limited.","Monthly expenses average €850-1,050, including €350-500 for rent, €220 for food, €65 for the LVB semester transport ticket, and €200-250 for insurance, study materials, and leisure. Energy surcharges have risen slightly since 2024, so budgeting a small buffer is prudent.","A2 German suffices for groceries and cafés, but B1 is recommended for dealing with the Bürgeramt, health insurance, and landlord communication, as many offices still operate primarily in German. Locals are generally patient with learners, yet official paperwork rarely offers English translations.","Leipzig University departments and research institutes often conduct seminars in English, and many younger residents speak it confidently, especially in academic settings. Outside campus, English support is patchier, so relying solely on English can slow down bureaucratic processes and housing searches.",4,"Leipzig University, founded in 1409, is one of Germany's oldest universities with strong programs in humanities, sciences, and medicine. The university ranks well nationally and offers excellent support for international students through programs like interDaF, with a particularly strong reputation in German studies and cultural research.","Send the registration form to interDaF by mail (Lumumbastraße 4, 04105 Leipzig) or email (interdaf@uni-leipzig.de). Contact them directly for pricing and specific deadlines.","[""german language"", ""academic writing"", ""cultural studies"", ""language education""]","[""generic content lacking Leipzig-specific details""]"
+6214,ACCESS� Preparation Year,Heilbronn University of Applied Sciences,Heilbronn,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/6214/,,preparatory,preparatory,Preparatory course,other,[],,EUR,,,False,True,,['winter'],[9],,,,,"['german', 'english']",{},"Costs
+155 EUR semester contribution (no other fees apply)
+This price includes
+Course fees
+Course fees for language course
+Academic admission requirements
+The academic aptitude can be proven by submitting a higher education entrance qualification recognised in Germany (applicable to all profiles).
+Alternatively, applicants with an indirect university access in Germany can prove their academic aptitude�for the profiles ""Engineering"" and ""IT"" by submitting either a SAT score report, a TestAS certificate or by participating in the ITB Technology Test.
+Language requirements
+German
+:
+Upon application, participants will be required to provide proof of German language proficiency at completed level A2 of the Common European Framework of Reference for Languages.
+English
+:
+While the language course is in German, the technical courses are offered in English. In order to ensure a sufficient level of English in the ACCESS� preparation course, applicants are required to prove that they possess profi",[],"['IELTS', 'TOEFL', 'CAMBRIDGE']",,6.0,False,"Course location Heilbronn Teaching language German English Date(s) September 2025 - August 2026 September 2026 - August 2027 Description/content Starting your studies abroad means that changes lie ahead  whether it's the new language, making new friends or achieving success in your academic courses. The ACCESS� programme offers a comprehensive preparation package for prospective engineering or business students. Programme components include: an intensive German language course that includes the... | Course components Subject-specific preparation Preparation for academic working methods Excursions Language course Intercultural training Recognised language exams offered (e.g. DSH, TestDaF, TOEFL) Yes Do course participants have student status? Yes Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination? No Preparation for degree programmes Bachelor's degree Preparation for subject groups Mathematics, Natural Sci...",,False,False,,,"Course location
+Heilbronn
+Teaching language
+German
+English
+Date(s)
+September 2025 - August 2026
+September 2026 - August 2027
+Description/content
+Starting your studies abroad means that changes lie ahead  whether it's the new language, making new friends or achieving success in your academic courses. The ACCESS� programme offers a comprehensive preparation package for prospective engineering or business students.
+Programme components include:
+an intensive German language course that includes the levels B1 and B2
+specialised subjects in engineering (e.g. programming, maths, electrical engineering), business (e.g. marketing, accounting, economics) or informatics in the English language
+preparation for academic working methods (e.g. presentation skills, academic writing)
+excursions to companies in the region
+Additional support:
+intercultural buddy programme
+contact to student assistants regarding questions about campus life
+weekly consultation hours","Course components
+Subject-specific preparation
+Preparation for academic working methods
+Excursions
+Language course
+Intercultural training
+Recognised language exams offered (e.g. DSH, TestDaF, TOEFL)
+Yes
+Do course participants have student status?
+Yes
+Does this course involve taking the university entrance examination or does the course specifically prepare students for this examination?
+No
+Preparation for degree programmes
+Bachelor's degree
+Preparation for subject groups
+Mathematics, Natural Sciences
+Engineering Sciences
+Economic Sciences, Law
+Further information on subsequent admission to degree programmes/guaranteed admission
+Upon successful completion of the ACCESS� programme, the participants fulfil the language requirements for several Bachelor's programmes at Heilbronn University of Applied Sciences.
+Also, the programme provides an introduction to the following Bachelor's programmes:
+Engineering Profile:
+Electrical Systems Engineering (BEng)
+Automotive Systems Engineering (BEng)
+Mechatronics and Robotics (BEng)
+Mechanical Engineering
+Business Profile:
+International Business  Intercultural Studies
+Informatics Profile:
+Software Engineering
+Successful participants can apply directly for the Bachelor's programmes of their choice. Course achievements from the preparation programme can be recognised in the above-mentioned Bachelor's programmes upon request.",,"Costs
+155 EUR semester contribution (no other fees apply)
+This price includes
+Course fees
+Course fees for language course
+Academic admission requirements
+The academic aptitude can be proven by submitting a higher education entrance qualification recognised in Germany (applicable to all profiles).
+Alternatively, applicants with an indirect university access in Germany can prove their academic aptitude�for the profiles ""Engineering"" and ""IT"" by submitting either a SAT score report, a TestAS certificate or by participating in the ITB Technology Test.
+Language requirements
+German
+:
+Upon application, participants will be required to provide proof of German language proficiency at completed level A2 of the Common European Framework of Reference for Languages.
+English
+:
+While the language course is in German, the technical courses are offered in English. In order to ensure a sufficient level of English in the ACCESS� preparation course, applicants are required to prove that they possess proficient skills in English by means of one of the following certifications:
+IELTS
+, minimum
+6.0
+overall band score
+TOEFL
+Internet-based test, minimum
+79
+points
+TOEFL
+paper-based test, minimum
+550
+points
+Cambridge CAE
+(Certificate in Advanced English), minimum
+C
+Oxford Test of English
+(at least 120 points and B2 in all modules)
+To ensure a high level of language proficiency, only native speakers of English are exempt from this requirement. Applicants whose school education or first degree were taught in English can be exempted as well. The TOEFL code of Heilbronn University is 2751.
+Do applicants require a higher education entrance qualification recognised in Germany?
+No
+Do applicants have to have already been admitted to a study programme at your university?
+No
+Submit application to
+https://www.hs-heilbronn.de/en/access2","Is accommodation organised?
+The organiser helps participants look for accommodation.
+Is a social and leisure programme offered?
+No
+Free internet access
+Yes
+Support in visa matters
+No
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818937+00:00,daad_api,2026-02-01T17:42:20.510091,"['Tuition fees not specified - contact university', 'No program image available', 'Program duration not specified']",0.65,True,6.0,79,"[""TOEFL paper-based (min 550)"", ""Cambridge CAE (min C)"", ""Oxford Test of English (min 120 points and B2 in all modules)"", ""TestAS"", ""DSH"", ""TestDaF""]",A2,B2,"German A2 required upon application. English proficiency required for technical courses (IELTS 6.0, TOEFL iBT 79, or equivalent). Native English speakers and those with English-taught school/degree exempt. TOEFL code: 2751. Programme includes intensive German B1-B2 language course.","Higher education entrance qualification recognised in Germany. Alternatively for Engineering/IT profiles: SAT score report, TestAS certificate, or ITB Technology Test for applicants with indirect university access in Germany.","Participants receive comprehensive support including intercultural buddy programme, student assistants for campus life questions, weekly consultation hours, help with accommodation search, excursions to regional companies, and preparation for academic working methods.","[""Intercultural buddy programme"", ""Student assistant support for campus life"", ""Weekly consultation hours"", ""Accommodation search assistance"", ""Company excursions"", ""Academic working methods preparation"", ""Free internet access""]",0,,,No tuition fees. Course fees and language course fees included in semester contribution.,155,Semester contribution covers course fees and language course fees. No other fees apply.,,,,"Programme prepares for Bachelor's degrees in Engineering, Business, or Informatics. Course achievements can be recognised in subsequent Bachelor's programmes upon request.",,Programme runs September 2025-August 2026 and September 2026-August 2027. Specific application deadlines not stated.,direct-university,Submit application directly to university via https://www.hs-heilbronn.de/en/access2,False,,"[""Higher education entrance qualification"", ""German language certificate (A2)"", ""English language certificate (IELTS/TOEFL/Cambridge/Oxford)"", ""SAT score report or TestAS certificate or ITB Technology Test (for Engineering/IT profiles with indirect access)"", ""Application form""]","{""overview"": ""ACCESS® is a one-year preparatory program combining intensive German language training (B1-B2) with English-taught technical courses in engineering, business, or informatics. Designed for international students who need language skills and academic preparation before starting their Bachelor's degree at Heilbronn University."", ""modules"": [""Intensive German language course (B1-B2 levels)"", ""Subject-specific courses in Engineering/Business/Informatics (taught in English)"", ""Academic working methods and presentation skills"", ""Company excursions and intercultural training"", ""Buddy program and student support services""], ""subjects"": [""engineering"", ""business administration"", ""computer science"", ""german language"", ""mathematics"", ""economics"", ""robotics""], ""requirements"": {""academic_background"": ""Higher education entrance qualification recognized in Germany, or indirect qualification with SAT/TestAS/ITB Technology Test for Engineering/IT profiles"", ""language"": ""German A2 level required at application; English proficiency needed (IELTS 6.0, TOEFL iBT 79, or equivalent) for technical courses taught in English"", ""documents"": [""application form"", ""CV/resume"", ""transcript of records"", ""passport copy"", ""proof of German proficiency (A2 level)"", ""proof of English proficiency (IELTS/TOEFL/Cambridge certificate)"", ""higher education entrance qualification"", ""SAT/TestAS/ITB test results (if applicable)""], ""extra"": ""Apply directly through university website; program runs September to August annually""}, ""costs"": {""tuition"": ""Free (no tuition fees)"", ""semester_fee"": ""155 EUR per semester contribution"", ""living_expenses"": ""Approximately 700-900 EUR per month in Heilbronn"", ""funding"": ""No specific scholarships mentioned""}, ""takeaways"": [""• Guaranteed pathway to multiple Bachelor's programs at Heilbronn University upon successful completion"", ""• Unique combination of German language learning with English-taught technical subjects"", ""• Full student status with access to campus facilities and support services""], ""how_to_apply"": ""Submit application directly through the university website at https://www.hs-heilbronn.de/en/access2. Program starts in September each year."", ""city_expats_overview"": ""Heilbronn is a mid-sized city in Baden-Württemberg with a growing international student community and strong industrial presence. The city offers a safe, manageable environment for international students with good connections to Stuttgart and other major cities."", ""accommodation_outlook"": ""Housing is moderately competitive with typical student rooms ranging from 300-500 EUR/month. The university assists with accommodation search, and options include student dorms, shared apartments (WG), and private rentals in surrounding areas."", ""job_market_demand"": ""Strong demand for engineering and IT graduates due to Heilbronn's automotive and technology industry cluster, including companies like Audi, Bosch, and numerous tech startups. Business graduates find opportunities in the region's growing service sector."", ""city_living_costs"": ""Monthly budget of 700-900 EUR covers rent (300-500 EUR), food (200-250 EUR), and other expenses. Heilbronn is more affordable than Stuttgart or Munich, making it budget-friendly for students."", ""german_daily_life_requirement"": ""B1-B2 German proficiency is ideal for comfortable daily life in Heilbronn. While the university environment is international-friendly, local shops, bureaucracy, and social integration require basic German skills."", ""english_livability"": ""Technical courses are taught in English, but German is essential for administrative tasks and daily life. The program specifically addresses this by providing intensive German training alongside English-taught subjects."", ""ai_city_fit_score"": 4, ""university_profile"": ""Heilbronn University of Applied Sciences specializes in practical, industry-oriented education with strong programs in engineering, business, and informatics. Known for close industry partnerships and hands-on learning approach, the university ranks well among German universities of applied sciences for graduate employability.""}","Heilbronn sits on the Neckar River in northern Baden-Württemberg and combines a compact city center with a sizable international community drawn by its universities and industry. International students appreciate the manageable scale, reliable public transport, and quick rail links to Stuttgart, Mannheim, and Würzburg.","Student dorm rooms via Studierendenwerk Heilbronn-Franken start around 280–350 EUR, while WG rooms in districts like Sontheim or Böckingen typically cost 350–450 EUR; private studios often exceed 500 EUR and require early applications due to limited supply. Many students broaden their search to nearby towns such as Neckarsulm or Weinsberg for better availability.","Heilbronn’s economy is anchored by automotive suppliers, logistics, and food processing, with companies like Audi (Neckarsulm), Bosch, and Lidl’s Schwarz Group offering internships and entry roles for engineering, IT, and business graduates. The city’s Innovation Park AI and logistics hub also create demand for data, automation, and supply-chain talent.","A realistic monthly budget is 800–950 EUR: rent 320–450 EUR, food 220–260 EUR, health insurance 120 EUR, transport 49 EUR Deutschlandticket, and 80–120 EUR for leisure and incidentals. Costs remain below Stuttgart but slightly above smaller rural towns.","B1 German is advisable for dealing with landlords, city offices, and everyday errands, though basic A2 can suffice initially if students actively practice and use university support services.","English works well on campus and within international programs, yet outside the university many service staff and municipal offices expect German, so students should be prepared to switch languages.",4,"Heilbronn University of Applied Sciences specializes in practical, industry-oriented education with strong programs in engineering, business, and informatics. Known for close industry partnerships and hands-on learning approach, the university ranks well among German universities of applied sciences for graduate employability.",Submit application directly through the university website at https://www.hs-heilbronn.de/en/access2. Program starts in September each year.,"[""engineering"", ""business administration"", ""computer science"", ""german language"", ""mathematics"", ""economics"", ""robotics""]","[""generic content""]"
+4722,Actuarial and Financial Mathematics,RPTU University of Kaiserslautern-Landau,Kaiserslautern,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/4722/,,master,master,Master's degree,natural sciences,"['applied mathematics', 'mathematics']",0,EUR,,,True,False,winter,['winter'],[],,24,4,,['english'],{},"Academic admission requirements
+Applicants have to hold a qualified BSc degree in Mathematics or Economathematics (equivalent to the correspondent study programmes in Kaiserslautern). Profound knowledge in probability theory and stochastic is required.
+Language requirements
+Profound knowledge of the English language (e.g., TOEFL 550 paper-based/ 213 computer-based /80 Internet-based)
+Application deadline
+Winter semester: 30 April
+(Early bird admission: 15 November)
+Summer semester: 31 October
+Submit application to
+Graduate School ""Mathematics as a Key Technology""
+Department of Mathematics
+RPTU University of Kaiserslautern-Landau
+Gottlieb-Daimler-Str. 47
+67663 Kaiserslautern
+Germany
+https://math.rptu.de/en/studies/study-programmes/msc/application-master",[],['TOEFL'],graduate,,False,Degree MSc Course location Kaiserslautern Teaching language English Languages The programme is completely in English. Additional courses taught in German are available. Interested students can practice their German language skills. Programme duration 4 semesters Beginning Winter and summer semester Application deadline Winter semester: 30 April (Early bird admission: 15 November) Summer semester: 31 October Tuition fees per semester in EUR None Combined Master's degree / PhD programme Yes Joint ... | Course organisation The research-oriented study programme contains practical training in real-world problems. The last semester is reserved for the Master's thesis. A Diploma supplement will be issued Yes International elements International guest lecturers Specialist literature in other languages Language training provided Training in intercultural skills Projects with partners in Germany and abroad International comparisons and thematic reference to the international context Integrated interns...,4 semesters,False,False,,['Welcome event | Buddy programme | Accompanying programme | Specialist counselling | Cultural and linguistic preparation | Visa matters | Pick-up service | Help with finding accommodation | Support with registration procedures'],"Degree
+MSc
+Course location
+Kaiserslautern
+Teaching language
+English
+Languages
+The programme is completely in English.�Additional courses taught in German are available. Interested students can practice their German language skills.
+Programme duration
+4 semesters
+Beginning
+Winter and summer semester
+Application deadline
+Winter semester: 30 April
+(Early bird admission: 15 November)
+Summer semester: 31 October
+Tuition fees per semester in EUR
+None
+Combined Master's degree / PhD programme
+Yes
+Joint degree / double degree programme
+No
+Description/content
+Within the field of mathematics, the study programme focuses on financial mathematics, actuarial sciences, statistics, and computational methods. Lectures in the mentioned fields are accompanied by seminars, reading courses, and project seminars. In addition, the participants take modules like Insurance Economics, Economics of Banking, Dynamics of Financial Markets.","Course organisation
+The research-oriented study programme contains practical training in real-world problems. The last semester is reserved for the Master's thesis.
+A Diploma supplement will be issued
+Yes
+International elements
+International guest lecturers
+Specialist literature in other languages
+Language training provided
+Training in intercultural skills
+Projects with partners in Germany and abroad
+International comparisons and thematic reference to the international context
+Integrated internships
+Yes
+Course-specific, integrated German language courses
+Yes
+Course-specific, integrated English language courses
+No","Tuition fees per semester in EUR
+None
+Semester contribution
+Social fee: 314 EUR per semester (including public transport [""Deutschland-Semesterticket""], free university sports courses, free printouts, reductions in RPTU canteen, etc.)
+Assessment fee: 60 EUR (RPTU Kaiserslautern), 75 EUR (RPTU Landau) (single payment for verification of foreign certificates)
+Recommended: German Language & Orientation Course for International Students: 800 EUR
+Costs of living
+Monthly cost of living: approx. 850 EUR (RPTU Kaiserslautern), approx. 950 EUR (RPTU Landau)
+(including accommodation, health insurance, food, internet, phone, etc.)
+For more information:
+https://rptu.de/international/master/prospective-students/why-kaiserslautern/fees-living-expenses
+Funding opportunities within the university
+No","Academic admission requirements
+Applicants have to hold a qualified BSc degree in Mathematics or Economathematics (equivalent to the correspondent study programmes in Kaiserslautern). Profound knowledge in probability theory and stochastic is required.
+Language requirements
+Profound knowledge of the English language (e.g., TOEFL 550 paper-based/ 213 computer-based /80 Internet-based)
+Application deadline
+Winter semester: 30 April
+(Early bird admission: 15 November)
+Summer semester: 31 October
+Submit application to
+Graduate School ""Mathematics as a Key Technology""
+Department of Mathematics
+RPTU University of Kaiserslautern-Landau
+Gottlieb-Daimler-Str. 47
+67663 Kaiserslautern
+Germany
+https://math.rptu.de/en/studies/study-programmes/msc/application-master","Possibility of finding part-time employment
+Student assistant jobs are available on a competitive basis at the university & its departments, at the affiliated research institutes of the Science & Innovation Alliance Kaiserslautern (including DFKI, Max Planck, Fraunhofer, etc.), or at nearby companies (John Deere, Daimler, BASF, etc.).
+Excellent students have good chances of finding jobs in research projects, but these are not usually granted in advance.
+International Affairs RPTU supports international students in finding student jobs and in strengthening their professional network, e.g. by organising networking dialogues with�executives from science and industry.
+Accommodation
+RPTU Kaiserslautern
+The majority of our students live in residence halls located on or close to campus. The ""Studierendenwerk"" operates several large halls of residence in Kaiserslautern. Students submit housing applications directly to the Studierendenwerk. For international Master's or PhD students, International Affairs RPTU aims to arrange accommodation in these residence halls or in private accommodation as part of the pre-arrival service. The halls of residence have modern single, double or shared apartments with kitchenette, bathroom/WC, and modern facilities as well as internet access.
+Fully-furnished: kitchenette (no plates & pots, etc.), bed & mattress (no blankets & pillows), wardrobe, shelf, table, chair (no computer)  rent: approx. 250 to 350 EUR
+Since accommodation is not automatically guaranteed with admission, a request for accommodation to ISGS is advisable.
+Optional: To help international students get started in Kaiserslautern, the Studierendenwerk offers a starter package. This package can be purchased for 95 EUR:
+https://www.studierendenwerk-kaiserslautern.de/en/housing/international
+.
+More information:
+https://rptu.de/international/master/prospective-students/travel-accommodation/accommodation
+RPTU Landau
+Accommodation is available in student residences or on the private housing market. A certain number of rooms in student residences are reserved for incoming international Master's students who enrol at RPTU Landau. Students can contact the Welcome Center for further information with regard to the application process or a search for private housing. E-mail:
+international@uni-landau.de
+More information:
+https://rptu.de/international/master/prospective-students-landau/travel-accommodation/accommodation
+Career advisory services and programmes for future professionals
+International Affairs RPTU sets up interdisciplinary workshops, seminars and info sessions focusing on skills & competences needed to establish a career in the German (business) culture.
+More information:
+https://rptu.de/international/master/current-students/enhance-your-degree
+Support for international students and doctoral candidates
+Welcome event
+Buddy programme
+Accompanying programme
+Specialist counselling
+Cultural and linguistic preparation
+Visa matters
+Pick-up service
+Help with finding accommodation
+Support with registration procedures
+General services and support for international students and doctoral candidates
+International Affairs RPTU supports international students during every phase of their stay!
+Before your arrival: Effective pre-arrival communication helps you handle application, visa, residence permit, and housing affairs.
+Once you are here: As a warm-up to your studies, we offer an orientation course which combines German language training with administrative support (finding accommodation, registration process, visa, health insurance, rental contracts, etc.) & a cultural & social component including individual guidance in the first days, a campus & city tour, excursions, info sessions, social events, a welcome party, etc.
+During your stay: We provide you with continuing support and accompany you on your way until graduation and entry into the German job market.
+More information:
+https://rptu.de/en/international/home",2026-02-01T13:15:06.818944+00:00,daad_api,2026-02-01T17:42:20.510210,['No program image available'],0.9,True,,80,[],,,TOEFL 550 paper-based / 213 computer-based / 80 Internet-based required. Programme completely in English. Additional German courses available for practice.,Qualified BSc degree in Mathematics or Economathematics (equivalent to Kaiserslautern programmes). Profound knowledge in probability theory and stochastic required.,"Comprehensive support including pre-arrival communication for visa and housing, orientation course combining German language training with administrative support, buddy programme, welcome events, campus and city tours, excursions, social events, career advisory services, networking dialogues with industry executives, help finding student jobs, and continuing support until graduation and job market entry.","[""Welcome event"", ""Buddy programme"", ""Orientation course"", ""German language training"", ""Visa support"", ""Housing assistance"", ""Registration support"", ""Health insurance guidance"", ""Campus and city tours"", ""Excursions"", ""Social events"", ""Welcome party"", ""Career advisory services"", ""Networking dialogues"", ""Job search support"", ""Cultural and linguistic preparation"", ""Individual guidance"", ""Interdisciplinary workshops and seminars""]",0,,,No tuition fees,314,"Social fee includes public transport (Deutschland-Semesterticket), free university sports, free printouts, canteen reductions. One-time assessment fee: 60 EUR (Kaiserslautern) or 75 EUR (Landau) for foreign certificate verification. Optional German Language & Orientation Course: 800 EUR.",850,"Approximately 850 EUR per month in Kaiserslautern, 950 EUR in Landau (including accommodation, health insurance, food, internet, phone). Residence hall rent: 250-350 EUR. Optional starter package: 95 EUR.",,"BSc in Mathematics or Economathematics required with profound knowledge in probability theory and stochastic. Programme focuses on financial mathematics, actuarial sciences, statistics, and computational methods.",2024-11-15,Winter semester: 30 April (Early bird admission: 15 November). Summer semester: 31 October.,direct-university,"Submit application to Graduate School ""Mathematics as a Key Technology"", Department of Mathematics, RPTU University of Kaiserslautern-Landau. Application details: https://math.rptu.de/en/studies/study-programmes/msc/application-master",False,No funding opportunities within the university mentioned,"[""BSc degree certificate"", ""Transcript of records"", ""Proof of English language proficiency (TOEFL or equivalent)"", ""CV"", ""Motivation letter"", ""Proof of knowledge in probability theory and stochastic""]","{""overview"": ""This research-oriented Master's program combines financial mathematics, actuarial sciences, and statistics with practical training in real-world problems. Designed for mathematics graduates seeking careers in insurance, banking, and financial markets."", ""modules"": [""Financial Mathematics & Actuarial Sciences"", ""Statistics & Computational Methods"", ""Insurance Economics"", ""Economics of Banking"", ""Dynamics of Financial Markets""], ""subjects"": [""mathematics"", ""financial mathematics"", ""actuarial science"", ""statistics"", ""economics"", ""banking""], ""requirements"": {""academic_background"": ""BSc in Mathematics or Economathematics with profound knowledge in probability theory and stochastics"", ""language"": ""English proficiency required (TOEFL 550 paper-based/213 computer-based/80 Internet-based or equivalent)"", ""documents"": [""application form"", ""CV/resume"", ""transcript of records"", ""passport copy"", ""proof of English proficiency""], ""extra"": ""Winter semester deadline: April 30 (early bird: November 15); Summer semester: October 31. Combined Master's/PhD track available""}, ""costs"": {""tuition"": ""Free"", ""semester_fee"": ""314 EUR per semester (includes public transport Deutschland-Semesterticket, sports, printing)"", ""living_expenses"": ""Approximately 850 EUR per month"", ""funding"": ""No university-specific funding, but student assistant positions available at university and research institutes""}, ""takeaways"": [""• Tuition-free program taught entirely in English with optional German courses"", ""• Strong industry connections with nearby companies like John Deere, Daimler, and BASF"", ""• Combined Master's/PhD track available for research-oriented students""], ""how_to_apply"": ""Submit applications directly to the Graduate School 'Mathematics as a Key Technology' at RPTU Kaiserslautern-Landau by April 30 (winter) or October 31 (summer). Details at https://math.rptu.de/en/studies/study-programmes/msc/application-master"", ""city_expats_overview"": ""Kaiserslautern is a mid-sized university town with a growing international community, particularly strong in tech and engineering sectors. The city offers a safe, affordable environment with good connections to major German cities."", ""accommodation_outlook"": ""Housing is relatively accessible with most students living in residence halls on or near campus. Rent ranges from 250-350 EUR for furnished student accommodation, with International Affairs helping arrange housing as part of pre-arrival service."", ""job_market_demand"": ""Strong demand for actuarial and financial mathematics graduates in the region, with opportunities at affiliated research institutes (DFKI, Max Planck, Fraunhofer) and major companies like John Deere, Daimler, and BASF. Student assistant positions frequently available."", ""city_living_costs"": ""Monthly living costs around 850 EUR including accommodation (250-350 EUR), health insurance, food, and other expenses. The semester ticket provides free public transport throughout Germany, significantly reducing transportation costs."", ""german_daily_life_requirement"": ""A2-B1 German helpful for daily life outside campus, though the university provides strong English support. Basic German recommended for shopping, bureaucracy, and social integration."", ""english_livability"": ""Students can complete the entire program in English with full administrative support. Campus life and academic activities function well in English, though German helps for off-campus activities and wider social integration."", ""ai_city_fit_score"": 4, ""university_profile"": ""RPTU Kaiserslautern-Landau excels in applied mathematics and technology, with strong industry partnerships through the Science & Innovation Alliance. The university is particularly renowned for its mathematics department and offers excellent support for international students through comprehensive pre-arrival and ongoing assistance programs.""}","Kaiserslautern is a compact Palatinate city with a large student share and a notable international community thanks to RPTU and the nearby U.S. military presence. International students find a manageable city center, easy cycling distances, and supportive university services tailored to newcomers.","Student housing is competitive but manageable: furnished dorm rooms via Studierendenwerk typically cost 280-360 EUR, while private shared flats range 350-450 EUR per room depending on proximity to campus. Early applications and temporary sublets are common strategies during peak semesters.","Actuarial and financial mathematics students tap into regional employers such as insurance analytics teams, financial IT firms, and research institutes like DFKI and Fraunhofer IESE, plus nearby corporate hubs in Mannheim and Frankfurt reachable by train. On-campus research assistantships and collaborations with local fintech startups provide practical experience.","Average monthly expenses run about 900 EUR: 320 EUR rent, 120 EUR health insurance, 220 EUR food, 80 EUR transport/semester fee, and 160 EUR for study materials and leisure. Costs stay below big-city levels but require budgeting for occasional trips to larger hubs.","A2 German suffices for groceries, bureaucracy, and casual interactions, while B1 smooths dealings with landlords and municipal offices; many locals appreciate attempts to speak German even when switching to English.","University administration, lectures, and research groups in the program operate comfortably in English, and many residents have basic English due to the U.S. base, yet off-campus errands still benefit from some German proficiency.",4,"RPTU Kaiserslautern-Landau excels in applied mathematics and technology, with strong industry partnerships through the Science & Innovation Alliance. The university is particularly renowned for its mathematics department and offers excellent support for international students through comprehensive pre-arrival and ongoing assistance programs.",Submit applications directly to the Graduate School 'Mathematics as a Key Technology' at RPTU Kaiserslautern-Landau by April 30 (winter) or October 31 (summer). Details at https://math.rptu.de/en/studies/study-programmes/msc/application-master,"[""mathematics"", ""financial mathematics"", ""actuarial science"", ""statistics"", ""economics"", ""banking""]","[""generic content"", ""incorrect transport info (no nationwide semester ticket)""]"
+10493,Academic German Year 2026/2027,University of Passau,Passau,https://www2.daad.de/deutschland/studienangebote/international-programmes/en/detail/10493/,,language_course,language_course,Language course,languages,"['german as an academic language', 'language', 'german']",0,EUR,,,True,False,,['winter'],[10],2026-06-30,,,,['german'],"{'german': 'A1, A2, B1, B2, C1'}","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+No previous knowledge of the German language is necessary.
+Submit application to
+https://www.gcp.uni-passau.de/en/academic-german-year/applications-and-admissions",[],[],,,False,"Course location Passau Teaching language German Language level of course German: A1, A2, B1, B2, C1 Date(s) October 2026 - September 2027 (Registration deadline of course provider: 30 June 2026) Information on dates, prices and mode of study No scholarships available Course participants can voluntarily decide to apply for the ""CampusCard"". This costs 118.50 EUR per semester and includes various functions, such as paying for meals in the refectory (""Unikantine""), a bus pass for the Passau city ar...",,False,False,,,"Course location
+Passau
+Teaching language
+German
+Language level of course
+German: A1, A2, B1, B2, C1
+Date(s)
+October 2026 - September 2027 (Registration deadline of course provider: 30 June 2026)
+Information on dates, prices and mode of study
+No scholarships available
+Course participants can voluntarily decide to apply for the ""CampusCard"". This costs 118.50 EUR per semester and includes various functions, such as paying for meals in the refectory (""Unikantine""), a bus pass for the Passau city area and other benefits.
+Target group
+International students who only have very little or no knowledge of the German language and who are aiming for a degree programme at the University of Passau
+Description/content
+This intensive German course is a joint project between the Language Centre and the International Office of the University of Passau, and it is one of the building blocks of the universitys strong international and multicultural orientation.
+The Academic German Year (AGY) starts with level A1 of the Common European Framework of Reference for Languages. Those completing the course will be given ample preparation to pass an official German language proficiency test.
+Study German together with highly motivated international students! The course participants will take intensive German classes five days a week (24 units each 45 minutes) and will be taught by experienced lecturers.
+Applicants should provide the following documents:
+A cover letter (letter of motivation) in German or English, one page
+Curriculum vitae in German or English
+A photocopy or scan of your
+secondary school leaving certificate
+Examples of leaving certificates are as follows: A Levels, Apolytirio, Baccalaur�at, Gaokao, high school diploma, Lise Diplomas1, Matura, Maturita, Scottish Highers, Te'udat bagrut, T�tulo de Bachillerato + Pruebas de Aptitud. (This list is not exhaustive.)
+Please also include certificates for all academic achievements gained after secondary school, such as university transcripts and certificates.
+Applicants need to fill out an application form:
+https://www.gcp.uni-passau.de/en/academic-german-year/applications-and-admissions
+.",,"Dates and costs
+October 2026 - September 2027 (Registration deadline of course provider: 30 June 2026),
+costs: EUR 3,990
+This price includes
+Course fees
+Information on dates, prices and mode of study
+No scholarships available
+Course participants can voluntarily decide to apply for the ""CampusCard"". This costs 118.50 EUR per semester and includes various functions, such as paying for meals in the refectory (""Unikantine""), a bus pass for the Passau city area and other benefits.","Teaching language
+German
+Language level of course
+German:
+A1, A2, B1, B2, C1
+Language requirements
+No previous knowledge of the German language is necessary.
+Submit application to
+https://www.gcp.uni-passau.de/en/academic-german-year/applications-and-admissions","Is accommodation organised?
+The organiser helps participants look for accommodation.
+Meals
+In the award-winning refectory in Passau, each student can put together his or her own menu, choosing from four different dishes every day during the lecture period. These meals include vegetarian dishes, meat dishes, soups, salads and desserts. Payment is done electronically with your ""CampusCard"".
+Thanks to state subsidies, prices are kept low.
+Is a social and leisure programme offered?
+Yes
+Description of social and leisure programme
+The extracurricular activities offer you many opportunities to get to know Germany's culture, landscape and people.
+In addition to the German courses, we offer exciting trips  for example, to the Bavarian Forest National Park�and to Munich, Regensburg�and Linz. Additionally, we organise parties, picnics, and barbecues on the popular ""Innwiese"" directly by the river, and we also offer seminars and much more.
+Free internet access
+Yes
+Support in visa matters
+No
+Pick-up service from train station/airport
+No",2026-02-01T13:15:06.818921+00:00,daad_api,2026-02-01T17:42:20.509764,"['No program image available', 'Limited course details available', 'Program duration not specified']",0.6,False,,,[],,,No previous knowledge of German language necessary. Course teaches German from A1 to C1 levels. Prepares students for official German language proficiency tests.,"Secondary school leaving certificate required (A Levels, Apolytirio, Baccalaur�at, Gaokao, high school diploma, Lise Diplomas1, Matura, Maturita, Scottish Highers, Te'udat bagrut, T�tulo de Bachillerato + Pruebas de Aptitud, or equivalent). All academic achievements gained after secondary school must also be provided.","The organizer helps participants find accommodation. Award-winning refectory offers subsidized meals with vegetarian and meat options. Extracurricular activities include trips to Bavarian Forest National Park, Munich, Regensburg, and Linz. Social events include parties, picnics, and barbecues on Innwiese by the river. Seminars and other activities organized. Free internet access provided.","[""Accommodation search assistance"", ""Subsidized refectory meals"", ""Cultural excursions and trips"", ""Social events (parties, picnics, barbecues)"", ""Seminars"", ""Free internet access""]",3990,,,"EUR 3,990 for full Academic German Year (October 2026 - September 2027). Price includes course fees.",118,"Optional CampusCard costs EUR 118.50 per semester. Includes refectory meal payments, bus pass for Passau city area, and other benefits. Voluntary purchase.",,,,Target group is international students with little or no German knowledge aiming for degree programme at University of Passau.,2026-06-30,Registration deadline is 30 June 2026 for October 2026 start.,direct-university,Applications submitted directly to University of Passau via online application form at https://www.gcp.uni-passau.de/en/academic-german-year/applications-and-admissions,False,No scholarships available for this course.,"[""Cover letter (motivation letter) in German or English (one page)"", ""Curriculum vitae in German or English"", ""Secondary school leaving certificate (photocopy or scan)"", ""University transcripts and certificates for all academic achievements after secondary school"", ""Application form""]","{""overview"": ""This year-long intensive German language program takes complete beginners from A1 to C1 level, preparing international students for degree programs at German universities. Classes run 24 hours per week with experienced instructors in a multicultural environment."", ""modules"": [""Progressive German levels A1 through C1"", ""24 weekly contact hours (45 minutes each)"", ""Official German proficiency test preparation"", ""Cultural immersion activities and excursions"", ""Academic German for university studies""], ""subjects"": [""german language"", ""language studies"", ""german culture""], ""requirements"": {""academic_background"": ""Secondary school leaving certificate required (A-Levels, Baccalauréat, Gaokao, high school diploma, etc.); any post-secondary academic achievements should be included"", ""language"": ""No previous German knowledge required - course starts at complete beginner level A1"", ""documents"": [""application form"", ""CV/resume"", ""transcript of records"", ""passport copy"", ""letter of motivation"", ""secondary school leaving certificate""], ""extra"": ""Application deadline: June 30, 2026 for October 2026 start""}, ""costs"": {""tuition"": ""€3,990 for the full year program"", ""semester_fee"": ""Optional CampusCard: €118.50/semester (includes local transport and cafeteria payment)"", ""living_expenses"": ""€700-900/month estimated for accommodation and living costs"", ""funding"": ""No scholarships available for this program""}, ""takeaways"": [""• Perfect gateway program for zero German speakers planning university studies in Germany"", ""• Full-year immersion with cultural activities and excursions to Munich, Regensburg, and Linz"", ""• Affordable tuition compared to private language schools with university-level instruction quality""], ""how_to_apply"": ""Submit application directly to University of Passau via online form at https://www.gcp.uni-passau.de/en/academic-german-year/applications-and-admissions by June 30, 2026."", ""city_expats_overview"": ""Passau is a charming Bavarian university town at the confluence of three rivers, offering a safe and welcoming environment for international students. The city has a growing international community thanks to the university's 12,000+ students from over 100 countries."", ""accommodation_outlook"": ""Housing assistance is provided by the organizers, with student dorms typically costing €250-400/month and shared flats (WG) ranging €350-500. Start searching early as the small city size means limited options, especially before semester start."", ""job_market_demand"": ""Limited part-time opportunities for non-German speakers during the language course, but Passau's proximity to Austria and Czech Republic opens cross-border opportunities once German improves. Tourism and university-related jobs are most accessible."", ""city_living_costs"": ""Budget €700-900 monthly total: rent (€300-450), food (€200-250), health insurance (€110), and personal expenses (€100-150). The subsidized university cafeteria and included bus pass with CampusCard help reduce costs."", ""german_daily_life_requirement"": ""A2-B1 German needed for comfortable daily life in this smaller Bavarian city. While the university has international services, shops, bureaucracy, and social life outside campus require basic German."", ""english_livability"": ""English-only living is challenging in Passau outside the university bubble. While fellow international students and university staff speak English, German is essential for housing searches, shopping, and integrating into local life."", ""ai_city_fit_score"": 3, ""university_profile"": ""University of Passau is known for its strong international orientation with partnerships in 240+ universities worldwide, excellent language programs, and strengths in computer science, business, and European studies. The compact campus and 1:18 student-teacher ratio create a supportive learning environment, particularly valued for humanities and social sciences.""}","Passau is a charming Bavarian university town at the confluence of three rivers, offering a safe and welcoming environment for international students. The city has a growing international community thanks to the university's 12,000+ students from over 100 countries.","Housing assistance is provided by the organizers, with student dorms typically costing €250-400/month and shared flats (WG) ranging €350-500. Start searching early as the small city size means limited options, especially before semester start.","Limited part-time opportunities for non-German speakers during the language course, but Passau's proximity to Austria and Czech Republic opens cross-border opportunities once German improves. Tourism and university-related jobs are most accessible.","Budget €700-900 monthly total: rent (€300-450), food (€200-250), health insurance (€110), and personal expenses (€100-150). The subsidized university cafeteria and included bus pass with CampusCard help reduce costs.","A2-B1 German needed for comfortable daily life in this smaller Bavarian city. While the university has international services, shops, bureaucracy, and social life outside campus require basic German.","English-only living is challenging in Passau outside the university bubble. While fellow international students and university staff speak English, German is essential for housing searches, shopping, and integrating into local life.",3,"University of Passau is known for its strong international orientation with partnerships in 240+ universities worldwide, excellent language programs, and strengths in computer science, business, and European studies. The compact campus and 1:18 student-teacher ratio create a supportive learning environment, particularly valued for humanities and social sciences.","Submit application directly to University of Passau via online form at https://www.gcp.uni-passau.de/en/academic-german-year/applications-and-admissions by June 30, 2026.","[""german language"", ""language studies"", ""german culture""]",

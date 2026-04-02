@@ -160,8 +160,8 @@ export function ProgramResults({ criteria, onClose, onProgramSelect, shortlisted
   }, [shortlistedPrograms]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 p-3 backdrop-blur-sm sm:p-5">
-      <div className="mx-auto flex h-full max-h-[calc(100vh-1.5rem)] w-full max-w-[96rem] flex-col overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 shadow-[0_28px_90px_rgba(2,6,23,0.55)] sm:max-h-[calc(100vh-2.5rem)]">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50">
+      <div className="h-full flex flex-col bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 max-h-screen">
         {/* Header */}
         <div className="flex-shrink-0 border-b border-white/10 bg-white/5 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-6 py-4">
