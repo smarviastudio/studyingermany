@@ -1,20 +1,20 @@
 export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
+import { isStripeTestMode } from '@/lib/stripe';
 
 export async function GET() {
   const envVars = {
-    starterMonthly: process.env.NEXT_PUBLIC_STRIPE_STARTER_MONTHLY_PRICE_ID,
-    starterYearly: process.env.NEXT_PUBLIC_STRIPE_STARTER_YEARLY_PRICE_ID,
-    essentialMonthly: process.env.NEXT_PUBLIC_STRIPE_ESSENTIAL_MONTHLY_PRICE_ID,
-    essentialYearly: process.env.NEXT_PUBLIC_STRIPE_ESSENTIAL_YEARLY_PRICE_ID,
-    proMonthly: process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PRICE_ID,
-    proYearly: process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PRICE_ID,
-    credits20: process.env.NEXT_PUBLIC_STRIPE_CREDITS_20_PRICE_ID,
-    credits100: process.env.NEXT_PUBLIC_STRIPE_CREDITS_100_PRICE_ID,
-    credits300: process.env.NEXT_PUBLIC_STRIPE_CREDITS_300_PRICE_ID,
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+    stripeMode: isStripeTestMode() ? 'test' : 'live',
     stripeSecret: process.env.STRIPE_SECRET_KEY ? 'SET' : 'NOT SET',
+    stripeTestSecret: process.env.STRIPE_TEST_SECRET_KEY ? 'SET' : 'NOT SET',
+    liveProMonthly: process.env.STRIPE_PRICE_PRO_MONTHLY,
+    liveProYearly: process.env.STRIPE_PRICE_PRO_YEARLY,
+    testEssentialMonthly: process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY,
+    testEssentialYearly: process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY,
+    testCredit20: process.env.STRIPE_TEST_PRICE_CREDITS_20,
+    testCredit100: process.env.STRIPE_TEST_PRICE_CREDITS_100,
+    testCredit300: process.env.STRIPE_TEST_PRICE_CREDITS_300,
   };
 
   const missingVars = Object.entries(envVars)

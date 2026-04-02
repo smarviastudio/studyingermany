@@ -2,19 +2,11 @@ export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { getStripeSecretKey } from '@/lib/stripe';
 
 export async function POST() {
   try {
-    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-    
-    if (!stripeSecretKey) {
-      return NextResponse.json(
-        { error: 'STRIPE_SECRET_KEY not configured' },
-        { status: 500 }
-      );
-    }
-
-    const stripe = new Stripe(stripeSecretKey, {
+    const stripe = new Stripe(getStripeSecretKey(), {
       apiVersion: '2026-02-25.clover',
     });
 

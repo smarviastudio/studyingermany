@@ -3,7 +3,7 @@ export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import Stripe from 'stripe';
-import { getPlans } from '@/lib/stripe';
+import { getPlans, getStripeSecretKey, isStripeTestMode } from '@/lib/stripe';
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,22 +36,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-    
-    if (!stripeSecretKey) {
-      return NextResponse.json(
-        { error: 'STRIPE_SECRET_KEY not configured' },
-        { status: 500 }
-      );
-    }
-
-    const stripe = new Stripe(stripeSecretKey, {
+    const stripe = new Stripe(getStripeSecretKey(), {
       apiVersion: '2026-02-25.clover',
     });
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.germanpath.com';
 
-    console.log('Creating Stripe session with:', { mode, planKey, priceId: resolvedPriceId, baseUrl });
+    console.log('Creating Stripe session with:', {
+      mode,
+      planKey,
+      priceId: resolvedPriceId,
+      baseUrl,
+      stripeMode: isStripeTestMode() ? 'test' : 'live',
+    });
     
     // First, verify the price exists
     try {

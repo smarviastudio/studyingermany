@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Stripe from 'stripe';
+import { getStripeSecretKey } from '@/lib/stripe';
 
 export async function POST() {
   try {
@@ -22,12 +23,7 @@ export async function POST() {
       return NextResponse.json({ error: 'No customer ID found' }, { status: 400 });
     }
 
-    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-    if (!stripeSecretKey) {
-      return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 });
-    }
-
-    const stripe = new Stripe(stripeSecretKey, {
+    const stripe = new Stripe(getStripeSecretKey(), {
       apiVersion: '2026-02-25.clover',
     });
 

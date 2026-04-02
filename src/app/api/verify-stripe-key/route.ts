@@ -1,19 +1,23 @@
 export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
+import { getStripeSecretKey, isStripeTestMode } from '@/lib/stripe';
 
 export async function GET() {
-  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-  
-  if (!stripeSecretKey) {
-    return NextResponse.json({ 
-      error: 'STRIPE_SECRET_KEY not configured',
+  let stripeSecretKey: string;
+  try {
+    stripeSecretKey = getStripeSecretKey();
+  } catch (error) {
+    return NextResponse.json({
+      error: error instanceof Error ? error.message : 'Stripe key not configured',
       configured: false,
+      stripeMode: isStripeTestMode() ? 'test' : 'live',
     });
   }
 
   const keyInfo = {
     configured: true,
+    stripeMode: isStripeTestMode() ? 'test' : 'live',
     startsWithTest: stripeSecretKey.startsWith('sk_test_'),
     startsWithLive: stripeSecretKey.startsWith('sk_live_'),
     first10Chars: stripeSecretKey.substring(0, 10),

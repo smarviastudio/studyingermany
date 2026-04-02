@@ -2,48 +2,52 @@ export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { getStripeSecretKey, isStripeTestMode } from '@/lib/stripe';
 
 export async function GET() {
-  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-  
-  if (!stripeSecretKey) {
-    return NextResponse.json({ error: 'STRIPE_SECRET_KEY not configured' }, { status: 500 });
-  }
-
-  const stripe = new Stripe(stripeSecretKey, {
+  const stripe = new Stripe(getStripeSecretKey(), {
     apiVersion: '2026-02-25.clover',
   });
 
-  const priceIds = [
-    'price_1THMg9BhIRngoSRXuAF4cOig', // Starter Monthly
-    'price_1THMg9BhIRngoSRXHPAOCeLp', // Starter Yearly
-    'price_1THMhjBhIRngoSRXvbQyNKcE', // Essential Monthly
-    'price_1THMhjBhIRngoSRXNhX1dcad', // Essential Yearly
-    'price_1THMj0BhIRngoSRXUxFgCUdS', // Pro Monthly
-    'price_1THMj0BhIRngoSRXLxEVsAmJ', // Pro Yearly
-    'price_1THMl6BhIRngoSRXMBbRuS2m', // Credits 20
-    'price_1THMl6BhIRngoSRXEH2UHrYP', // Credits 100
-    'price_1THMl6BhIRngoSRXrR48BBwX', // Credits 300
-  ];
+  const priceSources = {
+    liveProMonthly: process.env.STRIPE_PRICE_PRO_MONTHLY,
+    liveProYearly: process.env.STRIPE_PRICE_PRO_YEARLY,
+    testEssentialMonthly: process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY,
+    testEssentialYearly: process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY,
+    liveCredits20: process.env.STRIPE_PRICE_CREDITS_20,
+    liveCredits100: process.env.STRIPE_PRICE_CREDITS_100,
+    liveCredits300: process.env.STRIPE_PRICE_CREDITS_300,
+    testCredits20: process.env.STRIPE_TEST_PRICE_CREDITS_20,
+    testCredits100: process.env.STRIPE_TEST_PRICE_CREDITS_100,
+    testCredits300: process.env.STRIPE_TEST_PRICE_CREDITS_300,
+  };
+
+  const priceIds = Object.entries(priceSources)
+    .filter(([, priceId]) => Boolean(priceId))
+    .map(([label, priceId]) => ({ label, priceId: priceId as string }));
 
   const results = await Promise.allSettled(
-    priceIds.map(async (priceId) => {
+    priceIds.map(async ({ priceId, label }) => {
       try {
         const price = await stripe.prices.retrieve(priceId);
-        return { priceId, valid: true, price };
+        return { label, priceId, valid: true, price };
       } catch (error) {
-        return { priceId, valid: false, error: error instanceof Error ? error.message : 'Unknown error' };
+        return { label, priceId, valid: false, error: error instanceof Error ? error.message : 'Unknown error' };
       }
     })
   );
 
   const validPrices: any[] = [];
   const invalidPrices: any[] = [];
+  const missingPrices = Object.entries(priceSources)
+    .filter(([, priceId]) => !priceId)
+    .map(([label]) => label);
 
   results.forEach((result) => {
     if (result.status === 'fulfilled') {
       if (result.value.valid && result.value.price) {
         validPrices.push({
+          label: result.value.label,
           priceId: result.value.priceId,
           amount: result.value.price.unit_amount,
           currency: result.value.price.currency,
@@ -52,6 +56,7 @@ export async function GET() {
         });
       } else {
         invalidPrices.push({
+          label: result.value.label,
           priceId: result.value.priceId,
           error: result.value.error,
         });
@@ -60,6 +65,9 @@ export async function GET() {
   });
 
   return NextResponse.json({
+    stripeMode: isStripeTestMode() ? 'test' : 'live',
+    expectedPriceEnvVars: Object.keys(priceSources),
+    missingPrices,
     validPrices,
     invalidPrices,
     message: `Found ${validPrices.length} valid prices out of ${priceIds.length}`,

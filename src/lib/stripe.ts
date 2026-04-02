@@ -2,12 +2,27 @@ import Stripe from 'stripe';
 
 let _stripe: Stripe | null = null;
 
+export function isStripeTestMode(): boolean {
+  return process.env.STRIPE_USE_TEST_MODE === 'true';
+}
+
+export function getStripeSecretKey(): string {
+  const stripeSecretKey = isStripeTestMode()
+    ? process.env.STRIPE_TEST_SECRET_KEY
+    : process.env.STRIPE_SECRET_KEY;
+
+  if (!stripeSecretKey) {
+    throw new Error(
+      isStripeTestMode() ? 'STRIPE_TEST_SECRET_KEY is not set' : 'STRIPE_SECRET_KEY is not set'
+    );
+  }
+
+  return stripeSecretKey;
+}
+
 export function getStripe(): Stripe {
   if (!_stripe) {
-    if (!process.env.STRIPE_SECRET_KEY) {
-      throw new Error('STRIPE_SECRET_KEY is not set');
-    }
-    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    _stripe = new Stripe(getStripeSecretKey(), {
       apiVersion: '2026-02-25.clover',
     });
   }
@@ -22,22 +37,41 @@ export const stripe = new Proxy({} as Stripe, {
 
 export type PlanKey = 'pro_monthly' | 'pro_yearly';
 
-const PAID_PLAN_MONTHLY_PRICE_ID =
-  process.env.STRIPE_PRICE_ESSENTIAL_MONTHLY || 'price_1THMhjBhIRngoSRXvbQyNKcE';
-const PAID_PLAN_YEARLY_PRICE_ID =
-  process.env.STRIPE_PRICE_ESSENTIAL_YEARLY || 'price_1THMhjBhIRngoSRXNhX1dcad';
+function getPaidPlanPriceIds() {
+  if (isStripeTestMode()) {
+    const monthly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY;
+    const yearly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY;
+
+    if (!monthly || !yearly) {
+      throw new Error('STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY and STRIPE_TEST_PRICE_ESSENTIAL_YEARLY are required in test mode');
+    }
+
+    return { monthly, yearly };
+  }
+
+  const monthly = process.env.STRIPE_PRICE_PRO_MONTHLY;
+  const yearly = process.env.STRIPE_PRICE_PRO_YEARLY;
+
+  if (!monthly || !yearly) {
+    throw new Error('STRIPE_PRICE_PRO_MONTHLY and STRIPE_PRICE_PRO_YEARLY are required in live mode');
+  }
+
+  return { monthly, yearly };
+}
 
 export function getPlans() {
+  const paidPlanPriceIds = getPaidPlanPriceIds();
+
   return {
     pro_monthly: {
-      priceId: PAID_PLAN_MONTHLY_PRICE_ID,
+      priceId: paidPlanPriceIds.monthly,
       planType: 'pro',
       label: 'Pro Plan',
       interval: 'month',
       amount: 999,
     },
     pro_yearly: {
-      priceId: PAID_PLAN_YEARLY_PRICE_ID,
+      priceId: paidPlanPriceIds.yearly,
       planType: 'pro',
       label: 'Pro Plan',
       interval: 'year',
@@ -50,10 +84,6 @@ export function getPlanTypeFromPriceId(priceId: string): 'pro' | 'free' {
   const priceIdMap: Record<string, 'pro'> = {
     'price_1THN5NBhIRngoSRXiAUcKhva': 'pro',
     'price_1THN5NBhIRngoSRX93yw0Txf': 'pro',
-    'price_1THN89BhIRngoSRXQc7qKse': 'pro',
-    'price_1THN89BhIRngoSRXlqKJkqhj': 'pro',
-    'price_1THNGmBhIRngoSRX4WNCJEX0': 'pro', // Pro monthly
-    'price_1THNGmBhIRngoSRXlNk14xBe': 'pro', // Pro yearly
     'price_1THMhjBhIRngoSRXvbQyNKcE': 'pro', // Essential monthly used as paid plan
     'price_1THMhjBhIRngoSRXNhX1dcad': 'pro', // Essential yearly used as paid plan
   };
