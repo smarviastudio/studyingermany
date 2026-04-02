@@ -16,7 +16,8 @@ import type { ProgramSummary } from '@/lib/types';
 import { SiteNav } from '@/components/SiteNav';
 
 const RED = '#dd0000';
-const SEARCH_RESULTS_LIMIT = 24;
+const SEARCH_RESULTS_LIMIT = 120;
+const RESULTS_PER_PAGE = 12;
 
 const HERO_SUGGESTIONS = [
   'English-taught master in AI',
@@ -129,6 +130,8 @@ export default function HomePage() {
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
   const [results, setResults] = useState<ProgramSummary[]>([]);
+  const [totalMatches, setTotalMatches] = useState(0);
+  const [resultsPage, setResultsPage] = useState(1);
   const [reasoning, setReasoning] = useState<string | null>(null);
   const [nonCourseMessage, setNonCourseMessage] = useState<string | null>(null);
   const [selectedProgramId, setSelectedProgramId] = useState<string | null>(null);
@@ -182,6 +185,16 @@ export default function HomePage() {
     });
   }, [results, filters]);
 
+  const totalPages = Math.max(1, Math.ceil(filteredResults.length / RESULTS_PER_PAGE));
+
+  const paginatedResults = useMemo(() => {
+    const startIndex = (resultsPage - 1) * RESULTS_PER_PAGE;
+    return filteredResults.slice(startIndex, startIndex + RESULTS_PER_PAGE);
+  }, [filteredResults, resultsPage]);
+
+  const pageStart = filteredResults.length === 0 ? 0 : (resultsPage - 1) * RESULTS_PER_PAGE + 1;
+  const pageEnd = Math.min(resultsPage * RESULTS_PER_PAGE, filteredResults.length);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); }),
@@ -222,6 +235,10 @@ export default function HomePage() {
       document.body.style.overflow = '';
     };
   }, [showSearchResults]);
+
+  useEffect(() => {
+    setResultsPage(1);
+  }, [filters, results]);
 
   useEffect(() => {
     if (status !== 'authenticated') return;
@@ -270,6 +287,8 @@ export default function HomePage() {
     setSearching(true);
     setSearchError(null);
     setResults([]);
+    setTotalMatches(0);
+    setResultsPage(1);
     setReasoning(null);
     setNonCourseMessage(null);
     setShowSearchResults(true);
@@ -316,6 +335,7 @@ export default function HomePage() {
         setNonCourseMessage(data.message || 'Please search for academic programs.');
       } else {
         setResults(data.programs || []);
+        setTotalMatches(data.total_matches || data.programs?.length || 0);
         setReasoning(data.reasoning || 'Advanced filter search');
       }
     } catch (err) {
@@ -331,6 +351,8 @@ export default function HomePage() {
     setSearching(true);
     setSearchError(null);
     setResults([]);
+    setTotalMatches(0);
+    setResultsPage(1);
     setReasoning(null);
     setNonCourseMessage(null);
     setShowSearchResults(true);
@@ -346,6 +368,7 @@ export default function HomePage() {
         setNonCourseMessage(data.reasoning || 'Try describing a university program.');
       } else {
         setResults(data.programs || []);
+        setTotalMatches(data.total_matches || data.programs?.length || 0);
         setReasoning(data.reasoning || null);
       }
     } catch (err) {
@@ -440,7 +463,7 @@ export default function HomePage() {
                       <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-purple-600 flex items-center justify-center">
                         <GraduationCap className="w-4 h-4 text-white" />
                       </div>
-                      <h1 className="text-2xl font-bold text-slate-900">{filteredResults.length} Programs</h1>
+                      <h1 className="text-2xl font-bold text-slate-900">{totalMatches || filteredResults.length} Programs</h1>
                     </div>
                   </div>
                 )}
@@ -515,8 +538,10 @@ export default function HomePage() {
                       <p className="text-slate-600">No programs match your filters. Try adjusting your selection.</p>
                     </div>
                   )}
+                  {filteredResults.length > 0 && (
+                    <>
                   <div className="program-list">
-                      {filteredResults.map(program => (
+                      {paginatedResults.map(program => (
                         <ProgramCard 
                           key={program.id}
                           program={program}
@@ -524,6 +549,39 @@ export default function HomePage() {
                         />
                       ))}
                 </div>
+                      <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-4 text-sm text-slate-600 md:flex-row md:items-center md:justify-between">
+                        <p>
+                          Showing <span className="font-semibold text-slate-900">{pageStart}</span> to{' '}
+                          <span className="font-semibold text-slate-900">{pageEnd}</span> of{' '}
+                          <span className="font-semibold text-slate-900">{filteredResults.length}</span> filtered programs
+                          {totalMatches > results.length ? ` from ${totalMatches} total matches` : ''}
+                        </p>
+                        {totalPages > 1 && (
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setResultsPage((page) => Math.max(1, page - 1))}
+                              disabled={resultsPage === 1}
+                              className="rounded-lg border border-slate-300 px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                              Previous
+                            </button>
+                            <span className="px-2 font-medium text-slate-800">
+                              Page {resultsPage} of {totalPages}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setResultsPage((page) => Math.min(totalPages, page + 1))}
+                              disabled={resultsPage === totalPages}
+                              className="rounded-lg border border-slate-300 px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                              Next
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </>
               )}
               {!searching && !searchError && !nonCourseMessage && results.length === 0 && (
