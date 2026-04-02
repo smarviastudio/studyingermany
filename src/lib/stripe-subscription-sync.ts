@@ -16,6 +16,10 @@ export async function upsertStripeSubscription(
 ) {
   const priceId = stripeSubscription.items.data[0]?.price?.id ?? '';
   const planType = getPlanTypeFromPriceId(priceId);
+  
+  // Stripe uses Unix timestamps (seconds), convert to milliseconds for Date
+  const currentPeriodStart = new Date((stripeSubscription as any).current_period_start * 1000);
+  const currentPeriodEnd = new Date((stripeSubscription as any).current_period_end * 1000);
 
   await prisma.subscription.upsert({
     where: { userId },
@@ -26,8 +30,8 @@ export async function upsertStripeSubscription(
       stripeSubscriptionId: stripeSubscription.id,
       stripeCustomerId: stripeSubscription.customer as string,
       stripePriceId: priceId,
-      currentPeriodStart: new Date((stripeSubscription as any).current_period_start * 1000),
-      currentPeriodEnd: new Date((stripeSubscription as any).current_period_end * 1000),
+      currentPeriodStart,
+      currentPeriodEnd,
       cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
     },
     update: {
@@ -36,8 +40,8 @@ export async function upsertStripeSubscription(
       stripeSubscriptionId: stripeSubscription.id,
       stripeCustomerId: stripeSubscription.customer as string,
       stripePriceId: priceId,
-      currentPeriodStart: new Date((stripeSubscription as any).current_period_start * 1000),
-      currentPeriodEnd: new Date((stripeSubscription as any).current_period_end * 1000),
+      currentPeriodStart,
+      currentPeriodEnd,
       cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
       updatedAt: new Date(),
     },
