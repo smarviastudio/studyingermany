@@ -45,8 +45,16 @@ export async function GET() {
       sub => sub.status === 'active' || sub.status === 'trialing'
     ) || subscriptions.data[0];
 
+    // Retrieve full subscription details with expand
+    const fullSubscription = await stripe.subscriptions.retrieve(activeSubscription.id, {
+      expand: ['latest_invoice', 'customer'],
+    });
+
+    console.log('[Stripe Sync] Full subscription object keys:', Object.keys(fullSubscription));
+    console.log('[Stripe Sync] Full subscription:', JSON.stringify(fullSubscription, null, 2));
+
     // Sync the subscription
-    await upsertStripeSubscription(userId, activeSubscription);
+    await upsertStripeSubscription(userId, fullSubscription);
     await syncStripeSubscriptionBenefits(userId, activeSubscription);
 
     // Get updated user data
