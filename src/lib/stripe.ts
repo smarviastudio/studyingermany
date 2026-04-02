@@ -20,6 +20,22 @@ export function getStripeSecretKey(): string {
   return stripeSecretKey;
 }
 
+export function getStripeWebhookSecret(): string {
+  const webhookSecret = isStripeTestMode()
+    ? process.env.STRIPE_TEST_WEBHOOK_SECRET
+    : process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!webhookSecret) {
+    throw new Error(
+      isStripeTestMode()
+        ? 'STRIPE_TEST_WEBHOOK_SECRET is not set'
+        : 'STRIPE_WEBHOOK_SECRET is not set'
+    );
+  }
+
+  return webhookSecret;
+}
+
 export function getStripe(): Stripe {
   if (!_stripe) {
     _stripe = new Stripe(getStripeSecretKey(), {

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   GraduationCap, Bookmark, Calendar, FileText, TrendingUp, Award,
   Briefcase, ChevronRight, Calculator, Search, ArrowRight, Crown, Zap, Loader2,
@@ -58,7 +58,10 @@ type RecommendedProgram = {
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const isAuthenticated = status === 'authenticated';
+  const checkoutSuccess = searchParams.get('success') === 'true';
+  const checkoutSessionId = searchParams.get('session_id');
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -76,6 +79,7 @@ export default function DashboardPage() {
   const [recommendLoading, setRecommendLoading] = useState(false);
   const [aiCredits, setAiCredits] = useState<number | null>(null);
   const [accountMissing, setAccountMissing] = useState(false);
+  const [syncingCheckout, setSyncingCheckout] = useState(false);
 
   const calculateProfileCompletion = (profile: UserProfile | null) => {
     if (!profile) return 0;
@@ -200,6 +204,55 @@ export default function DashboardPage() {
     return () => { cancelled = true; };
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    if (!isAuthenticated || !checkoutSuccess) return;
+
+    let cancelled = false;
+
+    const syncCheckoutSubscription = async () => {
+      setSyncingCheckout(true);
+      try {
+        await fetch('/api/stripe/sync-subscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(checkoutSessionId ? { sessionId: checkoutSessionId } : {}),
+        });
+
+        const [subscriptionRes, creditsRes] = await Promise.all([
+          fetch('/api/subscription'),
+          fetch('/api/credits/balance'),
+        ]);
+
+        if (!cancelled && subscriptionRes.ok) {
+          const data = await subscriptionRes.json();
+          setSubscription(data.subscription || { planType: data.planType || 'free', status: 'active' });
+          setUsage(data.usage || null);
+        }
+
+        if (!cancelled && creditsRes.ok) {
+          const data = await creditsRes.json();
+          if (!data.hasUnlimited) setAiCredits(data.credits);
+        }
+
+        if (!cancelled) {
+          router.replace('/dashboard');
+        }
+      } catch (error) {
+        console.error('Failed to sync checkout subscription', error);
+      } finally {
+        if (!cancelled) {
+          setSyncingCheckout(false);
+        }
+      }
+    };
+
+    syncCheckoutSubscription();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated, checkoutSuccess, checkoutSessionId, router]);
+
   const hasShortlist = shortlistEntries.length > 0;
   const getPlanFor = (programId: string) => planProgress.find((p) => p.programId === programId);
   const userName = session?.user?.name?.split(' ')[0] || 'there';
@@ -241,6 +294,13 @@ export default function DashboardPage() {
       <SiteNav />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-8">
+        {syncingCheckout && (
+          <div className="mb-6 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            <span className="text-sm font-medium">Finalizing your subscription and updating your account...</span>
+          </div>
+        )}
+
         {/* Welcome Header */}
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

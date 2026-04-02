@@ -1,69 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe, getPlanTypeFromPriceId } from '@/lib/stripe';
+import { stripe, getPlanTypeFromPriceId, getStripeWebhookSecret } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 import Stripe from 'stripe';
 import { getIncludedAiCredits } from '@/lib/plans';
+import {
+  syncStripeSubscriptionBenefits,
+  upsertStripeSubscription,
+} from '@/lib/stripe-subscription-sync';
 
 export const config = { api: { bodyParser: false } };
-
-async function upsertSubscription(
-  userId: string,
-  stripeSubscription: Stripe.Subscription
-) {
-  const priceId = stripeSubscription.items.data[0]?.price?.id ?? '';
-  const planType = getPlanTypeFromPriceId(priceId);
-
-  await prisma.subscription.upsert({
-    where: { userId },
-    create: {
-      userId,
-      planType,
-      status: stripeSubscription.status,
-      stripeSubscriptionId: stripeSubscription.id,
-      stripeCustomerId: stripeSubscription.customer as string,
-      stripePriceId: priceId,
-      currentPeriodStart: new Date((stripeSubscription as any).current_period_start * 1000),
-      currentPeriodEnd: new Date((stripeSubscription as any).current_period_end * 1000),
-      cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-    },
-    update: {
-      planType,
-      status: stripeSubscription.status,
-      stripeSubscriptionId: stripeSubscription.id,
-      stripeCustomerId: stripeSubscription.customer as string,
-      stripePriceId: priceId,
-      currentPeriodStart: new Date((stripeSubscription as any).current_period_start * 1000),
-      currentPeriodEnd: new Date((stripeSubscription as any).current_period_end * 1000),
-      cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-      updatedAt: new Date(),
-    },
-  });
-}
-
-async function syncSubscriptionBenefits(
-  userId: string,
-  stripeSubscription: Stripe.Subscription
-) {
-  const priceId = stripeSubscription.items.data[0]?.price?.id ?? '';
-  const planType = getPlanTypeFromPriceId(priceId);
-  const includedCredits = getIncludedAiCredits(planType);
-
-  if (includedCredits === null) return;
-
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { aiCredits: true },
-  });
-
-  if (!user || user.aiCredits >= includedCredits) return;
-
-  await prisma.user.update({
-    where: { id: userId },
-    data: { aiCredits: includedCredits },
-  });
-
-  console.log(`[Webhook] Synced ${includedCredits} Pro credits for user ${userId}`);
-}
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
@@ -78,7 +23,7 @@ export async function POST(req: NextRequest) {
     event = stripe.webhooks.constructEvent(
       body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      getStripeWebhookSecret()
     );
   } catch (err) {
     console.error('[Webhook] Signature verification failed:', err);
@@ -141,8 +86,8 @@ export async function POST(req: NextRequest) {
             metadata: { userId },
           });
           
-          await upsertSubscription(userId, subscription);
-          await syncSubscriptionBenefits(userId, subscription);
+          await upsertStripeSubscription(userId, subscription);
+          await syncStripeSubscriptionBenefits(userId, subscription);
           
           console.log(`[Webhook] Subscription created for user ${userId}`);
         }
@@ -158,11 +103,11 @@ export async function POST(req: NextRequest) {
             where: { stripeCustomerId: subscription.customer as string },
           });
           if (existing) {
-            await upsertSubscription(existing.userId, subscription);
+            await upsertStripeSubscription(existing.userId, subscription);
           }
           break;
         }
-        await upsertSubscription(userId, subscription);
+        await upsertStripeSubscription(userId, subscription);
         console.log(`[Webhook] Subscription updated for user ${userId}`);
         break;
       }
@@ -201,8 +146,8 @@ export async function POST(req: NextRequest) {
             where: { stripeSubscriptionId: subscription.id },
           });
           if (existing) {
-            await upsertSubscription(existing.userId, subscription);
-            await syncSubscriptionBenefits(existing.userId, subscription);
+            await upsertStripeSubscription(existing.userId, subscription);
+            await syncStripeSubscriptionBenefits(existing.userId, subscription);
           }
         }
         break;
