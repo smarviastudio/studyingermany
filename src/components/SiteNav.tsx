@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
-import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard, ChevronLeft, ChevronRight, Home, Bookmark } from 'lucide-react';
+import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard, ChevronLeft, ChevronRight, Home, Bookmark, User } from 'lucide-react';
 import { useContactModal } from './ContactModalProvider';
 
 const RED = '#dd0000';
@@ -71,6 +71,7 @@ export function SiteNav() {
   const { status } = useSession();
   const { openContactModal } = useContactModal();
   const isAuthenticated = status === 'authenticated';
+  const [accountAvailable, setAccountAvailable] = useState<boolean | null>(null);
 
   const [aiUsage, setAiUsage] = useState<{ used: number; limit: number } | null>(null);
   const [aiCredits, setAiCredits] = useState<number>(0);
@@ -124,22 +125,37 @@ export function SiteNav() {
     if (!isAuthenticated) return;
     (async () => {
       try {
-        const [usageRes, creditsRes] = await Promise.all([
+        const [usageRes, creditsRes, accountRes] = await Promise.all([
           fetch('/api/ai-credits'),
           fetch('/api/credits/balance'),
+          fetch('/api/user/subscription'),
         ]);
-        if (usageRes.ok) {
-          const data = await usageRes.json();
-          setAiUsage(data);
+
+        const [usageData, creditsData] = await Promise.all([
+          usageRes.ok ? usageRes.json() : Promise.resolve(null),
+          creditsRes.ok ? creditsRes.json() : Promise.resolve(null),
+        ]);
+
+        if (usageData) {
+          setAiUsage(usageData);
         }
-        if (creditsRes.ok) {
-          const data = await creditsRes.json();
-          setHasUnlimited(data.hasUnlimited);
-          if (!data.hasUnlimited) {
-            setAiCredits(data.credits);
+        if (creditsData) {
+          setHasUnlimited(creditsData.hasUnlimited);
+          if (!creditsData.hasUnlimited) {
+            setAiCredits(creditsData.credits);
           }
         }
+
+        if (accountRes.ok) {
+          setAccountAvailable(true);
+        } else if (accountRes.status === 404 || accountRes.status === 401) {
+          setAccountAvailable(false);
+          await signOut({ redirect: false });
+        } else {
+          setAccountAvailable(true);
+        }
       } catch {
+        setAccountAvailable(false);
         // silent
       }
     })();
@@ -295,6 +311,7 @@ export function SiteNav() {
           <a href="/#tools" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Wrench size={20} />Free AI Tools</a>
           <a href="/pricing" className="sitenav-drawer-link red" onClick={() => setDrawerOpen(false)}><Tag size={20} />Pricing</a>
           {isAuthenticated && <Link href="/dashboard" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><LayoutDashboard size={20} />Dashboard</Link>}
+          {isAuthenticated && <Link href="/profile" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><User size={20} />Account</Link>}
           {isAuthenticated && <Link href="/my-shortlist" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Bookmark size={20} />My Shortlist</Link>}
         </div>
         <div className="sitenav-drawer-auth">
@@ -375,7 +392,7 @@ export function SiteNav() {
             </form>
 
             {/* Auth Actions */}
-            {isAuthenticated ? (
+          {isAuthenticated && accountAvailable !== false ? (
               <>
                 {!hasUnlimited && aiCredits !== null && (
                   <Link href="/credits" className="sitenav-credits">
@@ -383,6 +400,7 @@ export function SiteNav() {
                     <span>{aiCredits}</span>
                   </Link>
                 )}
+                <Link href="/profile" className="sitenav-btn-secondary">Account</Link>
                 <Link href="/dashboard" className="sitenav-btn-primary">Dashboard</Link>
                 <button onClick={() => signOut()} className="sitenav-btn-icon" title="Sign out">
                   <LogOut className="w-4 h-4" />

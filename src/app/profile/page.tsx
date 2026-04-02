@@ -1,399 +1,531 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { ArrowLeft, CheckCircle, User, GraduationCap, Target, Globe, Phone, MapPin, Calendar, Flag, AlertCircle } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import {
+  Loader2,
+  User,
+  Crown,
+  Zap,
+  Bookmark,
+  CreditCard,
+  LogOut,
+  ExternalLink,
+  CheckCircle2,
+  Sparkles,
+  ArrowRight,
+  Shield,
+  Clock3,
+} from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
+import { getPlanDisplayName, normalizePlanType } from '@/lib/plans';
 
-type UserProfile = {
-  // Personal info
-  fullName?: string;
-  phone?: string;
-  nationality?: string;
-  dateOfBirth?: string;
-  address?: string;
-  // Academic goals
-  targetDegreeLevel?: string;
-  targetSubjects?: string[];
-  preferredLanguage?: string;
-  germanLevel?: string;
-  englishLevel?: string;
-  // Language test scores
-  ieltsScore?: number | null;
-  toeflScore?: number | null;
-  // Background
-  academicBackground?: string;
-  backgroundSummary?: string;
-  skills?: string;
-  careerGoals?: string;
-  preferredCities?: string[];
+const RED = '#dd0000';
+
+type Subscription = {
+  planType: string;
+  status: string;
+  currentPeriodEnd: string | null;
+  cancelAtPeriodEnd: boolean;
+};
+
+type AccountData = {
+  email: string;
+  displayCredits: number;
+  normalizedPlanType: 'free' | 'pro';
+  subscription: Subscription | null;
 };
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
-  const isAuthenticated = status === 'authenticated';
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [profileCompletion, setProfileCompletion] = useState(0);
+  const router = useRouter();
+
+  const [accountData, setAccountData] = useState<AccountData | null>(null);
+  const [shortlistCount, setShortlistCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [actionLoading, setActionLoading] = useState(false);
 
-  // Calculate profile completion percentage
-  const calculateProfileCompletion = (profile: UserProfile | null) => {
-    if (!profile) return 0;
-    const fields = [
-      profile.fullName,
-      profile.phone,
-      profile.nationality,
-      profile.targetDegreeLevel,
-      profile.targetSubjects && profile.targetSubjects.length > 0,
-      profile.preferredLanguage,
-      profile.germanLevel,
-      profile.englishLevel,
-      profile.academicBackground,
-      profile.backgroundSummary,
-      profile.skills,
-      profile.careerGoals,
-      profile.preferredCities && profile.preferredCities.length > 0
-    ];
-    const completed = fields.filter(Boolean).length;
-    return Math.round((completed / fields.length) * 100);
-  };
-
-  const isPersonalInfoComplete = !!(userProfile?.fullName && userProfile?.phone && userProfile?.nationality);
-
-  // Load user profile
   useEffect(() => {
-    if (!isAuthenticated) {
-      setLoading(false);
-      return;
+    if (status === 'unauthenticated') {
+      router.replace('/auth/signin?callbackUrl=/profile');
     }
-    
-    const loadProfile = async () => {
+  }, [status, router]);
+
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+
+    const load = async () => {
       try {
-        const res = await fetch('/api/profile');
-        if (res.ok) {
-          const data = await res.json();
-          setUserProfile(data.profile || null);
-          setProfileCompletion(calculateProfileCompletion(data.profile || null));
+        const [accountRes, shortlistRes] = await Promise.all([
+          fetch('/api/user/subscription'),
+          fetch('/api/shortlist'),
+        ]);
+
+        if (accountRes.ok) {
+          const account = await accountRes.json();
+          setAccountData(account);
+        }
+
+        if (shortlistRes.ok) {
+          const shortlist = await shortlistRes.json();
+          setShortlistCount((shortlist.shortlists || []).length);
         }
       } catch (error) {
-        console.warn('Failed to load profile', error);
+        console.error('Failed to load account page', error);
       } finally {
         setLoading(false);
       }
     };
-    
-    loadProfile();
-  }, [isAuthenticated]);
 
-  const handleSaveProfile = async () => {
-    if (!isAuthenticated) return;
-    
-    setSaving(true);
+    load();
+  }, [status]);
+
+  const handleManageBilling = async () => {
+    setActionLoading(true);
     try {
-      // Strip DB-only fields that Zod schema doesn't accept
-      const { id: _id, userId: _uid, createdAt: _ca, updatedAt: _ua, ...profilePayload } = (userProfile || {}) as any;
-      // Remove null/undefined values because Zod string optional does not accept null
-      const cleanedPayload = Object.entries(profilePayload).reduce<Record<string, any>>((acc, [key, value]) => {
-        if (value !== null && value !== undefined) {
-          acc[key] = value;
-        }
-        return acc;
-      }, {});
-      const res = await fetch('/api/profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cleanedPayload)
-      });
-      
-      if (res.ok) {
-        setProfileCompletion(calculateProfileCompletion(userProfile));
-        setSaveStatus('success');
-      } else {
-        setSaveStatus('error');
-      }
+      const res = await fetch('/api/stripe/customer-portal', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
     } catch (error) {
-      console.warn('Failed to save profile', error);
-      setSaveStatus('error');
+      alert('Failed to open billing portal');
     } finally {
-      setSaving(false);
-      setTimeout(() => setSaveStatus('idle'), 3000);
+      setActionLoading(false);
     }
   };
 
-  const updateProfile = (field: keyof UserProfile, value: any) => {
-    setUserProfile(prev => {
-      const updated = prev ? { ...prev, [field]: value } : { [field]: value };
-      setProfileCompletion(calculateProfileCompletion(updated));
-      return updated;
-    });
-  };
-
-  const iStyle: React.CSSProperties = { width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 14, color: '#111', outline: 'none', background: '#fff', boxSizing: 'border-box' };
-
-  const profileSections = [
-    {
-      title: 'Academic Goals',
-      icon: <GraduationCap className="w-5 h-5" />,
-      fields: [
-        { key: 'targetDegreeLevel', label: 'Target Degree Level', type: 'select', options: ['Bachelor', 'Master', 'PhD', 'Other'] },
-        { key: 'targetSubjects', label: 'Target Subjects / Fields', type: 'tags', placeholder: 'e.g. Computer Science, Data Science, Engineering' },
-        { key: 'preferredLanguage', label: 'Preferred Study Language', type: 'select', options: ['English', 'German', 'Both'] }
-      ]
-    },
-    {
-      title: 'Language Skills',
-      icon: <Globe className="w-5 h-5" />,
-      fields: [
-        { key: 'germanLevel', label: 'German Level', type: 'select', options: ['None', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Native'] },
-        { key: 'englishLevel', label: 'English Level', type: 'select', options: ['None', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Native'] },
-        { key: 'ieltsScore', label: 'IELTS Overall Score (if available)', type: 'number', placeholder: 'e.g. 7.0' },
-        { key: 'toeflScore', label: 'TOEFL iBT Score (if available)', type: 'number', placeholder: 'e.g. 100' }
-      ]
-    },
-    {
-      title: 'Academic Background',
-      icon: <User className="w-5 h-5" />,
-      fields: [
-        { key: 'academicBackground', label: 'Academic Background', type: 'textarea', placeholder: 'e.g. B.Sc. Computer Science from XYZ University, GPA 3.8' },
-        { key: 'backgroundSummary', label: 'Personal Summary', type: 'textarea', placeholder: 'A short summary about yourself for AI tools to use...' },
-        { key: 'skills', label: 'Key Skills', type: 'textarea', placeholder: 'e.g. Python, Machine Learning, Data Analysis, Research...' }
-      ]
-    },
-    {
-      title: 'Career Goals',
-      icon: <Target className="w-5 h-5" />,
-      fields: [
-        { key: 'careerGoals', label: 'Career Goals', type: 'textarea', placeholder: 'What do you want to achieve after graduation?' },
-        { key: 'preferredCities', label: 'Preferred Cities in Germany', type: 'tags', placeholder: 'e.g. Berlin, Munich, Hamburg' }
-      ]
-    }
-  ];
-
-  if (!isAuthenticated) {
+  if (status === 'loading' || loading) {
     return (
       <div style={{ minHeight: '100vh', background: '#fafafa' }}>
         <SiteNav />
-        <main style={{ maxWidth: 800, margin: '0 auto', padding: '114px 24px 80px' }}>
-          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <User className="w-16 h-16" style={{ color: '#999', margin: '0 auto 24px' }} />
-            <h2 style={{ fontSize: 24, fontWeight: 600, color: '#111', marginBottom: 16 }}>Please Sign In</h2>
-            <p style={{ fontSize: 16, color: '#737373', marginBottom: 24 }}>You need to be signed in to complete your profile.</p>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
+          <Loader2 size={40} color={RED} className="animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!accountData) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+        <SiteNav />
+        <main style={{ maxWidth: 980, margin: '0 auto', padding: '120px 24px 88px' }}>
+          <section style={sectionCardStyle}>
+            <div style={sectionHeaderStyle}>
+              <div style={heroIconWrap('#fff3f3')}>
+                <User size={20} color={RED} />
+              </div>
+              <div>
+                <h1 style={{ ...sectionTitleStyle, fontSize: 28 }}>Sign in to view your account</h1>
+                <p style={sectionSubtitleStyle}>Your session exists, but the account record is missing. Sign in again to restore access.</p>
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+              <Link href="/auth/signin?callbackUrl=/profile" style={primaryLinkStyle}>
+                Sign in
+              </Link>
+              <Link href="/" style={secondaryLinkStyle}>
+                Go home
+              </Link>
+            </div>
+          </section>
         </main>
       </div>
     );
   }
 
-  if (loading) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#fafafa' }}>
-        <SiteNav />
-        <main style={{ maxWidth: 800, margin: '0 auto', padding: '114px 24px 80px' }}>
-          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <div style={{ width: 40, height: 40, margin: '0 auto', border: '4px solid #f3f3f3', borderTop: '4px solid #dd0000', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-            <p style={{ fontSize: 16, color: '#737373', marginTop: 16 }}>Loading profile...</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  const rawPlanType = accountData.subscription?.planType || 'free';
+  const planName = getPlanDisplayName(rawPlanType);
+  const normalizedPlanType = accountData.normalizedPlanType || normalizePlanType(rawPlanType);
+  const billingDate = accountData.subscription?.currentPeriodEnd
+    ? new Date(accountData.subscription.currentPeriodEnd).toLocaleDateString()
+    : null;
 
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
-      
-      <main className="profile-main" style={{ maxWidth: 800, margin: '0 auto', padding: '114px 24px 80px' }}>
-        {/* Header */}
-        <header style={{ marginBottom: 40 }}>
-          <Link href="/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#666', textDecoration: 'none', fontSize: 14, marginBottom: 16 }}>
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </Link>
-          
-          <div className="profile-header-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-            <div>
-              <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 6px' }}>Complete Your Profile</h1>
-              <p style={{ fontSize: 15, color: '#737373', margin: 0 }}>Fill in your information for better program recommendations</p>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 32, fontWeight: 800, color: profileCompletion === 100 ? '#22c55e' : '#dd0000' }}>{profileCompletion}%</div>
-              <div style={{ fontSize: 12, color: '#737373' }}>Complete</div>
-            </div>
-          </div>
-          
-          {/* Progress Bar */}
-          <div style={{ height: 8, background: '#f5f5f5', borderRadius: 4, overflow: 'hidden' }}>
-            <div style={{ width: `${profileCompletion}%`, height: '100%', background: profileCompletion === 100 ? '#22c55e' : 'linear-gradient(90deg, #dd0000, #7c3aed)', borderRadius: 4, transition: 'width 0.3s ease' }} />
-          </div>
-        </header>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+      <main style={{ maxWidth: 1180, margin: '0 auto', padding: '96px 24px 88px' }}>
+        <section
+          style={{
+            position: 'relative',
+            overflow: 'hidden',
+            borderRadius: 32,
+            padding: '34px 34px 30px',
+            marginBottom: 26,
+            border: '1px solid rgba(15,23,42,0.08)',
+            background: 'linear-gradient(135deg, #fff 0%, #fff7f7 45%, #f6f0ff 100%)',
+            boxShadow: '0 24px 70px rgba(15,23,42,0.08)',
+          }}
+        >
+          <div style={{ position: 'absolute', inset: 'auto -120px -120px auto', width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle, rgba(221,0,0,0.12) 0%, rgba(221,0,0,0) 70%)' }} />
+          <div style={{ position: 'absolute', inset: '-110px auto auto -90px', width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.10) 0%, rgba(124,58,237,0) 70%)' }} />
 
-        {/* ── PERSONAL INFO SECTION ── */}
-        <section className="profile-form-section" style={{ background: '#fff', border: `1px solid ${isPersonalInfoComplete ? '#d1fae5' : '#fde68a'}`, borderRadius: 20, padding: 24, marginBottom: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <User size={20} color="#fff" />
-              </div>
-              <div>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: 0 }}>Personal Information</h2>
-                <p style={{ fontSize: 12, color: '#737373', margin: '2px 0 0' }}>Used to auto-fill CV, Cover Letter & Motivation Letter</p>
-              </div>
-            </div>
-            {!isPersonalInfoComplete && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: '6px 10px' }}>
-                <AlertCircle size={14} color="#d97706" />
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#d97706' }}>Required</span>
-              </div>
-            )}
-          </div>
+          <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'minmax(0, 1.6fr) minmax(320px, 0.95fr)', gap: 28, alignItems: 'center' }}>
+            <div>
+              <p style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8b8b8b', margin: '0 0 12px' }}>
+                Account
+              </p>
+              <h1 style={{ fontSize: 'clamp(34px, 4vw, 52px)', lineHeight: 1.02, fontWeight: 900, color: '#0f172a', margin: '0 0 14px' }}>
+                Manage your plan, credits, and shortlist in one place.
+              </h1>
+              <p style={{ maxWidth: 700, fontSize: 17, lineHeight: 1.7, color: '#4b5563', margin: 0 }}>
+                A compact account page built for the current product: Free and Pro, AI credits, shortlist access, and billing.
+              </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }} className="profile-field-row">
-            <div>
-              <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>Full Name <span style={{ color: '#dd0000' }}>*</span></label>
-              <div style={{ position: 'relative' }}>
-                <User size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#bbb' }} />
-                <input style={{ ...iStyle, paddingLeft: 38 }} value={userProfile?.fullName || ''} onChange={e => updateProfile('fullName', e.target.value)} placeholder="Your full name" />
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 22 }}>
+                <span style={heroChipStyle}><Shield size={14} /> Secure login</span>
+                <span style={heroChipStyle}><Clock3 size={14} /> Live plan status</span>
+                <span style={heroChipStyle}><Bookmark size={14} /> Shortlist tracking</span>
               </div>
             </div>
-            <div>
-              <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>Phone Number <span style={{ color: '#dd0000' }}>*</span></label>
-              <div style={{ position: 'relative' }}>
-                <Phone size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#bbb' }} />
-                <input style={{ ...iStyle, paddingLeft: 38 }} value={userProfile?.phone || ''} onChange={e => updateProfile('phone', e.target.value)} placeholder="+49 176 000 0000" />
+
+            <div style={{ display: 'grid', gap: 14 }}>
+              <div style={heroPanelStyle}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={heroIconWrap('#fff3f3')}>
+                    <User size={22} color={RED} />
+                  </div>
+                  <div>
+                    <p style={panelLabelStyle}>Signed in as</p>
+                    <p style={panelValueStyle}>{session?.user?.name || 'User'}</p>
+                  </div>
+                </div>
+                <p style={panelSubtextStyle}>{accountData.email}</p>
               </div>
-            </div>
-            <div>
-              <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>Nationality <span style={{ color: '#dd0000' }}>*</span></label>
-              <div style={{ position: 'relative' }}>
-                <Flag size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#bbb' }} />
-                <input style={{ ...iStyle, paddingLeft: 38 }} value={userProfile?.nationality || ''} onChange={e => updateProfile('nationality', e.target.value)} placeholder="e.g. Pakistani, Indian, Nigerian" />
-              </div>
-            </div>
-            <div>
-              <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>Date of Birth</label>
-              <div style={{ position: 'relative' }}>
-                <Calendar size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#bbb' }} />
-                <input type="date" style={{ ...iStyle, paddingLeft: 38 }} value={userProfile?.dateOfBirth || ''} onChange={e => updateProfile('dateOfBirth', e.target.value)} />
-              </div>
-            </div>
-            <div style={{ gridColumn: '1 / -1' }}>
-              <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>Address / City</label>
-              <div style={{ position: 'relative' }}>
-                <MapPin size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#bbb' }} />
-                <input style={{ ...iStyle, paddingLeft: 38 }} value={userProfile?.address || ''} onChange={e => updateProfile('address', e.target.value)} placeholder="e.g. Berlin, Germany" />
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                <div style={miniStatStyle}>
+                  <div style={heroIconWrap('#fff3f3')}>
+                    <Crown size={20} color={RED} />
+                  </div>
+                  <p style={miniStatLabel}>Plan</p>
+                  <p style={miniStatValue}>{planName}</p>
+                </div>
+                <div style={miniStatStyle}>
+                  <div style={heroIconWrap('#f3f0ff')}>
+                    <Zap size={20} color="#7c3aed" />
+                  </div>
+                  <p style={miniStatLabel}>Credits</p>
+                  <p style={miniStatValue}>{accountData.displayCredits}</p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── OTHER SECTIONS ── */}
-          {profileSections.map((section, sectionIndex) => (
-            <section key={sectionIndex} className="profile-form-section" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: 20, padding: 24 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {section.icon}
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(300px, 0.9fr)', gap: 24, alignItems: 'start' }}>
+          <section style={{ display: 'grid', gap: 18 }}>
+            <div style={sectionCardStyle}>
+              <div style={sectionHeaderStyle}>
+                <div style={heroIconWrap('#fff3f3')}>
+                  <Sparkles size={20} color={RED} />
                 </div>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: 0 }}>{section.title}</h2>
+                <div>
+                  <h2 style={sectionTitleStyle}>What you have access to</h2>
+                  <p style={sectionSubtitleStyle}>A clean summary of your current entitlements.</p>
+                </div>
               </div>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {section.fields.map((field: any, fieldIndex: number) => (
-                  <div key={fieldIndex}>
-                    <label style={{ fontSize: 11, color: '#737373', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>
-                      {field.label}
-                    </label>
-                    {field.type === 'select' ? (
-                      <select
-                        value={userProfile?.[field.key as keyof UserProfile] as string || ''}
-                        onChange={(e) => updateProfile(field.key as keyof UserProfile, e.target.value)}
-                        style={{ ...iStyle, cursor: 'pointer' }}
-                      >
-                        <option value="">Select an option</option>
-                        {field.options?.map((option: string) => (
-                          <option key={option} value={option}>{option}</option>
-                        ))}
-                      </select>
-                    ) : field.type === 'textarea' ? (
-                      <textarea
-                        value={userProfile?.[field.key as keyof UserProfile] as string || ''}
-                        onChange={(e) => updateProfile(field.key as keyof UserProfile, e.target.value)}
-                        style={{ ...iStyle, minHeight: 100, resize: 'vertical' }}
-                        placeholder={field.placeholder || `Enter your ${field.label.toLowerCase()}...`}
-                      />
-                    ) : field.type === 'number' ? (
-                      <input
-                        type="number"
-                        step="0.5"
-                        min="0"
-                        max={field.key === 'ieltsScore' ? '9' : '120'}
-                        value={(userProfile as any)?.[field.key] ?? ''}
-                        onChange={(e) => updateProfile(field.key as keyof UserProfile, e.target.value ? parseFloat(e.target.value) : null)}
-                        style={iStyle}
-                        placeholder={field.placeholder || ''}
-                      />
-                    ) : field.type === 'tags' ? (
-                      <input
-                        type="text"
-                        value={Array.isArray(userProfile?.[field.key as keyof UserProfile]) ? (userProfile![field.key as keyof UserProfile] as string[]).join(', ') : ''}
-                        onChange={(e) => updateProfile(field.key as keyof UserProfile, e.target.value.split(',').map((item: string) => item.trim()).filter(Boolean))}
-                        style={iStyle}
-                        placeholder={field.placeholder || `Enter ${field.label.toLowerCase()} separated by commas...`}
-                      />
-                    ) : null}
+
+              <div style={{ display: 'grid', gap: 12 }}>
+                {[
+                  normalizedPlanType === 'free' ? '3 AI credits after login' : '20 AI credits every month',
+                  normalizedPlanType === 'free' ? 'Basic tool access' : 'Full Pro tool access',
+                  normalizedPlanType === 'free' ? 'Limited templates' : 'All CV templates unlocked',
+                  'Save programs to your shortlist',
+                ].map((item) => (
+                  <div key={item} style={featureRowStyle}>
+                    <CheckCircle2 size={18} color="#16a34a" style={{ flexShrink: 0, marginTop: 2 }} />
+                    <span style={{ fontSize: 15, color: '#374151', lineHeight: 1.55 }}>{item}</span>
                   </div>
                 ))}
               </div>
-            </section>
-          ))}
+            </div>
 
-        </div>{/* end gap container */}
+            <div style={sectionCardStyle}>
+              <div style={sectionHeaderStyle}>
+                <div style={heroIconWrap('#eefaf2')}>
+                  <Bookmark size={20} color="#16a34a" />
+                </div>
+                <div>
+                  <h2 style={sectionTitleStyle}>Shortlist overview</h2>
+                  <p style={sectionSubtitleStyle}>Saved programs are tracked here for later review.</p>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 12 }}>
+                <div style={statTileStyle}>
+                  <p style={statTileLabel}>Saved</p>
+                  <p style={statTileValue}>{shortlistCount}</p>
+                </div>
+                <div style={statTileStyle}>
+                  <p style={statTileLabel}>Visibility</p>
+                  <p style={statTileValue}>Private</p>
+                </div>
+                <div style={statTileStyle}>
+                  <p style={statTileLabel}>Action</p>
+                  <p style={statTileValue}><Link href="/my-shortlist" style={{ color: RED, textDecoration: 'none' }}>Open</Link></p>
+                </div>
+              </div>
+            </div>
+          </section>
 
-        {/* Save Button */}
-        <div style={{ marginTop: 40, textAlign: 'center' }}>
-          <button
-            onClick={handleSaveProfile}
-            disabled={saving}
-            style={{
-              padding: '16px 32px',
-              borderRadius: 12,
-              fontSize: 16,
-              fontWeight: 700,
-              color: '#fff',
-              background: saving ? '#999' : 'linear-gradient(135deg, #dd0000, #7c3aed)',
-              border: 'none',
-              cursor: saving ? 'not-allowed' : 'pointer',
-              transition: 'all 0.2s',
-              boxShadow: '0 4px 16px rgba(221,0,0,0.2)',
-              opacity: saving ? 0.7 : 1
-            }}
-          >
-            {saving ? 'Saving...' : 'Save Profile'}
-          </button>
-          
-          {saveStatus === 'success' && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 16, color: '#22c55e', fontSize: 14, fontWeight: 600 }}>
-              <CheckCircle className="w-5 h-5" />
-              Profile saved successfully!
+          <aside style={{ display: 'grid', gap: 18 }}>
+            <div style={sectionCardStyle}>
+              <div style={sectionHeaderStyle}>
+                <div style={heroIconWrap('#f8fafc')}>
+                  <ArrowRight size={20} color="#111827" />
+                </div>
+                <div>
+                  <h2 style={sectionTitleStyle}>Quick links</h2>
+                  <p style={sectionSubtitleStyle}>Fast access to the main user flows.</p>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gap: 10 }}>
+                <Link href="/my-shortlist" style={quickLinkStyle}>Open shortlist</Link>
+                <Link href="/credits" style={quickLinkStyle}>View credits</Link>
+                <Link href="/pricing" style={quickLinkStyle}>See pricing</Link>
+                <Link href="/dashboard" style={quickLinkStyle}>Open dashboard</Link>
+              </div>
             </div>
-          )}
-          {saveStatus === 'error' && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 16, color: '#dd0000', fontSize: 14, fontWeight: 600 }}>
-              Failed to save profile. Please try again.
+
+            <div style={sectionCardStyle}>
+              <div style={sectionHeaderStyle}>
+                <div style={heroIconWrap('#fff3f3')}>
+                  <CreditCard size={20} color={RED} />
+                </div>
+                <div>
+                  <h2 style={sectionTitleStyle}>Account actions</h2>
+                  <p style={sectionSubtitleStyle}>Billing and access controls.</p>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gap: 10 }}>
+                {normalizedPlanType === 'pro' && (
+                  <button onClick={handleManageBilling} disabled={actionLoading} style={primaryButtonStyle}>
+                    {actionLoading ? <Loader2 size={16} className="animate-spin" /> : <CreditCard size={16} />}
+                    Manage billing
+                  </button>
+                )}
+                <Link href="/pricing" style={normalizedPlanType === 'free' ? primaryLinkStyle : secondaryLinkStyle}>
+                  <ExternalLink size={16} />
+                  {normalizedPlanType === 'free' ? 'Upgrade to Pro' : 'Change plan'}
+                </Link>
+                <button onClick={() => signOut({ callbackUrl: '/' })} style={secondaryButtonStyle}>
+                  <LogOut size={16} />
+                  Sign out
+                </button>
+              </div>
             </div>
-          )}
-          {saveStatus === 'idle' && profileCompletion === 100 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 16, color: '#22c55e', fontSize: 14, fontWeight: 600 }}>
-              <CheckCircle className="w-5 h-5" />
-              Profile complete! You'll get better program recommendations.
-            </div>
-          )}
+          </aside>
         </div>
       </main>
     </div>
   );
 }
+
+const heroChipStyle: React.CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 8,
+  padding: '10px 14px',
+  borderRadius: 999,
+  border: '1px solid rgba(15,23,42,0.08)',
+  background: 'rgba(255,255,255,0.75)',
+  color: '#374151',
+  fontSize: 13,
+  fontWeight: 700,
+  backdropFilter: 'blur(10px)',
+};
+
+const heroPanelStyle: React.CSSProperties = {
+  borderRadius: 24,
+  border: '1px solid rgba(15,23,42,0.08)',
+  background: 'rgba(255,255,255,0.82)',
+  padding: 20,
+  boxShadow: '0 16px 40px rgba(15,23,42,0.05)',
+};
+
+const heroIconWrap = (background: string): React.CSSProperties => ({
+  width: 44,
+  height: 44,
+  borderRadius: 14,
+  background,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+});
+
+const panelLabelStyle: React.CSSProperties = {
+  fontSize: 13,
+  color: '#6b7280',
+  margin: 0,
+};
+
+const panelValueStyle: React.CSSProperties = {
+  fontSize: 18,
+  fontWeight: 800,
+  color: '#111827',
+  margin: '2px 0 0',
+};
+
+const panelSubtextStyle: React.CSSProperties = {
+  fontSize: 14,
+  color: '#6b7280',
+  margin: '14px 0 0',
+  wordBreak: 'break-word',
+};
+
+const miniStatStyle: React.CSSProperties = {
+  borderRadius: 22,
+  border: '1px solid rgba(15,23,42,0.08)',
+  background: 'rgba(255,255,255,0.82)',
+  padding: 18,
+  boxShadow: '0 12px 30px rgba(15,23,42,0.04)',
+};
+
+const miniStatLabel: React.CSSProperties = {
+  fontSize: 13,
+  color: '#6b7280',
+  margin: '12px 0 4px',
+};
+
+const miniStatValue: React.CSSProperties = {
+  fontSize: 22,
+  lineHeight: 1.1,
+  fontWeight: 900,
+  color: '#111827',
+  margin: 0,
+};
+
+const sectionCardStyle: React.CSSProperties = {
+  background: '#fff',
+  border: '1px solid #e5e7eb',
+  borderRadius: 28,
+  padding: 26,
+  boxShadow: '0 14px 40px rgba(15,23,42,0.04)',
+};
+
+const sectionHeaderStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 12,
+  marginBottom: 18,
+};
+
+const sectionTitleStyle: React.CSSProperties = {
+  fontSize: 22,
+  fontWeight: 850,
+  color: '#111827',
+  margin: 0,
+};
+
+const sectionSubtitleStyle: React.CSSProperties = {
+  fontSize: 14,
+  color: '#6b7280',
+  margin: '4px 0 0',
+};
+
+const featureRowStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  gap: 12,
+  padding: '14px 16px',
+  background: '#fafafa',
+  border: '1px solid #f0f0f0',
+  borderRadius: 18,
+};
+
+const statTileStyle: React.CSSProperties = {
+  borderRadius: 18,
+  background: '#fafafa',
+  border: '1px solid #f0f0f0',
+  padding: 16,
+};
+
+const statTileLabel: React.CSSProperties = {
+  fontSize: 12,
+  textTransform: 'uppercase',
+  letterSpacing: '0.12em',
+  color: '#6b7280',
+  margin: '0 0 8px',
+  fontWeight: 700,
+};
+
+const statTileValue: React.CSSProperties = {
+  fontSize: 18,
+  fontWeight: 900,
+  color: '#111827',
+  margin: 0,
+};
+
+const quickLinkStyle: React.CSSProperties = {
+  padding: '13px 16px',
+  borderRadius: 16,
+  border: '1px solid #ececec',
+  textDecoration: 'none',
+  color: '#222',
+  fontWeight: 700,
+  fontSize: 14,
+  background: 'linear-gradient(180deg, #ffffff, #fafafa)',
+};
+
+const primaryButtonStyle: React.CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 8,
+  padding: '13px 16px',
+  borderRadius: 16,
+  border: 'none',
+  background: '#111827',
+  color: '#fff',
+  fontWeight: 700,
+  fontSize: 14,
+  cursor: 'pointer',
+};
+
+const secondaryButtonStyle: React.CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 8,
+  padding: '13px 16px',
+  borderRadius: 16,
+  border: '1px solid #e5e5e5',
+  background: '#fff',
+  color: '#444',
+  fontWeight: 700,
+  fontSize: 14,
+  cursor: 'pointer',
+};
+
+const primaryLinkStyle: React.CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 8,
+  padding: '13px 16px',
+  borderRadius: 16,
+  border: 'none',
+  background: RED,
+  color: '#fff',
+  fontWeight: 700,
+  fontSize: 14,
+  textDecoration: 'none',
+};
+
+const secondaryLinkStyle: React.CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 8,
+  padding: '13px 16px',
+  borderRadius: 16,
+  border: `1px solid ${RED}`,
+  background: '#fff',
+  color: RED,
+  fontWeight: 700,
+  fontSize: 14,
+  textDecoration: 'none',
+};

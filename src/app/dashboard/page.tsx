@@ -75,6 +75,7 @@ export default function DashboardPage() {
   const [recommendedPrograms, setRecommendedPrograms] = useState<RecommendedProgram[]>([]);
   const [recommendLoading, setRecommendLoading] = useState(false);
   const [aiCredits, setAiCredits] = useState<number | null>(null);
+  const [accountMissing, setAccountMissing] = useState(false);
 
   const calculateProfileCompletion = (profile: UserProfile | null) => {
     if (!profile) return 0;
@@ -144,6 +145,11 @@ export default function DashboardPage() {
     const loadProfile = async () => {
       try {
         const res = await fetch('/api/profile');
+        if (res.status === 401 || res.status === 404) {
+          setAccountMissing(true);
+          router.replace('/auth/signin?callbackUrl=/dashboard');
+          return;
+        }
         if (res.ok && !cancelled) {
           const data = await res.json();
           const p = data.profile || null;
@@ -158,6 +164,11 @@ export default function DashboardPage() {
     const loadSubscription = async () => {
       try {
         const res = await fetch('/api/subscription');
+        if (res.status === 401 || res.status === 404) {
+          setAccountMissing(true);
+          router.replace('/auth/signin?callbackUrl=/dashboard');
+          return;
+        }
         if (res.ok && !cancelled) {
           const data = await res.json();
           setSubscription(data.subscription || { planType: data.planType || 'free', status: 'active' });
@@ -169,6 +180,11 @@ export default function DashboardPage() {
     const loadCredits = async () => {
       try {
         const res = await fetch('/api/credits/balance');
+        if (res.status === 401 || res.status === 404) {
+          setAccountMissing(true);
+          router.replace('/auth/signin?callbackUrl=/dashboard');
+          return;
+        }
         if (res.ok && !cancelled) {
           const data = await res.json();
           if (!data.hasUnlimited) setAiCredits(data.credits);
@@ -192,6 +208,30 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-red-600 animate-spin" />
+      </div>
+    );
+  }
+
+  if (accountMissing) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50">
+            <User className="w-6 h-6 text-red-600" />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900">Sign in again</h1>
+          <p className="mt-3 text-slate-600">
+            Your account record is missing. Sign in again to restore access to the dashboard.
+          </p>
+          <div className="mt-6 flex flex-col gap-3">
+            <Link href="/auth/signin?callbackUrl=/dashboard" className="rounded-xl bg-red-600 px-4 py-3 font-semibold text-white">
+              Sign in
+            </Link>
+            <Link href="/" className="rounded-xl border border-slate-200 px-4 py-3 font-semibold text-slate-700">
+              Go home
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -228,9 +268,9 @@ export default function DashboardPage() {
               <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
                 <User className="w-5 h-5 text-blue-600" />
               </div>
-              <span className="text-2xl font-bold text-slate-900">{profileCompletion}%</span>
+              <span className="text-2xl font-bold text-slate-900">{subscription?.planType === 'pro' ? 'Pro' : 'Free'}</span>
             </div>
-            <p className="text-sm font-medium text-slate-600 group-hover:text-blue-600 transition-colors">Profile Complete</p>
+            <p className="text-sm font-medium text-slate-600 group-hover:text-blue-600 transition-colors">Account & Plan</p>
           </Link>
 
           {aiCredits !== null && (

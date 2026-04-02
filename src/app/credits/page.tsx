@@ -27,6 +27,7 @@ export default function CreditsPage() {
   const [hasUnlimited, setHasUnlimited] = useState(false);
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState<string | null>(null);
+  const [accountMissing, setAccountMissing] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -39,6 +40,11 @@ export default function CreditsPage() {
     const loadBalance = async () => {
       try {
         const res = await fetch('/api/credits/balance');
+        if (res.status === 401 || res.status === 404) {
+          setAccountMissing(true);
+          router.replace('/auth/signin?callbackUrl=/credits');
+          return;
+        }
         if (res.ok) {
           const data = await res.json();
           setBalance(data.credits);
@@ -79,6 +85,30 @@ export default function CreditsPage() {
     return (
       <div style={{ minHeight: '100vh', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#dd0000' }} />
+      </div>
+    );
+  }
+
+  if (accountMissing) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+        <div style={{ maxWidth: 520, width: '100%', background: '#fff', borderRadius: 24, border: '1px solid #e5e7eb', padding: 32, textAlign: 'center', boxShadow: '0 12px 30px rgba(15,23,42,0.06)' }}>
+          <div style={{ width: 64, height: 64, borderRadius: 20, background: '#fff1f2', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+            <Zap size={28} color="#dd0000" />
+          </div>
+          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#0a0a0a', margin: '0 0 10px' }}>Sign in again</h1>
+          <p style={{ fontSize: 16, color: '#737373', margin: '0 0 24px' }}>
+            Your account record is missing. Sign in again to view your credits and purchases.
+          </p>
+          <div style={{ display: 'grid', gap: 12 }}>
+            <Link href="/auth/signin?callbackUrl=/credits" style={{ display: 'inline-flex', justifyContent: 'center', padding: '14px 18px', borderRadius: 12, background: '#dd0000', color: '#fff', textDecoration: 'none', fontWeight: 700 }}>
+              Sign in
+            </Link>
+            <Link href="/" style={{ display: 'inline-flex', justifyContent: 'center', padding: '14px 18px', borderRadius: 12, border: '1px solid #e5e7eb', color: '#111827', textDecoration: 'none', fontWeight: 700 }}>
+              Go home
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
