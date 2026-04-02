@@ -22,17 +22,17 @@ export default function PricingPage() {
       const pending = sessionStorage.getItem('pendingCheckout');
       if (pending) {
         sessionStorage.removeItem('pendingCheckout');
-        const { priceId, mode } = JSON.parse(pending);
-        handleCheckout(priceId, mode);
+        const { planKey, priceId, mode } = JSON.parse(pending);
+        handleCheckout(planKey || priceId, mode);
       }
     }
   }, [status]);
 
-  const handleCheckout = async (priceId: string, mode: 'subscription' | 'payment') => {
+  const handleCheckout = async (planKeyOrPriceId: string, mode: 'subscription' | 'payment') => {
     // Check if user is logged in
     if (status === 'unauthenticated') {
       // Store the intended purchase in sessionStorage
-      sessionStorage.setItem('pendingCheckout', JSON.stringify({ priceId, mode }));
+      sessionStorage.setItem('pendingCheckout', JSON.stringify({ planKey: planKeyOrPriceId, mode }));
       // Redirect to login with callback to pricing page
       router.push('/auth/signin?callbackUrl=/pricing');
       return;
@@ -42,10 +42,10 @@ export default function PricingPage() {
       return; // Wait for session to load
     }
 
-    console.log('handleCheckout called with:', { priceId, mode });
-    setLoading(priceId);
+    console.log('handleCheckout called with:', { planKeyOrPriceId, mode });
+    setLoading(planKeyOrPriceId);
     try {
-      const body = JSON.stringify({ priceId, mode });
+      const body = JSON.stringify({ planKey: planKeyOrPriceId, mode });
       console.log('Sending body:', body);
       
       const res = await fetch('/api/stripe/create-checkout', {
@@ -249,10 +249,8 @@ export default function PricingPage() {
               </div>
 
               <button
-                onClick={() => handleCheckout(
-                  billingPeriod === 'monthly' 
-                    ? 'price_1THN89BhIRngoSRXQc7qKse' 
-                    : 'price_1THN89BhIRngoSRXlqKJkqhj',
+                  onClick={() => handleCheckout(
+                  billingPeriod === 'monthly' ? 'pro_monthly' : 'pro_yearly',
                   'subscription'
                 )}
                 disabled={loading !== null}

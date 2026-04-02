@@ -3,6 +3,7 @@ export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import Stripe from 'stripe';
+import { getPlans } from '@/lib/stripe';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,11 +20,18 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log('Request body:', body);
     
-    const { priceId, mode = 'subscription' } = body;
+    const { priceId, planKey, mode = 'subscription' } = body;
 
-    if (!priceId) {
+    const plans = getPlans();
+    const resolvedPlan =
+      planKey && plans[planKey as keyof typeof plans]
+        ? plans[planKey as keyof typeof plans]
+        : null;
+    const resolvedPriceId = resolvedPlan?.priceId || priceId;
+
+    if (!resolvedPriceId) {
       return NextResponse.json(
-        { error: 'Price ID is required', receivedBody: body },
+        { error: 'Price ID or planKey is required', receivedBody: body },
         { status: 400 }
       );
     }
@@ -43,11 +51,11 @@ export async function POST(request: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.germanpath.com';
 
-    console.log('Creating Stripe session with:', { mode, priceId, baseUrl });
+    console.log('Creating Stripe session with:', { mode, planKey, priceId: resolvedPriceId, baseUrl });
     
     // First, verify the price exists
     try {
-      const price = await stripe.prices.retrieve(priceId);
+      const price = await stripe.prices.retrieve(resolvedPriceId);
       console.log('Price retrieved successfully:', { id: price.id, type: price.type, active: price.active });
     } catch (priceError) {
       console.error('Failed to retrieve price:', priceError);
@@ -66,7 +74,7 @@ export async function POST(request: NextRequest) {
       customer_email: userEmail,
       line_items: [
         {
-          price: priceId,
+          price: resolvedPriceId,
           quantity: 1,
         },
       ],
@@ -84,8 +92,8 @@ export async function POST(request: NextRequest) {
         'price_1THNNCBhIRngoSRXR97jnrrf': '100',
         'price_1THNNCBhIRngoSRXROohsxsl': '300',
       };
-      if (creditsMap[priceId]) {
-        sessionConfig.metadata!.credits = creditsMap[priceId];
+      if (creditsMap[resolvedPriceId]) {
+        sessionConfig.metadata!.credits = creditsMap[resolvedPriceId];
       }
     }
     
