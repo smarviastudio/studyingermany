@@ -151,16 +151,16 @@ export default function ProfilePage() {
           style={{
             position: 'relative',
             overflow: 'hidden',
-            borderRadius: 32,
-            padding: '34px 34px 30px',
-            marginBottom: 26,
-            border: '1px solid rgba(15,23,42,0.08)',
-            background: 'linear-gradient(135deg, #fff 0%, #fff7f7 45%, #f6f0ff 100%)',
-            boxShadow: '0 24px 70px rgba(15,23,42,0.08)',
+            borderRadius: 24,
+            padding: '40px',
+            marginBottom: 32,
+            border: '1px solid #e5e7eb',
+            background: 'linear-gradient(135deg, #ffffff 0%, #fef2f2 100%)',
+            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)',
           }}
         >
-          <div style={{ position: 'absolute', inset: 'auto -120px -120px auto', width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle, rgba(221,0,0,0.12) 0%, rgba(221,0,0,0) 70%)' }} />
-          <div style={{ position: 'absolute', inset: '-110px auto auto -90px', width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.10) 0%, rgba(124,58,237,0) 70%)' }} />
+          <div style={{ position: 'absolute', inset: 'auto -80px -80px auto', width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(221,0,0,0.08) 0%, rgba(221,0,0,0) 70%)', filter: 'blur(40px)' }} />
+          <div style={{ position: 'absolute', inset: '-60px auto auto -60px', width: 180, height: 180, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.06) 0%, rgba(124,58,237,0) 70%)', filter: 'blur(40px)' }} />
 
           <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'minmax(0, 1.6fr) minmax(320px, 0.95fr)', gap: 28, alignItems: 'center' }}>
             <div>
@@ -295,20 +295,55 @@ export default function ProfilePage() {
                   <CreditCard size={20} color={RED} />
                 </div>
                 <div>
-                  <h2 style={sectionTitleStyle}>Account actions</h2>
-                  <p style={sectionSubtitleStyle}>Billing and access controls.</p>
+                  <h2 style={sectionTitleStyle}>Subscription & Billing</h2>
+                  <p style={sectionSubtitleStyle}>Manage your plan and payment settings.</p>
                 </div>
               </div>
+              
+              {/* Subscription Status */}
+              {normalizedPlanType === 'pro' && accountData.subscription && (
+                <div style={{ 
+                  padding: '16px', 
+                  background: '#f0fdf4', 
+                  border: '1px solid #bbf7d0',
+                  borderRadius: 16,
+                  marginBottom: 16 
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <CheckCircle2 size={18} color="#16a34a" />
+                    <span style={{ fontSize: 14, fontWeight: 700, color: '#15803d' }}>
+                      {accountData.subscription.cancelAtPeriodEnd ? 'Cancels on' : 'Renews on'} {billingDate}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: 13, color: '#166534', margin: 0 }}>
+                    {accountData.subscription.cancelAtPeriodEnd 
+                      ? 'Your subscription will end on this date. Reactivate to continue.' 
+                      : 'Your subscription will automatically renew.'}
+                  </p>
+                </div>
+              )}
+
               <div style={{ display: 'grid', gap: 10 }}>
-                {normalizedPlanType === 'pro' && (
-                  <button onClick={handleManageBilling} disabled={actionLoading} style={primaryButtonStyle}>
-                    {actionLoading ? <Loader2 size={16} className="animate-spin" /> : <CreditCard size={16} />}
-                    Manage billing
-                  </button>
+                {normalizedPlanType === 'free' ? (
+                  <Link href="/pricing" style={primaryLinkStyle}>
+                    <Crown size={16} />
+                    Upgrade to Pro
+                  </Link>
+                ) : (
+                  <>
+                    <Link href="/subscription" style={primaryLinkStyle}>
+                      <CreditCard size={16} />
+                      Manage Subscription
+                    </Link>
+                    <button onClick={handleManageBilling} disabled={actionLoading} style={secondaryButtonStyle}>
+                      {actionLoading ? <Loader2 size={16} className="animate-spin" /> : <ExternalLink size={16} />}
+                      Billing Portal
+                    </button>
+                  </>
                 )}
-                <Link href="/pricing" style={normalizedPlanType === 'free' ? primaryLinkStyle : secondaryLinkStyle}>
+                <Link href="/pricing" style={secondaryLinkStyle}>
                   <ExternalLink size={16} />
-                  {normalizedPlanType === 'free' ? 'Upgrade to Pro' : 'Change plan'}
+                  View All Plans
                 </Link>
                 <button onClick={() => signOut({ callbackUrl: '/' })} style={secondaryButtonStyle}>
                   <LogOut size={16} />
