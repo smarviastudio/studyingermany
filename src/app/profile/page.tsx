@@ -5,19 +5,8 @@ import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import {
-  Loader2,
-  User,
-  Crown,
-  Zap,
-  Bookmark,
-  CreditCard,
-  LogOut,
-  ExternalLink,
-  CheckCircle2,
-  Sparkles,
-  ArrowRight,
-  Shield,
-  Clock3,
+  Loader2, User, Crown, Zap, Bookmark, CreditCard, LogOut, ExternalLink,
+  CheckCircle2, Sparkles, ArrowRight, Shield, Calendar, AlertCircle, Settings
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { getPlanDisplayName, normalizePlanType } from '@/lib/plans';
@@ -41,7 +30,6 @@ type AccountData = {
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-
   const [accountData, setAccountData] = useState<AccountData | null>(null);
   const [shortlistCount, setShortlistCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -55,19 +43,13 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (status !== 'authenticated') return;
-
     const load = async () => {
       try {
         const [accountRes, shortlistRes] = await Promise.all([
           fetch('/api/user/subscription'),
           fetch('/api/shortlist'),
         ]);
-
-        if (accountRes.ok) {
-          const account = await accountRes.json();
-          setAccountData(account);
-        }
-
+        if (accountRes.ok) setAccountData(await accountRes.json());
         if (shortlistRes.ok) {
           const shortlist = await shortlistRes.json();
           setShortlistCount((shortlist.shortlists || []).length);
@@ -78,7 +60,6 @@ export default function ProfilePage() {
         setLoading(false);
       }
     };
-
     load();
   }, [status]);
 
@@ -97,7 +78,7 @@ export default function ProfilePage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom, #fef2f2 0%, #ffffff 100%)' }}>
         <SiteNav />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
           <Loader2 size={40} color={RED} className="animate-spin" />
@@ -106,34 +87,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (!accountData) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#fafafa' }}>
-        <SiteNav />
-        <main style={{ maxWidth: 980, margin: '0 auto', padding: '120px 24px 88px' }}>
-          <section style={sectionCardStyle}>
-            <div style={sectionHeaderStyle}>
-              <div style={heroIconWrap('#fff3f3')}>
-                <User size={20} color={RED} />
-              </div>
-              <div>
-                <h1 style={{ ...sectionTitleStyle, fontSize: 28 }}>Sign in to view your account</h1>
-                <p style={sectionSubtitleStyle}>Your session exists, but the account record is missing. Sign in again to restore access.</p>
-              </div>
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-              <Link href="/auth/signin?callbackUrl=/profile" style={primaryLinkStyle}>
-                Sign in
-              </Link>
-              <Link href="/" style={secondaryLinkStyle}>
-                Go home
-              </Link>
-            </div>
-          </section>
-        </main>
-      </div>
-    );
-  }
+  if (!accountData) return null;
 
   const rawPlanType = accountData.subscription?.planType || 'free';
   const planName = getPlanDisplayName(rawPlanType);
@@ -143,424 +97,148 @@ export default function ProfilePage() {
     : null;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom, #fef2f2 0%, #ffffff 100%)' }}>
       <SiteNav />
-
-      <main style={{ maxWidth: 1180, margin: '0 auto', padding: '96px 24px 88px' }}>
-        <section
-          style={{
-            position: 'relative',
-            overflow: 'hidden',
-            borderRadius: 24,
-            padding: '40px',
-            marginBottom: 32,
-            border: '1px solid #e5e7eb',
-            background: 'linear-gradient(135deg, #ffffff 0%, #fef2f2 100%)',
-            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)',
-          }}
-        >
-          <div style={{ position: 'absolute', inset: 'auto -80px -80px auto', width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(221,0,0,0.08) 0%, rgba(221,0,0,0) 70%)', filter: 'blur(40px)' }} />
-          <div style={{ position: 'absolute', inset: '-60px auto auto -60px', width: 180, height: 180, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.06) 0%, rgba(124,58,237,0) 70%)', filter: 'blur(40px)' }} />
-
-          <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'minmax(0, 1.6fr) minmax(320px, 0.95fr)', gap: 28, alignItems: 'center' }}>
-            <div>
-              <p style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8b8b8b', margin: '0 0 12px' }}>
-                Account
-              </p>
-              <h1 style={{ fontSize: 'clamp(34px, 4vw, 52px)', lineHeight: 1.02, fontWeight: 900, color: '#0f172a', margin: '0 0 14px' }}>
-                Manage your plan, credits, and shortlist in one place.
-              </h1>
-              <p style={{ maxWidth: 700, fontSize: 17, lineHeight: 1.7, color: '#4b5563', margin: 0 }}>
-                A compact account page built for the current product: Free and Pro, AI credits, shortlist access, and billing.
-              </p>
-
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 22 }}>
-                <span style={heroChipStyle}><Shield size={14} /> Secure login</span>
-                <span style={heroChipStyle}><Clock3 size={14} /> Live plan status</span>
-                <span style={heroChipStyle}><Bookmark size={14} /> Shortlist tracking</span>
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gap: 14 }}>
-              <div style={heroPanelStyle}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={heroIconWrap('#fff3f3')}>
-                    <User size={22} color={RED} />
-                  </div>
-                  <div>
-                    <p style={panelLabelStyle}>Signed in as</p>
-                    <p style={panelValueStyle}>{session?.user?.name || 'User'}</p>
-                  </div>
-                </div>
-                <p style={panelSubtextStyle}>{accountData.email}</p>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-                <div style={miniStatStyle}>
-                  <div style={heroIconWrap('#fff3f3')}>
-                    <Crown size={20} color={RED} />
-                  </div>
-                  <p style={miniStatLabel}>Plan</p>
-                  <p style={miniStatValue}>{planName}</p>
-                </div>
-                <div style={miniStatStyle}>
-                  <div style={heroIconWrap('#f3f0ff')}>
-                    <Zap size={20} color="#7c3aed" />
-                  </div>
-                  <p style={miniStatLabel}>Credits</p>
-                  <p style={miniStatValue}>{accountData.displayCredits}</p>
-                </div>
-              </div>
-            </div>
+      <main style={{ maxWidth: 1100, margin: '0 auto', padding: '80px 24px 100px' }}>
+        
+        {/* Hero */}
+        <div style={{ textAlign: 'center', marginBottom: 64 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: 'rgba(221,0,0,0.08)', borderRadius: 999, marginBottom: 20, border: '1px solid rgba(221,0,0,0.15)' }}>
+            <User size={16} color={RED} />
+            <span style={{ fontSize: 13, fontWeight: 700, color: RED, letterSpacing: '0.02em' }}>YOUR ACCOUNT</span>
           </div>
-        </section>
+          <h1 style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: '#0a0a0a', marginBottom: 16, lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+            Welcome back, {session?.user?.name?.split(' ')[0] || 'there'}
+          </h1>
+          <p style={{ fontSize: 18, color: '#6b7280', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 }}>
+            Manage your subscription, track progress, and access all your tools
+          </p>
+        </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(300px, 0.9fr)', gap: 24, alignItems: 'start' }}>
-          <section style={{ display: 'grid', gap: 18 }}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <div style={heroIconWrap('#fff3f3')}>
-                  <Sparkles size={20} color={RED} />
-                </div>
-                <div>
-                  <h2 style={sectionTitleStyle}>What you have access to</h2>
-                  <p style={sectionSubtitleStyle}>A clean summary of your current entitlements.</p>
-                </div>
-              </div>
+        {/* Stats */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24, marginBottom: 48 }}>
+          <StatCard icon={<Crown size={24} color="#fff" strokeWidth={2.5} />} label="Current Plan" value={planName} gradient={`linear-gradient(135deg, ${RED} 0%, #ff4444 100%)`} />
+          <StatCard icon={<Zap size={24} color="#fff" strokeWidth={2.5} fill="#fff" />} label="AI Credits" value={accountData.displayCredits} gradient="linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)" />
+          <StatCard icon={<Bookmark size={24} color="#fff" strokeWidth={2.5} />} label="Saved Programs" value={shortlistCount} gradient="linear-gradient(135deg, #16a34a 0%, #22c55e 100%)" />
+        </div>
 
-              <div style={{ display: 'grid', gap: 12 }}>
-                {[
-                  normalizedPlanType === 'free' ? '3 AI credits after login' : '20 AI credits every month',
-                  normalizedPlanType === 'free' ? 'Basic tool access' : 'Full Pro tool access',
-                  normalizedPlanType === 'free' ? 'Limited templates' : 'All CV templates unlocked',
-                  'Save programs to your shortlist',
-                ].map((item) => (
-                  <div key={item} style={featureRowStyle}>
-                    <CheckCircle2 size={18} color="#16a34a" style={{ flexShrink: 0, marginTop: 2 }} />
-                    <span style={{ fontSize: 15, color: '#374151', lineHeight: 1.55 }}>{item}</span>
+        {/* Main Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 32 }}>
+          
+          {/* Left */}
+          <div style={{ display: 'grid', gap: 24 }}>
+            <Card title="Account Details" icon={<User size={24} color="#6b7280" strokeWidth={2.5} />}>
+              <InfoRow label="Full Name" value={session?.user?.name || 'Not set'} />
+              <InfoRow label="Email Address" value={accountData.email} />
+              {billingDate && (
+                <div style={{ padding: '16px 20px', background: accountData.subscription?.cancelAtPeriodEnd ? '#fef3c7' : '#f0fdf4', borderRadius: 14, border: `1px solid ${accountData.subscription?.cancelAtPeriodEnd ? '#fde68a' : '#bbf7d0'}`, marginTop: 12 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                    {accountData.subscription?.cancelAtPeriodEnd ? <AlertCircle size={16} color="#f59e0b" /> : <Calendar size={16} color="#16a34a" />}
+                    <p style={{ fontSize: 12, color: accountData.subscription?.cancelAtPeriodEnd ? '#92400e' : '#166534', margin: 0, fontWeight: 700 }}>
+                      {accountData.subscription?.cancelAtPeriodEnd ? 'ENDS' : 'RENEWS'}
+                    </p>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <div style={heroIconWrap('#eefaf2')}>
-                  <Bookmark size={20} color="#16a34a" />
-                </div>
-                <div>
-                  <h2 style={sectionTitleStyle}>Shortlist overview</h2>
-                  <p style={sectionSubtitleStyle}>Saved programs are tracked here for later review.</p>
-                </div>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 12 }}>
-                <div style={statTileStyle}>
-                  <p style={statTileLabel}>Saved</p>
-                  <p style={statTileValue}>{shortlistCount}</p>
-                </div>
-                <div style={statTileStyle}>
-                  <p style={statTileLabel}>Visibility</p>
-                  <p style={statTileValue}>Private</p>
-                </div>
-                <div style={statTileStyle}>
-                  <p style={statTileLabel}>Action</p>
-                  <p style={statTileValue}><Link href="/my-shortlist" style={{ color: RED, textDecoration: 'none' }}>Open</Link></p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <aside style={{ display: 'grid', gap: 18 }}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <div style={heroIconWrap('#f8fafc')}>
-                  <ArrowRight size={20} color="#111827" />
-                </div>
-                <div>
-                  <h2 style={sectionTitleStyle}>Quick links</h2>
-                  <p style={sectionSubtitleStyle}>Fast access to the main user flows.</p>
-                </div>
-              </div>
-              <div style={{ display: 'grid', gap: 10 }}>
-                <Link href="/my-shortlist" style={quickLinkStyle}>Open shortlist</Link>
-                <Link href="/credits" style={quickLinkStyle}>View credits</Link>
-                <Link href="/pricing" style={quickLinkStyle}>See pricing</Link>
-                <Link href="/dashboard" style={quickLinkStyle}>Open dashboard</Link>
-              </div>
-            </div>
-
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <div style={heroIconWrap('#fff3f3')}>
-                  <CreditCard size={20} color={RED} />
-                </div>
-                <div>
-                  <h2 style={sectionTitleStyle}>Subscription & Billing</h2>
-                  <p style={sectionSubtitleStyle}>Manage your plan and payment settings.</p>
-                </div>
-              </div>
-              
-              {/* Subscription Status */}
-              {normalizedPlanType === 'pro' && accountData.subscription && (
-                <div style={{ 
-                  padding: '16px', 
-                  background: '#f0fdf4', 
-                  border: '1px solid #bbf7d0',
-                  borderRadius: 16,
-                  marginBottom: 16 
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <CheckCircle2 size={18} color="#16a34a" />
-                    <span style={{ fontSize: 14, fontWeight: 700, color: '#15803d' }}>
-                      {accountData.subscription.cancelAtPeriodEnd ? 'Cancels on' : 'Renews on'} {billingDate}
-                    </span>
-                  </div>
-                  <p style={{ fontSize: 13, color: '#166534', margin: 0 }}>
-                    {accountData.subscription.cancelAtPeriodEnd 
-                      ? 'Your subscription will end on this date. Reactivate to continue.' 
-                      : 'Your subscription will automatically renew.'}
-                  </p>
+                  <p style={{ fontSize: 15, color: accountData.subscription?.cancelAtPeriodEnd ? '#78350f' : '#15803d', margin: 0, fontWeight: 800 }}>{billingDate}</p>
                 </div>
               )}
+            </Card>
 
-              <div style={{ display: 'grid', gap: 10 }}>
-                {normalizedPlanType === 'free' ? (
-                  <Link href="/pricing" style={primaryLinkStyle}>
-                    <Crown size={16} />
-                    Upgrade to Pro
-                  </Link>
-                ) : (
-                  <>
-                    <Link href="/subscription" style={primaryLinkStyle}>
-                      <CreditCard size={16} />
-                      Manage Subscription
-                    </Link>
-                    <button onClick={handleManageBilling} disabled={actionLoading} style={secondaryButtonStyle}>
-                      {actionLoading ? <Loader2 size={16} className="animate-spin" /> : <ExternalLink size={16} />}
-                      Billing Portal
-                    </button>
-                  </>
-                )}
-                <Link href="/pricing" style={secondaryLinkStyle}>
-                  <ExternalLink size={16} />
-                  View All Plans
-                </Link>
-                <button onClick={() => signOut({ callbackUrl: '/' })} style={secondaryButtonStyle}>
-                  <LogOut size={16} />
-                  Sign out
-                </button>
-              </div>
-            </div>
-          </aside>
+            <Card title="Your Benefits" icon={<Sparkles size={24} color="#7c3aed" strokeWidth={2.5} />}>
+              {[
+                normalizedPlanType === 'free' ? '3 AI credits after login' : '20 AI credits every month',
+                normalizedPlanType === 'free' ? 'Basic tool access' : 'Full Pro tool access',
+                normalizedPlanType === 'free' ? 'Limited templates' : 'All CV templates unlocked',
+                'Save unlimited programs',
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: '#fafafa', borderRadius: 14, border: '1px solid #f0f0f0', marginBottom: 8 }}>
+                  <CheckCircle2 size={20} color="#16a34a" strokeWidth={2.5} />
+                  <span style={{ fontSize: 15, color: '#374151', fontWeight: 600 }}>{item}</span>
+                </div>
+              ))}
+            </Card>
+          </div>
+
+          {/* Right */}
+          <div style={{ display: 'grid', gap: 24, alignContent: 'start' }}>
+            <Card title="Quick Actions" icon={<Settings size={24} color="#6b7280" strokeWidth={2.5} />}>
+              <ActionLink href="/my-shortlist" icon={<Bookmark size={18} />} label="View Shortlist" />
+              <ActionLink href="/dashboard" icon={<ArrowRight size={18} />} label="Open Dashboard" />
+              <ActionLink href="/pricing" icon={<Crown size={18} />} label="View Plans" />
+            </Card>
+
+            <Card title="Subscription & Billing" icon={<CreditCard size={24} color={RED} strokeWidth={2.5} />}>
+              {normalizedPlanType === 'free' ? (
+                <ActionButton href="/pricing" label="Upgrade to Pro" icon={<Crown size={18} />} primary />
+              ) : (
+                <>
+                  <ActionButton href="/subscription" label="Manage Subscription" icon={<CreditCard size={18} />} primary />
+                  <button onClick={handleManageBilling} disabled={actionLoading} style={{ padding: '14px 24px', borderRadius: 14, border: '1.5px solid #e5e7eb', background: '#fff', color: '#6b7280', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 12, width: '100%' }}>
+                    {actionLoading ? <Loader2 size={18} className="animate-spin" /> : <ExternalLink size={18} />}
+                    Billing Portal
+                  </button>
+                </>
+              )}
+              <button onClick={() => signOut({ callbackUrl: '/' })} style={{ padding: '14px 24px', borderRadius: 14, border: '1.5px solid #e5e7eb', background: '#fff', color: '#6b7280', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 12, width: '100%' }}>
+                <LogOut size={18} />
+                Sign Out
+              </button>
+            </Card>
+          </div>
         </div>
       </main>
     </div>
   );
 }
 
-const heroChipStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 8,
-  padding: '10px 14px',
-  borderRadius: 999,
-  border: '1px solid rgba(15,23,42,0.08)',
-  background: 'rgba(255,255,255,0.75)',
-  color: '#374151',
-  fontSize: 13,
-  fontWeight: 700,
-  backdropFilter: 'blur(10px)',
-};
+function StatCard({ icon, label, value, gradient }: any) {
+  return (
+    <div style={{ background: 'linear-gradient(135deg, #ffffff 0%, #fafafa 100%)', border: '1px solid #e5e7eb', borderRadius: 20, padding: 32, boxShadow: '0 1px 3px 0 rgba(0,0,0,0.1)', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 48, height: 48, borderRadius: 16, background: gradient, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
+        {icon}
+      </div>
+      <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 4px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
+      <h3 style={{ fontSize: 28, fontWeight: 900, color: '#0a0a0a', margin: 0, letterSpacing: '-0.02em' }}>{value}</h3>
+    </div>
+  );
+}
 
-const heroPanelStyle: React.CSSProperties = {
-  borderRadius: 24,
-  border: '1px solid rgba(15,23,42,0.08)',
-  background: 'rgba(255,255,255,0.82)',
-  padding: 20,
-  boxShadow: '0 16px 40px rgba(15,23,42,0.05)',
-};
+function Card({ title, icon, children }: any) {
+  return (
+    <div style={{ background: 'linear-gradient(135deg, #ffffff 0%, #fafafa 100%)', border: '1px solid #e5e7eb', borderRadius: 24, padding: 40, boxShadow: '0 1px 3px 0 rgba(0,0,0,0.1)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
+        <div style={{ width: 48, height: 48, borderRadius: 16, background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {icon}
+        </div>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0a', margin: 0 }}>{title}</h2>
+      </div>
+      {children}
+    </div>
+  );
+}
 
-const heroIconWrap = (background: string): React.CSSProperties => ({
-  width: 44,
-  height: 44,
-  borderRadius: 14,
-  background,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexShrink: 0,
-});
+function InfoRow({ label, value }: any) {
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 6px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
+      <p style={{ fontSize: 16, color: '#0a0a0a', margin: 0, fontWeight: 600 }}>{value}</p>
+    </div>
+  );
+}
 
-const panelLabelStyle: React.CSSProperties = {
-  fontSize: 13,
-  color: '#6b7280',
-  margin: 0,
-};
+function ActionLink({ href, icon, label }: any) {
+  return (
+    <Link href={href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: '#fafafa', borderRadius: 14, textDecoration: 'none', color: '#374151', fontWeight: 600, fontSize: 15, marginBottom: 8, border: '1px solid #f0f0f0' }}>
+      {icon}
+      {label}
+    </Link>
+  );
+}
 
-const panelValueStyle: React.CSSProperties = {
-  fontSize: 18,
-  fontWeight: 800,
-  color: '#111827',
-  margin: '2px 0 0',
-};
-
-const panelSubtextStyle: React.CSSProperties = {
-  fontSize: 14,
-  color: '#6b7280',
-  margin: '14px 0 0',
-  wordBreak: 'break-word',
-};
-
-const miniStatStyle: React.CSSProperties = {
-  borderRadius: 22,
-  border: '1px solid rgba(15,23,42,0.08)',
-  background: 'rgba(255,255,255,0.82)',
-  padding: 18,
-  boxShadow: '0 12px 30px rgba(15,23,42,0.04)',
-};
-
-const miniStatLabel: React.CSSProperties = {
-  fontSize: 13,
-  color: '#6b7280',
-  margin: '12px 0 4px',
-};
-
-const miniStatValue: React.CSSProperties = {
-  fontSize: 22,
-  lineHeight: 1.1,
-  fontWeight: 900,
-  color: '#111827',
-  margin: 0,
-};
-
-const sectionCardStyle: React.CSSProperties = {
-  background: '#fff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 28,
-  padding: 26,
-  boxShadow: '0 14px 40px rgba(15,23,42,0.04)',
-};
-
-const sectionHeaderStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 12,
-  marginBottom: 18,
-};
-
-const sectionTitleStyle: React.CSSProperties = {
-  fontSize: 22,
-  fontWeight: 850,
-  color: '#111827',
-  margin: 0,
-};
-
-const sectionSubtitleStyle: React.CSSProperties = {
-  fontSize: 14,
-  color: '#6b7280',
-  margin: '4px 0 0',
-};
-
-const featureRowStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'flex-start',
-  gap: 12,
-  padding: '14px 16px',
-  background: '#fafafa',
-  border: '1px solid #f0f0f0',
-  borderRadius: 18,
-};
-
-const statTileStyle: React.CSSProperties = {
-  borderRadius: 18,
-  background: '#fafafa',
-  border: '1px solid #f0f0f0',
-  padding: 16,
-};
-
-const statTileLabel: React.CSSProperties = {
-  fontSize: 12,
-  textTransform: 'uppercase',
-  letterSpacing: '0.12em',
-  color: '#6b7280',
-  margin: '0 0 8px',
-  fontWeight: 700,
-};
-
-const statTileValue: React.CSSProperties = {
-  fontSize: 18,
-  fontWeight: 900,
-  color: '#111827',
-  margin: 0,
-};
-
-const quickLinkStyle: React.CSSProperties = {
-  padding: '13px 16px',
-  borderRadius: 16,
-  border: '1px solid #ececec',
-  textDecoration: 'none',
-  color: '#222',
-  fontWeight: 700,
-  fontSize: 14,
-  background: 'linear-gradient(180deg, #ffffff, #fafafa)',
-};
-
-const primaryButtonStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 8,
-  padding: '13px 16px',
-  borderRadius: 16,
-  border: 'none',
-  background: '#111827',
-  color: '#fff',
-  fontWeight: 700,
-  fontSize: 14,
-  cursor: 'pointer',
-};
-
-const secondaryButtonStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 8,
-  padding: '13px 16px',
-  borderRadius: 16,
-  border: '1px solid #e5e5e5',
-  background: '#fff',
-  color: '#444',
-  fontWeight: 700,
-  fontSize: 14,
-  cursor: 'pointer',
-};
-
-const primaryLinkStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 8,
-  padding: '13px 16px',
-  borderRadius: 16,
-  border: 'none',
-  background: RED,
-  color: '#fff',
-  fontWeight: 700,
-  fontSize: 14,
-  textDecoration: 'none',
-};
-
-const secondaryLinkStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 8,
-  padding: '13px 16px',
-  borderRadius: 16,
-  border: `1px solid ${RED}`,
-  background: '#fff',
-  color: RED,
-  fontWeight: 700,
-  fontSize: 14,
-  textDecoration: 'none',
-};
+function ActionButton({ href, label, icon, primary }: any) {
+  return (
+    <Link href={href} style={{ padding: '16px 24px', borderRadius: 14, border: 'none', background: primary ? `linear-gradient(135deg, ${RED} 0%, #ff4444 100%)` : '#fff', color: primary ? '#fff' : RED, fontSize: 15, fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: primary ? `0 4px 12px ${RED}30` : 'none' }}>
+      {icon}
+      {label}
+    </Link>
+  );
+}
