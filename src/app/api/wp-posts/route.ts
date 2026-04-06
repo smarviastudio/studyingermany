@@ -19,7 +19,8 @@ export async function GET(request: Request) {
     if (search) url += `&search=${encodeURIComponent(search)}`;
     if (tickerOnly) {
       // Only show posts from "News" category in ticker
-      url += '&category_name=news&orderby=date&order=desc';
+      // First, we need to get the News category ID, or we can filter on the frontend
+      url += '&orderby=date&order=desc';
     }
 
     const res = await fetch(url, {

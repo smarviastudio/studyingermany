@@ -95,10 +95,14 @@ export function SiteNav() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('/api/wp-posts?per_page=8&ticker_only=1');
+        const res = await fetch('/api/wp-posts?per_page=30&ticker_only=1');
         if (res.ok) {
           const data = await res.json();
-          setWpPosts(data.posts || []);
+          // Filter to only show posts that have "News" category
+          const newsPosts = (data.posts || []).filter((post: SiteNavPost) => 
+            post.categories?.some(cat => cat.slug.toLowerCase() === 'news')
+          );
+          setWpPosts(newsPosts.slice(0, 8)); // Limit to 8 news posts
         }
       } catch {
         // silent
