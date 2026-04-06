@@ -131,11 +131,15 @@ export class CSVDataProvider implements DataProvider {
       return Number.isFinite(parsed) ? parsed : null;
     };
 
-    const hasEnglishProofRequirement = (program: Program) =>
-      !!program.english_min_level ||
-      !!program.ielts_min_score ||
-      !!program.toefl_min_score ||
-      ((program.language_notes || '').toLowerCase().includes('english'));
+    const hasEnglishProofRequirement = (program: Program) => {
+      // Check if program has any English language requirement
+      const hasIelts = !!program.ielts_min_score && program.ielts_min_score.trim() !== '';
+      const hasToefl = !!program.toefl_min_score && program.toefl_min_score.trim() !== '';
+      const hasEnglishLevel = !!program.english_min_level && program.english_min_level.trim() !== '';
+      const hasEnglishNotes = (program.language_notes || '').toLowerCase().includes('english');
+      
+      return hasIelts || hasToefl || hasEnglishLevel || hasEnglishNotes;
+    };
 
     const hasGermanProofRequirement = (program: Program) =>
       !!program.german_min_level ||

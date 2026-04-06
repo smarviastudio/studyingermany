@@ -71,6 +71,7 @@ IMPORTANT RULES:
 8. If the user asks for online, scholarship-funded, no-work-experience, GPA, ECTS, deadline, direct application, uni-assist, living-cost, or semester-fee constraints, put them in filters.
 9. For GPA and ECTS, treat the user's value as the maximum required by the program. Example: "I have 180 ECTS" => "max_min_ects": 180.
 10. For "still open", "deadline after now", or "open now", set deadline_after to today's date or a concrete date inferred from the query.
+11. CRITICAL: If user says "without IELTS", "no IELTS requirement", "no English test", "without English proof", etc., set "requires_english_proof": false. Do NOT set max_ielts_score in this case.
 
 Do not include any text outside of JSON.`;
 
