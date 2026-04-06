@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
-import { ProfileWarningBanner } from '@/components/ProfileWarningBanner';
 import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
 import { templates as TEMPLATE_LIBRARY } from '@/lib/cv-maker/templates';
 import { useProfileData } from '@/hooks/useProfileData';
@@ -1031,7 +1030,6 @@ function CVMakerContent() {
         </div>
 
         <div className="cvmaker-page-wrap" style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>
-          <ProfileWarningBanner requiredFields={['fullName', 'phone', 'nationality', 'backgroundSummary', 'skills']} />
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 12px' }}>Create your CV</h1>
             <p style={{ fontSize: 16, color: '#737373', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 }}>Choose a template designed for German universities and employers. Click any text to edit directly.</p>

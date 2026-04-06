@@ -426,10 +426,10 @@ function DashboardContent() {
                     </div>
                   ) : (
                     <div className="text-center py-8">
-                      <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-3" />
-                      <p className="text-sm text-slate-600 mb-3">Complete your profile to get personalized recommendations</p>
-                      <Link href="/profile" className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
-                        Complete Profile <ArrowRight className="w-4 h-4" />
+                      <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                      <p className="text-sm text-slate-600 mb-3">Explore programs to get personalized recommendations</p>
+                      <Link href="/course-finder" className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
+                        Find Programs <ArrowRight className="w-4 h-4" />
                       </Link>
                     </div>
                   )}
@@ -533,29 +533,6 @@ function DashboardContent() {
               </div>
             </div>
 
-            {/* Profile Completion - Only show if less than 60% complete */}
-            {profileCompletion < 60 && (
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                    <User className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900">Complete Your Profile</p>
-                    <p className="text-xs text-slate-600">{profileCompletion}% complete</p>
-                  </div>
-                </div>
-                <div className="h-2 bg-white rounded-full overflow-hidden mb-4">
-                  <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all" style={{ width: `${profileCompletion}%` }} />
-                </div>
-                <p className="text-sm text-slate-600 mb-4">
-                  Get personalized program recommendations by completing your profile.
-                </p>
-                <Link href="/profile" className="inline-flex items-center gap-2 w-full justify-center px-4 py-2.5 bg-blue-600 text-white rounded-xl font-medium text-sm hover:bg-blue-700 transition-colors">
-                  Complete Now <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            )}
 
             {/* Help Card */}
             <div className="bg-white rounded-2xl border border-slate-200 p-5">
@@ -571,23 +548,23 @@ function DashboardContent() {
         </div>
 
         {/* Empty State */}
-        {!hasShortlist && profileCompletion < 40 && (
+        {!hasShortlist && (
           <div className="mt-8 bg-white rounded-2xl border border-slate-200 p-12 text-center">
             <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-6">
               <Search className="w-8 h-8 text-slate-400" />
             </div>
             <h2 className="text-xl font-semibold text-slate-900 mb-2">Start Your Journey</h2>
             <p className="text-slate-600 mb-6 max-w-md mx-auto">
-              Complete your profile and explore programs to begin your path to studying in Germany.
+              Explore programs and tools to begin your path to studying in Germany.
             </p>
             <div className="flex items-center justify-center gap-4 flex-wrap">
-              <Link href="/profile" className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors">
-                <User className="w-5 h-5" />
-                Complete Profile
-              </Link>
-              <Link href="/course-finder" className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-colors">
+              <Link href="/course-finder" className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors">
                 <Search className="w-5 h-5" />
                 Find Programs
+              </Link>
+              <Link href="/tools" className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-colors">
+                <Sparkles className="w-5 h-5" />
+                Explore Tools
               </Link>
             </div>
           </div>
