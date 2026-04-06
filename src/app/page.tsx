@@ -257,7 +257,16 @@ export default function HomePage() {
     const groups: Record<string, WpPost[]> = {};
     JOURNEY_CATEGORIES.forEach(cat => { groups[cat.key] = []; });
     groups['other'] = [];
-    wpPosts.forEach(post => {
+    
+    // Filter out posts that ONLY have "News" category
+    const guidePosts = wpPosts.filter(post => {
+      const hasNews = post.categories.some(c => c.slug.toLowerCase() === 'news');
+      const hasOtherCategories = post.categories.some(c => c.slug.toLowerCase() !== 'news');
+      // Exclude if it ONLY has News category (News but no other categories)
+      return !(hasNews && !hasOtherCategories);
+    });
+    
+    guidePosts.forEach(post => {
       const postSlugs = post.categories.map(c => c.slug.toLowerCase());
       const postNames = post.categories.map(c => c.name.toLowerCase());
       let placed = false;
@@ -274,12 +283,25 @@ export default function HomePage() {
   }, [wpPosts]);
 
   const filteredPosts = useMemo(() => {
-    if (activeCategory === 'all') return wpPosts;
+    // Filter out News-only posts
+    const guidePosts = wpPosts.filter(post => {
+      const hasNews = post.categories.some(c => c.slug.toLowerCase() === 'news');
+      const hasOtherCategories = post.categories.some(c => c.slug.toLowerCase() !== 'news');
+      return !(hasNews && !hasOtherCategories);
+    });
+    
+    if (activeCategory === 'all') return guidePosts;
     return categorizedPosts[activeCategory] || [];
   }, [activeCategory, wpPosts, categorizedPosts]);
 
   const featuredPost = useMemo(() => {
-    return wpPosts.find(p => p.featuredImage) || wpPosts[0] || null;
+    // Exclude News-only posts from featured
+    const guidePosts = wpPosts.filter(post => {
+      const hasNews = post.categories.some(c => c.slug.toLowerCase() === 'news');
+      const hasOtherCategories = post.categories.some(c => c.slug.toLowerCase() !== 'news');
+      return !(hasNews && !hasOtherCategories);
+    });
+    return guidePosts.find(p => p.featuredImage) || guidePosts[0] || null;
   }, [wpPosts]);
 
   const handleAdvancedSearch = async () => {
