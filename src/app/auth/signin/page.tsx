@@ -37,24 +37,6 @@ function SignInPageContent() {
     }
   }, [status, session, router, callbackUrl]);
 
-  // Show loading while checking auth status
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-[#f7f7f3] flex items-center justify-center">
-        <p className="text-sm text-[#5a5a5a] tracking-[0.2em] uppercase">Checking authentication...</p>
-      </div>
-    );
-  }
-
-  // Don't render signin form if already authenticated
-  if (status === 'authenticated') {
-    return (
-      <div className="min-h-screen bg-[#f7f7f3] flex items-center justify-center">
-        <p className="text-sm text-[#5a5a5a] tracking-[0.2em] uppercase">Redirecting...</p>
-      </div>
-    );
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
