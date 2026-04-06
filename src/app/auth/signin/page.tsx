@@ -93,116 +93,237 @@ function SignInPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f7f3] text-[#171717]" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 px-6 py-16 items-center">
-        <div className="space-y-6">
-          <Link href="/" className="inline-flex items-center gap-3">
-            <img src="/logo_wp.png" alt="Students in Germany" className="h-12 w-auto" />
-            <span className="text-sm font-semibold tracking-[0.15em] uppercase text-[#a3a3a3]">Students in Germany</span>
-          </Link>
-          <div>
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#dd0000] mb-3">Welcome back</p>
-            <h1 className="font-['Space_Grotesk'] text-4xl lg:text-5xl font-bold leading-tight text-[#111]">
-              Sign in to continue your journey
+    <div className="min-h-screen" style={{ 
+      background: 'linear-gradient(to bottom, #fafafa 0%, #ffffff 100%)',
+      fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif"
+    }}>
+      {/* Logo */}
+      <div className="absolute top-8 left-8">
+        <Link href="/" className="inline-flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity">
+          <img src="/logo_wp.png" alt="Students in Germany" className="h-10 w-auto" />
+        </Link>
+      </div>
+
+      {/* Centered Content */}
+      <div className="min-h-screen flex items-center justify-center px-6 py-20">
+        <div className="w-full max-w-md">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h1 style={{
+              fontSize: 'clamp(32px, 5vw, 48px)',
+              fontWeight: 700,
+              color: '#1d1d1f',
+              marginBottom: 12,
+              letterSpacing: '-0.02em',
+              lineHeight: 1.1
+            }}>
+              Sign in to continue
             </h1>
-            <p className="text-base text-[#5a5a5a] mt-4 max-w-md">
-              Access your saved programs, AI tools, and personalized roadmaps for studying and working in Germany.
+            <p style={{
+              fontSize: 17,
+              color: '#86868b',
+              lineHeight: 1.5,
+              fontWeight: 400
+            }}>
+              Access your saved programs and AI tools
             </p>
           </div>
-          <div className="flex gap-4 text-sm text-[#5a5a5a]">
-            <div>
-              <p className="font-semibold text-[#111]">Need help?</p>
-              <Link href="http://localhost:8000/#contact" className="text-[#dd0000] font-semibold">Contact support →</Link>
-            </div>
-            <div>
-              <p className="font-semibold text-[#111]">New here?</p>
-              <Link href="/auth/signup" className="text-[#dd0000] font-semibold">Create account →</Link>
-            </div>
-          </div>
-        </div>
 
-        <div className="bg-white border border-[#e5e5e5] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] p-8">
-          <h2 className="text-xl font-semibold mb-6">Sign in</h2>
-          <button
-            type="button"
-            onClick={handleGoogleSignIn}
-            disabled={googleLoading}
-            className="w-full border border-[#e0e0e0] bg-white text-[#111] font-semibold py-3 rounded-2xl transition-all flex items-center justify-center gap-2 mb-5 hover:border-[#dd0000]/60 disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {googleLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Redirecting...
-              </>
-            ) : (
-              <>
-                <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" className="w-5 h-5" />
-                Continue with Google
-              </>
-            )}
-          </button>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {error && (
-              <div className="bg-[#fff5f5] border border-[#f4cece] text-[#b42318] px-4 py-3 rounded-xl text-sm">
-                {error}
+          {/* Form Card */}
+          <div style={{
+            background: '#ffffff',
+            border: '1px solid rgba(0,0,0,0.06)',
+            borderRadius: 24,
+            padding: 40,
+            boxShadow: '0 4px 24px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.04)'
+          }}>
+            {/* Google Sign In */}
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={googleLoading}
+              style={{
+                width: '100%',
+                padding: '16px 24px',
+                borderRadius: 12,
+                border: '1px solid rgba(0,0,0,0.1)',
+                background: '#ffffff',
+                color: '#1d1d1f',
+                fontSize: 17,
+                fontWeight: 600,
+                cursor: googleLoading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 12,
+                transition: 'all 0.2s',
+                opacity: googleLoading ? 0.6 : 1,
+                marginBottom: 24
+              }}
+              onMouseOver={(e) => !googleLoading && (e.currentTarget.style.background = '#f5f5f7')}
+              onMouseOut={(e) => (e.currentTarget.style.background = '#ffffff')}
+            >
+              {googleLoading ? (
+                <>
+                  <Loader2 style={{ width: 20, height: 20 }} className="animate-spin" />
+                  <span>Redirecting...</span>
+                </>
+              ) : (
+                <>
+                  <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" style={{ width: 20, height: 20 }} />
+                  <span>Continue with Google</span>
+                </>
+              )}
+            </button>
+
+            {/* Divider */}
+            <div style={{ position: 'relative', marginBottom: 24 }}>
+              <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: 'rgba(0,0,0,0.06)' }} />
+              <div style={{ position: 'relative', textAlign: 'center' }}>
+                <span style={{ background: '#ffffff', padding: '0 16px', fontSize: 13, color: '#86868b', fontWeight: 500 }}>or</span>
               </div>
-            )}
+            </div>
+            {/* Form */}
+            <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 20 }}>
+              {error && (
+                <div style={{
+                  padding: '14px 18px',
+                  borderRadius: 12,
+                  background: '#fff5f5',
+                  border: '1px solid #fecaca',
+                  color: '#dc2626',
+                  fontSize: 14,
+                  fontWeight: 500
+                }}>
+                  {error}
+                </div>
+              )}
 
-            <div>
-              <label className="block text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">
-                Email address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#c5c5c5]" />
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: '#86868b',
+                  marginBottom: 8
+                }}>
+                  Email
+                </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#e0e0e0] bg-white text-sm focus:outline-none focus:border-[#dd0000] focus:ring-2 focus:ring-[#dd0000]/10"
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    borderRadius: 10,
+                    border: '1px solid rgba(0,0,0,0.1)',
+                    background: '#fafafa',
+                    fontSize: 17,
+                    color: '#1d1d1f',
+                    outline: 'none',
+                    transition: 'all 0.2s'
+                  }}
                   placeholder="you@example.com"
+                  onFocus={(e) => {
+                    e.currentTarget.style.background = '#ffffff';
+                    e.currentTarget.style.borderColor = '#0071e3';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.background = '#fafafa';
+                    e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)';
+                  }}
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#c5c5c5]" />
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: '#86868b',
+                  marginBottom: 8
+                }}>
+                  Password
+                </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#e0e0e0] bg-white text-sm focus:outline-none focus:border-[#dd0000] focus:ring-2 focus:ring-[#dd0000]/10"
-                  placeholder="••••••••"
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    borderRadius: 10,
+                    border: '1px solid rgba(0,0,0,0.1)',
+                    background: '#fafafa',
+                    fontSize: 17,
+                    color: '#1d1d1f',
+                    outline: 'none',
+                    transition: 'all 0.2s'
+                  }}
+                  placeholder="Enter your password"
+                  onFocus={(e) => {
+                    e.currentTarget.style.background = '#ffffff';
+                    e.currentTarget.style.borderColor = '#0071e3';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.background = '#fafafa';
+                    e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)';
+                  }}
                 />
               </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  padding: '16px 24px',
+                  borderRadius: 12,
+                  border: 'none',
+                  background: loading ? '#0071e3' : '#0071e3',
+                  color: '#ffffff',
+                  fontSize: 17,
+                  fontWeight: 600,
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 10,
+                  opacity: loading ? 0.6 : 1,
+                  transition: 'all 0.2s',
+                  marginTop: 8
+                }}
+                onMouseOver={(e) => !loading && (e.currentTarget.style.background = '#0077ed')}
+                onMouseOut={(e) => (e.currentTarget.style.background = '#0071e3')}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 style={{ width: 18, height: 18 }} className="animate-spin" />
+                    <span>Signing in...</span>
+                  </>
+                ) : (
+                  'Sign In'
+                )}
+              </button>
+            </form>
+
+            {/* Footer Links */}
+            <div style={{ marginTop: 32, textAlign: 'center' }}>
+              <p style={{ fontSize: 14, color: '#86868b', marginBottom: 16 }}>
+                Don't have an account?{' '}
+                <Link href="/auth/signup" style={{ color: '#0071e3', fontWeight: 600, textDecoration: 'none' }}>
+                  Create one
+                </Link>
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 24, fontSize: 13 }}>
+                <Link href="http://localhost:8000/#contact" style={{ color: '#86868b', textDecoration: 'none', fontWeight: 500 }}>Need help?</Link>
+                <span style={{ color: '#d2d2d7' }}>•</span>
+                <Link href="/" style={{ color: '#86868b', textDecoration: 'none', fontWeight: 500 }}>Back to home</Link>
+              </div>
             </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#dd0000] hover:bg-[#c10000] disabled:opacity-60 text-white font-semibold py-3 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#dd0000]/30"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                'Sign In'
-              )}
-            </button>
-          </form>
-
-          <div className="mt-6 text-sm text-[#6b6b6b] text-center">
-            Don&apos;t have an account?{' '}
-            <Link href="/auth/signup" className="text-[#dd0000] font-semibold">
-              Create one
-            </Link>
           </div>
         </div>
       </div>
