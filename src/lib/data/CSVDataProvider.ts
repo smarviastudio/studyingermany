@@ -345,7 +345,7 @@ export class CSVDataProvider implements DataProvider {
           this.programMatchesSubject(program, subject)
         ).length;
         score += (subjectMatches / filters.subjects.length) * 0.3;
-        if (subjectMatches > 0) reasons.push(`Matches ${subjectMatches} subject(s)`);
+        // Don't show "Matches X subject(s)" - it's not useful info for users
       }
       
       // Language fit
