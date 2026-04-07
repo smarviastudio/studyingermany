@@ -1,11 +1,13 @@
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AlertCircle, ArrowLeft, RefreshCw, Trash2 } from 'lucide-react';
 
-export default function AuthErrorPage() {
+// Inner component that uses useSearchParams
+function AuthErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
   const [isClearing, setIsClearing] = useState(false);
@@ -279,5 +281,53 @@ export default function AuthErrorPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+// Loading fallback
+function AuthErrorLoading() {
+  return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%)',
+    }}>
+      <div style={{
+        maxWidth: '520px',
+        width: '100%',
+        background: '#fff',
+        borderRadius: '24px',
+        padding: '48px 40px',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
+        textAlign: 'center'
+      }}>
+        <div style={{
+          width: '88px',
+          height: '88px',
+          margin: '0 auto 28px',
+          borderRadius: '50%',
+          background: 'rgba(239, 68, 68, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <AlertCircle style={{ width: '44px', height: '44px', color: '#ef4444' }} />
+        </div>
+        <h1 style={{ fontSize: '26px', fontWeight: '700', color: '#111', margin: '0 0 16px' }}>
+          Loading...
+        </h1>
+      </div>
+    </div>
+  );
+}
+
+// Main export with Suspense
+export default function AuthErrorPage() {
+  return (
+    <Suspense fallback={<AuthErrorLoading />}>
+      <AuthErrorContent />
+    </Suspense>
   );
 }
