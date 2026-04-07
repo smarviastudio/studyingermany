@@ -127,7 +127,7 @@ export const VERIFIED_RESOURCES = {
   internalTools: {
     cvMaker: { url: "/cv-maker", label: "Create CV", type: "cv" as const },
     motivationLetter: { url: "/motivation-letter", label: "Write Motivation Letter", type: "letter" as const },
-    profile: { url: "/profile", label: "Complete Your Profile", type: "document" as const },
+    profile: { url: "/profile", label: "Account Settings", type: "document" as const },
   },
 };
 

@@ -786,8 +786,8 @@ function createGuaranteedPlan(program: any, userProfile?: any) {
     profileMatch: {
       score,
       summary: userProfile 
-        ? `Based on your profile, you have a ${score}% match with this program. ${score >= 70 ? 'You meet most requirements!' : 'Complete your profile and documents to improve your chances.'}`
-        : 'Complete your profile to get a personalized compatibility analysis.',
+        ? `Based on your preferences, you have a ${score}% match with this program. ${score >= 70 ? 'You meet most requirements!' : 'Prepare your documents to improve your chances.'}`
+        : 'Add your preferences to get a personalized compatibility analysis.',
       strengths: userProfile ? [
         hasEnglish ? 'Language proficiency verified' : null,
         userProfile.academicBackground ? 'Academic background provided' : null,
