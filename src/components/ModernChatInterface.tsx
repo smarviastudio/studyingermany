@@ -50,7 +50,7 @@ export function ModernChatInterface({ sessionId, userProfile }: ModernChatInterf
   };
 
   const sendInitialMessage = async () => {
-    const profileSummary = `I've completed my profile setup and I'm ready to see program recommendations! Here are my details:
+    const profileSummary = `I'm looking for programs in Germany. Here are my preferences:
 
 **Degree Level:** ${userProfile.target_degree_level || 'Any level'}
 **Subject Interests:** ${userProfile.target_subjects?.join(', ') || 'Open to various subjects'}
@@ -59,7 +59,7 @@ export function ModernChatInterface({ sessionId, userProfile }: ModernChatInterf
 **Budget:** ${userProfile.max_tuition_eur ? `Up to €${userProfile.max_tuition_eur} per year` : 'No specific budget limit'}
 **Intake Timing:** ${userProfile.desired_intake || 'Any semester'}
 
-Please search for relevant programs and provide detailed recommendations with explanations of why each program would be a great fit for my profile!`;
+Please search for relevant programs and provide detailed recommendations with explanations of why each program would be a great fit!`;
     
     await sendMessage(profileSummary, false);
   };

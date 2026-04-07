@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import {
   GraduationCap, Bookmark, Zap, Loader2, Sparkles, Search, ArrowRight,
   Crown, FileText, Briefcase, Award, Calculator, ChevronRight,
-  User, Target, LayoutGrid, Heart, Settings, CheckCircle2, BookOpen
+  LayoutGrid, Heart, Settings, CheckCircle2, BookOpen
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
@@ -18,21 +18,6 @@ interface ShortlistEntry {
   programName: string;
   university: string;
   addedAt: string;
-}
-
-interface UserProfile {
-  fullName?: string;
-  targetDegreeLevel?: string;
-  targetSubjects?: string[];
-  preferredCities?: string[];
-}
-
-interface RecommendedProgram {
-  id: string;
-  name: string;
-  university: string;
-  city: string;
-  matchScore: number;
 }
 
 // Dashboard Component
@@ -46,10 +31,8 @@ function DashboardContent() {
 
   // State
   const [shortlistEntries, setShortlistEntries] = useState<ShortlistEntry[]>([]);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [subscription, setSubscription] = useState<{ planType: string } | null>(null);
   const [aiCredits, setAiCredits] = useState<number | null>(null);
-  const [recommendedPrograms, setRecommendedPrograms] = useState<RecommendedProgram[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncingCheckout, setSyncingCheckout] = useState(false);
 
@@ -60,33 +43,14 @@ function DashboardContent() {
 
     const loadData = async () => {
       try {
-        const [shortlistRes, profileRes, subscriptionRes, creditsRes] = await Promise.all([
+        const [shortlistRes, subscriptionRes, creditsRes] = await Promise.all([
           fetch('/api/shortlist').catch(() => null),
-          fetch('/api/profile').catch(() => null),
           fetch('/api/subscription').catch(() => null),
           fetch('/api/credits/balance').catch(() => null)
         ]);
 
         if (!cancelled) {
           if (shortlistRes?.ok) setShortlistEntries((await shortlistRes.json()).entries || []);
-          if (profileRes?.ok) {
-            const profile = (await profileRes.json()).profile || null;
-            setUserProfile(profile);
-            // Load recommendations if profile is complete enough
-            if (profile?.targetSubjects?.length || profile?.targetDegreeLevel) {
-              try {
-                const recRes = await fetch('/api/programs/recommend', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    targetSubjects: profile.targetSubjects || [],
-                    degreeLevel: profile.targetDegreeLevel || ''
-                  })
-                });
-                if (recRes.ok) setRecommendedPrograms((await recRes.json()).programs || []);
-              } catch {}
-            }
-          }
           if (subscriptionRes?.ok) setSubscription((await subscriptionRes.json()).subscription || { planType: 'free' });
           if (creditsRes?.ok) {
             const creditsData = await creditsRes.json();
@@ -142,7 +106,6 @@ function DashboardContent() {
 
   const userName = session?.user?.name?.split(' ')[0] || 'there';
   const isPro = subscription?.planType === 'pro';
-  const hasRecommendations = recommendedPrograms.length > 0;
   const hasShortlist = shortlistEntries.length > 0;
 
   return (
@@ -214,7 +177,7 @@ function DashboardContent() {
               <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-colors ${isPro ? 'bg-amber-50 group-hover:bg-amber-100' : 'bg-gray-100 group-hover:bg-gray-200'}`}>
-                    {isPro ? <Crown className="w-5 h-5 text-amber-600" /> : <User className="w-5 h-5 text-gray-600" />}
+                    {isPro ? <Crown className="w-5 h-5 text-amber-600" /> : <Zap className="w-5 h-5 text-gray-600" />}
                   </div>
                   <span className={`text-sm font-semibold px-2.5 py-1 rounded-full ${isPro ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'}`}>
                     {isPro ? 'Pro' : 'Free'}
@@ -258,64 +221,58 @@ function DashboardContent() {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Left Column - Main Content */}
             <div className="lg:col-span-2 space-y-6">
-              {/* AI Recommendations */}
+              {/* Featured Programs / Course Finder CTA */}
               <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-red-50/50 to-purple-50/50">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-purple-600 flex items-center justify-center shadow-sm">
-                        <Sparkles className="w-5 h-5 text-white" />
+                        <Search className="w-5 h-5 text-white" />
                       </div>
                       <div>
-                        <h2 className="font-semibold text-gray-900">Recommended for You</h2>
-                        <p className="text-xs text-gray-500">Personalized program suggestions</p>
+                        <h2 className="font-semibold text-gray-900">Find Your Perfect Program</h2>
+                        <p className="text-xs text-gray-500">Search 600+ programs in Germany</p>
                       </div>
                     </div>
                     <Link href="/course-finder" className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-1">
-                      View all <ChevronRight className="w-4 h-4" />
+                      Search <ChevronRight className="w-4 h-4" />
                     </Link>
                   </div>
                 </div>
 
-                <div className="p-4">
-                  {hasRecommendations ? (
-                    <div className="space-y-3">
-                      {recommendedPrograms.slice(0, 3).map((prog) => (
-                        <Link
-                          key={prog.id}
-                          href={`/course-finder?program=${prog.id}`}
-                          className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
-                        >
-                          <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center shrink-0 shadow-sm">
-                            <GraduationCap className="w-6 h-6 text-gray-600" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-medium text-gray-900 truncate group-hover:text-red-600 transition-colors">{prog.name}</h3>
-                            <p className="text-sm text-gray-500 truncate">{prog.university} · {prog.city}</p>
-                          </div>
-                          <div className="shrink-0 flex items-center gap-3">
-                            <span className="px-2.5 py-1 rounded-full bg-gradient-to-r from-red-500 to-purple-600 text-white text-xs font-bold">
-                              {prog.matchScore}% match
-                            </span>
-                            <ChevronRight className="w-5 h-5 text-gray-400" />
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-10">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-100 to-purple-100 flex items-center justify-center mx-auto mb-4">
-                        <Target className="w-8 h-8 text-red-600" />
+                <div className="p-6">
+                  <div className="grid sm:grid-cols-3 gap-4 mb-6">
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+                      <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center">
+                        <GraduationCap className="w-4 h-4 text-red-600" />
                       </div>
-                      <h3 className="font-semibold text-gray-900 mb-2">Get Personalized Recommendations</h3>
-                      <p className="text-sm text-gray-500 mb-4 max-w-sm mx-auto">
-                        Complete your profile to receive AI-powered program recommendations tailored to your goals.
-                      </p>
-                      <Link href="/profile" className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
-                        Complete Profile <ArrowRight className="w-4 h-4" />
-                      </Link>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">600+ Programs</p>
+                        <p className="text-xs text-gray-500">Bachelor & Master</p>
+                      </div>
                     </div>
-                  )}
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+                      <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
+                        <Sparkles className="w-4 h-4 text-purple-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">AI Search</p>
+                        <p className="text-xs text-gray-500">Smart matching</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                        <Heart className="w-4 h-4 text-emerald-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">Save Favorites</p>
+                        <p className="text-xs text-gray-500">Shortlist anytime</p>
+                      </div>
+                    </div>
+                  </div>
+                  <Link href="/course-finder" className="block w-full text-center px-5 py-3 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
+                    Start Searching Programs
+                  </Link>
                 </div>
               </div>
 
