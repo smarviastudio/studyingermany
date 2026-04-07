@@ -42,12 +42,14 @@ export async function POST(request: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.germanpath.com';
 
+    const currentMode = isStripeTestMode() ? 'test' : 'live';
+    
     console.log('Creating Stripe session with:', {
       mode,
       planKey,
       priceId: resolvedPriceId,
       baseUrl,
-      stripeMode: isStripeTestMode() ? 'test' : 'live',
+      stripeMode: currentMode,
     });
     
     // First, verify the price exists
@@ -56,8 +58,15 @@ export async function POST(request: NextRequest) {
       console.log('Price retrieved successfully:', { id: price.id, type: price.type, active: price.active });
     } catch (priceError) {
       console.error('Failed to retrieve price:', priceError);
+      const errorMsg = priceError instanceof Error ? priceError.message : 'Unknown error';
       return NextResponse.json(
-        { error: 'Invalid price ID: ' + (priceError instanceof Error ? priceError.message : 'Unknown error') },
+        { 
+          error: `Invalid price ID: No such price: '${resolvedPriceId}'; a similar object exists in ${currentMode === 'live' ? 'test' : 'live'} mode, but a ${currentMode} mode key was used to make this request.`,
+          details: errorMsg,
+          currentMode,
+          priceId: resolvedPriceId,
+          suggestion: `The app is currently in ${currentMode.toUpperCase()} mode. Please ensure STRIPE_USE_TEST_MODE is set correctly in Vercel environment variables.`
+        },
         { status: 400 }
       );
     }
