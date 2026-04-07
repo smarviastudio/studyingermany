@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AlertCircle, ArrowLeft, RefreshCw, Trash2 } from 'lucide-react';
 
@@ -36,25 +36,7 @@ export default function AuthErrorPage() {
     }
   };
 
-  // Auto-redirect for OAuth cookie errors after countdown
-  useEffect(() => {
-    if (error === 'Configuration' || error === 'InvalidCheck' || error === 'OAuthCallback') {
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            handleClearAndRetry();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [error]);
-
-  const clearAuthCookies = () => {
+  const clearAuthCookies = useCallback(() => {
     // Clear all NextAuth related cookies
     const cookiesToClear = [
       'next-auth.state',
@@ -76,9 +58,9 @@ export default function AuthErrorPage() {
     document.cookie = 'g_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     document.cookie = 'g_csrf_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     document.cookie = 'oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  };
+  }, []);
 
-  const handleClearAndRetry = () => {
+  const handleClearAndRetry = useCallback(() => {
     setIsClearing(true);
     clearAuthCookies();
     
@@ -86,7 +68,25 @@ export default function AuthErrorPage() {
     setTimeout(() => {
       window.location.href = '/auth/signin';
     }, 100);
-  };
+  }, [clearAuthCookies]);
+
+  // Auto-redirect for OAuth cookie errors after countdown
+  useEffect(() => {
+    if (error === 'Configuration' || error === 'InvalidCheck' || error === 'OAuthCallback') {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            handleClearAndRetry();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [error, handleClearAndRetry]);
 
   const isOAuthError = error === 'Configuration' || error === 'InvalidCheck' || error === 'OAuthCallback';
 
