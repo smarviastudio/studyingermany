@@ -91,8 +91,8 @@ export type PlanKey = 'pro_monthly' | 'pro_yearly';
 
 function getPaidPlanPriceIds() {
   if (isStripeTestMode()) {
-    const monthly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY;
-    const yearly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY;
+    const monthly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY || 'price_1THN89BhIRngoSRXlgKJkghi'; // Fallback to new test price
+    const yearly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY || 'price_1THN89BhIRngoSRXlgKJkghi'; // Using monthly for now
 
     if (!monthly || !yearly) {
       throw new Error('STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY and STRIPE_TEST_PRICE_ESSENTIAL_YEARLY are required in test mode');
@@ -101,12 +101,11 @@ function getPaidPlanPriceIds() {
     return { monthly, yearly };
   }
 
-  // In live mode, also use Essential prices
-  const monthly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY || process.env.STRIPE_PRICE_PRO_MONTHLY;
-  const yearly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY || process.env.STRIPE_PRICE_PRO_YEARLY;
+  const monthly = process.env.STRIPE_PRICE_PRO_MONTHLY;
+  const yearly = process.env.STRIPE_PRICE_PRO_YEARLY;
 
   if (!monthly || !yearly) {
-    throw new Error('STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY and STRIPE_TEST_PRICE_ESSENTIAL_YEARLY are required in live mode');
+    throw new Error('STRIPE_PRICE_PRO_MONTHLY and STRIPE_PRICE_PRO_YEARLY are required in live mode');
   }
 
   return { monthly, yearly };
@@ -139,6 +138,7 @@ export function getPlanTypeFromPriceId(priceId: string): 'pro' | 'free' {
     'price_1THN5NBhIRngoSRX93yw0Txf': 'pro',
     'price_1THMhjBhIRngoSRXvbQyNKcE': 'pro', // Essential monthly used as paid plan
     'price_1THMhjBhIRngoSRXNhX1dcad': 'pro', // Essential yearly used as paid plan
+    'price_1THN89BhIRngoSRXlgKJkghi': 'pro', // New test price created by user
   };
   
   if (priceIdMap[priceId]) {

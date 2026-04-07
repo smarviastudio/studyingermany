@@ -12,15 +12,15 @@ const RED = '#dd0000';
 // Price IDs configuration - automatically switches based on environment
 const PRICE_IDS = {
   live: {
-    pro_monthly: 'price_1THMhjBhIRngoSRXvbQyNKcE', // Essential monthly
-    pro_yearly: 'price_1THMhjBhIRngoSRXNhX1dcad', // Essential yearly
+    pro_monthly: 'price_1T9WRxBhlRngoSRXX9UJTQPY',
+    pro_yearly: 'price_1T9WSyBhlRngoSRXQPTRKZib',
     credits_20: 'price_1THMl6BhIRngoSRXMBbRuS2m',
     credits_100: 'price_1THMl6BhIRngoSRXEH2UHrYP',
     credits_300: 'price_1THMl6BhIRngoSRXrR48BBwX',
   },
   test: {
-    pro_monthly: 'price_1T9WRxBhlRngoSRXX9UJTQPY',
-    pro_yearly: 'price_1T9WSyBhlRngoSRXQPTRKZib',
+    pro_monthly: 'price_1THN89BhIRngoSRXlgKJkghi', // User created test price
+    pro_yearly: 'price_1THN89BhIRngoSRXlgKJkghi', // Using monthly for now - create yearly in Stripe
     credits_20: 'price_1THNNCBhIRngoSRXEd8VpVkv',
     credits_100: 'price_1THNNCBhIRngoSRXR97jnrrf',
     credits_300: 'price_1THNNCBhIRngoSRXROohsxsl',
@@ -271,14 +271,26 @@ export default function PricingPage() {
               <div style={{ marginBottom: 24, marginTop: 8 }}>
                 <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: RED, margin: '0 0 8px' }}>Pro</p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-                  <span style={{ fontSize: 48, fontWeight: 900, color: RED }}>
-                    {billingPeriod === 'monthly' ? '€9.99' : '€6.66'}
-                  </span>
-                  <span style={{ fontSize: 16, color: '#888' }}>/month</span>
+                { billingPeriod === 'monthly' && (
+                  <>
+                    <span style={{ fontSize: 48, fontWeight: 900, color: RED }}>
+                      €9.99
+                    </span>
+                    <span style={{ fontSize: 16, color: '#888' }}>/month</span>
+                  </>
+                )}
+                { billingPeriod === 'yearly' && (
+                  <>
+                    <span style={{ fontSize: 48, fontWeight: 900, color: RED }}>
+                      €79.99
+                    </span>
+                    <span style={{ fontSize: 16, color: '#888' }}>/year</span>
+                  </>
+                )}
                 </div>
                 {billingPeriod === 'yearly' && (
                   <p style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, margin: 0 }}>
-                    Billed €79.99/year
+                    Billed €79.99/year (same price as monthly - create yearly in Stripe)
                   </p>
                 )}
               </div>
