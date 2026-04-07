@@ -344,7 +344,7 @@ export default function HomePage() {
       
       const constructedQuery = queryParts.length > 0 ? queryParts.join(' ') : 'programs in Germany';
       
-      const res = await fetch('/api/course-finder', {
+      const res = await fetch('/api/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: constructedQuery, limit: SEARCH_RESULTS_LIMIT }),
@@ -379,7 +379,7 @@ export default function HomePage() {
     setNonCourseMessage(null);
     setShowSearchResults(true);
     try {
-      const res = await fetch('/api/course-finder', {
+      const res = await fetch('/api/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: query.trim(), limit: SEARCH_RESULTS_LIMIT }),

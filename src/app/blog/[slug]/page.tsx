@@ -586,7 +586,7 @@ export default async function BlogPostPage({ params }: Props) {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/course-finder" className="block p-2.5 rounded-lg border border-gray-100 bg-white/90 hover:border-[#dd0000] transition-all">
+                    <Link href="/" className="block p-2.5 rounded-lg border border-gray-100 bg-white/90 hover:border-[#dd0000] transition-all">
                       <strong className="block text-[13px] text-[#dd0000]">Course finder</strong>
                       <span className="text-xs text-gray-600">Search 20,000+ German programs with filters.</span>
                     </Link>

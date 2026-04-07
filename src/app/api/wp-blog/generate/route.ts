@@ -127,7 +127,7 @@ SEO instructions:
 - Do not invent statistics, legal rules, deadlines, or policy updates unless the topic explicitly provides them.
 - If mentioning time-sensitive requirements, keep wording careful and evergreen.
 - Do not include an <h1> inside the content because the page title will already serve as the H1.
-- Where relevant, include 1-2 natural internal links using relative URLs such as /course-finder, /motivation-letter, /cv-maker, /gpa-converter, or /blog.
+- Where relevant, include 1-2 natural internal links using relative URLs such as /, /motivation-letter, /cv-maker, /gpa-converter, or /blog.
 
 Format your response as valid JSON with this exact structure:
 	{

@@ -42,7 +42,7 @@ Germany is one of the most popular destinations for international students, and 
 
 ## Step 1: Choose Your Program
 
-Start by deciding what you want to study. Use our [Course Finder](/course-finder) to search through thousands of programs. Consider:
+Start by deciding what you want to study. Use our [Course Finder](/) to search through thousands of programs. Consider:
 
 - **Degree level**: Bachelor's, Master's, or PhD
 - **Language**: English-taught or German-taught programs
@@ -134,7 +134,7 @@ Monthly budget estimate for students in Germany:
 ## Ready to Start?
 
 Use our free AI-powered tools to begin your journey:
-- [Find Programs](/course-finder) — Search 20,000+ courses
+- [Find Programs](/) — Search 20,000+ courses
 - [Build Your CV](/cv-maker) — Professional academic CV
 - [Write Motivation Letters](/motivation-letter) — AI-generated, personalized
 - [Convert Your GPA](/gpa-converter) — Check your German grade equivalent`,
@@ -257,7 +257,7 @@ Once you arrive in Germany:
 Our AI tools can help you prepare:
 - [Build Your CV](/cv-maker) — needed for visa applications
 - [Write a Motivation Letter](/motivation-letter) — some embassies require this
-- [Find Programs](/course-finder) — get your admission letter first`,
+- [Find Programs](/) — get your admission letter first`,
   },
   {
     slug: 'cost-of-studying-in-germany',

@@ -203,7 +203,7 @@ function DashboardContent() {
             </Link>
 
             {/* Find Programs */}
-            <Link href="/course-finder" className="group">
+            <Link href="/" className="group">
               <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all">
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
@@ -234,7 +234,7 @@ function DashboardContent() {
                         <p className="text-xs text-gray-500">Search 600+ programs in Germany</p>
                       </div>
                     </div>
-                    <Link href="/course-finder" className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-1">
+                    <Link href="/" className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-1">
                       Search <ChevronRight className="w-4 h-4" />
                     </Link>
                   </div>
@@ -270,7 +270,7 @@ function DashboardContent() {
                       </div>
                     </div>
                   </div>
-                  <Link href="/course-finder" className="block w-full text-center px-5 py-3 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
+                  <Link href="/" className="block w-full text-center px-5 py-3 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
                     Start Searching Programs
                   </Link>
                 </div>
@@ -323,7 +323,7 @@ function DashboardContent() {
                     </div>
                   </div>
                   <div className="mt-6 flex items-center gap-3">
-                    <Link href="/course-finder" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-gray-900 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors">
+                    <Link href="/" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-gray-900 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors">
                       <Search className="w-4 h-4" />
                       Find Programs
                     </Link>

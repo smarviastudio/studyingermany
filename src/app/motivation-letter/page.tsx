@@ -595,7 +595,7 @@ function MotivationLetterContent() {
                 ) : shortlist.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: '20px 0' }}>
                     <p style={{ fontSize: 14, color: '#9ca3af', margin: '0 0 10px' }}>No shortlisted programs yet.</p>
-                    <Link href="/course-finder" style={{ fontSize: 13, color: '#dd0000', fontWeight: 700, textDecoration: 'none' }}>Browse programs →</Link>
+                    <Link href="/" style={{ fontSize: 13, color: '#dd0000', fontWeight: 700, textDecoration: 'none' }}>Browse programs →</Link>
                   </div>
                 ) : (
                   <div style={{ position: 'relative' }} ref={dropdownRef}>
