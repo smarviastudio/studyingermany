@@ -3,7 +3,27 @@ import Stripe from 'stripe';
 let _stripe: Stripe | null = null;
 
 export function isStripeTestMode(): boolean {
-  return process.env.STRIPE_USE_TEST_MODE === 'true';
+  // Auto-detect test mode based on environment
+  // Use test mode if:
+  // 1. Explicitly set via STRIPE_USE_TEST_MODE
+  // 2. Running on localhost
+  // 3. Running on Vercel preview deployments
+  
+  if (process.env.STRIPE_USE_TEST_MODE === 'true') {
+    return true;
+  }
+  
+  // Auto-enable test mode for local development
+  if (process.env.NODE_ENV === 'development') {
+    return true;
+  }
+  
+  // Auto-enable test mode for Vercel preview deployments
+  if (process.env.VERCEL_ENV === 'preview') {
+    return true;
+  }
+  
+  return false;
 }
 
 export function getStripeSecretKey(): string {
@@ -18,6 +38,22 @@ export function getStripeSecretKey(): string {
   }
 
   return stripeSecretKey;
+}
+
+export function getStripePublishableKey(): string {
+  const publishableKey = isStripeTestMode()
+    ? process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY
+    : process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+
+  if (!publishableKey) {
+    throw new Error(
+      isStripeTestMode()
+        ? 'NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY is not set'
+        : 'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set'
+    );
+  }
+
+  return publishableKey;
 }
 
 export function getStripeWebhookSecret(): string {

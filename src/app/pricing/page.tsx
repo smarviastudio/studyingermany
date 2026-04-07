@@ -4,10 +4,28 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Check, Shield, RefreshCw, Globe, MessageCircle, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { Check, Shield, RefreshCw, Globe, MessageCircle, ChevronDown, ChevronUp, Loader2, AlertCircle } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 
 const RED = '#dd0000';
+
+// Price IDs configuration - automatically switches based on environment
+const PRICE_IDS = {
+  live: {
+    pro_monthly: 'price_1T9WRxBhlRngoSRXX9UJTQPY',
+    pro_yearly: 'price_1T9WSyBhlRngoSRXQPTRKZib',
+    credits_20: 'price_1THMl6BhIRngoSRXMBbRuS2m',
+    credits_100: 'price_1THMl6BhIRngoSRXEH2UHrYP',
+    credits_300: 'price_1THMl6BhIRngoSRXrR48BBwX',
+  },
+  test: {
+    pro_monthly: 'price_1THMhjBhIRngoSRXvbQyNKcE',
+    pro_yearly: 'price_1THMhjBhIRngoSRXNhX1dcad',
+    credits_20: 'price_1THNNCBhIRngoSRXEd8VpVkv',
+    credits_100: 'price_1THNNCBhIRngoSRXR97jnrrf',
+    credits_300: 'price_1THNNCBhIRngoSRXROohsxsl',
+  },
+};
 
 export default function PricingPage() {
   const { status } = useSession();
@@ -15,6 +33,18 @@ export default function PricingPage() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('yearly');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [loading, setLoading] = useState<string | null>(null);
+  const [isTestMode, setIsTestMode] = useState(false);
+
+  // Check if we're in test mode
+  useEffect(() => {
+    fetch('/api/stripe/mode')
+      .then(res => res.json())
+      .then(data => setIsTestMode(data.testMode))
+      .catch(() => setIsTestMode(false));
+  }, []);
+
+  // Get the correct price IDs based on mode
+  const priceIds = isTestMode ? PRICE_IDS.test : PRICE_IDS.live;
 
   // Handle pending checkout after login
   useEffect(() => {
@@ -106,6 +136,16 @@ export default function PricingPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
+      
+      {/* Test Mode Indicator */}
+      {isTestMode && (
+        <div style={{ background: '#fbbf24', padding: '12px 24px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <AlertCircle size={18} color="#78350f" />
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#78350f' }}>
+            TEST MODE - Using Stripe test environment. Use test card: 4242 4242 4242 4242
+          </span>
+        </div>
+      )}
 
       <main style={{ paddingTop: 80 }}>
         {/* HEADER */}
@@ -260,7 +300,7 @@ export default function PricingPage() {
               </div>
 
               <button
-                  onClick={() => handleCheckout(
+                onClick={() => handleCheckout(
                   billingPeriod === 'monthly' ? 'pro_monthly' : 'pro_yearly',
                   'subscription'
                 )}
@@ -302,9 +342,9 @@ export default function PricingPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24, maxWidth: 900, margin: '0 auto' }}>
             {[
-              { credits: 20, price: 2.99, priceId: 'price_1THNNCBhIRngoSRXEd8VpVkv', perCredit: 0.15, label: 'Best for trying' },
-              { credits: 100, price: 9.99, priceId: 'price_1THNNCBhIRngoSRXR97jnrrf', perCredit: 0.10, label: 'Most popular', popular: true },
-              { credits: 300, price: 24.99, priceId: 'price_1THNNCBhIRngoSRXROohsxsl', perCredit: 0.08, label: 'Best value 🔥', badge: true },
+              { credits: 20, price: 2.99, priceId: priceIds.credits_20, perCredit: 0.15, label: 'Best for trying' },
+              { credits: 100, price: 9.99, priceId: priceIds.credits_100, perCredit: 0.10, label: 'Most popular', popular: true },
+              { credits: 300, price: 24.99, priceId: priceIds.credits_300, perCredit: 0.08, label: 'Best value 🔥', badge: true },
             ].map((pack) => (
               <div
                 key={pack.credits}
