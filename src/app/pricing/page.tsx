@@ -289,9 +289,14 @@ export default function PricingPage() {
                 )}
                 </div>
                 {billingPeriod === 'yearly' && (
-                  <p style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, margin: 0 }}>
-                    Billed €79.99/year (same price as monthly - create yearly in Stripe)
-                  </p>
+                  <div style={{ marginTop: 8 }}>
+                    <p style={{ fontSize: 14, color: '#666', margin: '0 0 4px' }}>
+                      Just <span style={{ fontWeight: 700, color: '#111' }}>€6.67/month</span> — billed annually
+                    </p>
+                    <p style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, margin: 0 }}>
+                      Save 33% vs monthly
+                    </p>
+                  </div>
                 )}
               </div>
 
