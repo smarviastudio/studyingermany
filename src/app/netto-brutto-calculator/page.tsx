@@ -2,10 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import {
-  ArrowLeft,
-  Info,
-} from 'lucide-react';
+import { ArrowLeft, Info, Calculator } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import {
   calculateGermanPayroll2026,
@@ -36,6 +33,7 @@ const BUNDESLAENDER = [
 ];
 
 export default function NettoBruttoCalculatorPage() {
+  // Input states
   const [mode, setMode] = useState<CalculationMode>('brutto-to-netto');
   const [bruttoSalary, setBruttoSalary] = useState<string>('50000');
   const [nettoSalary, setNettoSalary] = useState<string>('3200');
@@ -57,10 +55,15 @@ export default function NettoBruttoCalculatorPage() {
   const [salaryPeriod, setSalaryPeriod] = useState<'monthly' | 'annual'>('annual');
   const [showAdvanced, setShowAdvanced] = useState(false);
 
-  const buildInput = (annualGross: number) => {
+  // Result states - only calculated when button clicked
+  const [result, setResult] = useState<ReturnType<typeof calculateGermanPayroll2026> | null>(null);
+  const [annualGross, setAnnualGross] = useState<number>(0);
+  const [annualNet, setAnnualNet] = useState<number>(0);
+
+  const buildInput = (annualGrossValue: number) => {
     const parsedChildren = Math.max(0, Math.min(5, parseInt(childrenCount || '0', 10) || 0));
     return {
-      annualGross,
+      annualGross: annualGrossValue,
       taxClass,
       stateCode: bundesland,
       churchTax,
@@ -79,19 +82,33 @@ export default function NettoBruttoCalculatorPage() {
     };
   };
 
-  const currentInput = parseFloat(mode === 'brutto-to-netto' ? bruttoSalary : nettoSalary) || 0;
-  const annualInput = salaryPeriod === 'monthly' ? currentInput * 12 : currentInput;
-  const annualGross = mode === 'brutto-to-netto'
-    ? annualInput
-    : estimateGrossFromNet2026(annualInput, buildInput(0));
-  const result = calculateGermanPayroll2026(buildInput(annualGross));
-  const annualNet = result.netto;
+  const handleCalculate = () => {
+    const currentInput = parseFloat(mode === 'brutto-to-netto' ? bruttoSalary : nettoSalary) || 0;
+    const annualInput = salaryPeriod === 'monthly' ? currentInput * 12 : currentInput;
+    
+    let calculatedAnnualGross: number;
+    let calculatedResult: ReturnType<typeof calculateGermanPayroll2026>;
+
+    if (mode === 'brutto-to-netto') {
+      calculatedAnnualGross = annualInput;
+      calculatedResult = calculateGermanPayroll2026(buildInput(calculatedAnnualGross));
+    } else {
+      // Net to gross - need to estimate
+      calculatedAnnualGross = estimateGrossFromNet2026(annualInput, buildInput(0));
+      calculatedResult = calculateGermanPayroll2026(buildInput(calculatedAnnualGross));
+    }
+
+    setAnnualGross(calculatedAnnualGross);
+    setAnnualNet(calculatedResult.netto);
+    setResult(calculatedResult);
+  };
+
   const displayGross = salaryPeriod === 'monthly' ? annualGross / 12 : annualGross;
   const displayNet = salaryPeriod === 'monthly' ? annualNet / 12 : annualNet;
   const monthlyGross = annualGross / 12;
   const monthlyNet = annualNet / 12;
 
-  const deductions = [
+  const deductions = result ? [
     { label: 'Income tax', amount: result.incomeTax },
     { label: 'Solidarity surcharge', amount: result.solidaritySurcharge },
     { label: 'Church tax', amount: result.churchTaxAmount },
@@ -99,9 +116,9 @@ export default function NettoBruttoCalculatorPage() {
     { label: 'Unemployment insurance', amount: result.unemploymentInsurance },
     { label: healthInsuranceType === 'public' ? 'Health insurance' : 'Private health', amount: result.healthInsurance },
     { label: 'Care insurance', amount: result.careInsurance },
-  ].filter((item) => item.amount > 0);
+  ].filter((item) => item.amount > 0) : [];
 
-  const maxDeduction = Math.max(...deductions.map((item) => item.amount), 1);
+  const maxDeduction = deductions.length > 0 ? Math.max(...deductions.map((item) => item.amount), 1) : 1;
 
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
@@ -306,21 +323,46 @@ export default function NettoBruttoCalculatorPage() {
               </div>
             )}
 
-            <button
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              style={{
-                padding: '12px 20px',
-                background: '#fff',
-                border: '1px solid #e5e5e5',
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 600,
-                color: '#666',
-                cursor: 'pointer',
-              }}
-            >
-              {showAdvanced ? 'Hide' : 'Show'} Advanced Settings
-            </button>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button
+                onClick={() => setShowAdvanced(!showAdvanced)}
+                style={{
+                  padding: '12px 20px',
+                  background: '#fff',
+                  border: '1px solid #e5e5e5',
+                  borderRadius: 8,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: '#666',
+                  cursor: 'pointer',
+                  flex: 1,
+                }}
+              >
+                {showAdvanced ? 'Hide' : 'Show'} Advanced Settings
+              </button>
+
+              {/* Calculate Button */}
+              <button
+                onClick={handleCalculate}
+                style={{
+                  padding: '12px 24px',
+                  background: '#dd0000',
+                  border: 'none',
+                  borderRadius: 8,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: '#fff',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  boxShadow: '0 4px 12px rgba(221,0,0,0.3)',
+                }}
+              >
+                <Calculator className="w-5 h-5" />
+                Calculate
+              </button>
+            </div>
           </div>
 
           {/* Right: Results */}
@@ -331,46 +373,50 @@ export default function NettoBruttoCalculatorPage() {
                 {mode === 'brutto-to-netto' ? 'Net Salary' : 'Gross Salary'}
               </div>
               <div style={{ fontSize: 48, fontWeight: 800, marginBottom: 16 }}>
-                {formatEuro(mode === 'brutto-to-netto' ? displayNet : displayGross)}
+                {result ? formatEuro(mode === 'brutto-to-netto' ? displayNet : displayGross) : '—'}
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13, opacity: 0.9 }}>
-                <div>
-                  <div style={{ opacity: 0.7 }}>Monthly</div>
-                  <div style={{ fontWeight: 700 }}>{formatEuro(mode === 'brutto-to-netto' ? monthlyNet : monthlyGross)}</div>
+              {result && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13, opacity: 0.9 }}>
+                  <div>
+                    <div style={{ opacity: 0.7 }}>Monthly</div>
+                    <div style={{ fontWeight: 700 }}>{formatEuro(mode === 'brutto-to-netto' ? monthlyNet : monthlyGross)}</div>
+                  </div>
+                  <div>
+                    <div style={{ opacity: 0.7 }}>Annual</div>
+                    <div style={{ fontWeight: 700 }}>{formatEuro(mode === 'brutto-to-netto' ? annualNet : annualGross)}</div>
+                  </div>
                 </div>
-                <div>
-                  <div style={{ opacity: 0.7 }}>Annual</div>
-                  <div style={{ fontWeight: 700 }}>{formatEuro(mode === 'brutto-to-netto' ? annualNet : annualGross)}</div>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Breakdown */}
-            <div style={card}>
-              <h3 style={{ fontSize: 14, fontWeight: 700, color: '#111', margin: '0 0 12px' }}>Deductions</h3>
-              <div style={{ display: 'grid', gap: 10 }}>
-                {deductions.map((item) => (
-                  <div key={item.label}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 13 }}>
-                      <span style={{ color: '#666' }}>{item.label}</span>
-                      <span style={{ fontWeight: 700, color: '#111' }}>{formatEuro(item.amount)}</span>
+            {result && (
+              <div style={card}>
+                <h3 style={{ fontSize: 14, fontWeight: 700, color: '#111', margin: '0 0 12px' }}>Deductions</h3>
+                <div style={{ display: 'grid', gap: 10 }}>
+                  {deductions.map((item) => (
+                    <div key={item.label}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 13 }}>
+                        <span style={{ color: '#666' }}>{item.label}</span>
+                        <span style={{ fontWeight: 700, color: '#111' }}>{formatEuro(item.amount)}</span>
+                      </div>
+                      <div style={{ height: 4, background: '#f0f0f0', borderRadius: 2, overflow: 'hidden' }}>
+                        <div style={{ width: `${(item.amount / maxDeduction) * 100}%`, height: '100%', background: '#dd0000' }} />
+                      </div>
                     </div>
-                    <div style={{ height: 4, background: '#f0f0f0', borderRadius: 2, overflow: 'hidden' }}>
-                      <div style={{ width: `${(item.amount / maxDeduction) * 100}%`, height: '100%', background: '#dd0000' }} />
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
+                  <span style={{ fontWeight: 700 }}>Total</span>
+                  <span style={{ fontWeight: 700, color: '#dd0000' }}>{formatEuro(result.totalDeductions)}</span>
+                </div>
               </div>
-              <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-                <span style={{ fontWeight: 700 }}>Total</span>
-                <span style={{ fontWeight: 700, color: '#dd0000' }}>{formatEuro(result.totalDeductions)}</span>
-              </div>
-            </div>
+            )}
 
             {/* Info */}
             <div style={{ padding: 12, background: '#f5f5f5', borderRadius: 8, fontSize: 12, color: '#666', display: 'flex', gap: 8 }}>
               <Info className="w-4 h-4" style={{ flexShrink: 0, marginTop: 1 }} />
-              <div>Based on 2026 German tax rules. This is an estimate for employees.</div>
+              <div>Click Calculate to see results based on 2026 German tax rules. This is an estimate for employees.</div>
             </div>
           </div>
         </div>
