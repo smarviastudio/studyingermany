@@ -12,15 +12,15 @@ const RED = '#dd0000';
 // Price IDs configuration - automatically switches based on environment
 const PRICE_IDS = {
   live: {
-    pro_monthly: 'price_1T9WRxBhlRngoSRXX9UJTQPY',
-    pro_yearly: 'price_1T9WSyBhlRngoSRXQPTRKZib',
+    pro_monthly: 'price_1THMhjBhIRngoSRXvbQyNKcE', // Essential monthly
+    pro_yearly: 'price_1THMhjBhIRngoSRXNhX1dcad', // Essential yearly
     credits_20: 'price_1THMl6BhIRngoSRXMBbRuS2m',
     credits_100: 'price_1THMl6BhIRngoSRXEH2UHrYP',
     credits_300: 'price_1THMl6BhIRngoSRXrR48BBwX',
   },
   test: {
-    pro_monthly: 'price_1TJeK1BQfqoHxjENcyiEpfgk', // New test price from Stripe
-    pro_yearly: 'price_1TJeK1BQfqoHxjENcyiEpfgk', // Using same for now (monthly only)
+    pro_monthly: 'price_1T9WRxBhlRngoSRXX9UJTQPY',
+    pro_yearly: 'price_1T9WSyBhlRngoSRXQPTRKZib',
     credits_20: 'price_1THNNCBhIRngoSRXEd8VpVkv',
     credits_100: 'price_1THNNCBhIRngoSRXR97jnrrf',
     credits_300: 'price_1THNNCBhIRngoSRXROohsxsl',

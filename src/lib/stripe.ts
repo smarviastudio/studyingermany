@@ -101,11 +101,12 @@ function getPaidPlanPriceIds() {
     return { monthly, yearly };
   }
 
-  const monthly = process.env.STRIPE_PRICE_PRO_MONTHLY;
-  const yearly = process.env.STRIPE_PRICE_PRO_YEARLY;
+  // In live mode, also use Essential prices
+  const monthly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY || process.env.STRIPE_PRICE_PRO_MONTHLY;
+  const yearly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY || process.env.STRIPE_PRICE_PRO_YEARLY;
 
   if (!monthly || !yearly) {
-    throw new Error('STRIPE_PRICE_PRO_MONTHLY and STRIPE_PRICE_PRO_YEARLY are required in live mode');
+    throw new Error('STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY and STRIPE_TEST_PRICE_ESSENTIAL_YEARLY are required in live mode');
   }
 
   return { monthly, yearly };
