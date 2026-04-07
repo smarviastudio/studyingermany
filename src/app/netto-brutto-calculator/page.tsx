@@ -100,7 +100,7 @@ export default function SalaryCalculatorPage() {
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 20px 40px' }}>
         {/* Header */}
         <div style={{ marginBottom: 20 }}>
-          <Link href="/netto-brutto-calculator/landing" style={{ fontSize: 13, color: '#64748b', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+          <Link href="/tools" style={{ fontSize: 13, color: '#64748b', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
