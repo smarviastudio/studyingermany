@@ -147,16 +147,16 @@ export default function PricingPage() {
         </div>
       )}
 
-      <main style={{ paddingTop: 80 }}>
+      <main style={{ paddingTop: 60 }}>
         {/* HEADER */}
-        <section style={{ textAlign: 'center', padding: '60px 24px 40px', position: 'relative', overflow: 'hidden' }}>
+        <section style={{ textAlign: 'center', padding: '40px 24px 30px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -100, left: '50%', transform: 'translateX(-50%)', width: 800, height: 800, borderRadius: '50%', background: 'radial-gradient(circle, rgba(221,0,0,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
           
           <div style={{ position: 'relative', maxWidth: 800, margin: '0 auto' }}>
-            <h1 style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: '#111', margin: '0 0 16px', lineHeight: 1.1 }}>
+            <h1 style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 900, color: '#111', margin: '0 0 12px', lineHeight: 1.1 }}>
               Simple, Student-Friendly Pricing
             </h1>
-            <p style={{ fontSize: 18, color: '#666', margin: '0 0 40px', lineHeight: 1.6 }}>
+            <p style={{ fontSize: 16, color: '#666', margin: '0 0 30px', lineHeight: 1.5 }}>
               Cancel anytime. No hidden fees. Built for international students.
             </p>
 
@@ -209,7 +209,7 @@ export default function PricingPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24, maxWidth: 900, margin: '0 auto' }}>
             
             {/* FREE */}
-            <div style={{ background: '#fff', border: '1.5px solid #e5e5e5', borderRadius: 20, padding: 32, display: 'flex', flexDirection: 'column' }}>
+            <div style={{ background: '#fff', border: '1.5px solid #e5e5e5', borderRadius: 20, padding: 28, display: 'flex', flexDirection: 'column' }}>
               <div style={{ marginBottom: 24 }}>
                 <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', margin: '0 0 8px' }}>Free</p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
@@ -257,12 +257,12 @@ export default function PricingPage() {
               background: '#fff', 
               border: `3px solid ${RED}`, 
               borderRadius: 20, 
-              padding: 32, 
+              padding: 28, 
               display: 'flex', 
               flexDirection: 'column',
               position: 'relative',
               boxShadow: '0 20px 60px rgba(221,0,0,0.15)',
-              transform: 'scale(1.05)',
+              transform: 'scale(1.02)',
             }}>
               <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: RED, borderRadius: 50, padding: '6px 20px' }}>
                 <span style={{ fontSize: 12, fontWeight: 800, color: '#fff', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Best Value</span>
@@ -270,33 +270,31 @@ export default function PricingPage() {
 
               <div style={{ marginBottom: 24, marginTop: 8 }}>
                 <p style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: RED, margin: '0 0 8px' }}>Pro</p>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-                { billingPeriod === 'monthly' && (
+                
+                {billingPeriod === 'monthly' && (
                   <>
-                    <span style={{ fontSize: 48, fontWeight: 900, color: RED }}>
-                      €9.99
-                    </span>
-                    <span style={{ fontSize: 16, color: '#888' }}>/month</span>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
+                      <span style={{ fontSize: 48, fontWeight: 900, color: RED }}>€9.99</span>
+                      <span style={{ fontSize: 16, color: '#888' }}>/month</span>
+                    </div>
+                    <p style={{ fontSize: 14, color: '#666', margin: '4px 0 0' }}>Billed monthly</p>
                   </>
                 )}
-                { billingPeriod === 'yearly' && (
-                  <>
-                    <span style={{ fontSize: 48, fontWeight: 900, color: RED }}>
-                      €79.99
-                    </span>
-                    <span style={{ fontSize: 16, color: '#888' }}>/year</span>
-                  </>
-                )}
-                </div>
+                
                 {billingPeriod === 'yearly' && (
-                  <div style={{ marginTop: 8 }}>
-                    <p style={{ fontSize: 14, color: '#666', margin: '0 0 4px' }}>
-                      Just <span style={{ fontWeight: 700, color: '#111' }}>€6.67/month</span> — billed annually
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
+                      <span style={{ fontSize: 48, fontWeight: 900, color: RED }}>€6.67</span>
+                      <span style={{ fontSize: 16, color: '#888' }}>/month</span>
+                    </div>
+                    <p style={{ fontSize: 13, color: '#666', margin: '4px 0 2px' }}>
+                      <span style={{ textDecoration: 'line-through', color: '#999', marginRight: 8 }}>€9.99</span>
+                      €79.99 billed annually
                     </p>
-                    <p style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, margin: 0 }}>
+                    <p style={{ fontSize: 13, color: '#22c55e', fontWeight: 700, margin: '4px 0 0' }}>
                       Save 33% vs monthly
                     </p>
-                  </div>
+                  </>
                 )}
               </div>
 
