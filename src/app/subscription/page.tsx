@@ -12,6 +12,54 @@ const RED = '#dd0000';
 const GRADIENT_START = '#fef2f2';
 const GRADIENT_END = '#fef9f3';
 
+// Toast Notification Component
+function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 5000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 100,
+      right: 24,
+      zIndex: 9999,
+      padding: '16px 20px',
+      borderRadius: 12,
+      background: type === 'success' ? '#f0fdf4' : '#fef2f2',
+      border: `1px solid ${type === 'success' ? '#bbf7d0' : '#fecaca'}`,
+      boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      maxWidth: 400,
+      animation: 'slideIn 0.3s ease-out',
+    }}>
+      {type === 'success' ? (
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Check size={18} color="#16a34a" />
+        </div>
+      ) : (
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <X size={18} color="#dc2626" />
+        </div>
+      )}
+      <div>
+        <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: type === 'success' ? '#166534' : '#991b1b' }}>
+          {type === 'success' ? 'Success' : 'Error'}
+        </p>
+        <p style={{ margin: '2px 0 0', fontSize: 13, color: type === 'success' ? '#22c55e' : '#ef4444' }}>
+          {message}
+        </p>
+      </div>
+      <button onClick={onClose} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+        <X size={16} color={type === 'success' ? '#16a34a' : '#dc2626'} />
+      </button>
+    </div>
+  );
+}
+
 type Subscription = {
   planType: string;
   status: string;
@@ -34,6 +82,8 @@ export default function SubscriptionPage() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -60,10 +110,7 @@ export default function SubscriptionPage() {
   };
 
   const handleCancelSubscription = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription? You will still have access until the end of your billing period.')) {
-      return;
-    }
-
+    setShowConfirmModal(false);
     setActionLoading(true);
     try {
       const res = await fetch('/api/stripe/cancel-subscription', {
@@ -71,13 +118,24 @@ export default function SubscriptionPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        alert('Subscription canceled successfully. You will have access until ' + new Date(data.cancelAt).toLocaleDateString());
+        setToast({
+          message: `Subscription canceled. You have access until ${new Date(data.cancelAt).toLocaleDateString()}`,
+          type: 'success'
+        });
         fetchUserData();
       } else {
-        alert('Failed to cancel subscription: ' + data.error);
+        // Check if it's a test/live mode mismatch
+        if (data.error?.includes('test mode') || data.error?.includes('live mode')) {
+          setToast({
+            message: 'Cannot cancel: This subscription was created in live mode but app is in test mode. Please contact support.',
+            type: 'error'
+          });
+        } else {
+          setToast({ message: data.error || 'Failed to cancel subscription', type: 'error' });
+        }
       }
     } catch (error) {
-      alert('Failed to cancel subscription');
+      setToast({ message: 'Failed to cancel subscription. Please try again.', type: 'error' });
     } finally {
       setActionLoading(false);
     }
@@ -90,13 +148,14 @@ export default function SubscriptionPage() {
         method: 'POST',
       });
       if (res.ok) {
-        alert('Subscription reactivated successfully!');
+        setToast({ message: 'Subscription reactivated successfully!', type: 'success' });
         fetchUserData();
       } else {
-        alert('Failed to reactivate subscription');
+        const data = await res.json();
+        setToast({ message: data.error || 'Failed to reactivate subscription', type: 'error' });
       }
     } catch (error) {
-      alert('Failed to reactivate subscription');
+      setToast({ message: 'Failed to reactivate subscription', type: 'error' });
     } finally {
       setActionLoading(false);
     }
@@ -111,9 +170,11 @@ export default function SubscriptionPage() {
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        setToast({ message: 'Failed to open billing portal', type: 'error' });
       }
     } catch (error) {
-      alert('Failed to open billing portal');
+      setToast({ message: 'Failed to open billing portal', type: 'error' });
     } finally {
       setActionLoading(false);
     }
@@ -143,6 +204,86 @@ export default function SubscriptionPage() {
   return (
     <div style={{ minHeight: '100vh', background: `linear-gradient(to bottom, ${GRADIENT_START} 0%, #ffffff 100%)` }}>
       <SiteNav />
+
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
+      {/* Confirmation Modal */}
+      {showConfirmModal && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9998,
+        }} onClick={() => setShowConfirmModal(false)}>
+          <div style={{
+            background: '#fff',
+            borderRadius: 20,
+            padding: 32,
+            maxWidth: 420,
+            width: '90%',
+            boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+          }} onClick={e => e.stopPropagation()}>
+            <div style={{ width: 56, height: 56, borderRadius: 16, background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+              <AlertCircle size={28} color="#f59e0b" />
+            </div>
+            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 12 }}>
+              Cancel Subscription?
+            </h3>
+            <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, marginBottom: 24 }}>
+              You will still have access to all Pro features until the end of your current billing period ({userData.subscription?.currentPeriodEnd ? new Date(userData.subscription.currentPeriodEnd).toLocaleDateString() : 'N/A'}).
+            </p>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                style={{
+                  flex: 1,
+                  padding: '12px 20px',
+                  borderRadius: 12,
+                  border: '1px solid #e5e7eb',
+                  background: '#fff',
+                  color: '#374151',
+                  fontSize: 15,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                Keep Subscription
+              </button>
+              <button
+                onClick={handleCancelSubscription}
+                disabled={actionLoading}
+                style={{
+                  flex: 1,
+                  padding: '12px 20px',
+                  borderRadius: 12,
+                  border: 'none',
+                  background: '#dc2626',
+                  color: '#fff',
+                  fontSize: 15,
+                  fontWeight: 600,
+                  cursor: actionLoading ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                }}
+              >
+                {actionLoading ? <Loader2 size={18} className="animate-spin" /> : 'Yes, Cancel'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main style={{ maxWidth: 1100, margin: '0 auto', padding: '80px 24px 100px' }}>
         {/* Hero Section */}
@@ -264,7 +405,7 @@ export default function SubscriptionPage() {
             <div style={{ display: 'grid', gap: 12 }}>
               {normalizedPlanType !== 'free' && isActive && !willCancel && (
                 <button
-                  onClick={handleCancelSubscription}
+                  onClick={() => setShowConfirmModal(true)}
                   disabled={actionLoading}
                   style={{
                     padding: '14px 24px',
@@ -368,7 +509,6 @@ export default function SubscriptionPage() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 10,
-                  boxShadow: '0 4px 12px rgba(124,58,237,0.3)',
                   transition: 'all 0.2s',
                 }}
               >
