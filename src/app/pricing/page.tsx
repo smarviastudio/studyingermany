@@ -19,8 +19,8 @@ const PRICE_IDS = {
     credits_300: 'price_1THMl6BhIRngoSRXrR48BBwX',
   },
   test: {
-    pro_monthly: 'price_1THMhjBhIRngoSRXvbQyNKcE',
-    pro_yearly: 'price_1THMhjBhIRngoSRXNhX1dcad',
+    pro_monthly: 'price_1TJeK1BQfqoHxjENcyiEpfgk', // New test price from Stripe
+    pro_yearly: 'price_1TJeK1BQfqoHxjENcyiEpfgk', // Using same for now (monthly only)
     credits_20: 'price_1THNNCBhIRngoSRXEd8VpVkv',
     credits_100: 'price_1THNNCBhIRngoSRXR97jnrrf',
     credits_300: 'price_1THNNCBhIRngoSRXROohsxsl',
