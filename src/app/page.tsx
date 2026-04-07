@@ -778,7 +778,7 @@ export default function HomePage() {
             </span>
           </h1>
           <p className="hero-subtitle animate-fade-up-3">
-            Find your perfect German university program with AI-powered search. Get personalized guidance, build your application, and track your progress — all without paying expensive consultant fees. Join 2,500+ students who found their path to Germany.
+            AI-powered search for 20,000+ German university programs. Save thousands on consultant fees and join 2,500+ students who found their path to Germany.
           </p>
           <form onSubmit={handleSearch} className="hero-search-form animate-fade-up-4">
             <div className="hero-search-bar">
