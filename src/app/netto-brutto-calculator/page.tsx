@@ -6,429 +6,342 @@ import { ArrowLeft, Info, Calculator } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import {
   calculateGermanPayroll2026,
-  estimateGrossFromNet2026,
   type HealthInsuranceType,
   type TaxClass,
 } from '@/lib/nettoBrutto2026';
 
-type CalculationMode = 'brutto-to-netto' | 'netto-to-brutto';
-
 const BUNDESLAENDER = [
-  { value: 'BY', label: 'Bavaria', churchTaxRate: 0.08 },
-  { value: 'BW', label: 'Baden-Württemberg', churchTaxRate: 0.08 },
-  { value: 'BE', label: 'Berlin', churchTaxRate: 0.09 },
-  { value: 'BB', label: 'Brandenburg', churchTaxRate: 0.09 },
-  { value: 'HB', label: 'Bremen', churchTaxRate: 0.09 },
-  { value: 'HH', label: 'Hamburg', churchTaxRate: 0.09 },
-  { value: 'HE', label: 'Hesse', churchTaxRate: 0.09 },
-  { value: 'MV', label: 'Mecklenburg-Vorpommern', churchTaxRate: 0.09 },
-  { value: 'NI', label: 'Lower Saxony', churchTaxRate: 0.09 },
-  { value: 'NW', label: 'North Rhine-Westphalia', churchTaxRate: 0.09 },
-  { value: 'RP', label: 'Rhineland-Palatinate', churchTaxRate: 0.09 },
-  { value: 'SL', label: 'Saarland', churchTaxRate: 0.09 },
-  { value: 'SN', label: 'Saxony', churchTaxRate: 0.09 },
-  { value: 'ST', label: 'Saxony-Anhalt', churchTaxRate: 0.09 },
-  { value: 'SH', label: 'Schleswig-Holstein', churchTaxRate: 0.09 },
-  { value: 'TH', label: 'Thuringia', churchTaxRate: 0.09 },
+  { value: 'BY', label: 'Bavaria' },
+  { value: 'BW', label: 'Baden-Württemberg' },
+  { value: 'BE', label: 'Berlin' },
+  { value: 'BB', label: 'Brandenburg' },
+  { value: 'HB', label: 'Bremen' },
+  { value: 'HH', label: 'Hamburg' },
+  { value: 'HE', label: 'Hesse' },
+  { value: 'MV', label: 'Mecklenburg-Vorpommern' },
+  { value: 'NI', label: 'Lower Saxony' },
+  { value: 'NW', label: 'North Rhine-Westphalia' },
+  { value: 'RP', label: 'Rhineland-Palatinate' },
+  { value: 'SL', label: 'Saarland' },
+  { value: 'SN', label: 'Saxony' },
+  { value: 'ST', label: 'Saxony-Anhalt' },
+  { value: 'SH', label: 'Schleswig-Holstein' },
+  { value: 'TH', label: 'Thuringia' },
 ];
 
 export default function NettoBruttoCalculatorPage() {
-  // Input states
-  const [mode, setMode] = useState<CalculationMode>('brutto-to-netto');
-  const [bruttoSalary, setBruttoSalary] = useState<string>('50000');
-  const [nettoSalary, setNettoSalary] = useState<string>('3200');
+  const [grossSalary, setGrossSalary] = useState<string>('50000');
+  const [salaryPeriod, setSalaryPeriod] = useState<'monthly' | 'annual'>('annual');
   const [taxClass, setTaxClass] = useState<TaxClass>('1');
   const [bundesland, setBundesland] = useState<string>('NW');
   const [childrenCount, setChildrenCount] = useState<string>('0');
-  const [taxChildAllowance, setTaxChildAllowance] = useState<string>('0');
-  const [childlessCareSurcharge, setChildlessCareSurcharge] = useState(true);
   const [churchTax, setChurchTax] = useState(false);
   const [healthInsuranceType, setHealthInsuranceType] = useState<HealthInsuranceType>('public');
   const [healthInsuranceRate, setHealthInsuranceRate] = useState('2.9');
-  const [privateHealthAndCareMonthly, setPrivateHealthAndCareMonthly] = useState('');
-  const [privateEmployerSubsidyMonthly, setPrivateEmployerSubsidyMonthly] = useState('');
-  const [birthYear, setBirthYear] = useState('');
-  const [annualTaxAllowance, setAnnualTaxAllowance] = useState('');
-  const [annualTaxAddition, setAnnualTaxAddition] = useState('');
-  const [pensionInsuranceMandatory, setPensionInsuranceMandatory] = useState(true);
-  const [unemploymentInsuranceMandatory, setUnemploymentInsuranceMandatory] = useState(true);
-  const [salaryPeriod, setSalaryPeriod] = useState<'monthly' | 'annual'>('annual');
-  const [showAdvanced, setShowAdvanced] = useState(false);
-
-  // Result states - only calculated when button clicked
+  
   const [result, setResult] = useState<ReturnType<typeof calculateGermanPayroll2026> | null>(null);
-  const [annualGross, setAnnualGross] = useState<number>(0);
-  const [annualNet, setAnnualNet] = useState<number>(0);
 
-  const buildInput = (annualGrossValue: number) => {
-    const parsedChildren = Math.max(0, Math.min(5, parseInt(childrenCount || '0', 10) || 0));
-    return {
-      annualGross: annualGrossValue,
+  const handleCalculate = () => {
+    const gross = parseFloat(grossSalary) || 0;
+    const annualGross = salaryPeriod === 'monthly' ? gross * 12 : gross;
+    
+    const input = {
+      annualGross,
       taxClass,
       stateCode: bundesland,
       churchTax,
       healthInsuranceType,
-      publicHealthAdditionalRate: parseFloat(healthInsuranceRate || '2.9') || 2.9,
-      privateHealthAndCareMonthly: parseFloat(privateHealthAndCareMonthly || '0') || 0,
-      privateEmployerSubsidyMonthly: parseFloat(privateEmployerSubsidyMonthly || '0') || 0,
-      childrenCount: parsedChildren,
-      taxChildAllowance: parseFloat(taxChildAllowance || '0') || 0,
-      childlessCareSurcharge,
-      birthYear: birthYear ? parseInt(birthYear, 10) : undefined,
-      annualTaxAllowance: parseFloat(annualTaxAllowance || '0') || 0,
-      annualTaxAddition: parseFloat(annualTaxAddition || '0') || 0,
-      pensionInsuranceMandatory,
-      unemploymentInsuranceMandatory,
+      publicHealthAdditionalRate: parseFloat(healthInsuranceRate) || 2.9,
+      privateHealthAndCareMonthly: 0,
+      privateEmployerSubsidyMonthly: 0,
+      childrenCount: parseInt(childrenCount) || 0,
+      taxChildAllowance: 0,
+      childlessCareSurcharge: true,
+      birthYear: undefined,
+      annualTaxAllowance: 0,
+      annualTaxAddition: 0,
+      pensionInsuranceMandatory: true,
+      unemploymentInsuranceMandatory: true,
     };
+
+    const calculated = calculateGermanPayroll2026(input);
+    setResult(calculated);
   };
 
-  const handleCalculate = () => {
-    const currentInput = parseFloat(mode === 'brutto-to-netto' ? bruttoSalary : nettoSalary) || 0;
-    const annualInput = salaryPeriod === 'monthly' ? currentInput * 12 : currentInput;
-    
-    let calculatedAnnualGross: number;
-    let calculatedResult: ReturnType<typeof calculateGermanPayroll2026>;
-
-    if (mode === 'brutto-to-netto') {
-      calculatedAnnualGross = annualInput;
-      calculatedResult = calculateGermanPayroll2026(buildInput(calculatedAnnualGross));
-    } else {
-      // Net to gross - need to estimate
-      calculatedAnnualGross = estimateGrossFromNet2026(annualInput, buildInput(0));
-      calculatedResult = calculateGermanPayroll2026(buildInput(calculatedAnnualGross));
-    }
-
-    setAnnualGross(calculatedAnnualGross);
-    setAnnualNet(calculatedResult.netto);
-    setResult(calculatedResult);
-  };
-
-  const displayGross = salaryPeriod === 'monthly' ? annualGross / 12 : annualGross;
-  const displayNet = salaryPeriod === 'monthly' ? annualNet / 12 : annualNet;
+  const displayGross = salaryPeriod === 'monthly' 
+    ? (parseFloat(grossSalary) || 0) 
+    : (parseFloat(grossSalary) || 0);
+  const annualGross = salaryPeriod === 'monthly' 
+    ? (parseFloat(grossSalary) || 0) * 12 
+    : (parseFloat(grossSalary) || 0);
+  
   const monthlyGross = annualGross / 12;
-  const monthlyNet = annualNet / 12;
+  const monthlyNet = result ? result.netto / 12 : 0;
+  const annualNet = result ? result.netto : 0;
 
   const deductions = result ? [
-    { label: 'Income tax', amount: result.incomeTax },
-    { label: 'Solidarity surcharge', amount: result.solidaritySurcharge },
-    { label: 'Church tax', amount: result.churchTaxAmount },
-    { label: 'Pension insurance', amount: result.pensionInsurance },
-    { label: 'Unemployment insurance', amount: result.unemploymentInsurance },
-    { label: healthInsuranceType === 'public' ? 'Health insurance' : 'Private health', amount: result.healthInsurance },
-    { label: 'Care insurance', amount: result.careInsurance },
+    { label: 'Income Tax', amount: result.incomeTax, color: '#dc2626' },
+    { label: 'Pension Insurance', amount: result.pensionInsurance, color: '#ea580c' },
+    { label: 'Health Insurance', amount: result.healthInsurance, color: '#2563eb' },
+    { label: 'Unemployment', amount: result.unemploymentInsurance, color: '#0891b2' },
+    { label: 'Care Insurance', amount: result.careInsurance, color: '#059669' },
+    { label: 'Solidarity Surcharge', amount: result.solidaritySurcharge, color: '#7c3aed' },
+    { label: 'Church Tax', amount: result.churchTaxAmount, color: '#9333ea' },
   ].filter((item) => item.amount > 0) : [];
 
-  const maxDeduction = deductions.length > 0 ? Math.max(...deductions.map((item) => item.amount), 1) : 1;
+  const totalDeductions = result?.totalDeductions || 0;
+  const effectiveRate = result?.effectiveRate || 0;
 
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
 
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '100px 20px 60px' }}>
-        {/* Header */}
-        <div style={{ marginBottom: 40 }}>
-          <Link
-            href="/netto-brutto-calculator/landing"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              color: '#666',
-              textDecoration: 'none',
-              fontSize: 14,
-              marginBottom: 16,
-            }}
-          >
-            <ArrowLeft className="w-4 h-4" />
+      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 20px 20px' }}>
+        {/* Compact Header */}
+        <div style={{ marginBottom: 16 }}>
+          <Link href="/netto-brutto-calculator/landing" style={{ fontSize: 13, color: '#666', textDecoration: 'none' }}>
+            <ArrowLeft className="w-4 h-4" style={{ display: 'inline', marginRight: 4 }} />
             Back
           </Link>
-          <h1 style={{ fontSize: 36, fontWeight: 700, color: '#111', margin: '0 0 8px' }}>
-            German Salary Calculator
-          </h1>
-          <p style={{ fontSize: 16, color: '#666', margin: 0 }}>
-            Calculate your net salary from gross (or vice versa) using 2026 German tax rules
-          </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 24, alignItems: 'start' }} className="calc-layout">
-          {/* Left: Inputs */}
-          <div style={{ display: 'grid', gap: 20 }}>
-            {/* Calculation Mode */}
-            <div style={card}>
-              <h2 style={cardTitle}>Calculation Mode</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <button onClick={() => setMode('brutto-to-netto')} style={modeBtn(mode === 'brutto-to-netto')}>
-                  Gross → Net
-                </button>
-                <button onClick={() => setMode('netto-to-brutto')} style={modeBtn(mode === 'netto-to-brutto')}>
-                  Net → Gross
-                </button>
-              </div>
-            </div>
+        {/* Main Card */}
+        <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
+          {/* Header */}
+          <div style={{ padding: '20px 24px', borderBottom: '1px solid #f0f0f0' }}>
+            <h1 style={{ fontSize: 20, fontWeight: 700, color: '#111', margin: 0 }}>
+              German Salary Calculator 2026
+            </h1>
+            <p style={{ fontSize: 13, color: '#666', margin: '4px 0 0' }}>
+              Calculate your take-home pay from gross salary
+            </p>
+          </div>
 
-            {/* Salary Input */}
-            <div style={card}>
-              <h2 style={cardTitle}>{mode === 'brutto-to-netto' ? 'Gross Salary' : 'Net Salary'}</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 12 }}>
-                <div style={{ position: 'relative' }}>
-                  <input
-                    type="number"
-                    value={mode === 'brutto-to-netto' ? bruttoSalary : nettoSalary}
-                    onChange={(e) => (mode === 'brutto-to-netto' ? setBruttoSalary(e.target.value) : setNettoSalary(e.target.value))}
-                    style={largeInput}
-                    placeholder="50000"
-                  />
-                  <span style={inputSuffix}>€</span>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px' }}>
+            {/* Left: Inputs */}
+            <div style={{ padding: 20, display: 'grid', gap: 16 }}>
+              {/* Gross Salary */}
+              <div>
+                <label style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 6, display: 'block' }}>
+                  Gross Salary
+                </label>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <div style={{ position: 'relative', flex: 1 }}>
+                    <input
+                      type="number"
+                      value={grossSalary}
+                      onChange={(e) => setGrossSalary(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '10px 40px 10px 12px',
+                        border: '2px solid #e5e5e5',
+                        borderRadius: 8,
+                        fontSize: 20,
+                        fontWeight: 700,
+                        outline: 'none',
+                      }}
+                    />
+                    <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', fontWeight: 600, color: '#999' }}>€</span>
+                  </div>
+                  <select 
+                    value={salaryPeriod} 
+                    onChange={(e) => setSalaryPeriod(e.target.value as 'monthly' | 'annual')}
+                    style={{ padding: '8px 12px', border: '1px solid #e5e5e5', borderRadius: 8, fontSize: 14, background: '#fff' }}
+                  >
+                    <option value="annual">per year</option>
+                    <option value="monthly">per month</option>
+                  </select>
                 </div>
-                <select value={salaryPeriod} onChange={(e) => setSalaryPeriod(e.target.value as 'monthly' | 'annual')} style={select}>
-                  <option value="annual">Annual</option>
-                  <option value="monthly">Monthly</option>
-                </select>
               </div>
-            </div>
 
-            {/* Tax Profile */}
-            <div style={card}>
-              <h2 style={cardTitle}>Tax Profile</h2>
+              {/* Compact Grid for Settings */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <label style={label}>Tax Class</label>
-                  <select value={taxClass} onChange={(e) => setTaxClass(e.target.value as TaxClass)} style={select}>
-                    <option value="1">Class 1 - Single</option>
-                    <option value="2">Class 2 - Single parent</option>
-                    <option value="3">Class 3 - Married, higher</option>
-                    <option value="4">Class 4 - Married, similar</option>
-                    <option value="5">Class 5 - Married, lower</option>
-                    <option value="6">Class 6 - Second job</option>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 4, display: 'block' }}>Tax Class</label>
+                  <select value={taxClass} onChange={(e) => setTaxClass(e.target.value as TaxClass)} style={selectStyle}>
+                    <option value="1">Class 1 (Single)</option>
+                    <option value="2">Class 2 (Single parent)</option>
+                    <option value="3">Class 3 (Married, higher)</option>
+                    <option value="4">Class 4 (Married, similar)</option>
+                    <option value="5">Class 5 (Married, lower)</option>
+                    <option value="6">Class 6 (Second job)</option>
                   </select>
                 </div>
                 <div>
-                  <label style={label}>State</label>
-                  <select value={bundesland} onChange={(e) => setBundesland(e.target.value)} style={select}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 4, display: 'block' }}>State</label>
+                  <select value={bundesland} onChange={(e) => setBundesland(e.target.value)} style={selectStyle}>
                     {BUNDESLAENDER.map((item) => (
                       <option key={item.value} value={item.value}>{item.label}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label style={label}>Children under 25</label>
-                  <select value={childrenCount} onChange={(e) => setChildrenCount(e.target.value)} style={select}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 4, display: 'block' }}>Children</label>
+                  <select value={childrenCount} onChange={(e) => setChildrenCount(e.target.value)} style={selectStyle}>
                     {[0, 1, 2, 3, 4, 5].map((v) => (
-                      <option key={v} value={v}>{v}</option>
+                      <option key={v} value={v}>{v} {v === 1 ? 'child' : 'children'}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label style={label}>Church Tax</label>
-                  <select value={churchTax ? 'yes' : 'no'} onChange={(e) => setChurchTax(e.target.value === 'yes')} style={select}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 4, display: 'block' }}>Church Tax</label>
+                  <select value={churchTax ? 'yes' : 'no'} onChange={(e) => setChurchTax(e.target.value === 'yes')} style={selectStyle}>
                     <option value="no">No</option>
-                    <option value="yes">Yes</option>
+                    <option value="yes">Yes (8-9%)</option>
                   </select>
                 </div>
               </div>
-            </div>
 
-            {/* Health Insurance */}
-            <div style={card}>
-              <h2 style={cardTitle}>Health Insurance</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
-                <button onClick={() => setHealthInsuranceType('public')} style={modeBtn(healthInsuranceType === 'public')}>
-                  Public
+              {/* Health Insurance Toggle */}
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button 
+                  onClick={() => setHealthInsuranceType('public')}
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    borderRadius: 6,
+                    border: healthInsuranceType === 'public' ? '2px solid #dc2626' : '1px solid #e5e5e5',
+                    background: healthInsuranceType === 'public' ? '#fef2f2' : '#fff',
+                    color: healthInsuranceType === 'public' ? '#dc2626' : '#666',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Public Health Insurance
                 </button>
-                <button onClick={() => setHealthInsuranceType('private')} style={modeBtn(healthInsuranceType === 'private')}>
-                  Private
+                <button 
+                  onClick={() => setHealthInsuranceType('private')}
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    borderRadius: 6,
+                    border: healthInsuranceType === 'private' ? '2px solid #dc2626' : '1px solid #e5e5e5',
+                    background: healthInsuranceType === 'private' ? '#fef2f2' : '#fff',
+                    color: healthInsuranceType === 'private' ? '#dc2626' : '#666',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Private Health Insurance
                 </button>
               </div>
-              {healthInsuranceType === 'public' ? (
+
+              {healthInsuranceType === 'public' && (
                 <div>
-                  <label style={label}>Additional Rate (%)</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 4, display: 'block' }}>
+                    Additional Health Insurance Rate (%)
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     value={healthInsuranceRate}
                     onChange={(e) => setHealthInsuranceRate(e.target.value)}
-                    style={input}
-                    placeholder="2.9"
+                    style={{ ...selectStyle, width: 120 }}
                   />
                 </div>
-              ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  <div>
-                    <label style={label}>Monthly Premium (€)</label>
-                    <input
-                      type="number"
-                      value={privateHealthAndCareMonthly}
-                      onChange={(e) => setPrivateHealthAndCareMonthly(e.target.value)}
-                      style={input}
-                      placeholder="450"
-                    />
-                  </div>
-                  <div>
-                    <label style={label}>Employer Subsidy (€)</label>
-                    <input
-                      type="number"
-                      value={privateEmployerSubsidyMonthly}
-                      onChange={(e) => setPrivateEmployerSubsidyMonthly(e.target.value)}
-                      style={input}
-                      placeholder="225"
-                    />
-                  </div>
-                </div>
               )}
-            </div>
-
-            {/* Advanced */}
-            {showAdvanced && (
-              <div style={card}>
-                <h2 style={cardTitle}>Advanced Settings</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  <div>
-                    <label style={label}>Tax Child Allowance</label>
-                    <input type="number" step="0.5" value={taxChildAllowance} onChange={(e) => setTaxChildAllowance(e.target.value)} style={input} />
-                  </div>
-                  <div>
-                    <label style={label}>Birth Year</label>
-                    <input type="number" value={birthYear} onChange={(e) => setBirthYear(e.target.value)} style={input} placeholder="1961" />
-                  </div>
-                  <div>
-                    <label style={label}>Annual Tax Allowance (€)</label>
-                    <input type="number" value={annualTaxAllowance} onChange={(e) => setAnnualTaxAllowance(e.target.value)} style={input} />
-                  </div>
-                  <div>
-                    <label style={label}>Annual Tax Addition (€)</label>
-                    <input type="number" value={annualTaxAddition} onChange={(e) => setAnnualTaxAddition(e.target.value)} style={input} />
-                  </div>
-                  <div>
-                    <label style={label}>Childless Care Surcharge</label>
-                    <select value={childlessCareSurcharge ? 'yes' : 'no'} onChange={(e) => setChildlessCareSurcharge(e.target.value === 'yes')} style={select}>
-                      <option value="yes">Yes</option>
-                      <option value="no">No</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={label}>Pension Insurance</label>
-                    <select value={pensionInsuranceMandatory ? 'yes' : 'no'} onChange={(e) => setPensionInsuranceMandatory(e.target.value === 'yes')} style={select}>
-                      <option value="yes">Included</option>
-                      <option value="no">Exempt</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={label}>Unemployment Insurance</label>
-                    <select value={unemploymentInsuranceMandatory ? 'yes' : 'no'} onChange={(e) => setUnemploymentInsuranceMandatory(e.target.value === 'yes')} style={select}>
-                      <option value="yes">Included</option>
-                      <option value="no">Exempt</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: 12 }}>
-              <button
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                style={{
-                  padding: '12px 20px',
-                  background: '#fff',
-                  border: '1px solid #e5e5e5',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: '#666',
-                  cursor: 'pointer',
-                  flex: 1,
-                }}
-              >
-                {showAdvanced ? 'Hide' : 'Show'} Advanced Settings
-              </button>
 
               {/* Calculate Button */}
               <button
                 onClick={handleCalculate}
                 style={{
-                  padding: '12px 24px',
-                  background: '#dd0000',
+                  width: '100%',
+                  padding: '14px 20px',
+                  background: '#dc2626',
                   border: 'none',
                   borderRadius: 8,
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: 700,
                   color: '#fff',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: 8,
-                  boxShadow: '0 4px 12px rgba(221,0,0,0.3)',
+                  boxShadow: '0 4px 12px rgba(220,38,38,0.3)',
+                  marginTop: 4,
                 }}
               >
                 <Calculator className="w-5 h-5" />
-                Calculate
+                Calculate Net Salary
               </button>
             </div>
-          </div>
 
-          {/* Right: Results */}
-          <div style={{ position: 'sticky', top: 100, display: 'grid', gap: 16 }}>
-            {/* Main Result */}
-            <div style={{ ...card, background: 'linear-gradient(135deg, #111 0%, #dd0000 100%)', color: '#fff', border: 'none' }}>
-              <div style={{ fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.7, marginBottom: 8 }}>
-                {mode === 'brutto-to-netto' ? 'Net Salary' : 'Gross Salary'}
-              </div>
-              <div style={{ fontSize: 48, fontWeight: 800, marginBottom: 16 }}>
-                {result ? formatEuro(mode === 'brutto-to-netto' ? displayNet : displayGross) : '—'}
-              </div>
-              {result && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13, opacity: 0.9 }}>
-                  <div>
-                    <div style={{ opacity: 0.7 }}>Monthly</div>
-                    <div style={{ fontWeight: 700 }}>{formatEuro(mode === 'brutto-to-netto' ? monthlyNet : monthlyGross)}</div>
-                  </div>
-                  <div>
-                    <div style={{ opacity: 0.7 }}>Annual</div>
-                    <div style={{ fontWeight: 700 }}>{formatEuro(mode === 'brutto-to-netto' ? annualNet : annualGross)}</div>
-                  </div>
+            {/* Right: Results */}
+            <div style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)', padding: 24, color: '#fff' }}>
+              {!result ? (
+                <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                  <Calculator className="w-12 h-12" style={{ opacity: 0.5, margin: '0 auto 16px' }} />
+                  <p style={{ fontSize: 14, opacity: 0.7 }}>Enter your details and click Calculate</p>
                 </div>
-              )}
-            </div>
-
-            {/* Breakdown */}
-            {result && (
-              <div style={card}>
-                <h3 style={{ fontSize: 14, fontWeight: 700, color: '#111', margin: '0 0 12px' }}>Deductions</h3>
-                <div style={{ display: 'grid', gap: 10 }}>
-                  {deductions.map((item) => (
-                    <div key={item.label}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 13 }}>
-                        <span style={{ color: '#666' }}>{item.label}</span>
-                        <span style={{ fontWeight: 700, color: '#111' }}>{formatEuro(item.amount)}</span>
-                      </div>
-                      <div style={{ height: 4, background: '#f0f0f0', borderRadius: 2, overflow: 'hidden' }}>
-                        <div style={{ width: `${(item.amount / maxDeduction) * 100}%`, height: '100%', background: '#dd0000' }} />
-                      </div>
+              ) : (
+                <>
+                  {/* Net Salary */}
+                  <div style={{ textAlign: 'center', marginBottom: 20 }}>
+                    <p style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.7, marginBottom: 8 }}>
+                      Your Net Salary
+                    </p>
+                    <div style={{ fontSize: 36, fontWeight: 800, marginBottom: 8 }}>
+                      {formatEuro(salaryPeriod === 'monthly' ? monthlyNet : annualNet)}
                     </div>
-                  ))}
-                </div>
-                <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-                  <span style={{ fontWeight: 700 }}>Total</span>
-                  <span style={{ fontWeight: 700, color: '#dd0000' }}>{formatEuro(result.totalDeductions)}</span>
-                </div>
-              </div>
-            )}
+                    <p style={{ fontSize: 12, opacity: 0.7 }}>
+                      {salaryPeriod === 'monthly' ? 'per month' : 'per year'}
+                    </p>
+                  </div>
 
-            {/* Info */}
-            <div style={{ padding: 12, background: '#f5f5f5', borderRadius: 8, fontSize: 12, color: '#666', display: 'flex', gap: 8 }}>
-              <Info className="w-4 h-4" style={{ flexShrink: 0, marginTop: 1 }} />
-              <div>Click Calculate to see results based on 2026 German tax rules. This is an estimate for employees.</div>
+                  {/* Stats Grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}>
+                    <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 8, padding: 12, textAlign: 'center' }}>
+                      <p style={{ fontSize: 11, opacity: 0.7, marginBottom: 4 }}>Gross</p>
+                      <p style={{ fontSize: 16, fontWeight: 700 }}>{formatEuro(salaryPeriod === 'monthly' ? monthlyGross : annualGross)}</p>
+                    </div>
+                    <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 8, padding: 12, textAlign: 'center' }}>
+                      <p style={{ fontSize: 11, opacity: 0.7, marginBottom: 4 }}>Deductions</p>
+                      <p style={{ fontSize: 16, fontWeight: 700, color: '#fca5a5' }}>{formatEuro(salaryPeriod === 'monthly' ? totalDeductions/12 : totalDeductions)}</p>
+                    </div>
+                    <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 8, padding: 12, textAlign: 'center' }}>
+                      <p style={{ fontSize: 11, opacity: 0.7, marginBottom: 4 }}>Tax Rate</p>
+                      <p style={{ fontSize: 16, fontWeight: 700 }}>{effectiveRate.toFixed(1)}%</p>
+                    </div>
+                    <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 8, padding: 12, textAlign: 'center' }}>
+                      <p style={{ fontSize: 11, opacity: 0.7, marginBottom: 4 }}>Take-Home</p>
+                      <p style={{ fontSize: 16, fontWeight: 700, color: '#86efac' }}>{(100 - effectiveRate).toFixed(1)}%</p>
+                    </div>
+                  </div>
+
+                  {/* Deductions List */}
+                  <div>
+                    <p style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.7, marginBottom: 12 }}>
+                      Deduction Breakdown
+                    </p>
+                    <div style={{ display: 'grid', gap: 6 }}>
+                      {deductions.map((item) => (
+                        <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color }} />
+                            <span style={{ fontSize: 12, opacity: 0.9 }}>{item.label}</span>
+                          </div>
+                          <span style={{ fontSize: 12, fontWeight: 600 }}>
+                            {formatEuro(salaryPeriod === 'monthly' ? item.amount/12 : item.amount)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
-      </main>
 
-      <style jsx>{`
-        @media (max-width: 1000px) {
-          .calc-layout {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
+        {/* Info Footer */}
+        <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#888' }}>
+          <Info className="w-4 h-4" />
+          <span>Based on 2026 German tax rules (BMF). For employees only. Actual amounts may vary slightly.</span>
+        </div>
+      </main>
     </div>
   );
 }
@@ -442,70 +355,12 @@ function formatEuro(value: number) {
   }).format(value);
 }
 
-const card: React.CSSProperties = {
-  background: '#fff',
-  border: '1px solid #e5e5e5',
-  borderRadius: 12,
-  padding: 20,
-};
-
-const cardTitle: React.CSSProperties = {
-  fontSize: 16,
-  fontWeight: 700,
-  color: '#111',
-  margin: '0 0 16px',
-};
-
-const label: React.CSSProperties = {
-  display: 'block',
-  fontSize: 13,
-  fontWeight: 600,
-  color: '#666',
-  marginBottom: 6,
-};
-
-const input: React.CSSProperties = {
+const selectStyle: React.CSSProperties = {
   width: '100%',
-  padding: '10px 12px',
+  padding: '8px 10px',
   border: '1px solid #e5e5e5',
   borderRadius: 6,
-  fontSize: 14,
-  outline: 'none',
+  fontSize: 13,
   background: '#fff',
-};
-
-const largeInput: React.CSSProperties = {
-  ...input,
-  fontSize: 24,
-  fontWeight: 700,
-  paddingRight: 40,
-};
-
-const select: React.CSSProperties = {
-  ...input,
   cursor: 'pointer',
 };
-
-const inputSuffix: React.CSSProperties = {
-  position: 'absolute',
-  right: 12,
-  top: '50%',
-  transform: 'translateY(-50%)',
-  fontSize: 14,
-  fontWeight: 700,
-  color: '#999',
-  pointerEvents: 'none',
-};
-
-function modeBtn(active: boolean): React.CSSProperties {
-  return {
-    padding: '10px 16px',
-    border: active ? '2px solid #dd0000' : '1px solid #e5e5e5',
-    borderRadius: 6,
-    background: active ? '#fff5f5' : '#fff',
-    color: active ? '#dd0000' : '#666',
-    fontSize: 14,
-    fontWeight: 600,
-    cursor: 'pointer',
-  };
-}
