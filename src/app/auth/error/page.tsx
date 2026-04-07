@@ -1,29 +1,94 @@
+'use client';
+
 import Link from 'next/link';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { AlertCircle, ArrowLeft, RefreshCw, Trash2 } from 'lucide-react';
 
-interface AuthErrorPageProps {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}
-
-export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps) {
-  const params = await searchParams;
-  const rawError = params?.error;
-  const error = Array.isArray(rawError) ? rawError[0] : rawError || null;
+export default function AuthErrorPage() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get('error');
+  const [isClearing, setIsClearing] = useState(false);
+  const [countdown, setCountdown] = useState(3);
 
   const getErrorMessage = (errorType: string | null) => {
     switch (errorType) {
       case 'Configuration':
-        return 'There is a problem with the server configuration. Please contact support.';
+        return 'There is a problem with the authentication configuration. This usually happens when your browser has old login cookies.';
       case 'AccessDenied':
         return 'Access denied. You do not have permission to sign in.';
       case 'Verification':
         return 'The verification token has expired or has already been used.';
       case 'InvalidCheck':
-        return 'This login attempt is stale or was started twice. Go back to the sign-in page and try again once.';
+        return 'This login attempt is stale or was started twice. Please clear your cookies and try again.';
+      case 'OAuthCallback':
+        return 'There was a problem completing your Google sign-in. Please try again.';
+      case 'OAuthAccountNotLinked':
+        return 'This email is already associated with another account. Please sign in with your original method.';
+      case 'EmailSignin':
+        return 'There was a problem sending the email. Please check your email address and try again.';
+      case 'CredentialsSignin':
+        return 'Invalid email or password. Please try again.';
+      case 'SessionRequired':
+        return 'You must be signed in to access this page.';
       default:
         return 'An error occurred during authentication. Please try again.';
     }
   };
+
+  // Auto-redirect for OAuth cookie errors after countdown
+  useEffect(() => {
+    if (error === 'Configuration' || error === 'InvalidCheck' || error === 'OAuthCallback') {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            handleClearAndRetry();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [error]);
+
+  const clearAuthCookies = () => {
+    // Clear all NextAuth related cookies
+    const cookiesToClear = [
+      'next-auth.state',
+      'next-auth.callback-url',
+      'next-auth.csrf-token',
+      'next-auth.session-token',
+      '__Host-next-auth.csrf-token',
+      '__Secure-next-auth.callback-url',
+      '__Secure-next-auth.session-token',
+    ];
+
+    cookiesToClear.forEach((cookieName) => {
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname};`;
+    });
+
+    // Also clear Google OAuth cookies
+    document.cookie = 'g_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'g_csrf_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  };
+
+  const handleClearAndRetry = () => {
+    setIsClearing(true);
+    clearAuthCookies();
+    
+    // Small delay to ensure cookies are cleared
+    setTimeout(() => {
+      window.location.href = '/auth/signin';
+    }, 100);
+  };
+
+  const isOAuthError = error === 'Configuration' || error === 'InvalidCheck' || error === 'OAuthCallback';
 
   return (
     <div style={{
@@ -36,32 +101,32 @@ export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
       <div style={{
-        maxWidth: '500px',
+        maxWidth: '520px',
         width: '100%',
         background: '#fff',
-        borderRadius: '20px',
-        padding: '40px',
-        boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+        borderRadius: '24px',
+        padding: '48px 40px',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
         textAlign: 'center'
       }}>
         <div style={{
-          width: '80px',
-          height: '80px',
-          margin: '0 auto 24px',
+          width: '88px',
+          height: '88px',
+          margin: '0 auto 28px',
           borderRadius: '50%',
-          background: 'rgba(239, 68, 68, 0.1)',
+          background: 'rgba(239, 68, 68, 0.08)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <AlertCircle style={{ width: '40px', height: '40px', color: '#ef4444' }} />
+          <AlertCircle style={{ width: '44px', height: '44px', color: '#ef4444' }} />
         </div>
 
         <h1 style={{
-          fontSize: '24px',
+          fontSize: '26px',
           fontWeight: '700',
           color: '#111',
-          margin: '0 0 12px'
+          margin: '0 0 16px'
         }}>
           Authentication Error
         </h1>
@@ -69,31 +134,91 @@ export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps
         <p style={{
           fontSize: '15px',
           color: '#666',
-          lineHeight: '1.6',
+          lineHeight: '1.7',
           margin: '0 0 32px'
         }}>
           {getErrorMessage(error)}
         </p>
 
-        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-          <Link
-            href="/auth/signin"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '12px 24px',
-              background: '#dd0000',
-              color: '#fff',
-              borderRadius: '10px',
-              textDecoration: 'none',
-              fontWeight: '600',
+        {/* Auto-redirect notice for OAuth errors */}
+        {isOAuthError && (
+          <div style={{
+            marginBottom: '24px',
+            padding: '16px 20px',
+            background: '#fef3c7',
+            borderRadius: '12px',
+            border: '1px solid #fde68a',
+          }}>
+            <p style={{
               fontSize: '14px',
-              transition: 'all 0.2s'
-            }}
-          >
-            Try Again
-          </Link>
+              color: '#92400e',
+              lineHeight: '1.6',
+              margin: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}>
+              <RefreshCw style={{ width: '16px', height: '16px' }} />
+              {!isClearing ? (
+                <>Automatically fixing in {countdown} seconds...</>
+              ) : (
+                <>Clearing cookies and redirecting...</>
+              )}
+            </p>
+          </div>
+        )}
+
+        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          {isOAuthError ? (
+            <button
+              onClick={handleClearAndRetry}
+              disabled={isClearing}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '14px 28px',
+                background: '#dd0000',
+                color: '#fff',
+                borderRadius: '12px',
+                border: 'none',
+                textDecoration: 'none',
+                fontWeight: '600',
+                fontSize: '15px',
+                cursor: isClearing ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s',
+                boxShadow: '0 4px 14px rgba(221,0,0,0.3)',
+              }}
+            >
+              {isClearing ? (
+                <RefreshCw style={{ width: '18px', height: '18px', animation: 'spin 1s linear infinite' }} />
+              ) : (
+                <Trash2 style={{ width: '18px', height: '18px' }} />
+              )}
+              {isClearing ? 'Clearing...' : 'Clear & Sign In Again'}
+            </button>
+          ) : (
+            <Link
+              href="/auth/signin"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '14px 28px',
+                background: '#dd0000',
+                color: '#fff',
+                borderRadius: '12px',
+                textDecoration: 'none',
+                fontWeight: '600',
+                fontSize: '15px',
+                transition: 'all 0.2s',
+                boxShadow: '0 4px 14px rgba(221,0,0,0.3)',
+              }}
+            >
+              Try Again
+            </Link>
+          )}
 
           <Link
             href="/"
@@ -101,35 +226,58 @@ export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '12px 24px',
+              padding: '14px 24px',
               background: '#f5f5f5',
               color: '#333',
-              borderRadius: '10px',
+              borderRadius: '12px',
               textDecoration: 'none',
               fontWeight: '600',
-              fontSize: '14px',
+              fontSize: '15px',
               transition: 'all 0.2s'
             }}
           >
-            <ArrowLeft style={{ width: '16px', height: '16px' }} />
+            <ArrowLeft style={{ width: '18px', height: '18px' }} />
             Go Home
           </Link>
         </div>
 
-        {(error === 'Configuration' || error === 'InvalidCheck') && (
-          <p style={{
-            marginTop: '24px',
-            padding: '12px',
-            background: '#fef3c7',
-            borderRadius: '8px',
-            fontSize: '13px',
-            color: '#92400e',
-            lineHeight: '1.5'
+        {/* Additional help text */}
+        {isOAuthError && (
+          <div style={{
+            marginTop: '28px',
+            padding: '20px',
+            background: '#f8fafc',
+            borderRadius: '12px',
+            textAlign: 'left',
           }}>
-            <strong>Note:</strong> If you see this after clicking Google sign-in, the browser likely reused an old OAuth state cookie. Close the tab, return to sign in, and try again once.
-          </p>
+            <h3 style={{
+              fontSize: '14px',
+              fontWeight: '600',
+              color: '#374151',
+              margin: '0 0 12px'
+            }}>
+              Why did this happen?
+            </h3>
+            <p style={{
+              fontSize: '13px',
+              color: '#6b7280',
+              lineHeight: '1.7',
+              margin: 0
+            }}>
+              Google Sign-In uses temporary cookies for security. If you clicked sign-in twice or 
+              waited too long, these cookies became stale. The button above clears them automatically 
+              so you can sign in fresh.
+            </p>
+          </div>
         )}
       </div>
+
+      <style jsx global>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }
