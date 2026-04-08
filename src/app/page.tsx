@@ -293,7 +293,10 @@ export default function HomePage() {
       return !(hasNews && !hasOtherCategories);
     });
     
-    if (activeCategory === 'all') return guidePosts;
+    if (activeCategory === 'all') {
+      // Shuffle posts randomly for "All Guides"
+      return [...guidePosts].sort(() => Math.random() - 0.5);
+    }
     return categorizedPosts[activeCategory] || [];
   }, [activeCategory, wpPosts, categorizedPosts]);
 
