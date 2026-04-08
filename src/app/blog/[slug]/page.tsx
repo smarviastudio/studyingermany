@@ -571,43 +571,89 @@ export default async function BlogPostPage({ params }: Props) {
             {/* Meta Widget */}
             <div className="bg-gradient-to-br from-white to-[#f8f8ff] rounded-2xl p-5 shadow-lg border border-gray-100">
               <p className="text-[11px] font-bold uppercase tracking-wider text-[#dd0000] mb-3">Snapshot</p>
-              <div className="flex flex-wrap gap-1.5 mb-3">
+              <div className="flex flex-wrap gap-1.5 mb-4">
                 <span className="bg-[#ffce00]/20 text-gray-900 rounded-full px-3 py-1 text-xs font-semibold">📅 {publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                 <span className="bg-[#ffce00]/20 text-gray-900 rounded-full px-3 py-1 text-xs font-semibold">⏱ {readTime} min read</span>
               </div>
 
-              <div className="mt-4">
-                <h5 className="text-[13px] uppercase tracking-wide text-gray-500 mb-2">Helpful resources</h5>
-                <ul className="space-y-2">
-                  <li>
-                    <Link href="/dashboard" className="block p-2.5 rounded-lg border border-gray-100 bg-white/90 hover:border-[#dd0000] transition-all">
-                      <strong className="block text-[13px] text-[#dd0000]">Free AI tools</strong>
-                      <span className="text-xs text-gray-600">Automate CVs, motivation letters, and visa prep.</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/" className="block p-2.5 rounded-lg border border-gray-100 bg-white/90 hover:border-[#dd0000] transition-all">
-                      <strong className="block text-[13px] text-[#dd0000]">Course finder</strong>
-                      <span className="text-xs text-gray-600">Search 20,000+ German programs with filters.</span>
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-
               <div className="mt-4 flex flex-col gap-2">
-                <Link href="/blog" className="flex justify-center items-center rounded-lg px-4 py-2.5 font-semibold text-sm bg-gradient-to-r from-[#11132c] to-[#191f4a] text-white">
+                <Link href="/blog" className="flex justify-center items-center rounded-lg px-4 py-2.5 font-semibold text-sm bg-gradient-to-r from-[#11132c] to-[#191f4a] text-white hover:shadow-lg transition-all">
                   Browse all guides
                 </Link>
               </div>
             </div>
 
+            {/* Recommended Tools Widget */}
+            <div className="bg-white rounded-2xl p-5 shadow-lg border border-gray-100">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-lg">🛠️</span>
+                <h4 className="text-[13px] font-bold uppercase tracking-wider text-gray-800">Free Tools</h4>
+              </div>
+              <ul className="space-y-2.5">
+                <li>
+                  <Link href="/" className="group flex items-start gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:border-[#dd0000] hover:bg-[#fff8f8] transition-all">
+                    <span className="text-xl mt-0.5">🔍</span>
+                    <div>
+                      <strong className="block text-[13px] text-gray-900 group-hover:text-[#dd0000] transition-colors">Course Finder</strong>
+                      <span className="text-xs text-gray-500">Search 20,000+ German programs</span>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/cv-maker" className="group flex items-start gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:border-[#dd0000] hover:bg-[#fff8f8] transition-all">
+                    <span className="text-xl mt-0.5">📄</span>
+                    <div>
+                      <strong className="block text-[13px] text-gray-900 group-hover:text-[#dd0000] transition-colors">CV Maker</strong>
+                      <span className="text-xs text-gray-500">Build a German-style CV with AI</span>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/motivation-letter" className="group flex items-start gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:border-[#dd0000] hover:bg-[#fff8f8] transition-all">
+                    <span className="text-xl mt-0.5">✍️</span>
+                    <div>
+                      <strong className="block text-[13px] text-gray-900 group-hover:text-[#dd0000] transition-colors">Motivation Letter</strong>
+                      <span className="text-xs text-gray-500">Generate compelling letters</span>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/cover-letter" className="group flex items-start gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:border-[#dd0000] hover:bg-[#fff8f8] transition-all">
+                    <span className="text-xl mt-0.5">💼</span>
+                    <div>
+                      <strong className="block text-[13px] text-gray-900 group-hover:text-[#dd0000] transition-colors">Cover Letter</strong>
+                      <span className="text-xs text-gray-500">Professional job applications</span>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/gpa-converter" className="group flex items-start gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:border-[#dd0000] hover:bg-[#fff8f8] transition-all">
+                    <span className="text-xl mt-0.5">🎓</span>
+                    <div>
+                      <strong className="block text-[13px] text-gray-900 group-hover:text-[#dd0000] transition-colors">GPA Converter</strong>
+                      <span className="text-xs text-gray-500">Convert grades to German scale</span>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/netto-brutto-calculator" className="group flex items-start gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:border-[#dd0000] hover:bg-[#fff8f8] transition-all">
+                    <span className="text-xl mt-0.5">💰</span>
+                    <div>
+                      <strong className="block text-[13px] text-gray-900 group-hover:text-[#dd0000] transition-colors">Salary Calculator</strong>
+                      <span className="text-xs text-gray-500">Calculate net salary in Germany</span>
+                    </div>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
             {/* CTA Widget */}
             <div className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-2xl p-5 text-white shadow-lg">
-              <span className="inline-block px-2.5 py-1 bg-[#ffce00] text-gray-900 text-[11px] font-bold uppercase tracking-wide rounded mb-3">Free tools</span>
+              <span className="inline-block px-2.5 py-1 bg-[#ffce00] text-gray-900 text-[11px] font-bold uppercase tracking-wide rounded mb-3">Get Started</span>
               <h4 className="text-lg font-bold mb-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Plan your move to Germany</h4>
               <p className="text-sm text-white/75 mb-5 leading-relaxed">AI tools for visa, housing, CV, and motivation letters — all in one place.</p>
               <Link href="/dashboard" className="block text-center py-3 px-5 bg-[#dd0000] text-white font-bold text-sm rounded-lg hover:bg-[#bb0000] transition-all">
-                Explore tools →
+                Explore Dashboard →
               </Link>
             </div>
           </aside>
