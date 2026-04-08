@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
-import { MessageCircle, X, Send, Loader2, Sparkles, Minimize2, LogIn, Crown, AlertCircle } from 'lucide-react';
+import { X, Send, Loader2, Sparkles, Minimize2, LogIn, AlertCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 
@@ -15,55 +15,34 @@ interface Message {
 interface PageContext {
   type: 'program' | 'blog' | 'page';
   pageName?: string;
-  data?: any;
+  data?: Record<string, string | undefined>;
 }
 
-// Context provider hook - detects current page and extracts relevant data
-function usePageContext(): PageContext | null {
+// Context provider hook - detects current page based on pathname
+function usePageContext(): PageContext {
   const pathname = usePathname();
-  const [context, setContext] = useState<PageContext | null>(null);
-
-  useEffect(() => {
-    // Detect page type based on pathname
+  
+  // Use useMemo to compute context based on pathname without setState
+  const context = useMemo<PageContext>(() => {
     if (pathname.startsWith('/blog/') && pathname !== '/blog') {
-      // Blog article page - extract article data from DOM
-      const articleTitle = document.querySelector('h1')?.textContent;
-      const articleContent = document.querySelector('article')?.textContent?.substring(0, 2000);
-      
-      if (articleTitle) {
-        setContext({
-          type: 'blog',
-          data: {
-            title: articleTitle,
-            content: articleContent,
-            url: pathname,
-          },
-        });
-      }
+      return {
+        type: 'blog',
+        pageName: 'Blog Article',
+        data: { url: pathname },
+      };
     } else if (pathname.startsWith('/detail/') || pathname.includes('/program/')) {
-      // Program detail page
-      const programName = document.querySelector('h1')?.textContent;
-      const universityName = document.querySelector('[data-university]')?.textContent || 
-                            document.querySelector('.university-name')?.textContent;
-      
-      if (programName) {
-        setContext({
-          type: 'program',
-          data: {
-            name: programName,
-            university: universityName,
-            url: pathname,
-          },
-        });
-      }
+      return {
+        type: 'program',
+        pageName: 'Program Details',
+        data: { url: pathname },
+      };
     } else {
-      // Generic page context
       const pageName = pathname === '/' ? 'Home' : 
                        pathname.replace(/^\//, '').replace(/-/g, ' ').replace(/\//g, ' > ');
-      setContext({
+      return {
         type: 'page',
         pageName: pageName.charAt(0).toUpperCase() + pageName.slice(1),
-      });
+      };
     }
   }, [pathname]);
 
@@ -71,7 +50,7 @@ function usePageContext(): PageContext | null {
 }
 
 export function GlobalChatbot() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const pageContext = usePageContext();
   
   const [isOpen, setIsOpen] = useState(false);
