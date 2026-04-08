@@ -344,7 +344,7 @@ export default function HomePage() {
       
       const constructedQuery = queryParts.length > 0 ? queryParts.join(' ') : 'programs in Germany';
       
-      const res = await fetch('/api/', {
+      const res = await fetch('/api/course-finder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: constructedQuery, limit: SEARCH_RESULTS_LIMIT }),
@@ -353,14 +353,14 @@ export default function HomePage() {
       if (!res.ok) throw new Error('Search failed');
       const data = await res.json();
       
-      if (data.is_course_related === false) {
-        setNonCourseMessage(data.message || 'Please search for academic programs.');
+      if (data.is_non_course_query) {
+        setNonCourseMessage(data.reasoning || 'Please search for academic programs.');
       } else {
         setResults(data.programs || []);
         setTotalMatches(data.total_matches || data.programs?.length || 0);
         setReasoning(data.reasoning || 'Advanced filter search');
       }
-    } catch (err) {
+    } catch {
       setSearchError('Failed to search programs. Please try again.');
     } finally {
       setSearching(false);
@@ -379,7 +379,7 @@ export default function HomePage() {
     setNonCourseMessage(null);
     setShowSearchResults(true);
     try {
-      const res = await fetch('/api/', {
+      const res = await fetch('/api/course-finder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: query.trim(), limit: SEARCH_RESULTS_LIMIT }),

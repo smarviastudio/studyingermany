@@ -613,6 +613,67 @@ export default async function BlogPostPage({ params }: Props) {
           </aside>
 
         </div>
+
+        {/* Recommended Articles Section */}
+        <section className="mt-16 pt-12 border-t border-gray-200">
+          <div className="text-center mb-10">
+            <span className="inline-block px-3 py-1 bg-[#ffce00]/20 text-[#9a3412] text-[11px] font-bold uppercase tracking-wider rounded-full mb-3">Keep Reading</span>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+              Recommended Articles
+            </h2>
+            <p className="text-gray-600 mt-2 max-w-xl mx-auto">
+              Explore more guides to help you on your journey to studying in Germany
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            {BLOG_POSTS.filter(p => p.slug !== slug).slice(0, 3).map(post => {
+              const postCat = CATEGORIES[post.category];
+              return (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  className="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-[#ffce00] transition-all duration-300"
+                >
+                  <div className="p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-3xl">{post.coverEmoji}</span>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${postCat.bg} ${postCat.color}`}>
+                        {postCat.label}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#dd0000] transition-colors line-clamp-2 mb-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                      {post.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                      {post.excerpt}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" />
+                        {post.readTime} min read
+                      </span>
+                      <span className="text-[#dd0000] font-semibold group-hover:underline">
+                        Read more →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link 
+              href="/blog" 
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#11132c] to-[#191f4a] text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+            >
+              View All Articles
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </section>
+
       </div>
     </div>
   );
