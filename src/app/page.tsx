@@ -146,6 +146,7 @@ export default function HomePage() {
   const [postsLoading, setPostsLoading] = useState(true);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [visibleCount, setVisibleCount] = useState(6);
   const [filters, setFilters] = useState({ language: 'all', city: 'all', degreeLevel: 'all', tuition: 'all' });
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
@@ -299,6 +300,11 @@ export default function HomePage() {
     }
     return categorizedPosts[activeCategory] || [];
   }, [activeCategory, wpPosts, categorizedPosts]);
+
+  // Reset visible count when category changes
+  useEffect(() => {
+    setVisibleCount(6);
+  }, [activeCategory]);
 
   const featuredPost = useMemo(() => {
     // Exclude News-only posts from featured
@@ -877,11 +883,11 @@ export default function HomePage() {
             })}
           </div>
 
-          {/* Featured Articles */}
+          {/* Articles Grid */}
           {!postsLoading && filteredPosts.length > 0 && (
             <div className="guides-articles scroll-reveal">
               <div className="guides-articles-row">
-                {filteredPosts.slice(0, 3).map((post) => (
+                {filteredPosts.slice(0, visibleCount).map((post) => (
                   <Link key={post.id} href={`/blog/${post.slug}`} className="guides-article-card">
                     <div className="guides-article-image">
                       {post.featuredImage ? (
@@ -898,30 +904,22 @@ export default function HomePage() {
                   </Link>
                 ))}
               </div>
-            </div>
-          )}
 
-          {/* Latest Articles */}
-          {!postsLoading && filteredPosts.length > 3 && (
-            <div className="guides-articles scroll-reveal">
-              <div className="guides-articles-row">
-                {filteredPosts.slice(3, 6).map((post) => (
-                  <Link key={post.id} href={`/blog/${post.slug}`} className="guides-article-card">
-                    <div className="guides-article-image">
-                      {post.featuredImage ? (
-                        <Image src={post.featuredImage} alt={stripHtml(post.title)} loading="lazy" className="guides-article-img" width={300} height={160} />
-                      ) : (
-                        <div className="guides-article-img-placeholder"><BookOpen className="w-6 h-6" style={{ color: '#d4d4d4' }} /></div>
-                      )}
-                      {post.categories[0] && <span className="guides-article-badge">{decodeHtmlEntities(post.categories[0].name)}</span>}
-                    </div>
-                    <div className="guides-article-body">
-                      <h4 className="guides-article-title">{stripHtml(post.title)}</h4>
-                      <p className="guides-article-excerpt">{stripHtml(post.excerpt)}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+              {/* See More Button */}
+              {filteredPosts.length > visibleCount && (
+                <div className="guides-load-more">
+                  <button
+                    onClick={() => setVisibleCount(prev => prev + 6)}
+                    className="guides-load-more-btn"
+                  >
+                    See more articles
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <span className="guides-load-more-count">
+                    Showing {visibleCount} of {filteredPosts.length}
+                  </span>
+                </div>
+              )}
             </div>
           )}
 
