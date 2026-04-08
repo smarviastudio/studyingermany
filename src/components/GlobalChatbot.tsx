@@ -143,12 +143,14 @@ export function GlobalChatbot() {
           content: 'Please sign in to continue chatting.',
         }]);
       } else {
+        // Use reply from API if available, otherwise show generic error
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: 'Sorry, I encountered an error. Please try again.',
+          content: data.reply || 'Sorry, I encountered an error. Please try again.',
         }]);
       }
-    } catch (error) {
+    } catch (err) {
+      console.error('[GlobalChatbot] Error:', err);
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: 'Sorry, I could not connect to the server. Please try again.',

@@ -24,22 +24,27 @@ const DAILY_LIMITS: Record<string, number> = {
 };
 
 async function getUserDailyMessageCount(userId: string): Promise<number> {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  // Count messages where role is 'user' by checking content pattern
-  // Since we're migrating schema, we'll use raw query or filter in memory
-  const messages = await prisma.chatMessage.findMany({
-    where: {
-      userId,
-      createdAt: {
-        gte: today,
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Try to count messages with the new schema (role field)
+    const messages = await prisma.chatMessage.findMany({
+      where: {
+        userId,
+        createdAt: {
+          gte: today,
+        },
       },
-    },
-    select: { role: true },
-  });
-  
-  return messages.filter(m => m.role === 'user').length;
+    });
+    
+    // Filter for user messages - handle both old and new schema
+    return messages.filter((m: Record<string, unknown>) => m.role === 'user').length;
+  } catch (error) {
+    console.error('[Global Chat] Failed to get message count:', error);
+    // Return 0 on error to allow chat to work
+    return 0;
+  }
 }
 
 async function getUserSubscriptionTier(userId: string): Promise<string> {
@@ -61,15 +66,20 @@ async function getUserSubscriptionTier(userId: string): Promise<string> {
   return 'free';
 }
 
-async function saveMessage(userId: string, role: 'user' | 'assistant', content: string, context?: any) {
-  await prisma.chatMessage.create({
-    data: {
-      userId,
-      role,
-      content,
-      context: context ? JSON.stringify(context) : null,
-    },
-  });
+async function saveMessage(userId: string, role: 'user' | 'assistant', content: string, context?: Record<string, unknown>) {
+  try {
+    await prisma.chatMessage.create({
+      data: {
+        userId,
+        role,
+        content,
+        context: context ? JSON.stringify(context) : null,
+      },
+    });
+  } catch (error) {
+    // Log but don't fail - message saving is non-critical
+    console.error('[Global Chat] Failed to save message:', error);
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -190,8 +200,20 @@ Answer questions based on this article content when relevant.`;
     
   } catch (error) {
     console.error('[Global Chat API] Error:', error);
+    
+    // Check for specific error types
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    
+    if (errorMessage.includes('API key') || errorMessage.includes('apiKey')) {
+      return NextResponse.json({
+        error: 'AI service configuration error',
+        reply: 'Sorry, the AI service is temporarily unavailable. Please try again later.',
+      }, { status: 503 });
+    }
+    
     return NextResponse.json({
       error: 'Failed to process message',
+      reply: 'Sorry, I encountered an error. Please try again.',
     }, { status: 500 });
   }
 }
