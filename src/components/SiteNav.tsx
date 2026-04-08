@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
-import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard, ChevronLeft, ChevronRight, Home, Bookmark, User } from 'lucide-react';
+import { Search, Loader2, LogOut, ArrowRight, Newspaper, Zap, Menu, X, GraduationCap, BookOpen, Wrench, Tag, LayoutDashboard, ChevronLeft, ChevronRight, Home, Bookmark, User, Smartphone, ChevronDown } from 'lucide-react';
 import { useContactModal } from './ContactModalProvider';
 
 const RED = '#dd0000';
@@ -88,9 +88,11 @@ export function SiteNav() {
   const [navAllLoading, setNavAllLoading] = useState(false);
   const [navAllResults, setNavAllResults] = useState<SiteNavPost[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [appsDropdownOpen, setAppsDropdownOpen] = useState(false);
 
   const navDropdownRef = useRef<HTMLDivElement>(null);
   const navInputRef = useRef<HTMLInputElement>(null);
+  const appsDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     (async () => {
@@ -179,6 +181,20 @@ export function SiteNav() {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [navDropdownOpen]);
+
+  useEffect(() => {
+    const handler = (event: MouseEvent) => {
+      if (!appsDropdownRef.current) return;
+      if (
+        appsDropdownOpen &&
+        !appsDropdownRef.current.contains(event.target as Node)
+      ) {
+        setAppsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [appsDropdownOpen]);
 
   const performNavSearch = async (value: string) => {
     if (!value || value.trim().length < 3) {
@@ -310,9 +326,13 @@ export function SiteNav() {
         </div>
         <div className="sitenav-drawer-links">
           <a href="/" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Home size={20} />Home</a>
-          <a href="/#hero" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><GraduationCap size={20} />Course Finder</a>
           <a href="/#guides" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><BookOpen size={20} />Study Guides</a>
           <a href="/#tools" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Wrench size={20} />Free AI Tools</a>
+          <div className="sitenav-drawer-section">
+            <span className="sitenav-drawer-section-title">Apps</span>
+            <Link href="/lesenlab-german-reading-app" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><span className="sitenav-drawer-emoji">📚</span>LesenLab – German Reading</Link>
+            <Link href="/einbuergerungstest-2026-app" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><span className="sitenav-drawer-emoji">🇩🇪</span>Einbürgerungstest 2026</Link>
+          </div>
           <a href="/pricing" className="sitenav-drawer-link red" onClick={() => setDrawerOpen(false)}><Tag size={20} />Pricing</a>
           {isAuthenticated && <Link href="/dashboard" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><LayoutDashboard size={20} />Dashboard</Link>}
           {isAuthenticated && <Link href="/profile" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><User size={20} />Account</Link>}
@@ -352,7 +372,43 @@ export function SiteNav() {
             <a href="/" className="sitenav-link">Home</a>
             <a href="/#guides" className="sitenav-link">Guides</a>
             <a href="/#tools" className="sitenav-link">Tools</a>
-            <a href="/#hero" className="sitenav-link">Courses</a>
+            <div ref={appsDropdownRef} className="sitenav-apps-dropdown">
+              <button
+                type="button"
+                className="sitenav-link sitenav-apps-trigger"
+                onClick={() => setAppsDropdownOpen(!appsDropdownOpen)}
+                onMouseEnter={() => setAppsDropdownOpen(true)}
+              >
+                Apps
+                <ChevronDown className={`w-4 h-4 transition-transform ${appsDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {appsDropdownOpen && (
+                <div className="sitenav-apps-menu">
+                  <Link
+                    href="/lesenlab-german-reading-app"
+                    className="sitenav-apps-item"
+                    onClick={() => setAppsDropdownOpen(false)}
+                  >
+                    <div className="sitenav-apps-icon sitenav-apps-lesenlab">📚</div>
+                    <div className="sitenav-apps-info">
+                      <span className="sitenav-apps-title">LesenLab</span>
+                      <span className="sitenav-apps-desc">German Reading App (A1–B2)</span>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/einbuergerungstest-2026-app"
+                    className="sitenav-apps-item"
+                    onClick={() => setAppsDropdownOpen(false)}
+                  >
+                    <div className="sitenav-apps-icon sitenav-apps-einburg">🇩🇪</div>
+                    <div className="sitenav-apps-info">
+                      <span className="sitenav-apps-title">Einbürgerungstest</span>
+                      <span className="sitenav-apps-desc">German Citizenship Test</span>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
             <a href="/pricing" className="sitenav-link">Pricing</a>
             <button type="button" onClick={openContactModal} className="sitenav-link">Contact</button>
           </nav>
