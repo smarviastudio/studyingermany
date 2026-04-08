@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { SiteNav } from '@/components/SiteNav';
@@ -562,28 +561,6 @@ export default function LesenLabPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#0a0a1a] py-12">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#dd0000] to-[#ffce00] flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-white font-bold text-lg">LesenLab</span>
-            </div>
-            <div className="flex items-center gap-6 text-white/60 text-sm">
-              <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-              <Link href="/tools" className="hover:text-white transition-colors">Tools</Link>
-              <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
-              <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">App Store</a>
-            </div>
-          </div>
-          <div className="border-t border-white/10 mt-8 pt-8 text-center text-white/40 text-sm">
-            © {new Date().getFullYear()} LesenLab. Part of German Path. All rights reserved.
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
