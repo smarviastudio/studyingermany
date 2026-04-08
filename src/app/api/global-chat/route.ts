@@ -1,19 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import OpenAI from 'openai';
 
-// Lazy initialization to avoid build-time errors
-let openaiClient: OpenAI | null = null;
-
-function getOpenAI(): OpenAI {
-  if (!openaiClient) {
-    openaiClient = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-  }
-  return openaiClient;
-}
+const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const MODEL = 'openai/gpt-4o-mini';
 
 // Daily limits by subscription tier
 const DAILY_LIMITS: Record<string, number> = {
@@ -158,7 +148,7 @@ Answer questions based on this article content when relevant.`;
     }
 
     // Build messages array
-    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+    const chatMessages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
       { role: 'system', content: systemPrompt },
     ];
     
@@ -167,23 +157,52 @@ Answer questions based on this article content when relevant.`;
       const recentHistory = conversationHistory.slice(-10);
       for (const msg of recentHistory) {
         if (msg.role === 'user' || msg.role === 'assistant') {
-          messages.push({ role: msg.role, content: msg.content });
+          chatMessages.push({ role: msg.role, content: msg.content });
         }
       }
     }
     
     // Add current message
-    messages.push({ role: 'user', content: message.trim() });
+    chatMessages.push({ role: 'user', content: message.trim() });
     
-    // Call OpenAI
-    const completion = await getOpenAI().chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages,
-      max_tokens: 800,
-      temperature: 0.7,
+    // Call OpenRouter API
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey) {
+      console.error('[Global Chat] OPENROUTER_API_KEY is not set');
+      return NextResponse.json({
+        error: 'AI service not configured',
+        reply: 'Sorry, the AI service is temporarily unavailable. Please try again later.',
+      }, { status: 503 });
+    }
+    
+    const response = await fetch(OPENROUTER_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://germanpath.com',
+        'X-Title': 'German Path AI Chat'
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages: chatMessages,
+        temperature: 0.7,
+        max_tokens: 800
+      }),
+      cache: 'no-store'
     });
     
-    const reply = completion.choices[0]?.message?.content || 'Sorry, I could not generate a response.';
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[Global Chat] OpenRouter error ${response.status}:`, errorText);
+      return NextResponse.json({
+        error: 'AI service error',
+        reply: 'Sorry, I encountered an error. Please try again.',
+      }, { status: 500 });
+    }
+    
+    const data = await response.json();
+    const reply = data?.choices?.[0]?.message?.content || 'Sorry, I could not generate a response.';
     
     // Save assistant message
     await saveMessage(userId, 'assistant', reply);
