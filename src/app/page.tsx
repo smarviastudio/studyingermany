@@ -877,7 +877,6 @@ export default function HomePage() {
           {/* Featured Articles */}
           {!postsLoading && filteredPosts.length > 0 && (
             <div className="guides-articles scroll-reveal">
-              <h3 className="guides-section-title">Featured Guides</h3>
               <div className="guides-articles-row">
                 {filteredPosts.slice(0, 3).map((post) => (
                   <Link key={post.id} href={`/blog/${post.slug}`} className="guides-article-card">
@@ -902,7 +901,6 @@ export default function HomePage() {
           {/* Latest Articles */}
           {!postsLoading && filteredPosts.length > 3 && (
             <div className="guides-articles scroll-reveal">
-              <h3 className="guides-section-title">Latest Guides</h3>
               <div className="guides-articles-row">
                 {filteredPosts.slice(3, 6).map((post) => (
                   <Link key={post.id} href={`/blog/${post.slug}`} className="guides-article-card">
