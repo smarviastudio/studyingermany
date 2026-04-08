@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { X, Send, Loader2, Sparkles, Minimize2, LogIn, AlertCircle } from 'lucide-react';
@@ -18,11 +18,34 @@ interface PageContext {
   data?: Record<string, string | undefined>;
 }
 
+// Helper to extract page content from DOM
+function extractPageContent(): { title?: string; content?: string } {
+  // Try to get article title
+  const title = document.querySelector('h1')?.textContent?.trim() || 
+                document.querySelector('article h1')?.textContent?.trim() ||
+                document.title;
+  
+  // Try to get article content
+  const articleEl = document.querySelector('article');
+  const mainEl = document.querySelector('main');
+  const contentEl = articleEl || mainEl;
+  
+  let content = '';
+  if (contentEl) {
+    // Get text content, removing scripts and styles
+    const clone = contentEl.cloneNode(true) as HTMLElement;
+    clone.querySelectorAll('script, style, nav, footer, header').forEach(el => el.remove());
+    content = clone.textContent?.replace(/\s+/g, ' ').trim().substring(0, 3000) || '';
+  }
+  
+  return { title, content };
+}
+
 // Context provider hook - detects current page based on pathname
 function usePageContext(): PageContext {
   const pathname = usePathname();
   
-  // Use useMemo to compute context based on pathname without setState
+  // Use useMemo to compute basic context based on pathname
   const context = useMemo<PageContext>(() => {
     if (pathname.startsWith('/blog/') && pathname !== '/blog') {
       return {
@@ -110,12 +133,23 @@ export function GlobalChatbot() {
     setLoading(true);
 
     try {
+      // Extract page content dynamically when sending
+      const pageContent = extractPageContent();
+      const enrichedContext = {
+        ...pageContext,
+        data: {
+          ...pageContext.data,
+          title: pageContent.title,
+          content: pageContent.content,
+        },
+      };
+      
       const response = await fetch('/api/global-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userMessage,
-          context: pageContext,
+          context: enrichedContext,
           conversationHistory: messages.slice(-10),
         }),
       });

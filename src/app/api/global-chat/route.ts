@@ -124,26 +124,25 @@ Be concise, helpful, and friendly. Use markdown formatting for better readabilit
 If you don't know something specific, suggest the user check official sources or contact the university directly.`;
 
     // Add context if available
-    if (context) {
-      if (context.type === 'program' && context.data) {
-        systemPrompt += `\n\nThe user is currently viewing this program:
-- Program: ${context.data.name || 'Unknown'}
-- University: ${context.data.university || 'Unknown'}
-- Degree: ${context.data.degree || 'Unknown'}
-- Language: ${context.data.language || 'Unknown'}
-- Duration: ${context.data.duration || 'Unknown'}
-- Tuition: ${context.data.tuition || 'Unknown'}
-- Description: ${context.data.description || 'No description available'}
+    if (context && context.data) {
+      const { title, content } = context.data;
+      
+      if (context.type === 'blog' && (title || content)) {
+        systemPrompt += `\n\nThe user is currently reading this article:
+- Title: ${title || 'Unknown'}
+- Article Content: ${content?.substring(0, 2500) || 'No content available'}
+
+IMPORTANT: Answer questions based on this article content. If the user asks to summarize, provide a clear summary of the key points from the article.`;
+      } else if (context.type === 'program') {
+        systemPrompt += `\n\nThe user is currently viewing a program page:
+- Page Title: ${title || 'Unknown Program'}
+- Page Content: ${content?.substring(0, 2000) || 'No content available'}
 
 Answer questions specifically about this program when relevant.`;
-      } else if (context.type === 'blog' && context.data) {
-        systemPrompt += `\n\nThe user is currently reading this article:
-- Title: ${context.data.title || 'Unknown'}
-- Content Summary: ${context.data.content?.substring(0, 1500) || 'No content available'}
-
-Answer questions based on this article content when relevant.`;
-      } else if (context.type === 'page') {
-        systemPrompt += `\n\nThe user is currently on the ${context.pageName || 'website'} page.`;
+      } else if (title || content) {
+        systemPrompt += `\n\nThe user is currently on the ${context.pageName || 'website'} page.
+- Page Title: ${title || 'Unknown'}
+- Page Content Summary: ${content?.substring(0, 1000) || 'No content available'}`;
       }
     }
 
