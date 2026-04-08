@@ -3,6 +3,7 @@
 import { CookieConsentBanner } from './CookieConsentBanner';
 import { SiteFooter } from './SiteFooter';
 import { ContactModalProvider } from './ContactModalProvider';
+import { GlobalChatbot } from './GlobalChatbot';
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -10,6 +11,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
       {children}
       <SiteFooter />
       <CookieConsentBanner />
+      <GlobalChatbot />
     </ContactModalProvider>
   );
 }
