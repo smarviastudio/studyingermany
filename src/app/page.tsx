@@ -845,6 +845,32 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Category Filter Pills */}
+          <div className="guides-category-pills scroll-reveal">
+            <button
+              onClick={() => setActiveCategory('all')}
+              className={`guides-category-pill ${activeCategory === 'all' ? 'active' : ''}`}
+            >
+              All Guides
+            </button>
+            {JOURNEY_CATEGORIES.map((cat) => {
+              const Icon = cat.icon;
+              const count = categorizedPosts[cat.key]?.length || 0;
+              return (
+                <button
+                  key={cat.key}
+                  onClick={() => setActiveCategory(cat.key)}
+                  className={`guides-category-pill ${activeCategory === cat.key ? 'active' : ''}`}
+                  style={{ '--pill-color': cat.color } as React.CSSProperties}
+                >
+                  <Icon className="w-4 h-4" />
+                  {cat.label}
+                  {count > 0 && <span className="guides-category-count">{count}</span>}
+                </button>
+              );
+            })}
+          </div>
+
           {/* Featured Articles */}
           {!postsLoading && filteredPosts.length > 0 && (
             <div className="guides-articles scroll-reveal">
