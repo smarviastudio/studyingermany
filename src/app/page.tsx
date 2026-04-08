@@ -8,7 +8,7 @@ import {
   Search, Loader2, Bookmark, X, ArrowRight, BookOpen, Newspaper, Calendar,
   GraduationCap, FileText, Languages, Home, Briefcase, CreditCard, Shield,
   Plane, Star, Zap, TrendingUp, Users, Globe, Clock, Calculator, LayoutDashboard, MapPin,
-  Settings, Filter, Sparkles
+  Settings, Filter, Sparkles, School, FolderOpen
 } from 'lucide-react';
 import { ProgramModal } from '@/components/ProgramModal';
 import { ProgramCard } from '@/components/ProgramCard';
@@ -70,12 +70,15 @@ const TESTIMONIALS = [
 ];
 
 const JOURNEY_CATEGORIES = [
-  { key: 'getting-started', label: 'Getting Started', icon: Plane, color: '#dd0000', desc: 'First steps to study in Germany', slugs: ['guides', 'getting-started', 'visa-immigration', 'visa'] },
-  { key: 'university-life', label: 'University Life', icon: GraduationCap, color: '#7c3aed', desc: 'Admissions, programs & campus', slugs: ['university-life', 'admissions', 'programs'] },
-  { key: 'housing',         label: 'Housing & Living', icon: Home, color: '#059669', desc: 'Find accommodation & settle in', slugs: ['housing', 'living', 'accommodation'] },
-  { key: 'finance',         label: 'Finance & Insurance', icon: CreditCard, color: '#d97706', desc: 'Blocked accounts, insurance & more', slugs: ['finance', 'insurance', 'blocked-account'] },
-  { key: 'jobs-career',     label: 'Jobs & Career', icon: Briefcase, color: '#0284c7', desc: 'Working while studying & after', slugs: ['jobs-career', 'jobs', 'career'] },
-  { key: 'language',        label: 'Language & Culture', icon: Languages, color: '#be185d', desc: 'German language & integration', slugs: ['language', 'culture', 'integration'] },
+  { key: 'phd',        label: 'PhD',        icon: GraduationCap, color: '#7c3aed', desc: 'Doctoral programs & research', slugs: ['phd', 'doctorate', 'doctoral'] },
+  { key: 'master',     label: 'Master',     icon: BookOpen,       color: '#dd0000', desc: 'Master programs',              slugs: ['master', 'masters'] },
+  { key: 'bachelor',   label: 'Bachelor',   icon: School,        color: '#059669', desc: 'Bachelor programs',          slugs: ['bachelor', 'bachelors'] },
+  { key: 'visa',       label: 'Visa',       icon: Plane,         color: '#d97706', desc: 'Visa & immigration',         slugs: ['visa', 'immigration'] },
+  { key: 'housing',    label: 'Housing',    icon: Home,          color: '#0284c7', desc: 'Accommodation',              slugs: ['housing', 'accommodation'] },
+  { key: 'finance',    label: 'Finance',    icon: CreditCard,    color: '#be185d', desc: 'Money matters',            slugs: ['finance', 'insurance', 'blocked-account'] },
+  { key: 'jobs',       label: 'Jobs',       icon: Briefcase,     color: '#0891b2', desc: 'Working in Germany',       slugs: ['jobs', 'career', 'work'] },
+  { key: 'language',   label: 'Language',   icon: Languages,     color: '#ea580c', desc: 'German language',          slugs: ['language', 'german'] },
+  { key: 'others',     label: 'Others',     icon: FolderOpen,    color: '#64748b', desc: 'Other topics',             slugs: ['guides', 'tips', 'life'] },
 ];
 
 type WpPost = {
