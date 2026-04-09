@@ -10,11 +10,11 @@ import { SiteNav } from '@/components/SiteNav';
 const RED = '#dd0000';
 
 // Price IDs configuration - automatically switches based on environment
-// Live prices from Stripe dashboard (Pro Plan = prod_UFsTyTZs2ijCcb)
+// Live prices from Stripe dashboard (Essential Plan = prod_UFsSSCfmCYDQRM)
 const PRICE_IDS = {
   live: {
-    pro_monthly: 'price_1THMj0BhIRngoSRXUxFgCUdS',  // €19.99/month
-    pro_yearly: 'price_1THMj0BhIRngoSRXLxEVsAmJ',   // €149.99/year
+    pro_monthly: 'price_1THMhjBhIRngoSRXvbQyNKcE',  // Essential €9.99/month
+    pro_yearly: 'price_1THMhjBhIRngoSRXNhX1dcad',   // Essential €79.99/year
     credits_20: 'price_1THMl6BhIRngoSRXMBbRuS2m',   // €2.99
     credits_100: 'price_1THMl6BhIRngoSRXEH2UHrYP',  // €9.99
     credits_300: 'price_1THMl6BhIRngoSRXrR48BBwX',  // €24.99
