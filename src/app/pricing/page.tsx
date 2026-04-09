@@ -10,17 +10,18 @@ import { SiteNav } from '@/components/SiteNav';
 const RED = '#dd0000';
 
 // Price IDs configuration - automatically switches based on environment
+// Live prices from Stripe dashboard (Pro Plan = prod_UFsTyTZs2ijCcb)
 const PRICE_IDS = {
   live: {
-    pro_monthly: 'price_1T9WRxBhlRngoSRXX9UJTQPY',
-    pro_yearly: 'price_1T9WSyBhlRngoSRXQPTRKZib',
-    credits_20: 'price_1THMl6BhIRngoSRXMBbRuS2m',
-    credits_100: 'price_1THMl6BhIRngoSRXEH2UHrYP',
-    credits_300: 'price_1THMl6BhIRngoSRXrR48BBwX',
+    pro_monthly: 'price_1THMj0BhIRngoSRXUxFgCUdS',  // €19.99/month
+    pro_yearly: 'price_1THMj0BhIRngoSRXLxEVsAmJ',   // €149.99/year
+    credits_20: 'price_1THMl6BhIRngoSRXMBbRuS2m',   // €2.99
+    credits_100: 'price_1THMl6BhIRngoSRXEH2UHrYP',  // €9.99
+    credits_300: 'price_1THMl6BhIRngoSRXrR48BBwX',  // €24.99
   },
   test: {
-    pro_monthly: 'price_1THN89BhIRngoSRXlgKJkghi', // User created test price
-    pro_yearly: 'price_1THN89BhIRngoSRXlgKJkghi', // Using monthly for now - create yearly in Stripe
+    pro_monthly: 'price_1THN89BhIRngoSRXlgKJkghi',
+    pro_yearly: 'price_1THN89BhIRngoSRXlgKJkghi',
     credits_20: 'price_1THNNCBhIRngoSRXEd8VpVkv',
     credits_100: 'price_1THNNCBhIRngoSRXR97jnrrf',
     credits_300: 'price_1THNNCBhIRngoSRXROohsxsl',
