@@ -198,6 +198,73 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').replace(/&[#A-Za-z0-9]+;/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+type WpPostSummary = {
+  id: number;
+  title: string;
+  excerpt: string;
+  slug: string;
+  date: string;
+  featuredImage: string | null;
+  categories: { id: number; name: string; slug: string }[];
+  readTime: number;
+};
+
+async function fetchRelatedWpPosts(excludeSlug: string, limit: number = 3): Promise<WpPostSummary[]> {
+  const wpUrl = process.env.WP_URL || (process.env.NODE_ENV === 'production' ? 'https://cms.germanpath.com' : 'http://localhost:8000');
+  try {
+    const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts?per_page=${limit + 1}&_embed=1`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const posts = await res.json();
+    
+    return posts
+      .filter((post: Record<string, unknown>) => post.slug !== excludeSlug)
+      .slice(0, limit)
+      .map((post: Record<string, unknown>) => {
+        const embedded = post._embedded as Record<string, unknown> | undefined;
+        const featuredMediaCandidates = Array.isArray(embedded?.['wp:featuredmedia'])
+          ? (embedded['wp:featuredmedia'] as Record<string, unknown>[])
+          : [];
+        const featuredMedia = featuredMediaCandidates.find((media) => {
+          const sourceUrl = media?.source_url;
+          return typeof sourceUrl === 'string' && sourceUrl.length > 0;
+        }) || null;
+        
+        const featuredMediaDetails = featuredMedia?.media_details as Record<string, unknown> | undefined;
+        const featuredSizes = featuredMediaDetails?.sizes as Record<string, Record<string, unknown>> | undefined;
+        const featuredImage =
+          (typeof featuredSizes?.medium?.source_url === 'string' && featuredSizes.medium.source_url) ||
+          (typeof featuredSizes?.thumbnail?.source_url === 'string' && featuredSizes.thumbnail.source_url) ||
+          (featuredMedia && typeof featuredMedia.source_url === 'string' ? featuredMedia.source_url : null);
+        
+        const wpTerms = Array.isArray(embedded?.['wp:term']) ? embedded['wp:term'] : [];
+        const categoryTerms = Array.isArray(wpTerms[0]) ? wpTerms[0] : [];
+        const categories = categoryTerms.map((cat: Record<string, unknown>) => ({
+          id: cat.id as number,
+          name: cat.name as string,
+          slug: cat.slug as string,
+        }));
+
+        const titleObj = post.title as { rendered: string };
+        const excerptObj = post.excerpt as { rendered: string };
+        const contentObj = post.content as { rendered: string };
+        const wordCount = contentObj?.rendered ? contentObj.rendered.replace(/<[^>]*>/g, '').split(/\s+/).length : 0;
+        
+        return {
+          id: post.id as number,
+          title: stripHtml(titleObj.rendered),
+          excerpt: stripHtml(excerptObj.rendered).slice(0, 120) + '...',
+          slug: post.slug as string,
+          date: post.date as string,
+          featuredImage,
+          categories,
+          readTime: Math.max(1, Math.ceil(wordCount / 200)),
+        };
+      });
+  } catch {
+    return [];
+  }
+}
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
@@ -472,6 +539,9 @@ export default async function BlogPostPage({ params }: Props) {
   const wpPost = await fetchWpPost(slug);
   if (!wpPost) notFound();
 
+  // Fetch related posts from WordPress
+  const relatedPosts = await fetchRelatedWpPosts(slug, 3);
+
   const title = wpPost.title.rendered;
   const content = renderWordPressHtml(wpPost.content.rendered);
   const seoDescription = wpPost.seo.description || stripHtml(wpPost.excerpt.rendered);
@@ -661,64 +731,74 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
 
         {/* Recommended Articles Section */}
-        <section className="mt-16 pt-12 border-t border-gray-200">
-          <div className="text-center mb-10">
-            <span className="inline-block px-3 py-1 bg-[#ffce00]/20 text-[#9a3412] text-[11px] font-bold uppercase tracking-wider rounded-full mb-3">Keep Reading</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-              Recommended Articles
-            </h2>
-            <p className="text-gray-600 mt-2 max-w-xl mx-auto">
-              Explore more guides to help you on your journey to studying in Germany
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6">
-            {BLOG_POSTS.filter(p => p.slug !== slug).slice(0, 3).map(post => {
-              const postCat = CATEGORIES[post.category];
-              return (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-[#ffce00] transition-all duration-300"
-                >
-                  <div className="p-6">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl">{post.coverEmoji}</span>
-                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${postCat.bg} ${postCat.color}`}>
-                        {postCat.label}
-                      </span>
+        {relatedPosts.length > 0 && (
+          <section className="mt-16 pt-12 border-t border-gray-200">
+            <div className="text-center mb-10">
+              <span className="inline-block px-3 py-1 bg-[#ffce00]/20 text-[#9a3412] text-[11px] font-bold uppercase tracking-wider rounded-full mb-3">Keep Reading</span>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                Recommended Articles
+              </h2>
+              <p className="text-gray-600 mt-2 max-w-xl mx-auto">
+                Explore more guides to help you on your journey to studying in Germany
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              {relatedPosts.map(post => {
+                const category = post.categories[0];
+                return (
+                  <Link
+                    key={post.slug}
+                    href={`/blog/${post.slug}`}
+                    className="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-[#ffce00] transition-all duration-300"
+                  >
+                    {post.featuredImage && (
+                      <div className="aspect-[16/9] overflow-hidden">
+                        <img 
+                          src={post.featuredImage} 
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
+                    <div className="p-6">
+                      {category && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#ffce00]/20 text-[#9a3412] mb-3 inline-block">
+                          {category.name}
+                        </span>
+                      )}
+                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#dd0000] transition-colors line-clamp-2 mb-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                        {post.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                        {post.excerpt}
+                      </p>
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5" />
+                          {post.readTime} min read
+                        </span>
+                        <span className="text-[#dd0000] font-semibold group-hover:underline">
+                          Read more →
+                        </span>
+                      </div>
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#dd0000] transition-colors line-clamp-2 mb-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm line-clamp-2 mb-4">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5" />
-                        {post.readTime} min read
-                      </span>
-                      <span className="text-[#dd0000] font-semibold group-hover:underline">
-                        Read more →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+                  </Link>
+                );
+              })}
+            </div>
 
-          <div className="text-center mt-10">
-            <Link 
-              href="/blog" 
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#11132c] to-[#191f4a] text-white font-semibold rounded-xl hover:shadow-lg transition-all"
-            >
-              View All Articles
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </section>
+            <div className="text-center mt-10">
+              <Link 
+                href="/#guides" 
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#11132c] to-[#191f4a] text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+              >
+                View All Articles
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </section>
+        )}
 
       </div>
     </div>
