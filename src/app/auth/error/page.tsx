@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AlertCircle, ArrowLeft, RefreshCw, Trash2 } from 'lucide-react';
 
@@ -11,7 +11,6 @@ function AuthErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
   const [isClearing, setIsClearing] = useState(false);
-  const [countdown, setCountdown] = useState(3);
 
   const getErrorMessage = (errorType: string | null) => {
     switch (errorType) {
@@ -72,24 +71,6 @@ function AuthErrorContent() {
     }, 100);
   }, [clearAuthCookies]);
 
-  // Auto-redirect for OAuth cookie errors after countdown
-  useEffect(() => {
-    if (error === 'Configuration' || error === 'InvalidCheck' || error === 'OAuthCallback') {
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            handleClearAndRetry();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [error, handleClearAndRetry]);
-
   const isOAuthError = error === 'Configuration' || error === 'InvalidCheck' || error === 'OAuthCallback';
 
   return (
@@ -141,35 +122,6 @@ function AuthErrorContent() {
         }}>
           {getErrorMessage(error)}
         </p>
-
-        {/* Auto-redirect notice for OAuth errors */}
-        {isOAuthError && (
-          <div style={{
-            marginBottom: '24px',
-            padding: '16px 20px',
-            background: '#fef3c7',
-            borderRadius: '12px',
-            border: '1px solid #fde68a',
-          }}>
-            <p style={{
-              fontSize: '14px',
-              color: '#92400e',
-              lineHeight: '1.6',
-              margin: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
-            }}>
-              <RefreshCw style={{ width: '16px', height: '16px' }} />
-              {!isClearing ? (
-                <>Automatically fixing in {countdown} seconds...</>
-              ) : (
-                <>Clearing cookies and redirecting...</>
-              )}
-            </p>
-          </div>
-        )}
 
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
           {isOAuthError ? (
