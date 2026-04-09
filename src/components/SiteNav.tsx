@@ -330,8 +330,14 @@ export function SiteNav() {
           <a href="/#tools" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Wrench size={20} />Free AI Tools</a>
           <div className="sitenav-drawer-section">
             <span className="sitenav-drawer-section-title">Apps</span>
-            <Link href="/lesenlab-german-reading-app" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><span className="sitenav-drawer-emoji">📚</span>LesenLab – German Reading</Link>
-            <Link href="/einbuergerungstest-2026-app" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><span className="sitenav-drawer-emoji">🇩🇪</span>Einbürgerungstest 2026</Link>
+            <Link href="/lesenlab-german-reading-app" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}>
+              <Image src="/lesenlab/logo.png" alt="LesenLab" width={20} height={20} className="sitenav-drawer-app-icon" />
+              LesenLab – German Reading
+            </Link>
+            <Link href="/einbuergerungstest-2026-app" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}>
+              <Image src="/einbuergerungstest/logo.png" alt="Einbürgerungstest" width={20} height={20} className="sitenav-drawer-app-icon" />
+              Einbürgerungstest 2026
+            </Link>
           </div>
           <a href="/pricing" className="sitenav-drawer-link red" onClick={() => setDrawerOpen(false)}><Tag size={20} />Pricing</a>
           {isAuthenticated && <Link href="/dashboard" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><LayoutDashboard size={20} />Dashboard</Link>}
@@ -389,7 +395,15 @@ export function SiteNav() {
                     className="sitenav-apps-item"
                     onClick={() => setAppsDropdownOpen(false)}
                   >
-                    <div className="sitenav-apps-icon sitenav-apps-lesenlab">📚</div>
+                    <div className="sitenav-apps-icon">
+                      <Image
+                        src="/lesenlab/logo.png"
+                        alt="LesenLab"
+                        width={40}
+                        height={40}
+                        className="sitenav-apps-logo"
+                      />
+                    </div>
                     <div className="sitenav-apps-info">
                       <span className="sitenav-apps-title">LesenLab</span>
                       <span className="sitenav-apps-desc">German Reading App (A1–B2)</span>
@@ -400,7 +414,15 @@ export function SiteNav() {
                     className="sitenav-apps-item"
                     onClick={() => setAppsDropdownOpen(false)}
                   >
-                    <div className="sitenav-apps-icon sitenav-apps-einburg">🇩🇪</div>
+                    <div className="sitenav-apps-icon">
+                      <Image
+                        src="/einbuergerungstest/logo.png"
+                        alt="Einbürgerungstest"
+                        width={40}
+                        height={40}
+                        className="sitenav-apps-logo"
+                      />
+                    </div>
                     <div className="sitenav-apps-info">
                       <span className="sitenav-apps-title">Einbürgerungstest</span>
                       <span className="sitenav-apps-desc">German Citizenship Test</span>
