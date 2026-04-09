@@ -2,14 +2,16 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   GraduationCap, Bookmark, Zap, Loader2, Sparkles, Search, ArrowRight,
-  Crown, FileText, Briefcase, Award, Calculator, ChevronRight,
-  LayoutGrid, Heart, Settings, CheckCircle2, BookOpen
+  Crown, FileText, Briefcase, Award, Calculator, ChevronRight, LayoutGrid,
+  Heart, Settings, CheckCircle2, BookOpen, User, CreditCard, LogOut,
+  ExternalLink, Calendar, AlertCircle, Mail
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
+import { getPlanDisplayName, normalizePlanType } from '@/lib/plans';
 
 // Types
 interface ShortlistEntry {
@@ -19,6 +21,20 @@ interface ShortlistEntry {
   university: string;
   addedAt: string;
 }
+
+type Subscription = {
+  planType: string;
+  status: string;
+  currentPeriodEnd: string | null;
+  cancelAtPeriodEnd: boolean;
+};
+
+type AccountData = {
+  email: string;
+  displayCredits: number;
+  normalizedPlanType: 'free' | 'pro';
+  subscription: Subscription | null;
+};
 
 // Dashboard Component
 function DashboardContent() {
@@ -31,10 +47,11 @@ function DashboardContent() {
 
   // State
   const [shortlistEntries, setShortlistEntries] = useState<ShortlistEntry[]>([]);
-  const [subscription, setSubscription] = useState<{ planType: string } | null>(null);
-  const [aiCredits, setAiCredits] = useState<number | null>(null);
+  const [accountData, setAccountData] = useState<AccountData | null>(null);
   const [loading, setLoading] = useState(true);
   const [syncingCheckout, setSyncingCheckout] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'overview' | 'account'>('overview');
 
   // Load data
   useEffect(() => {
@@ -43,19 +60,17 @@ function DashboardContent() {
 
     const loadData = async () => {
       try {
-        const [shortlistRes, subscriptionRes, creditsRes] = await Promise.all([
+        const [shortlistRes, accountRes] = await Promise.all([
           fetch('/api/shortlist').catch(() => null),
-          fetch('/api/subscription').catch(() => null),
-          fetch('/api/credits/balance').catch(() => null)
+          fetch('/api/user/subscription').catch(() => null),
         ]);
 
         if (!cancelled) {
-          if (shortlistRes?.ok) setShortlistEntries((await shortlistRes.json()).entries || []);
-          if (subscriptionRes?.ok) setSubscription((await subscriptionRes.json()).subscription || { planType: 'free' });
-          if (creditsRes?.ok) {
-            const creditsData = await creditsRes.json();
-            if (!creditsData.hasUnlimited) setAiCredits(creditsData.credits);
+          if (shortlistRes?.ok) {
+            const data = await shortlistRes.json();
+            setShortlistEntries(data.entries || data.shortlists || []);
           }
+          if (accountRes?.ok) setAccountData(await accountRes.json());
         }
       } catch (err) {
         console.error('Dashboard load error:', err);
@@ -79,8 +94,8 @@ function DashboardContent() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(checkoutSessionId ? { sessionId: checkoutSessionId } : {}),
         });
-        const res = await fetch('/api/subscription');
-        if (res.ok) setSubscription((await res.json()).subscription || { planType: 'free' });
+        const res = await fetch('/api/user/subscription');
+        if (res.ok) setAccountData(await res.json());
         router.replace('/dashboard');
       } finally {
         setSyncingCheckout(false);
@@ -96,6 +111,19 @@ function DashboardContent() {
     }
   }, [status, router]);
 
+  const handleManageBilling = async () => {
+    setActionLoading(true);
+    try {
+      const res = await fetch('/api/stripe/customer-portal', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } catch {
+      alert('Failed to open billing portal');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -105,7 +133,14 @@ function DashboardContent() {
   }
 
   const userName = session?.user?.name?.split(' ')[0] || 'there';
-  const isPro = subscription?.planType === 'pro';
+  const rawPlanType = accountData?.subscription?.planType || 'free';
+  const planName = getPlanDisplayName(rawPlanType);
+  const normalizedPlanType = accountData?.normalizedPlanType || normalizePlanType(rawPlanType);
+  const isPro = normalizedPlanType === 'pro';
+  const aiCredits = accountData?.displayCredits ?? 3;
+  const billingDate = accountData?.subscription?.currentPeriodEnd
+    ? new Date(accountData.subscription.currentPeriodEnd).toLocaleDateString()
+    : null;
   const hasShortlist = shortlistEntries.length > 0;
 
   return (
@@ -195,7 +230,7 @@ function DashboardContent() {
                   <div className="w-11 h-11 rounded-xl bg-purple-50 flex items-center justify-center group-hover:bg-purple-100 transition-colors">
                     <Zap className="w-5 h-5 text-purple-600" />
                   </div>
-                  <span className="text-2xl font-bold text-gray-900">{aiCredits ?? (isPro ? '∞' : '3')}</span>
+                  <span className="text-2xl font-bold text-gray-900">{aiCredits}</span>
                 </div>
                 <p className="text-sm font-medium text-gray-600">AI Credits</p>
                 <p className="text-xs text-gray-400 mt-1">For AI generations</p>
@@ -420,6 +455,100 @@ function DashboardContent() {
                 <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-700">
                   Browse Guides <ArrowRight className="w-4 h-4" />
                 </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Account & Billing Section */}
+          <div className="mt-8 grid lg:grid-cols-2 gap-6">
+            {/* Account Details */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center">
+                  <User className="w-4 h-4 text-gray-600" />
+                </div>
+                <h2 className="font-semibold text-gray-900">Account Details</h2>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Full Name</p>
+                  <p className="text-gray-900 font-medium">{session?.user?.name || 'Not set'}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Email Address</p>
+                  <p className="text-gray-900 font-medium flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-gray-400" />
+                    {accountData?.email || session?.user?.email || 'Not set'}
+                  </p>
+                </div>
+                {billingDate && (
+                  <div className={`p-4 rounded-xl ${accountData?.subscription?.cancelAtPeriodEnd ? 'bg-amber-50 border border-amber-200' : 'bg-green-50 border border-green-200'}`}>
+                    <div className="flex items-center gap-2 mb-1">
+                      {accountData?.subscription?.cancelAtPeriodEnd ? (
+                        <AlertCircle className="w-4 h-4 text-amber-600" />
+                      ) : (
+                        <Calendar className="w-4 h-4 text-green-600" />
+                      )}
+                      <p className={`text-xs font-bold uppercase ${accountData?.subscription?.cancelAtPeriodEnd ? 'text-amber-700' : 'text-green-700'}`}>
+                        {accountData?.subscription?.cancelAtPeriodEnd ? 'Subscription Ends' : 'Next Renewal'}
+                      </p>
+                    </div>
+                    <p className={`font-bold ${accountData?.subscription?.cancelAtPeriodEnd ? 'text-amber-800' : 'text-green-800'}`}>
+                      {billingDate}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Subscription & Billing */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-red-50 flex items-center justify-center">
+                  <CreditCard className="w-4 h-4 text-red-600" />
+                </div>
+                <h2 className="font-semibold text-gray-900">Subscription & Billing</h2>
+              </div>
+              <div className="p-6 space-y-3">
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Current Plan</p>
+                    <p className="text-lg font-bold text-gray-900">{planName}</p>
+                  </div>
+                  <div className={`px-3 py-1.5 rounded-full text-xs font-bold ${isPro ? 'bg-amber-100 text-amber-700' : 'bg-gray-200 text-gray-600'}`}>
+                    {isPro ? 'Active' : 'Free Tier'}
+                  </div>
+                </div>
+
+                {isPro ? (
+                  <>
+                    <Link href="/subscription" className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors">
+                      <Settings className="w-4 h-4" />
+                      Manage Subscription
+                    </Link>
+                    <button
+                      onClick={handleManageBilling}
+                      disabled={actionLoading}
+                      className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                      {actionLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ExternalLink className="w-4 h-4" />}
+                      Open Billing Portal
+                    </button>
+                  </>
+                ) : (
+                  <Link href="/pricing" className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all">
+                    <Crown className="w-4 h-4" />
+                    Upgrade to Pro
+                  </Link>
+                )}
+
+                <button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white border border-gray-200 text-gray-500 rounded-xl font-medium hover:bg-gray-50 hover:text-red-600 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </button>
               </div>
             </div>
           </div>
