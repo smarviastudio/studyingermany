@@ -331,11 +331,11 @@ export function SiteNav() {
           <div className="sitenav-drawer-section">
             <span className="sitenav-drawer-section-title">Apps</span>
             <Link href="/lesenlab-german-reading-app" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}>
-              <Image src="/lesenlab/logo.png" alt="LesenLab" width={20} height={20} className="sitenav-drawer-app-icon" />
+              <Image src="/lesenlab/logo-ios.png" alt="LesenLab" width={20} height={20} className="sitenav-drawer-app-icon" />
               LesenLab – German Reading
             </Link>
             <Link href="/einbuergerungstest-2026-app" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}>
-              <Image src="/einbuergerungstest/logo.png" alt="Einbürgerungstest" width={20} height={20} className="sitenav-drawer-app-icon" />
+              <Image src="/einbuergerungstest/logo-ios.png" alt="Einbürgerungstest" width={20} height={20} className="sitenav-drawer-app-icon" />
               Einbürgerungstest 2026
             </Link>
           </div>
@@ -397,7 +397,7 @@ export function SiteNav() {
                   >
                     <div className="sitenav-apps-icon">
                       <Image
-                        src="/lesenlab/logo.png"
+                        src="/lesenlab/logo-ios.png"
                         alt="LesenLab"
                         width={40}
                         height={40}
@@ -416,7 +416,7 @@ export function SiteNav() {
                   >
                     <div className="sitenav-apps-icon">
                       <Image
-                        src="/einbuergerungstest/logo.png"
+                        src="/einbuergerungstest/logo-ios.png"
                         alt="Einbürgerungstest"
                         width={40}
                         height={40}
