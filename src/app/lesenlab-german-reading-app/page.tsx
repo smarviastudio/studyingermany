@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { SiteNav } from '@/components/SiteNav';
 import { 
   BookOpen, Headphones, Languages, Brain, GraduationCap, Sparkles,
-  CheckCircle2, ChevronRight, Apple, Smartphone, Tablet, Monitor, Glasses,
+  CheckCircle2, ChevronRight, Smartphone, Tablet, Monitor, Glasses,
   HelpCircle, ArrowRight, Star
 } from 'lucide-react';
 
@@ -189,7 +189,7 @@ export default function LesenLabPage() {
             {/* Left Content */}
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white/80 text-sm mb-6">
-                <Apple className="w-4 h-4" />
+                <Image src="/apple-icon.png" alt="Apple" width={16} height={16} className="invert" />
                 Available on iOS
               </div>
 
@@ -228,7 +228,7 @@ export default function LesenLabPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 px-8 py-4 bg-white text-[#0a0a1a] rounded-2xl font-bold text-lg hover:bg-[#ffce00] transition-all hover:scale-105 shadow-2xl"
               >
-                <Apple className="w-6 h-6" />
+                <Image src="/apple-icon.png" alt="Apple" width={24} height={24} />
                 Download on the App Store
               </a>
 
@@ -455,7 +455,7 @@ export default function LesenLabPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 px-6 py-3 bg-[#0a0a1a] text-white rounded-xl font-semibold hover:bg-[#1a1a2e] transition-colors"
               >
-                <Apple className="w-5 h-5" />
+                <Image src="/apple-icon.png" alt="Apple" width={20} height={20} className="invert" />
                 Download Free on App Store
                 <ArrowRight className="w-4 h-4" />
               </a>
@@ -554,7 +554,7 @@ export default function LesenLabPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 px-8 py-4 bg-white text-[#dd0000] rounded-2xl font-bold text-lg hover:bg-[#ffce00] hover:text-[#0a0a1a] transition-all hover:scale-105 shadow-2xl"
           >
-            <Apple className="w-6 h-6" />
+            <Image src="/apple-icon.png" alt="Apple" width={24} height={24} />
             Download on the App Store
           </a>
           <p className="text-white/60 text-sm mt-4">Available for iPhone, iPad, Mac & Vision Pro</p>
