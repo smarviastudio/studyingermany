@@ -341,7 +341,6 @@ export function SiteNav() {
           </div>
           <a href="/pricing" className="sitenav-drawer-link red" onClick={() => setDrawerOpen(false)}><Tag size={20} />Pricing</a>
           {isAuthenticated && <Link href="/dashboard" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><LayoutDashboard size={20} />Dashboard</Link>}
-          {isAuthenticated && <Link href="/profile" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><User size={20} />Account</Link>}
           {isAuthenticated && <Link href="/my-shortlist" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Bookmark size={20} />My Shortlist</Link>}
         </div>
         <div className="sitenav-drawer-auth">
@@ -482,7 +481,6 @@ export function SiteNav() {
                     <span>{aiCredits}</span>
                   </Link>
                 )}
-                <Link href="/profile" className="sitenav-btn-secondary">Account</Link>
                 <Link href="/dashboard" className="sitenav-btn-primary">Dashboard</Link>
                 <button onClick={() => signOut()} className="sitenav-btn-icon" title="Sign out">
                   <LogOut className="w-4 h-4" />
