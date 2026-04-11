@@ -29,7 +29,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/study-in-germany-from-pakistan`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/study-in-germany-from-india`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     
+    // App landing pages
+    { url: `${BASE_URL}/einbuergerungstest-2026-app`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/lesenlab-german-reading-app`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+
     // Legal pages
+    { url: `${BASE_URL}/impressum`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BASE_URL}/privacy-policy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BASE_URL}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
   ];
