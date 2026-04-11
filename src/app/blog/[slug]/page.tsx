@@ -447,6 +447,20 @@ export default async function BlogPostPage({ params }: Props) {
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+              { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
+              { '@type': 'ListItem', position: 3, name: post.title },
+            ],
+          }),
+        }}
+      />
       <SiteNav />
 
       <article className="blog-static-article max-w-3xl mx-auto px-6 pt-24 pb-10">
@@ -582,6 +596,20 @@ export default async function BlogPostPage({ params }: Props) {
               '@type': 'WebPage',
               '@id': `${SITE_URL}/blog/${slug}`,
             },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+              { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
+              { '@type': 'ListItem', position: 3, name: stripHtml(title) },
+            ],
           }),
         }}
       />

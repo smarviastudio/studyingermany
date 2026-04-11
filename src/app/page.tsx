@@ -168,7 +168,7 @@ export default function HomePage() {
   });
 
   const heroSlides = [
-    { main: 'Your journey to', highlight: 'Germany starts here' },
+    { main: 'Study in Germany —', highlight: '20,000+ Programs Found Here' },
     { main: 'Say goodbye to', highlight: 'expensive consultants' },
     { main: 'Find your program', highlight: 'in minutes, not months' },
     { main: 'Save thousands on', highlight: 'consultant fees' },
@@ -779,16 +779,18 @@ export default function HomePage() {
           <div className="hero-orb hero-orb-3" />
         </div>
         <div className="hero-content">
+          {/* Static SEO H1 — hidden visually, readable by crawlers */}
+          <h1 className="sr-only">Study in Germany — Search 20,000+ English-Taught Programs for International Students</h1>
           <div className="hero-badge animate-fade-up-1">
             <span className="hero-badge-dot" />
             <span>AI-POWERED · 20,000+ PROGRAMS</span>
           </div>
-          <h1 className="hero-title animate-fade-up-2">
+          <p className="hero-title animate-fade-up-2" aria-hidden="true">
             <span className="hero-slide-text" key={heroSlideIndex}>
               {heroSlides[heroSlideIndex].main}<br />
               <span className="hero-title-gradient">{heroSlides[heroSlideIndex].highlight}</span>
             </span>
-          </h1>
+          </p>
           <p className="hero-subtitle animate-fade-up-3">
             AI-powered search for 20,000+ German university programs. Save thousands on consultant fees and join 2,500+ students who found their path to Germany.
           </p>

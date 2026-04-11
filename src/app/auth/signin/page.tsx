@@ -24,9 +24,6 @@ function SignInPageContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -54,31 +51,6 @@ function SignInPageContent() {
       </div>
     );
   }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError(result.error);
-      } else {
-        router.push(callbackUrl);
-        router.refresh();
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleGoogleSignIn = async () => {
     if (googleLoading) return;
@@ -123,11 +95,18 @@ function SignInPageContent() {
 
         <div className="bg-white border border-[#e5e5e5] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] p-8">
           <h2 className="text-xl font-semibold mb-6">Sign in</h2>
+
+          {error && (
+            <div className="bg-[#fff5f5] border border-[#f4cece] text-[#b42318] px-4 py-3 rounded-xl text-sm mb-5">
+              {error}
+            </div>
+          )}
+
           <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={googleLoading}
-            className="w-full border border-[#e0e0e0] bg-white text-[#111] font-semibold py-3 rounded-2xl transition-all flex items-center justify-center gap-2 mb-5 hover:border-[#dd0000]/60 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full border border-[#e0e0e0] bg-white text-[#111] font-semibold py-3 rounded-2xl transition-all flex items-center justify-center gap-2 hover:border-[#dd0000]/60 hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {googleLoading ? (
               <>
@@ -141,62 +120,46 @@ function SignInPageContent() {
               </>
             )}
           </button>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {error && (
-              <div className="bg-[#fff5f5] border border-[#f4cece] text-[#b42318] px-4 py-3 rounded-xl text-sm">
-                {error}
-              </div>
-            )}
 
-            <div>
-              <label className="block text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">
-                Email address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#c5c5c5]" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#e0e0e0] bg-white text-sm focus:outline-none focus:border-[#dd0000] focus:ring-2 focus:ring-[#dd0000]/10"
-                  placeholder="you@example.com"
-                />
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-[#ebebeb]" />
+            <span className="text-xs text-[#b0b0b0] font-medium tracking-widest uppercase">or</span>
+            <div className="flex-1 h-px bg-[#ebebeb]" />
+          </div>
+
+          {/* Email sign-in — coming soon */}
+          <div className="relative rounded-2xl border border-dashed border-[#e0e0e0] bg-[#fafafa] overflow-hidden">
+            {/* Blurred fields preview */}
+            <div className="p-5 space-y-4 select-none pointer-events-none" aria-hidden="true">
+              <div>
+                <div className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">Email address</div>
+                <div className="w-full h-11 rounded-xl border border-[#e8e8e8] bg-white flex items-center px-4 blur-[2px]">
+                  <Mail className="w-4 h-4 text-[#d0d0d0] mr-2 shrink-0" />
+                  <div className="h-3 w-32 bg-[#e8e8e8] rounded-full" />
+                </div>
               </div>
+              <div>
+                <div className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">Password</div>
+                <div className="w-full h-11 rounded-xl border border-[#e8e8e8] bg-white flex items-center px-4 blur-[2px]">
+                  <Lock className="w-4 h-4 text-[#d0d0d0] mr-2 shrink-0" />
+                  <div className="h-3 w-24 bg-[#e8e8e8] rounded-full" />
+                </div>
+              </div>
+              <div className="h-11 w-full rounded-xl bg-[#e8e8e8] blur-[2px]" />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#c5c5c5]" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#e0e0e0] bg-white text-sm focus:outline-none focus:border-[#dd0000] focus:ring-2 focus:ring-[#dd0000]/10"
-                  placeholder="••••••••"
-                />
-              </div>
+            {/* Overlay badge */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+              <span className="inline-flex items-center gap-1.5 bg-[#111] text-white text-xs font-semibold px-3 py-1.5 rounded-full tracking-widest uppercase shadow-lg">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#dd0000] animate-pulse" />
+                Coming Soon
+              </span>
+              <p className="text-xs text-[#6b6b6b] text-center max-w-[160px] leading-relaxed">
+                Email sign-in is being rolled out soon
+              </p>
             </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#dd0000] hover:bg-[#c10000] disabled:opacity-60 text-white font-semibold py-3 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#dd0000]/30"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                'Sign In'
-              )}
-            </button>
-          </form>
+          </div>
 
           <div className="mt-6 text-sm text-[#6b6b6b] text-center">
             Don&apos;t have an account?{' '}
