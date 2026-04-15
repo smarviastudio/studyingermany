@@ -2,6 +2,25 @@ import Link from 'next/link';
 import { GraduationCap, Search, ArrowRight } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
 
+const FAQS = [
+  { q: 'Can international students do a bachelor\'s degree in Germany for free?', a: 'Yes — public universities in Germany charge no tuition fees for bachelor\'s programs, including for international students. You only pay a semester contribution of €150–350 per semester, which usually includes a public transport pass.' },
+  { q: 'What is Studienkolleg and do I need it?', a: 'Studienkolleg is a one-year preparatory course for international students whose school-leaving certificate is not directly recognized in Germany. After completing it, you take the Feststellungsprüfung exam. Students from most non-EU countries (including Pakistan, India, Nigeria) typically need it for bachelor\'s admission.' },
+  { q: 'What language do I need for a bachelor\'s in Germany?', a: 'Most bachelor\'s programs are taught in German, requiring at least B2/C1 level (TestDaF or DSH certificate). However, there are 300+ bachelor\'s programs taught in English. Even for English programs, learning basic German (A2/B1) helps with daily life and internships.' },
+  { q: 'How do I apply for a bachelor\'s program in Germany?', a: 'Applications go either directly to the university or through uni-assist (a centralized portal for international applicants). You\'ll need your school-leaving certificate, language certificate, passport, and a motivation letter. Some programs also require a portfolio or entrance exam.' },
+  { q: 'What are the admission deadlines for bachelor\'s programs in Germany?', a: 'For the winter semester (October start): apply by July 15. For the summer semester (April start): apply by January 15. Some universities have earlier deadlines for international applicants — always check the university\'s international office website.' },
+  { q: 'How long is a bachelor\'s degree in Germany?', a: 'Bachelor\'s degrees in Germany are typically 3 years (6 semesters, 180 ECTS) for most subjects, or 3.5–4 years for engineering and some science programs. The final semester includes a bachelor\'s thesis.' },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map(faq => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: { '@type': 'Answer', text: faq.a },
+  })),
+};
+
 export const metadata = buildPageMetadata({
   title: 'Bachelor\'s Programs in Germany - Guide for International Students',
   description: 'Find English-taught bachelor\'s programs in Germany. Learn about admission requirements, Studienkolleg, tuition fees, and how to apply as an international student.',
@@ -19,6 +38,7 @@ export const metadata = buildPageMetadata({
 export default function BachelorInGermanyPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', padding: '100px 24px 80px', color: '#fff' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
           <GraduationCap style={{ width: 48, height: 48, marginBottom: 20, opacity: 0.9 }} />
@@ -64,6 +84,23 @@ export default function BachelorInGermanyPage() {
             <Link href="/#hero" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#dd0000', fontWeight: 600, textDecoration: 'none' }}>
               Search Programs <ArrowRight style={{ width: 16, height: 16 }} />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section style={{ padding: '80px 24px', borderTop: '1px solid #e5e5e5' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#171717', margin: '0 0 32px', textAlign: 'center' }}>
+            Frequently Asked Questions
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {FAQS.map((faq) => (
+              <div key={faq.q} style={{ border: '1px solid #e5e5e5', borderRadius: 12, padding: '20px 24px' }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#171717', margin: '0 0 8px' }}>{faq.q}</h3>
+                <p style={{ fontSize: 15, color: '#525252', lineHeight: 1.7, margin: 0 }}>{faq.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

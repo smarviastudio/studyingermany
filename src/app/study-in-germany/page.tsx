@@ -2,6 +2,25 @@ import Link from 'next/link';
 import { GraduationCap, Euro, Globe, FileText, Plane, Briefcase, ArrowRight, CheckCircle, Search } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
 
+const FAQS = [
+  { q: 'Is studying in Germany really free?', a: 'Yes — public universities in Germany charge no tuition fees for bachelor\'s and master\'s programs, including for international students. You only pay a semester contribution of €150–350, which typically includes a public transport pass.' },
+  { q: 'Do I need to speak German to study in Germany?', a: 'Not necessarily. Over 2,000 programs are taught entirely in English. However, for German-taught programs you need at least B2/C1 German (TestDaF or DSH certificate). Even for English programs, basic German helps with daily life.' },
+  { q: 'What is a blocked account and how much do I need?', a: 'A blocked account (Sperrkonto) is a German bank account that proves you have enough funds to support yourself. For 2024/25 you need €11,904 deposited before your visa appointment. Each month €992 is released. Providers include Fintiba, Coracle, and Deutsche Bank.' },
+  { q: 'How long does it take to get a German student visa?', a: 'The German student visa process typically takes 6–12 weeks from your embassy appointment. Start early — book your appointment as soon as you receive your university admission letter. Required documents include the blocked account, health insurance, and proof of admission.' },
+  { q: 'Can I work while studying in Germany?', a: 'Yes. International students can work up to 120 full days (or 240 half-days) per year during their studies. Student jobs (Werkstudent) typically pay €12–18/hour. After graduation, you receive an 18-month job-seeker visa to find employment in Germany.' },
+  { q: 'What is uni-assist and do I need it?', a: 'Uni-assist is a centralized application service used by many German universities for international applicants. They verify your foreign credentials and forward your application. Not all universities use it — some accept direct applications. Check each university\'s website.' },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map(faq => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: { '@type': 'Answer', text: faq.a },
+  })),
+};
+
 export const metadata = buildPageMetadata({
   title: 'Study in Germany - Complete Guide for International Students',
   description: 'Complete guide to studying in Germany for international students. Learn about tuition-free universities, English-taught programs, student visa requirements, blocked accounts, and more.',
@@ -73,6 +92,7 @@ const RELATED_PAGES = [
 export default function StudyInGermanyPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* Hero */}
       <section style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)', padding: '100px 24px 80px', color: '#fff' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
@@ -220,6 +240,23 @@ export default function StudyInGermanyPage() {
                 <h3 style={{ fontSize: 15, fontWeight: 700, color: '#171717', margin: '0 0 4px' }}>{page.title}</h3>
                 <p style={{ fontSize: 13, color: '#737373', margin: 0 }}>{page.desc}</p>
               </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section style={{ padding: '80px 24px', background: '#fff', borderTop: '1px solid #e5e5e5' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#171717', margin: '0 0 32px', textAlign: 'center' }}>
+            Frequently Asked Questions
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {FAQS.map((faq) => (
+              <div key={faq.q} style={{ border: '1px solid #e5e5e5', borderRadius: 12, padding: '20px 24px' }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#171717', margin: '0 0 8px' }}>{faq.q}</h3>
+                <p style={{ fontSize: 15, color: '#525252', lineHeight: 1.7, margin: 0 }}>{faq.a}</p>
+              </div>
             ))}
           </div>
         </div>

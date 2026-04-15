@@ -25,7 +25,10 @@ function SignInPageContent() {
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
   const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -64,10 +67,35 @@ function SignInPageContent() {
     }
   };
 
+  const handleEmailSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (emailLoading) return;
+    setEmailLoading(true);
+    setError('');
+    
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError('Invalid email or password. Please try again.');
+        setEmailLoading(false);
+      } else if (result?.ok) {
+        router.push(callbackUrl);
+      }
+    } catch {
+      setError('Sign-in failed. Please try again.');
+      setEmailLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f7f7f3] text-[#171717]" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 px-6 py-16 items-center">
-        <div className="space-y-6">
+        <div className="space-y-6 order-2 lg:order-1">
           <Link href="/" className="inline-flex items-center gap-3">
             <img src="/logo_wp.png" alt="Students in Germany" className="h-12 w-auto" />
             <span className="text-sm font-semibold tracking-[0.15em] uppercase text-[#a3a3a3]">Students in Germany</span>
@@ -93,7 +121,7 @@ function SignInPageContent() {
           </div>
         </div>
 
-        <div className="bg-white border border-[#e5e5e5] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] p-8">
+        <div className="bg-white border border-[#e5e5e5] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] p-8 order-1 lg:order-2 w-full">
           <h2 className="text-xl font-semibold mb-6">Sign in</h2>
 
           {error && (
@@ -128,38 +156,59 @@ function SignInPageContent() {
             <div className="flex-1 h-px bg-[#ebebeb]" />
           </div>
 
-          {/* Email sign-in — coming soon */}
-          <div className="relative rounded-2xl border border-dashed border-[#e0e0e0] bg-[#fafafa] overflow-hidden">
-            {/* Blurred fields preview */}
-            <div className="p-5 space-y-4 select-none pointer-events-none" aria-hidden="true">
-              <div>
-                <div className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">Email address</div>
-                <div className="w-full h-11 rounded-xl border border-[#e8e8e8] bg-white flex items-center px-4 blur-[2px]">
-                  <Mail className="w-4 h-4 text-[#d0d0d0] mr-2 shrink-0" />
-                  <div className="h-3 w-32 bg-[#e8e8e8] rounded-full" />
-                </div>
+          {/* Email/Password Sign-in Form */}
+          <form onSubmit={handleEmailSignIn} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em] block">
+                Email address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="your@email.com"
+                  className="w-full h-11 rounded-xl border border-[#e0e0e0] bg-white pl-11 pr-4 text-sm focus:outline-none focus:border-[#dd0000] transition-colors"
+                />
               </div>
-              <div>
-                <div className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">Password</div>
-                <div className="w-full h-11 rounded-xl border border-[#e8e8e8] bg-white flex items-center px-4 blur-[2px]">
-                  <Lock className="w-4 h-4 text-[#d0d0d0] mr-2 shrink-0" />
-                  <div className="h-3 w-24 bg-[#e8e8e8] rounded-full" />
-                </div>
-              </div>
-              <div className="h-11 w-full rounded-xl bg-[#e8e8e8] blur-[2px]" />
             </div>
 
-            {/* Overlay badge */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-              <span className="inline-flex items-center gap-1.5 bg-[#111] text-white text-xs font-semibold px-3 py-1.5 rounded-full tracking-widest uppercase shadow-lg">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#dd0000] animate-pulse" />
-                Coming Soon
-              </span>
-              <p className="text-xs text-[#6b6b6b] text-center max-w-[160px] leading-relaxed">
-                Email sign-in is being rolled out soon
-              </p>
+            <div>
+              <label htmlFor="password" className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em] block">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="••••••••"
+                  className="w-full h-11 rounded-xl border border-[#e0e0e0] bg-white pl-11 pr-4 text-sm focus:outline-none focus:border-[#dd0000] transition-colors"
+                />
+              </div>
             </div>
-          </div>
+
+            <button
+              type="submit"
+              disabled={emailLoading}
+              className="w-full bg-[#dd0000] text-white font-semibold py-3 rounded-2xl transition-all hover:bg-[#b30000] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {emailLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign in with Email'
+              )}
+            </button>
+          </form>
 
           <div className="mt-6 text-sm text-[#6b6b6b] text-center">
             Don&apos;t have an account?{' '}

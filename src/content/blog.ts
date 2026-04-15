@@ -26,8 +26,8 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt: 'Everything you need to know about studying in Germany — from choosing a program to settling in. A step-by-step guide for international students.',
     category: 'guide',
     readTime: 12,
-    publishedAt: '2026-01-15',
-    updatedAt: '2026-02-10',
+    publishedAt: '2024-09-10',
+    updatedAt: '2025-03-15',
     coverEmoji: '🇩🇪',
     featured: true,
     body: `## Why Study in Germany?
@@ -145,7 +145,7 @@ Use our free AI-powered tools to begin your journey:
     excerpt: 'Step-by-step guide to applying for a German student visa — documents needed, blocked account, health insurance, and embassy appointment tips.',
     category: 'visa',
     readTime: 8,
-    publishedAt: '2026-01-20',
+    publishedAt: '2024-10-05',
     coverEmoji: '📋',
     featured: true,
     body: `## Do You Need a Student Visa?
@@ -265,7 +265,7 @@ Our AI tools can help you prepare:
     excerpt: 'Detailed breakdown of all costs — tuition, living expenses, insurance, and hidden fees. Plus money-saving tips for international students.',
     category: 'finance',
     readTime: 7,
-    publishedAt: '2026-02-01',
+    publishedAt: '2024-11-12',
     coverEmoji: '💰',
     body: `## The Big Picture
 
@@ -386,7 +386,7 @@ As an international student, you can:
     excerpt: 'Best resources, timeline, and strategies to learn German for university admission. Free and paid options compared.',
     category: 'tips',
     readTime: 6,
-    publishedAt: '2026-02-05',
+    publishedAt: '2024-12-03',
     coverEmoji: '🗣️',
     body: `## Do You Need German?
 
@@ -503,7 +503,7 @@ Even if your program is in English, you'll need German for:
     excerpt: 'From WG life to Mensa food, semester parties to study culture — an honest look at what to expect as an international student in Germany.',
     category: 'life',
     readTime: 6,
-    publishedAt: '2026-02-10',
+    publishedAt: '2025-01-18',
     coverEmoji: '🎓',
     body: `## A Typical Day
 
@@ -650,7 +650,7 @@ One of the best perks of being a student in Germany:
     excerpt: 'Complete guide to opening a blocked account for your German student visa — providers compared, step-by-step process, and common mistakes to avoid.',
     category: 'finance',
     readTime: 5,
-    publishedAt: '2026-02-12',
+    publishedAt: '2025-02-07',
     coverEmoji: '🏦',
     body: `## What Is a Blocked Account?
 
@@ -759,7 +759,7 @@ A: For visa renewal, you may need to show proof of funds again. Some students to
     excerpt: 'Comprehensive list of scholarships available for international students — DAAD, Deutschlandstipendium, foundation scholarships, and how to apply.',
     category: 'finance',
     readTime: 7,
-    publishedAt: '2026-02-15',
+    publishedAt: '2025-03-22',
     coverEmoji: '🏆',
     featured: true,
     body: `## Overview

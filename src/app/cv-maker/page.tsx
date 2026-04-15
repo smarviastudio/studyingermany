@@ -9,7 +9,7 @@ import {
   ArrowLeft, Download, Sparkles, Plus, Trash2,
   GraduationCap, Loader2, Check, Palette, Camera,
   ChevronRight, X, Wand2, Printer, Save, Type, AArrowUp, User, LogIn, FolderOpen, Crown, FileText,
-  ChevronDown, CheckCircle2
+  ChevronDown, CheckCircle2, Eye, EyeOff
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
@@ -46,6 +46,10 @@ const SAMPLE: CVData = {
   skills: ['JavaScript', 'TypeScript', 'React', 'Next.js', 'Python', 'Java', 'SQL', 'Git', 'Docker', 'Machine Learning'],
   customSections: [],
   sectionTitles: { summary: 'PROFESSIONAL SUMMARY', experience: 'WORK EXPERIENCE', skills: 'SKILLS', education: 'EDUCATION' },
+  nationality: 'German',
+  dateOfBirth: '15/03/1998',
+  gender: 'Female',
+  linkedin: 'linkedin.com/in/maria-schmidt',
 };
 
 /* ── TEMPLATES — Germany-relevant for education & jobs ── */
@@ -66,7 +70,9 @@ const TEMPLATES: CVTemplate[] = TEMPLATE_LIBRARY.map((tpl) => ({
   layout: tpl.layout,
   font: formatFontFamily(tpl.fonts),
 }));
-const COLORS = ['#2563EB', '#003399', '#1E3A5F', '#7C3AED', '#0F766E', '#DC2626', '#EA580C', '#CA8A04', '#475569', '#DB2777'];
+const COLORS = ['#2563EB', '#003399', '#1E3A5F', '#7C3AED', '#0F766E', '#DC2626', '#EA580C', '#CA8A04', '#475569', '#DB2777', '#38BDF8', '#34D399', '#FBBF24', '#F472B6', '#A78BFA', '#2DD4BF', '#FB923C', '#F87171', '#818CF8', '#4ADE80'];
+const SIDEBAR_COLORS = ['#111827', '#1E293B', '#0F172A', '#1A1A2E', '#1B2A4A', '#1A3C5E', '#1E3A5F', '#2D3748', '#1C1C3A', '#3B0764', '#701A75', '#7F1D1D', '#14532D', '#134E4A', '#0C4A6E'];
+const SIDEBAR_LAYOUTS = ['dark-sidebar', 'split-color', 'professional-sidebar'];
 
 /* ══════════════════════════════════════════════════════════
    Mini CV preview for template picker (static, uses SAMPLE)
@@ -85,8 +91,11 @@ function MiniCV({ tpl }: { tpl: CVTemplate }) {
     <div style={{ fontSize: 5.5, fontWeight: 800, textTransform: 'uppercase' as const, letterSpacing: 0.8, color: '#111', marginBottom: 3, marginTop: 6 }}>{t}</div>
   );
   const Pic = ({ sz = 28, bg = '#E5E7EB', tc = '#999', sq = false }: { sz?: number; bg?: string; tc?: string; sq?: boolean }) => (
-    <div style={{ width: sz, height: sz, borderRadius: sq ? 4 : 999, background: bg, border: `1.5px solid ${a}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-      <span style={{ fontSize: sz * 0.3, color: tc, fontWeight: 700 }}>MS</span>
+    <div style={{ width: sz, height: sz, borderRadius: sq ? 4 : 999, background: bg, border: `1.5px solid ${a}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
+      <svg viewBox="0 0 100 100" width={sz * 0.85} height={sz * 0.85} style={{ display: 'block' }}>
+        <circle cx="50" cy="36" r="18" fill={tc} opacity="0.7" />
+        <ellipse cx="50" cy="82" rx="28" ry="22" fill={tc} opacity="0.5" />
+      </svg>
     </div>
   );
   const Exp = ({ n = 2 }: { n?: number }) => (
@@ -139,27 +148,92 @@ function MiniCV({ tpl }: { tpl: CVTemplate }) {
     </div>
   );
 
-  /* ── 1. EUROPASS — blue band header + two-col body ── */
+  /* ── 1. EU CLASSIC — European format with blue left stripe ── */
   if (tpl.layout === 'europass') return (
-    <div style={{ width: W, height: H, fontFamily: tpl.font, background: '#fff', overflow: 'hidden' }}>
-      <div style={{ background: a, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
-        <Pic sz={32} bg="rgba(255,255,255,0.15)" tc="#fff" />
-        <div>
-          <div style={{ fontSize: 10, fontWeight: 700, color: '#fff' }}>{d.name}</div>
-          <div style={{ fontSize: 4.5, color: 'rgba(255,255,255,0.8)' }}>{d.title}</div>
-          <div style={{ fontSize: 4, color: 'rgba(255,255,255,0.55)' }}>{d.email} · {d.phone}</div>
+    <div style={{ width: W, height: H, fontFamily: 'Arial, sans-serif', background: '#fff', overflow: 'hidden', display: 'flex' }}>
+      <div style={{ width: 4, background: a, flexShrink: 0 }} />
+      <div style={{ flex: 1, padding: '6px 8px 4px 8px' }}>
+        {/* Header */}
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#111', marginBottom: 1 }}>{d.name}</div>
+        <div style={{ fontSize: 3.2, color: '#6B7280', lineHeight: 1.5, marginBottom: 1 }}>
+          <span style={{ fontWeight: 600 }}>Nationality:</span> {d.nationality} &nbsp;&nbsp; <span style={{ fontWeight: 600 }}>DOB:</span> {d.dateOfBirth} &nbsp;&nbsp; <span style={{ fontWeight: 600 }}>Gender:</span> {d.gender}
+        </div>
+        <div style={{ fontSize: 3.2, color: '#6B7280', marginBottom: 1 }}>✉ {d.email} &nbsp;&nbsp; ☎ {d.phone}</div>
+        <div style={{ borderBottom: `1px solid ${a}30`, marginBottom: 3, marginTop: 2 }} />
+        {/* About Me */}
+        <div style={{ fontSize: 5, fontWeight: 800, color: a, textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 1.5, borderBottom: `0.5px solid ${a}30`, paddingBottom: 1 }}>About Me</div>
+        <div style={{ fontSize: 3.5, color: '#374151', lineHeight: 1.4, marginBottom: 3 }}>{d.summary.slice(0, 100)}…</div>
+        {/* Work Experience */}
+        <div style={{ fontSize: 5, fontWeight: 800, color: a, textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 1.5, borderBottom: `0.5px solid ${a}30`, paddingBottom: 1 }}>Work Experience</div>
+        {d.experience.slice(0, 2).map((e, i) => (
+          <div key={i} style={{ marginBottom: 2.5 }}>
+            <div style={{ fontWeight: 700, fontSize: 4.5, color: a }}>{e.role}</div>
+            <div style={{ fontSize: 3.5, color: '#6B7280', fontStyle: 'italic' as const }}>{e.company} [ {e.period} ]</div>
+            <div style={{ fontSize: 3.2, color: '#6B7280', marginTop: 0.5 }}>City: Munich &nbsp; Country: Germany</div>
+            {e.bullets.slice(0, 2).map((b, j) => <div key={j} style={{ fontSize: 3.3, color: '#374151', marginLeft: 5, lineHeight: 1.3 }}>· {b.slice(0, 60)}…</div>)}
+          </div>
+        ))}
+        {/* Education */}
+        <div style={{ fontSize: 5, fontWeight: 800, color: a, textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 1.5, marginTop: 2, borderBottom: `0.5px solid ${a}30`, paddingBottom: 1 }}>Education and Training</div>
+        {d.education.slice(0, 2).map((e, i) => (
+          <div key={i} style={{ marginBottom: 2 }}>
+            <div style={{ fontWeight: 700, fontSize: 4, color: a }}>{e.degree}</div>
+            <div style={{ fontSize: 3.5, color: '#6B7280', fontStyle: 'italic' as const }}>{e.school}</div>
+            <div style={{ fontSize: 3.2, color: '#6B7280' }}>City: Munich &nbsp; Country: Germany</div>
+          </div>
+        ))}
+        {/* Skills */}
+        <div style={{ fontSize: 5, fontWeight: 800, color: a, textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 1.5, marginTop: 2, borderBottom: `0.5px solid ${a}30`, paddingBottom: 1 }}>Skills</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 2 }}>
+          {d.skills.slice(0, 6).map((s, i) => <span key={i} style={{ fontSize: 3.3, color: '#374151' }}>• {s}</span>)}
         </div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 70px', padding: '4px 10px 4px 12px', gap: 8 }}>
-        <div>
-          <Sec t="Personal Statement" />
-          <div style={{ fontSize: 4.5, color: '#374151', lineHeight: 1.4 }}>{d.summary.slice(0, 90)}…</div>
-          <Sec t="Work Experience" /><Exp n={2} />
+    </div>
+  );
+
+  /* ── EU PHOTO — European-style with photo header ── */
+  if (tpl.layout === 'eu-photo') return (
+    <div style={{ width: W, height: H, fontFamily: 'Arial, sans-serif', background: '#fff', overflow: 'hidden', display: 'flex' }}>
+      <div style={{ width: 4, background: a, flexShrink: 0 }} />
+      <div style={{ flex: 1, padding: '6px 8px 4px 8px' }}>
+        {/* Header with photo */}
+        <div style={{ display: 'flex', gap: 7, alignItems: 'flex-start', marginBottom: 3, paddingBottom: 3, borderBottom: `1px solid ${a}25` }}>
+          <Pic sz={30} bg={`${a}15`} tc={a} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#111' }}>{d.name}</div>
+            <div style={{ fontSize: 4, color: a, fontWeight: 600, marginBottom: 1 }}>{d.title}</div>
+            <div style={{ fontSize: 3.2, color: '#6B7280', lineHeight: 1.5 }}>
+              ✉ {d.email} &nbsp; ☎ {d.phone}
+            </div>
+            <div style={{ fontSize: 3.2, color: '#6B7280', lineHeight: 1.5 }}>
+              <span style={{ fontWeight: 600 }}>Nationality:</span> {d.nationality} &nbsp; <span style={{ fontWeight: 600 }}>DOB:</span> {d.dateOfBirth}
+            </div>
+          </div>
         </div>
-        <div style={{ borderLeft: '1px solid #E5E7EB', paddingLeft: 7 }}>
-          <Sec t="Education" /><Edu />
-          <Sec t="Skills" />
-          {d.skills.slice(0, 5).map((s, i) => <div key={i} style={{ fontSize: 4, color: '#374151' }}>• {s}</div>)}
+        {/* About Me */}
+        <div style={{ fontSize: 5, fontWeight: 800, color: a, textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 1.5, borderBottom: `0.5px solid ${a}30`, paddingBottom: 1 }}>About Me</div>
+        <div style={{ fontSize: 3.5, color: '#374151', lineHeight: 1.4, marginBottom: 3 }}>{d.summary.slice(0, 90)}…</div>
+        {/* Work Experience */}
+        <div style={{ fontSize: 5, fontWeight: 800, color: a, textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 1.5, borderBottom: `0.5px solid ${a}30`, paddingBottom: 1 }}>Work Experience</div>
+        {d.experience.slice(0, 2).map((e, i) => (
+          <div key={i} style={{ marginBottom: 2.5 }}>
+            <div style={{ fontWeight: 700, fontSize: 4.5, color: a }}>{e.role}</div>
+            <div style={{ fontSize: 3.5, color: '#6B7280', fontStyle: 'italic' as const }}>{e.company} [ {e.period} ]</div>
+            {e.bullets.slice(0, 1).map((b, j) => <div key={j} style={{ fontSize: 3.3, color: '#374151', marginLeft: 5 }}>· {b.slice(0, 55)}…</div>)}
+          </div>
+        ))}
+        {/* Education */}
+        <div style={{ fontSize: 5, fontWeight: 800, color: a, textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 1.5, marginTop: 1, borderBottom: `0.5px solid ${a}30`, paddingBottom: 1 }}>Education</div>
+        {d.education.slice(0, 2).map((e, i) => (
+          <div key={i} style={{ marginBottom: 1.5 }}>
+            <div style={{ fontWeight: 700, fontSize: 4, color: a }}>{e.degree}</div>
+            <div style={{ fontSize: 3.5, color: '#6B7280', fontStyle: 'italic' as const }}>{e.school}</div>
+          </div>
+        ))}
+        {/* Skills */}
+        <div style={{ fontSize: 5, fontWeight: 800, color: a, textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 1.5, marginTop: 1, borderBottom: `0.5px solid ${a}30`, paddingBottom: 1 }}>Skills</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 2 }}>
+          {d.skills.slice(0, 5).map((s, i) => <span key={i} style={{ fontSize: 3.3, color: '#374151' }}>• {s}</span>)}
         </div>
       </div>
     </div>
@@ -596,6 +670,66 @@ function MiniCV({ tpl }: { tpl: CVTemplate }) {
     </div>
   );
 
+  /* ── PROFESSIONAL SIDEBAR — dark teal sidebar with photo, white content ── */
+  if (tpl.layout === 'professional-sidebar') return (
+    <div style={{ width: W, height: H, display: 'flex', fontFamily: tpl.font, overflow: 'hidden' }}>
+      <div style={{ width: 72, background: a, padding: '10px 6px', display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 5 }}>
+        <div style={{ fontSize: 9, fontWeight: 900, color: '#fff', textTransform: 'uppercase' as const, letterSpacing: 0.5, textAlign: 'center' as const, lineHeight: 1.2, marginBottom: 2 }}>{d.name}</div>
+        <div style={{ fontSize: 4, color: 'rgba(255,255,255,0.7)', textAlign: 'center' as const }}>{d.title}</div>
+        <Pic sz={32} bg="rgba(255,255,255,0.15)" tc="#fff" />
+        <div style={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: 4, marginTop: 2 }}>
+          {[d.email, d.phone, d.location].map((v, i) => <div key={i} style={{ fontSize: 3.2, color: 'rgba(255,255,255,0.5)', marginBottom: 1.5, display: 'flex', alignItems: 'center', gap: 2 }}>• {v}</div>)}
+        </div>
+        <div style={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: 4 }}>
+          <div style={{ fontSize: 4.5, fontWeight: 700, color: '#fff', textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 3 }}>Skills</div>
+          <BarsDark n={4} />
+        </div>
+        <div style={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: 4 }}>
+          <div style={{ fontSize: 4.5, fontWeight: 700, color: '#fff', textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 3 }}>Languages</div>
+          {['English', 'Japanese', 'Chinese'].map((lang, i) => <div key={i} style={{ fontSize: 3.5, color: 'rgba(255,255,255,0.6)', marginBottom: 1 }}>• {lang}</div>)}
+        </div>
+      </div>
+      <div style={{ flex: 1, padding: '8px 10px', background: '#fff' }}>
+        <Sec t="Objective" />
+        <div style={{ fontSize: 4.5, color: '#374151', lineHeight: 1.4 }}>{d.summary.slice(0, 75)}…</div>
+        <Sec t="Education" /><Edu />
+        <Sec t="Experience" /><Exp n={2} />
+        <Sec t="Honors & Awards" />
+        <div style={{ fontSize: 4, color: '#374151' }}>• Dean&apos;s List 2022–2023</div>
+      </div>
+    </div>
+  );
+
+  /* ── CORPORATE BANNER — teal header with photo, two-column body ── */
+  if (tpl.layout === 'corporate-banner') return (
+    <div style={{ width: W, height: H, fontFamily: tpl.font, background: '#fff', overflow: 'hidden' }}>
+      <div style={{ background: a, padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <Pic sz={34} bg="rgba(255,255,255,0.15)" tc="#fff" />
+        <div>
+          <div style={{ fontSize: 10, fontWeight: 900, color: '#fff', textTransform: 'uppercase' as const, letterSpacing: 0.5 }}>{d.name}</div>
+          <div style={{ fontSize: 5, color: 'rgba(255,255,255,0.8)' }}>{d.title}</div>
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '68px 1fr', height: 'calc(100% - 54px)' }}>
+        <div style={{ padding: '6px 5px', background: '#f8f8f8', borderRight: '1px solid #e5e7eb' }}>
+          {[d.email, d.phone, d.location].map((v, i) => <div key={i} style={{ fontSize: 3.2, color: '#6B7280', marginBottom: 2, display: 'flex', alignItems: 'center', gap: 2 }}>• {v}</div>)}
+          <div style={{ fontSize: 4.5, fontWeight: 700, color: a, textTransform: 'uppercase' as const, marginTop: 5, marginBottom: 3, borderBottom: `1px solid ${a}40`, paddingBottom: 2 }}>Skills</div>
+          {d.skills.slice(0, 4).map((s, i) => <div key={i} style={{ fontSize: 3.5, color: '#374151', marginBottom: 1 }}>• {s}</div>)}
+          <div style={{ fontSize: 4.5, fontWeight: 700, color: a, textTransform: 'uppercase' as const, marginTop: 5, marginBottom: 3, borderBottom: `1px solid ${a}40`, paddingBottom: 2 }}>Languages</div>
+          {['English', 'Japanese', 'Chinese'].map((lang, i) => <div key={i} style={{ fontSize: 3.5, color: '#374151', marginBottom: 1 }}>• {lang}</div>)}
+        </div>
+        <div style={{ padding: '6px 10px' }}>
+          <Sec t="Objective" />
+          <div style={{ fontSize: 4.5, color: '#374151', lineHeight: 1.4 }}>{d.summary.slice(0, 70)}…</div>
+          <Sec t="Education" /><Edu />
+          <Sec t="Experience" /><Exp n={2} />
+          <Sec t="Activities" />
+          <div style={{ fontSize: 4, color: '#374151' }}>• Member of US Ambassador · 2014–2016</div>
+        </div>
+      </div>
+    </div>
+  );
+
   /* ── DEFAULT fallback ── */
   return (
     <div style={{ width: W, height: H, fontFamily: tpl.font, background: '#fff', padding: '14px 16px', overflow: 'hidden' }}>
@@ -624,6 +758,7 @@ function CVMakerContent() {
   const [tplId, setTplId] = useState('professional');
   const [planType, setPlanType] = useState('free');
   const [accent, setAccent] = useState('#2563EB');
+  const [sidebarColor, setSidebarColor] = useState('#111827');
   const [fontFamily, setFontFamily] = useState('Inter');
   const [fontSize, setFontSize] = useState<'small' | 'normal' | 'large'>('normal');
   const [textColor, setTextColor] = useState('#111827');
@@ -643,6 +778,7 @@ function CVMakerContent() {
   const [saveMessage, setSaveMessage] = useState('');
   const [user, setUser] = useState<any>(null);
   const [mobileTab, setMobileTab] = useState<'design' | 'preview'>('design');
+  const [hiddenFields, setHiddenFields] = useState<Record<string, boolean>>({});
   
   // Program selection states
   const [shortlist, setShortlist] = useState<ShortlistItem[]>([]);
@@ -1044,7 +1180,7 @@ function CVMakerContent() {
               <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Let AI write your CV</h3>
               <p style={{ fontSize: 14, color: '#666', margin: 0, lineHeight: 1.5 }}>Tell us about yourself and AI generates professional content for every section.</p>
             </div>
-            <button onClick={() => { setPhase('editor'); setTimeout(() => setShowAI(true), 400); }} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 24px', borderRadius: 12, background: '#dd0000', color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)', flexShrink: 0 }}
+            <button onClick={() => { if (!session) { window.location.href = '/auth/signin?callbackUrl=' + encodeURIComponent(window.location.href); return; } setPhase('editor'); setTimeout(() => setShowAI(true), 400); }} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 24px', borderRadius: 12, background: '#dd0000', color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)', flexShrink: 0 }}
               onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
               <Sparkles className="w-5 h-5" /> Generate with AI
@@ -1052,14 +1188,14 @@ function CVMakerContent() {
           </div>
 
           {/* Template Grid */}
-          <div className="cvmaker-template-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16, paddingBottom: 100 }}>
+          <div className="cvmaker-template-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16, paddingBottom: 100 }}>
             {TEMPLATES.map((t, idx) => {
               const isPremium = !canAccessCvTemplate(planType, idx);
               const accessLabel = getTemplateAccessLabel(idx);
               return (
                 <button key={t.id} onClick={() => {
                   setTplId(t.id); setAccent(t.accent);
-                }} className="cv-template-card" style={{ position: 'relative', textAlign: 'left', borderRadius: 16, overflow: 'hidden', border: `2px solid ${isPremium ? 'rgba(234,179,8,0.4)' : tplId === t.id ? '#dd0000' : '#ebebeb'}`, background: '#fff', cursor: 'pointer', transition: 'all 0.3s', boxShadow: tplId === t.id && !isPremium ? '0 8px 24px rgba(221,0,0,0.15)' : 'none' }}>
+                }} className="cv-template-card" style={{ position: 'relative', textAlign: 'left', borderRadius: 16, overflow: 'hidden', border: `2px solid ${tplId === t.id ? (isPremium ? '#f59e0b' : '#dd0000') : isPremium ? 'rgba(234,179,8,0.4)' : '#ebebeb'}`, background: '#fff', cursor: 'pointer', transition: 'all 0.3s', boxShadow: tplId === t.id ? (isPremium ? '0 8px 24px rgba(245,158,11,0.2)' : '0 8px 24px rgba(221,0,0,0.15)') : 'none' }}>
                   <div style={{ background: '#fff', overflow: 'hidden', display: 'flex', justifyContent: 'center', height: 180, position: 'relative' }}>
                     <MiniCV tpl={t} />
                     {isPremium && (
@@ -1091,7 +1227,7 @@ function CVMakerContent() {
                         )}
                     </div>
                   </div>
-                  {tplId === t.id && !isPremium && <div style={{ position: 'absolute', top: 12, right: 12, width: 28, height: 28, borderRadius: 999, background: '#dd0000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(221,0,0,0.3)' }}><Check className="w-4 h-4" style={{ color: '#fff' }} /></div>}
+                  {tplId === t.id && <div style={{ position: 'absolute', top: 12, right: 12, width: 28, height: 28, borderRadius: 999, background: isPremium ? 'linear-gradient(135deg,#f59e0b,#d97706)' : '#dd0000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: isPremium ? '0 4px 12px rgba(245,158,11,0.4)' : '0 4px 12px rgba(221,0,0,0.3)' }}><Check className="w-4 h-4" style={{ color: '#fff' }} /></div>}
                 </button>
               );
             })}
@@ -1099,12 +1235,15 @@ function CVMakerContent() {
         </div>
 
         {/* Sticky bottom bar */}
-        <div style={{ position: 'sticky', bottom: 0, zIndex: 30, borderTop: '1px solid #e5e5e5', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)' }}>
+        <div style={{ position: 'sticky', bottom: 0, zIndex: 30, borderTop: `1px solid ${isPremiumTemplate ? 'rgba(245,158,11,0.3)' : '#e5e5e5'}`, background: isPremiumTemplate ? 'rgba(255,252,235,0.97)' : 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-            <div style={{ fontSize: 14, color: '#999' }}>Selected: <span style={{ color: '#111', fontWeight: 700 }}>{tpl.name}</span></div>
-            <button onClick={() => setPhase('editor')} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', borderRadius: 12, background: '#dd0000', color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)' }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <div style={{ fontSize: 14, color: '#999' }}>Selected: <span style={{ color: '#111', fontWeight: 700 }}>{tpl.name}</span>{isPremiumTemplate && <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, color: '#d97706', background: 'rgba(245,158,11,0.12)', padding: '2px 8px', borderRadius: 20 }}>✦ Pro template</span>}</div>
+              {isPremiumTemplate && <div style={{ fontSize: 12, color: '#a16207' }}>You can edit freely — upgrade to Pro to download as PDF</div>}
+            </div>
+            <button onClick={() => setPhase('editor')} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', borderRadius: 12, background: isPremiumTemplate ? 'linear-gradient(135deg,#f59e0b,#d97706)' : '#dd0000', color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: isPremiumTemplate ? '0 4px 16px rgba(245,158,11,0.3)' : '0 4px 16px rgba(221,0,0,0.2)' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; }}>
               Start editing <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -1124,6 +1263,28 @@ function CVMakerContent() {
     // Use selected font family or fall back to template font
     const effectiveFont = fontFamily || 'Inter, sans-serif';
     const effectiveTextColor = textColor || '#111827';
+
+    const isFieldHidden = (field: string) => hiddenFields[field] === true;
+    const toggleField = (field: string) => setHiddenFields(prev => ({ ...prev, [field]: !prev[field] }));
+    const FieldToggle = ({ field, children }: { field: string; children: React.ReactNode }) => {
+      const hidden = isFieldHidden(field);
+      if (forPrint && hidden) return null;
+      return (
+        <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 2, opacity: hidden ? 0.35 : 1, textDecoration: hidden ? 'line-through' : 'none' }} className={forPrint ? '' : 'group/field'}>
+          {children}
+          {!forPrint && (
+            <button
+              onClick={(e) => { e.stopPropagation(); toggleField(field); }}
+              className="opacity-0 group-hover/field:opacity-100 transition-opacity"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'inline-flex', alignItems: 'center', flexShrink: 0 }}
+              title={hidden ? 'Show this field' : 'Hide this field'}
+            >
+              {hidden ? <EyeOff className="w-2.5 h-2.5 text-red-400" /> : <Eye className="w-2.5 h-2.5 text-gray-400" />}
+            </button>
+          )}
+        </span>
+      );
+    };
 
     const SH = ({ children, id }: { children: string; id: string }) => (
       <div style={{ fontSize: 10 * sizeMultiplier, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: 1, color: accent, borderBottom: `2px solid ${accent}`, paddingBottom: 4, marginBottom: 10, marginTop: 18, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1322,30 +1483,133 @@ function CVMakerContent() {
       );
     }
 
-    // ── EUROPASS — accent band header + two-col body
+    // ── EUROPASS — official EU format with blue left stripe
     if (tpl.layout === 'europass') {
+      const EuroSH = ({ children, id }: { children: React.ReactNode; id: string }) => (
+        <div id={`section-${id}`} style={{ fontSize: 14, fontWeight: 800, color: accent, textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 18, marginBottom: 8, paddingBottom: 4, borderBottom: `1px solid ${accent}40`, textDecoration: 'underline', textUnderlineOffset: 4 }}>
+          {children}
+        </div>
+      );
       return (
-        <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: effectiveFont, fontSize: 12 }} className="bg-white shadow-2xl">
-          <div style={{ background: accent, padding: '20px 28px', display: 'flex', alignItems: 'center', gap: 16 }}>
-            {photoEl}
-            <div>
-              {forPrint ? <div style={{ fontSize: 22, fontWeight: 700, color: '#fff' }}>{cv.name}</div> : <E v={cv.name} onChange={v => up('name', v)} k="name" cls="text-[22px] font-bold block" sty={{ color: '#fff' }} ph="Your Name" />}
-              {forPrint ? <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', marginTop: 2 }}>{cv.title}</div> : <E v={cv.title} onChange={v => up('title', v)} k="title" cls="text-[12px] block mt-0.5" sty={{ color: 'rgba(255,255,255,0.8)' }} ph="Job Title" />}
-              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)', marginTop: 4, display: 'flex', gap: 8 }}>
-                {forPrint ? <span>{cv.email} · {cv.phone} · {cv.location}</span> : <><E v={cv.email} onChange={v => up('email', v)} k="email" cls="text-[10px]" ph="email" /><span>·</span><E v={cv.phone} onChange={v => up('phone', v)} k="phone" cls="text-[10px]" ph="phone" /><span>·</span><E v={cv.location} onChange={v => up('location', v)} k="loc" cls="text-[10px]" ph="location" /></>}
+        <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: 'Arial, sans-serif', fontSize: 12, display: 'flex' }} className="bg-white shadow-2xl">
+          {/* Blue left stripe */}
+          <div style={{ width: 12, background: accent, flexShrink: 0 }} />
+          <div style={{ flex: 1, padding: '28px 32px 28px 24px' }}>
+            {/* Header: name */}
+            <div style={{ marginBottom: 6 }}>
+              {forPrint ? <div style={{ fontSize: 28, fontWeight: 700, color: '#111' }}>{cv.name}</div> : <E v={cv.name} onChange={v => up('name', v)} k="name" cls="text-[28px] font-bold block text-gray-900" ph="Your Name" />}
+            </div>
+            {/* Personal info row */}
+            <div style={{ fontSize: 10, color: '#374151', marginBottom: 4, display: 'flex', flexWrap: 'wrap', gap: 12, lineHeight: 1.7, alignItems: 'center' }}>
+              <FieldToggle field="nationality">
+                <strong>Nationality:</strong>&nbsp;{forPrint ? (cv.nationality || 'N/A') : <E v={cv.nationality || ''} onChange={v => setCv(p => ({ ...p, nationality: v }))} k="nationality" cls="text-[10px] inline" ph="Nationality" />}
+              </FieldToggle>
+              <FieldToggle field="dob">
+                <strong>Date of birth:</strong>&nbsp;{forPrint ? (cv.dateOfBirth || 'N/A') : <E v={cv.dateOfBirth || ''} onChange={v => setCv(p => ({ ...p, dateOfBirth: v }))} k="dob" cls="text-[10px] inline" ph="DD/MM/YYYY" />}
+              </FieldToggle>
+              <FieldToggle field="gender">
+                <strong>Gender:</strong>&nbsp;{forPrint ? (cv.gender || 'N/A') : <E v={cv.gender || ''} onChange={v => setCv(p => ({ ...p, gender: v }))} k="gender" cls="text-[10px] inline" ph="Gender" />}
+              </FieldToggle>
+              <FieldToggle field="phone">
+                <strong>Phone:</strong>&nbsp;{forPrint ? cv.phone : <E v={cv.phone} onChange={v => up('phone', v)} k="phone" cls="text-[10px] inline" ph="phone" />}
+              </FieldToggle>
+            </div>
+            {/* Contact row */}
+            <div style={{ fontSize: 10, color: accent, marginBottom: 12, display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+              <FieldToggle field="email">
+                ✉ Email:&nbsp;{forPrint ? cv.email : <E v={cv.email} onChange={v => up('email', v)} k="email" cls="text-[10px] inline" sty={{ color: accent }} ph="email@example.com" />}
+              </FieldToggle>
+              <FieldToggle field="linkedin">
+                🔗 LinkedIn:&nbsp;{forPrint ? (cv.linkedin || '') : <E v={cv.linkedin || ''} onChange={v => setCv(p => ({ ...p, linkedin: v }))} k="linkedin" cls="text-[10px] inline" sty={{ color: accent }} ph="linkedin.com/in/yourname" />}
+              </FieldToggle>
+            </div>
+            <div style={{ borderBottom: `1px solid ${accent}25`, marginBottom: 4 }} />
+            {/* About Me */}
+            <EuroSH id="sum">{cv.sectionTitles?.summary || 'About Me'}</EuroSH>
+            {summaryEl}
+            {/* Work Experience */}
+            <EuroSH id="exp">{cv.sectionTitles?.experience || 'Work Experience'}</EuroSH>
+            {expBlock}
+            {/* Education */}
+            <EuroSH id="edu">{cv.sectionTitles?.education || 'Education and Training'}</EuroSH>
+            {eduBlock}
+            {/* Skills */}
+            <EuroSH id="skills">{cv.sectionTitles?.skills || 'Skills'}</EuroSH>
+            {skillsBlock}
+            {customSectionsBlock}
+            {/* Page number */}
+            <div style={{ textAlign: 'right', fontSize: 9, color: '#9CA3AF', marginTop: 24 }}>1 / 1</div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── EU PHOTO — European-style with photo header
+    if (tpl.layout === 'eu-photo') {
+      const EuroSH = ({ children, id }: { children: React.ReactNode; id: string }) => (
+        <div id={`section-${id}`} style={{ fontSize: 14, fontWeight: 800, color: accent, textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 18, marginBottom: 8, paddingBottom: 4, borderBottom: `1px solid ${accent}40`, textDecoration: 'underline', textUnderlineOffset: 4 }}>
+          {children}
+        </div>
+      );
+      return (
+        <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: 'Arial, sans-serif', fontSize: 12, display: 'flex' }} className="bg-white shadow-2xl">
+          {/* Blue left stripe */}
+          <div style={{ width: 12, background: accent, flexShrink: 0 }} />
+          <div style={{ flex: 1, padding: '28px 32px 28px 24px' }}>
+            {/* Header with photo */}
+            <div style={{ display: 'flex', gap: 18, alignItems: 'flex-start', marginBottom: 12, paddingBottom: 14, borderBottom: `2px solid ${accent}25` }}>
+              <div onClick={forPrint ? undefined : () => document.getElementById('photo-upload')?.click()} className={forPrint ? '' : 'cursor-pointer group/photo relative'} style={{ width: 80, height: 80, borderRadius: 999, background: `${accent}15`, border: `2px solid ${accent}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+                {cv.photo ? <img src={cv.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: 24, color: accent, fontWeight: 700 }}>{cv.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</span>}
+                {!forPrint && <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/photo:opacity-100 flex items-center justify-center"><Camera className="w-4 h-4 text-white" /></div>}
+              </div>
+              <div style={{ flex: 1 }}>
+                {forPrint ? <div style={{ fontSize: 26, fontWeight: 700, color: '#111' }}>{cv.name}</div> : <E v={cv.name} onChange={v => up('name', v)} k="name" cls="text-[26px] font-bold block text-gray-900" ph="Your Name" />}
+                {forPrint ? <div style={{ fontSize: 12, color: accent, fontWeight: 600, marginTop: 2 }}>{cv.title}</div> : <E v={cv.title} onChange={v => up('title', v)} k="title" cls="text-[12px] font-semibold block mt-0.5" sty={{ color: accent }} ph="Job Title" />}
+                <div style={{ fontSize: 10, color: '#6B7280', marginTop: 6, lineHeight: 1.8 }}>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+                    <FieldToggle field="email">
+                      ✉&nbsp;{forPrint ? cv.email : <E v={cv.email} onChange={v => up('email', v)} k="email" cls="text-[10px] inline" ph="email" />}
+                    </FieldToggle>
+                    <FieldToggle field="phone">
+                      ☎&nbsp;{forPrint ? cv.phone : <E v={cv.phone} onChange={v => up('phone', v)} k="phone" cls="text-[10px] inline" ph="phone" />}
+                    </FieldToggle>
+                    <FieldToggle field="location">
+                      📍&nbsp;{forPrint ? cv.location : <E v={cv.location} onChange={v => up('location', v)} k="loc" cls="text-[10px] inline" ph="location" />}
+                    </FieldToggle>
+                  </div>
+                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 2, alignItems: 'center' }}>
+                    <FieldToggle field="nationality">
+                      <strong>Nationality:</strong>&nbsp;{forPrint ? (cv.nationality || 'N/A') : <E v={cv.nationality || ''} onChange={v => setCv(p => ({ ...p, nationality: v }))} k="nationality" cls="text-[10px] inline" ph="Nationality" />}
+                    </FieldToggle>
+                    <FieldToggle field="dob">
+                      <strong>DOB:</strong>&nbsp;{forPrint ? (cv.dateOfBirth || 'N/A') : <E v={cv.dateOfBirth || ''} onChange={v => setCv(p => ({ ...p, dateOfBirth: v }))} k="dob" cls="text-[10px] inline" ph="DD/MM/YYYY" />}
+                    </FieldToggle>
+                    <FieldToggle field="gender">
+                      <strong>Gender:</strong>&nbsp;{forPrint ? (cv.gender || 'N/A') : <E v={cv.gender || ''} onChange={v => setCv(p => ({ ...p, gender: v }))} k="gender" cls="text-[10px] inline" ph="Gender" />}
+                    </FieldToggle>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 2, alignItems: 'center' }}>
+                    <FieldToggle field="linkedin">
+                      🔗&nbsp;{forPrint ? (cv.linkedin || '') : <E v={cv.linkedin || ''} onChange={v => setCv(p => ({ ...p, linkedin: v }))} k="linkedin" cls="text-[10px] inline" sty={{ color: accent }} ph="linkedin.com/in/yourname" />}
+                    </FieldToggle>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 180px', padding: '0 0', minHeight: 650 }}>
-            <div style={{ padding: '16px 20px 24px 28px', borderRight: '1px solid #E5E7EB' }}>
-              <SH id="sum">{cv.sectionTitles?.summary || 'Personal Statement'}</SH>{summaryEl}
-              <SH id="exp">{cv.sectionTitles?.experience || 'Work Experience'}</SH>{expBlock}
-              {customSectionsBlock}
-            </div>
-            <div style={{ padding: '16px 20px 24px 16px' }}>
-              <SH id="edu">{cv.sectionTitles?.education || 'Education'}</SH>{eduBlock}
-              <SH id="skills">{cv.sectionTitles?.skills || 'Skills'}</SH>{skillsBlock}
-            </div>
+            {/* About Me */}
+            <EuroSH id="sum">{cv.sectionTitles?.summary || 'About Me'}</EuroSH>
+            {summaryEl}
+            {/* Work Experience */}
+            <EuroSH id="exp">{cv.sectionTitles?.experience || 'Work Experience'}</EuroSH>
+            {expBlock}
+            {/* Education */}
+            <EuroSH id="edu">{cv.sectionTitles?.education || 'Education and Training'}</EuroSH>
+            {eduBlock}
+            {/* Skills */}
+            <EuroSH id="skills">{cv.sectionTitles?.skills || 'Skills'}</EuroSH>
+            {skillsBlock}
+            {customSectionsBlock}
+            <div style={{ textAlign: 'right', fontSize: 9, color: '#9CA3AF', marginTop: 24 }}>1 / 1</div>
           </div>
         </div>
       );
@@ -1361,12 +1625,11 @@ function CVMakerContent() {
               <div key={i} className={forPrint ? '' : 'group/skill relative'}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: 'rgba(255,255,255,0.7)', marginBottom: 4, alignItems: 'center', gap: 6 }}>
                   <span>{s}</span>
-                  <div className="flex items-center gap-1">
+                  {!forPrint ? (
+                    <button type="button" onClick={() => setEditingSkillIndex(editingSkillIndex === i ? null : i)} style={{ color: accent, background: 'none', border: 'none', cursor: 'pointer', fontSize: 9, padding: 0 }} title="Click to edit percentage">{level}%</button>
+                  ) : (
                     <span style={{ color: accent }}>{level}%</span>
-                    {!forPrint && editingSkillIndex !== i && (
-                      <button type="button" onClick={() => setEditingSkillIndex(i)} className="text-white/50 hover:text-white text-[8px] uppercase tracking-wide">Edit</button>
-                    )}
-                  </div>
+                  )}
                 </div>
                 <div style={{ height: 4, background: 'rgba(255,255,255,0.1)', borderRadius: 99 }}>
                   <div style={{ width: `${level}%`, height: '100%', background: accent, borderRadius: 99 }} />
@@ -1408,7 +1671,7 @@ function CVMakerContent() {
       );
       return (
         <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, display: 'flex', fontFamily: tpl.font, fontSize: 12 }} className="bg-white shadow-2xl">
-          <div style={{ width: 185, background: '#111827', color: '#fff', padding: '28px 18px', flexShrink: 0 }}>
+          <div style={{ width: 185, background: sidebarColor, color: '#fff', padding: '28px 18px', flexShrink: 0 }}>
             <div onClick={forPrint ? undefined : () => document.getElementById('photo-upload')?.click()} className={forPrint ? '' : 'cursor-pointer group/photo relative'} style={{ width: 80, height: 80, borderRadius: 999, background: `${accent}33`, border: `3px solid ${accent}`, margin: '0 auto 14px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               {cv.photo ? <img src={cv.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: 26, color: accent, fontWeight: 700 }}>{cv.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</span>}
               {!forPrint && <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/photo:opacity-100 transition-opacity flex items-center justify-center"><Camera className="w-4 h-4 text-white" /></div>}
@@ -1790,7 +2053,7 @@ function CVMakerContent() {
     if (tpl.layout === 'split-color') {
       return (
         <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: tpl.font, fontSize: 12, display: 'flex' }} className="bg-white shadow-2xl">
-          <div style={{ width: 200, background: accent, padding: '28px 18px', display: 'flex', flexDirection: 'column', gap: 14, flexShrink: 0 }}>
+          <div style={{ width: 200, background: sidebarColor, padding: '28px 18px', display: 'flex', flexDirection: 'column', gap: 14, flexShrink: 0 }}>
             <div onClick={forPrint ? undefined : () => document.getElementById('photo-upload')?.click()} className={forPrint ? '' : 'cursor-pointer group/photo relative'} style={{ width: 90, height: 90, borderRadius: 999, background: 'rgba(255,255,255,0.2)', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               {cv.photo ? <img src={cv.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: 28, color: '#fff', fontWeight: 700 }}>{cv.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</span>}
               {!forPrint && <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/photo:opacity-100 flex items-center justify-center"><Camera className="w-5 h-5 text-white" /></div>}
@@ -1901,12 +2164,25 @@ function CVMakerContent() {
             const level = getSkillLevel(i);
             return (
               <div key={i} className={forPrint ? '' : 'group/skill relative'}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#111827', marginBottom: 3, fontWeight: 700 }}>
-                  <span>{s}</span><span style={{ color: accent }}>{level}%</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#111827', marginBottom: 3, fontWeight: 700, alignItems: 'center' }}>
+                  <span>{s}</span>
+                  {!forPrint ? (
+                    <button type="button" onClick={() => setEditingSkillIndex(editingSkillIndex === i ? null : i)} style={{ color: accent, background: 'none', border: 'none', cursor: 'pointer', fontSize: 10, fontWeight: 700, padding: 0 }} title="Click to edit percentage">{level}%</button>
+                  ) : (
+                    <span style={{ color: accent }}>{level}%</span>
+                  )}
                 </div>
                 <div style={{ height: 4, background: '#E9D5FF', borderRadius: 99 }}>
                   <div style={{ width: `${level}%`, height: '100%', background: accent, borderRadius: 99 }} />
                 </div>
+                {!forPrint && (
+                  editingSkillIndex === i ? (
+                    <div className="mt-1 flex items-center gap-2 text-[8px] text-gray-500">
+                      <input type="range" min={10} max={100} value={level} onChange={e => setSkillLevels(prev => prev.map((val, idx) => (idx === i ? Number(e.target.value) : val)))} onMouseUp={closeSkillEditor} onTouchEnd={closeSkillEditor} className="flex-1" />
+                      <input type="number" min={0} max={100} value={level} onChange={e => { const next = Math.min(100, Math.max(0, Number(e.target.value))); setSkillLevels(prev => prev.map((val, idx) => (idx === i ? next : val))); }} onBlur={closeSkillEditor} className="w-10 bg-gray-50 border border-gray-200 rounded px-1 py-0.5 text-gray-700 text-[8px]" />
+                    </div>
+                  ) : null
+                )}
                 {!forPrint && <button onClick={() => rmSkill(i)} className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white opacity-0 group-hover/skill:opacity-100 flex items-center justify-center"><X className="w-2 h-2" /></button>}
               </div>
             );
@@ -1986,6 +2262,109 @@ function CVMakerContent() {
       );
     }
 
+    // ── PROFESSIONAL SIDEBAR — dark teal sidebar with photo, contact & skills
+    if (tpl.layout === 'professional-sidebar') {
+      return (
+        <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: effectiveFont, fontSize: 12, display: 'flex' }} className="bg-white shadow-2xl">
+          <div style={{ width: 190, background: sidebarColor, padding: '28px 16px', display: 'flex', flexDirection: 'column', gap: 14, flexShrink: 0 }}>
+            <div className="text-center">
+              {forPrint ? <div style={{ fontSize: 18, fontWeight: 900, color: '#fff', textTransform: 'uppercase' as const, letterSpacing: 1 }}>{cv.name}</div> : <E v={cv.name} onChange={v => up('name', v)} k="name" cls="text-[18px] font-black block text-center uppercase tracking-wide" sty={{ color: '#fff' }} ph="Your Name" />}
+              {forPrint ? <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.75)', marginTop: 3 }}>{cv.title}</div> : <E v={cv.title} onChange={v => up('title', v)} k="title" cls="text-[10px] block mt-1 text-center" sty={{ color: 'rgba(255,255,255,0.75)' }} ph="Job Title" />}
+            </div>
+            <div onClick={forPrint ? undefined : () => document.getElementById('photo-upload')?.click()} className={forPrint ? '' : 'cursor-pointer group/photo relative'} style={{ width: 90, height: 90, borderRadius: 999, background: 'rgba(255,255,255,0.15)', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+              {cv.photo ? <img src={cv.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: 28, color: '#fff', fontWeight: 700 }}>{cv.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</span>}
+              {!forPrint && <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/photo:opacity-100 flex items-center justify-center"><Camera className="w-5 h-5 text-white" /></div>}
+            </div>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: 12 }}>
+              <div style={{ fontSize: 8, fontWeight: 700, textTransform: 'uppercase' as const, color: 'rgba(255,255,255,0.85)', letterSpacing: 0.8, marginBottom: 6 }}>Contact</div>
+              <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)', lineHeight: 1.9 }}>
+                {forPrint ? <><div>◆ {cv.email}</div><div>◆ {cv.phone}</div><div>◆ {cv.location}</div></> : <><span>◆ </span><E v={cv.email} onChange={v => up('email', v)} k="email" cls="block text-[9px]" sty={{ color: 'rgba(255,255,255,0.6)' }} ph="email" /><span>◆ </span><E v={cv.phone} onChange={v => up('phone', v)} k="phone" cls="block text-[9px]" sty={{ color: 'rgba(255,255,255,0.6)' }} ph="phone" /><span>◆ </span><E v={cv.location} onChange={v => up('location', v)} k="loc" cls="block text-[9px]" sty={{ color: 'rgba(255,255,255,0.6)' }} ph="location" /></>}
+              </div>
+            </div>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: 12 }}>
+              <div style={{ fontSize: 8, fontWeight: 700, textTransform: 'uppercase' as const, color: 'rgba(255,255,255,0.85)', letterSpacing: 0.8, marginBottom: 6 }}>Skills</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {cv.skills.map((s, i) => {
+                  const level = getSkillLevel(i);
+                  return (
+                    <div key={i} className={forPrint ? '' : 'group/skill relative'}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
+                        <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.7)' }}>{s}</div>
+                      </div>
+                      {!forPrint ? (
+                        <div onClick={() => setEditingSkillIndex(editingSkillIndex === i ? null : i)} style={{ cursor: 'pointer', height: 3, background: 'rgba(255,255,255,0.1)', borderRadius: 99 }} title="Click to edit percentage">
+                          <div style={{ width: `${level}%`, height: '100%', background: 'rgba(255,255,255,0.6)', borderRadius: 99 }} />
+                        </div>
+                      ) : (
+                        <div style={{ height: 3, background: 'rgba(255,255,255,0.1)', borderRadius: 99 }}>
+                          <div style={{ width: `${level}%`, height: '100%', background: 'rgba(255,255,255,0.6)', borderRadius: 99 }} />
+                        </div>
+                      )}
+                      {!forPrint && (
+                        editingSkillIndex === i ? (
+                          <div className="mt-1 flex items-center gap-2 text-[7px] text-white/60">
+                            <input type="range" min={10} max={100} value={level} onChange={e => setSkillLevels(prev => prev.map((val, idx) => (idx === i ? Number(e.target.value) : val)))} onMouseUp={closeSkillEditor} onTouchEnd={closeSkillEditor} className="flex-1" />
+                            <input type="number" min={0} max={100} value={level} onChange={e => { const next = Math.min(100, Math.max(0, Number(e.target.value))); setSkillLevels(prev => prev.map((val, idx) => (idx === i ? next : val))); }} onBlur={closeSkillEditor} className="w-8 bg-white/10 border border-white/20 rounded px-1 py-0.5 text-white text-[7px]" />
+                          </div>
+                        ) : null
+                      )}
+                      {!forPrint && <button onClick={() => rmSkill(i)} className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white opacity-0 group-hover/skill:opacity-100 flex items-center justify-center"><X className="w-2 h-2" /></button>}
+                    </div>
+                  );
+                })}
+                {!forPrint && <form onSubmit={e => { e.preventDefault(); if (newSkill.trim()) { setCv(p => ({ ...p, skills: [...p.skills, newSkill.trim()] })); setNewSkill(''); } }}><input value={newSkill} onChange={e => setNewSkill(e.target.value)} placeholder="+ Add skill" className="text-[9px] bg-transparent border border-dashed border-white/30 rounded px-1.5 py-0.5 outline-none text-white/60 w-20" /></form>}
+              </div>
+            </div>
+          </div>
+          <div style={{ flex: 1, padding: '28px 24px' }}>
+            <SH id="sum">{cv.sectionTitles?.summary || 'Objective'}</SH>{summaryEl}
+            <SH id="edu">{cv.sectionTitles?.education || 'Education'}</SH>{eduBlock}
+            <SH id="exp">{cv.sectionTitles?.experience || 'Work Experience'}</SH>{expBlock}
+            {customSectionsBlock}
+          </div>
+        </div>
+      );
+    }
+
+    // ── CORPORATE BANNER — teal header with photo, two-column body
+    if (tpl.layout === 'corporate-banner') {
+      return (
+        <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: effectiveFont, fontSize: 12 }} className="bg-white shadow-2xl">
+          <div style={{ background: accent, padding: '22px 28px', display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div onClick={forPrint ? undefined : () => document.getElementById('photo-upload')?.click()} className={forPrint ? '' : 'cursor-pointer group/photo relative'} style={{ width: 72, height: 72, borderRadius: 999, background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0, border: '2px solid rgba(255,255,255,0.3)' }}>
+              {cv.photo ? <img src={cv.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: 22, color: '#fff', fontWeight: 700 }}>{cv.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</span>}
+              {!forPrint && <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/photo:opacity-100 flex items-center justify-center"><Camera className="w-4 h-4 text-white" /></div>}
+            </div>
+            <div>
+              {forPrint ? <div style={{ fontSize: 22, fontWeight: 900, color: '#fff', textTransform: 'uppercase' as const, letterSpacing: 1 }}>{cv.name}</div> : <E v={cv.name} onChange={v => up('name', v)} k="name" cls="text-[22px] font-black block uppercase tracking-wide" sty={{ color: '#fff' }} ph="Your Name" />}
+              {forPrint ? <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.85)', marginTop: 2 }}>{cv.title}</div> : <E v={cv.title} onChange={v => up('title', v)} k="title" cls="text-[11px] block mt-0.5" sty={{ color: 'rgba(255,255,255,0.85)' }} ph="Job Title" />}
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '175px 1fr', minHeight: 700 }}>
+            <div style={{ padding: '18px 16px', background: '#f8f9fa', borderRight: '1px solid #e5e7eb' }}>
+              <div style={{ fontSize: 8, fontWeight: 700, textTransform: 'uppercase' as const, color: accent, letterSpacing: 0.8, marginBottom: 8 }}>Contact</div>
+              <div style={{ fontSize: 9, color: '#6B7280', lineHeight: 1.9, marginBottom: 16 }}>
+                {forPrint ? <><div>◆ {cv.email}</div><div>◆ {cv.phone}</div><div>◆ {cv.location}</div></> : <><span>◆ </span><E v={cv.email} onChange={v => up('email', v)} k="email" cls="block text-[9px]" ph="email" /><span>◆ </span><E v={cv.phone} onChange={v => up('phone', v)} k="phone" cls="block text-[9px]" ph="phone" /><span>◆ </span><E v={cv.location} onChange={v => up('location', v)} k="loc" cls="block text-[9px]" ph="location" /></>}
+              </div>
+              <div style={{ borderTop: `1px solid ${accent}30`, paddingTop: 12, marginBottom: 16 }}>
+                <div style={{ fontSize: 8, fontWeight: 700, textTransform: 'uppercase' as const, color: accent, letterSpacing: 0.8, marginBottom: 8 }}>Skills</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {cv.skills.map((s, i) => <div key={i} style={{ fontSize: 9, color: '#374151' }} className={forPrint ? '' : 'group/skill relative'}>• {s}{!forPrint && <button onClick={() => rmSkill(i)} className="absolute -right-1 top-0 opacity-0 group-hover/skill:opacity-100 text-red-400"><X className="w-2.5 h-2.5" /></button>}</div>)}
+                  {!forPrint && <form onSubmit={e => { e.preventDefault(); if (newSkill.trim()) { setCv(p => ({ ...p, skills: [...p.skills, newSkill.trim()] })); setNewSkill(''); } }}><input value={newSkill} onChange={e => setNewSkill(e.target.value)} placeholder="+ Add skill" className="text-[9px] bg-transparent border border-dashed border-gray-300 rounded px-1.5 py-0.5 outline-none w-20" /></form>}
+                </div>
+              </div>
+            </div>
+            <div style={{ padding: '18px 24px' }}>
+              <SH id="sum">{cv.sectionTitles?.summary || 'Objective'}</SH>{summaryEl}
+              <SH id="edu">{cv.sectionTitles?.education || 'Education'}</SH>{eduBlock}
+              <SH id="exp">{cv.sectionTitles?.experience || 'Work Experience'}</SH>{expBlock}
+              {customSectionsBlock}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     // Default fallback
     return (
       <div ref={forPrint ? undefined : cvRef} style={{ width: 595, minHeight: 842, fontFamily: tpl.font, fontSize: 12, padding: 28 }} className="bg-white shadow-2xl">
@@ -2026,7 +2405,7 @@ function CVMakerContent() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {/* AI Button — full label on desktop, icon-only on mobile */}
-            <button onClick={() => setShowAI(true)} className="cvmaker-topbar-btn cvmaker-topbar-btn-ai"
+            <button onClick={() => { if (!session) { window.location.href = '/auth/signin?callbackUrl=' + encodeURIComponent(window.location.href); return; } setShowAI(true); }} className="cvmaker-topbar-btn cvmaker-topbar-btn-ai"
               style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 16px', borderRadius: 10, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(221,0,0,0.2)', whiteSpace: 'nowrap' }}
               onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
               onMouseLeave={e => e.currentTarget.style.transform = 'none'}>
@@ -2114,6 +2493,23 @@ function CVMakerContent() {
                 ))}
               </div>
             </div>
+            {/* Sidebar Color — only for sidebar layouts */}
+            {SIDEBAR_LAYOUTS.includes(tpl.layout) && (
+              <div style={{ marginTop: 12 }}>
+                <label style={{ fontSize: 11, color: '#999', marginBottom: 6, display: 'block', fontWeight: 600 }}>Sidebar</label>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {SIDEBAR_COLORS.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setSidebarColor(c)}
+                      style={{ width: 32, height: 32, borderRadius: 8, border: sidebarColor === c ? '3px solid #dd0000' : '2px solid transparent', background: c, cursor: 'pointer', transition: 'all 0.2s', transform: sidebarColor === c ? 'scale(1.1)' : 'scale(1)' }}
+                      onMouseEnter={e => sidebarColor !== c && (e.currentTarget.style.transform = 'scale(1.05)')}
+                      onMouseLeave={e => sidebarColor !== c && (e.currentTarget.style.transform = 'scale(1)')}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Font Section */}

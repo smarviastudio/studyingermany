@@ -8,7 +8,7 @@ import {
   Search, Loader2, Bookmark, X, ArrowRight, BookOpen, Newspaper, Calendar,
   GraduationCap, FileText, Languages, Home, Briefcase, CreditCard, Shield,
   Plane, Star, Zap, TrendingUp, Users, Globe, Clock, Calculator, LayoutDashboard, MapPin,
-  Settings, Filter, Sparkles, School, FolderOpen
+  Settings, Filter, Sparkles, School, FolderOpen, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { ProgramModal } from '@/components/ProgramModal';
 import { ProgramCard } from '@/components/ProgramCard';
@@ -36,36 +36,46 @@ const TOOLS = [
 
 const TESTIMONIALS = [
   {
-    name: 'Ayesha Khan',
-    country: 'Karachi, Pakistan',
-    track: 'Bachelor in Data Science (TU Munich)',
-    quote: 'The AI document checklist told me exactly which certificates Munich required, and the CV builder gave me a German-style resume in 10 minutes.',
-    highlight: 'Got admission with full semester waiver',
-    avatar: '🇵🇰'
+    name: 'Fatima Z.',
+    location: 'LAHORE, PAKISTAN',
+    quote: 'From Lahore to Leipzig in 6 months. The AI tools helped me translate my Pakistani qualifications to German standards. Now pursuing my dream of studying Computer Science at a top university.',
+    flag: 'PK'
   },
   {
-    name: 'Chinedu Adewale',
-    country: 'Lagos, Nigeria',
-    track: 'Master in Renewable Energy (FH Aachen)',
-    quote: 'German Path showed me the blocked account options and helped me time every admin step. Their AI roadmap kept my tasks organized while I handled embassy requirements myself.',
-    highlight: 'Planned finances + deadlines with AI',
-    avatar: '🇳🇬'
+    name: 'Zainab O.',
+    location: 'NAIROBI, KENYA',
+    quote: 'The AI CV Maker was a game changer. I got accepted into three TU9 universities for Data Science. German Path made the complex simple.',
+    flag: 'KE'
   },
   {
-    name: 'Meera Iyer',
-    country: 'Bangalore, India',
-    track: 'MBA in Berlin (SRH University)',
-    quote: 'The motivation letter tool used my profile and program info to craft a personalized story that admissions loved.',
-    highlight: 'Scholarship + internship offer',
-    avatar: '🇮🇳'
+    name: 'Arjun M.',
+    location: 'MUMBAI, INDIA',
+    quote: 'Navigating the visa process from India was stressful until I found their step-by-step guides. Currently studying in Munich thanks to them!',
+    flag: 'IN'
   },
   {
-    name: 'Kevin Otieno',
-    country: 'Nairobi, Kenya',
-    track: 'Master in Automotive Software (RWTH Aachen)',
-    quote: 'I used the shortlist + AI plan to track every deadline. The guidance explained finances and insurance so I could prepare documents with confidence.',
-    highlight: 'Working student job in 2 months',
-    avatar: '🇰🇪'
+    name: 'Linh T.',
+    location: 'HANOI, VIETNAM',
+    quote: 'The GPA converter showed me that my grades were actually eligible for top public universities. It changed my entire application strategy.',
+    flag: 'VN'
+  },
+  {
+    name: 'Ahmed K.',
+    location: 'CAIRO, EGYPT',
+    quote: 'The motivation letter tool helped me craft a compelling story. Got accepted to RWTH Aachen with a scholarship for my Master in Engineering.',
+    flag: 'EG'
+  },
+  {
+    name: 'Maria S.',
+    location: 'MANILA, PHILIPPINES',
+    quote: 'Finding English-taught programs was overwhelming until I used German Path. Now I am studying Business Analytics in Berlin!',
+    flag: 'PH'
+  },
+  {
+    name: 'David N.',
+    location: 'LAGOS, NIGERIA',
+    quote: 'The blocked account guide and visa checklist saved me months of confusion. Successfully got my student visa on the first try.',
+    flag: 'NG'
   }
 ];
 
@@ -123,6 +133,87 @@ function timeAgo(dateStr: string) {
   if (days < 7) return `${days}d ago`;
   if (days < 30) return `${Math.floor(days / 7)}w ago`;
   return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+function TestimonialSlider({ testimonials }: { testimonials: typeof TESTIMONIALS }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const itemsPerPage = 3;
+  const maxIndex = Math.max(0, testimonials.length - itemsPerPage);
+
+  const handlePrev = () => {
+    setCurrentIndex(prev => Math.max(0, prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex(prev => Math.min(maxIndex, prev + 1));
+  };
+
+  const visibleTestimonials = testimonials.slice(currentIndex, currentIndex + itemsPerPage);
+
+  return (
+    <section className="testimonial-section" id="stories">
+      <div className="section-container">
+        <div className="section-header scroll-reveal" style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>
+            Loved by applicants across Asia & Africa
+          </h2>
+          <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px', color: '#737373' }}>
+            Join 50,000+ students who navigated their German journey with us.
+          </p>
+        </div>
+
+        <div style={{ position: 'relative' }}>
+          {currentIndex > 0 && (
+            <button
+              onClick={handlePrev}
+              className="testimonial-nav-btn testimonial-nav-prev"
+              aria-label="Previous testimonials"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+          )}
+
+          <div className="testimonial-grid">
+            {visibleTestimonials.map((person, idx) => (
+              <article key={person.name} className="testimonial-card">
+                <div className="testimonial-card-header">
+                  <div className="testimonial-avatar">
+                    <Image
+                      src={`https://flagcdn.com/w80/${person.flag.toLowerCase()}.png`}
+                      alt={person.location}
+                      width={40}
+                      height={30}
+                      style={{ borderRadius: '4px', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div className="testimonial-info">
+                    <p className="testimonial-name">{person.name}</p>
+                    <p className="testimonial-location">{person.location}</p>
+                  </div>
+                </div>
+                <p className="testimonial-quote">{person.quote}</p>
+                <div className="testimonial-stars">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} style={{ color: '#dd0000', fontSize: '16px' }}>★</span>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {currentIndex < maxIndex && (
+            <button
+              onClick={handleNext}
+              className="testimonial-nav-btn testimonial-nav-next"
+              aria-label="Next testimonials"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          )}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default function HomePage() {
@@ -963,32 +1054,7 @@ export default function HomePage() {
       </section>
 
       {/* ══ TESTIMONIALS ══ */}
-      <section className="testimonial-section" id="stories">
-        <div className="section-container">
-          <div className="section-header scroll-reveal">
-            <div className="section-label">Student Voices</div>
-            <h2 className="section-title">Loved by applicants across Asia & Africa</h2>
-            <p className="section-desc">Real students using German Path to unlock admissions, scholarships, and visas — Pakistani, Indian, Nigerian, Kenyan and more.</p>
-          </div>
-
-          <div className="testimonial-grid">
-            {TESTIMONIALS.map((person, idx) => (
-              <article key={person.name} className="testimonial-card scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
-                <div className="testimonial-card-header">
-                  <div className="testimonial-avatar">{person.avatar}</div>
-                  <div className="testimonial-info">
-                    <p className="testimonial-name">{person.name}</p>
-                    <p className="testimonial-country">{person.country}</p>
-                  </div>
-                  <span className="testimonial-highlight">{person.highlight}</span>
-                </div>
-                <p className="testimonial-quote">{person.quote}</p>
-                <p className="testimonial-track">{person.track}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TestimonialSlider testimonials={TESTIMONIALS} />
 
       {/* ══ TOOLS ══ */}
       <section className="tools-section" id="tools">
@@ -1053,37 +1119,38 @@ export default function HomePage() {
       </section>
 
       {/* ══ HOW IT WORKS ══ */}
-      <section className="howto-section scroll-reveal">
+      <section className="howto-section scroll-reveal" style={{ padding: '128px 24px' }}>
         <div className="section-container">
-          <div className="section-header">
-            <div className="section-label">Your Journey</div>
-            <h2 className="section-title">5 steps to study in Germany</h2>
+          <div className="section-header" style={{ textAlign: 'center', marginBottom: '80px' }}>
+            <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>Your Path, Simplified</h2>
+            <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px' }}>We've broken down the complex process of moving to Germany into five clear, manageable milestones.</p>
           </div>
-          <div className="howto-grid">
-            <div className="howto-card">
-              <div className="howto-number">1</div>
-              <h3>Find Programs</h3>
-              <p>Search 20,000+ English-taught degrees</p>
+          <div className="howto-steps-container">
+            <div className="howto-progress-line" style={{ position: 'absolute', top: '50%', left: 0, width: '100%', height: '1px', background: '#ebe7e7', transform: 'translateY(-50%)', zIndex: -1 }} />
+            <div className="howto-step">
+              <div className="howto-step-circle gradient">01</div>
+              <h4>Find Programs</h4>
+              <p>Match your profile with 2,000+ courses.</p>
             </div>
-            <div className="howto-card">
-              <div className="howto-number">2</div>
-              <h3>Prepare Docs</h3>
-              <p>CV, motivation letter & transcripts</p>
+            <div className="howto-step">
+              <div className="howto-step-circle gray">02</div>
+              <h4>Prepare Docs</h4>
+              <p>Optimize CVs and Motivation Letters.</p>
             </div>
-            <div className="howto-card">
-              <div className="howto-number">3</div>
-              <h3>Apply</h3>
-              <p>Submit via uni-assist or directly</p>
+            <div className="howto-step">
+              <div className="howto-step-circle gray">03</div>
+              <h4>Apply</h4>
+              <p>Submit through Uni-Assist or directly.</p>
             </div>
-            <div className="howto-card">
-              <div className="howto-number">4</div>
-              <h3>Get Visa</h3>
-              <p>Blocked account + health insurance</p>
+            <div className="howto-step">
+              <div className="howto-step-circle gray">04</div>
+              <h4>Get Visa</h4>
+              <p>Navigate embassy requirements with ease.</p>
             </div>
-            <div className="howto-card">
-              <div className="howto-number">5</div>
-              <h3>Arrive</h3>
-              <p>Register & start your studies</p>
+            <div className="howto-step">
+              <div className="howto-step-circle gray">05</div>
+              <h4>Arrive</h4>
+              <p>Land in Germany and start your life.</p>
             </div>
           </div>
         </div>

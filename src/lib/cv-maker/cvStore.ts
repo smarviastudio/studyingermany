@@ -37,6 +37,10 @@ export interface CVData {
     skills: string;
     education: string;
   };
+  nationality?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  linkedin?: string;
 }
 
 export interface CV {
