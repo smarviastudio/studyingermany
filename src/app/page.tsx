@@ -340,7 +340,7 @@ export default function HomePage() {
   });
 
   const heroSlides = [
-    { main: 'Study in Germany —', highlight: '20,000+ Programs Found Here' },
+    { main: 'Study in Germany —', highlight: '20,000+ Programs' },
     { main: 'Say goodbye to', highlight: 'expensive consultants' },
     { main: 'Find your program', highlight: 'in minutes, not months' },
     { main: 'Save thousands on', highlight: 'consultant fees' },
@@ -447,7 +447,10 @@ export default function HomePage() {
       const postNames = post.categories.map(c => c.name.toLowerCase());
       let placed = false;
       for (const journeyCat of JOURNEY_CATEGORIES) {
-        if (journeyCat.slugs.some(s => postSlugs.some(ps => ps.includes(s)) || postNames.some(pn => pn.includes(s)))) {
+        // Check if any post category slug or name matches any of our search terms
+        const matchesSlug = postSlugs.some(ps => journeyCat.slugs.some(s => ps.includes(s) || s.includes(ps)));
+        const matchesName = postNames.some(pn => journeyCat.slugs.some(s => pn.includes(s) || s.includes(pn)));
+        if (matchesSlug || matchesName) {
           groups[journeyCat.key].push(post);
           placed = true;
           break;
