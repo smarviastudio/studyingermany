@@ -8,7 +8,7 @@ import {
   Search, Loader2, Bookmark, X, ArrowRight, BookOpen, Newspaper, Calendar,
   GraduationCap, FileText, Languages, Home, Briefcase, CreditCard, Shield,
   Plane, Star, Zap, TrendingUp, Users, Globe, Clock, Calculator, LayoutDashboard, MapPin,
-  Settings, Filter, Sparkles, School, FolderOpen, ChevronLeft, ChevronRight
+  Settings, Filter, Sparkles, School, FolderOpen, ChevronLeft, ChevronRight, ChevronDown
 } from 'lucide-react';
 import { ProgramModal } from '@/components/ProgramModal';
 import { ProgramCard } from '@/components/ProgramCard';
@@ -85,7 +85,7 @@ const JOURNEY_CATEGORIES = [
   { key: 'bachelor',   label: 'Bachelor',   icon: School,        color: '#059669', desc: 'Bachelor programs',          slugs: ['bachelor', 'bachelors'] },
   { key: 'visa',       label: 'Visa',       icon: Plane,         color: '#d97706', desc: 'Visa & immigration',         slugs: ['visa', 'immigration'] },
   { key: 'housing',    label: 'Housing',    icon: Home,          color: '#0284c7', desc: 'Accommodation',              slugs: ['housing', 'accommodation'] },
-  { key: 'finance',    label: 'Finance',    icon: CreditCard,    color: '#be185d', desc: 'Money matters',            slugs: ['finance', 'insurance', 'blocked-account'] },
+  { key: 'finance',    label: 'Finance',    icon: CreditCard,    color: '#be185d', desc: 'Money matters',            slugs: ['finance', 'financial', 'money', 'cost', 'expenses', 'budget', 'blocked-account', 'sperrkonto', 'insurance', 'scholarship', 'funding', 'tuition', 'fees', 'living-costs', 'expenses'] },
   { key: 'jobs',       label: 'Jobs',       icon: Briefcase,     color: '#0891b2', desc: 'Working in Germany',       slugs: ['jobs', 'career', 'work'] },
   { key: 'language',   label: 'Language',   icon: Languages,     color: '#ea580c', desc: 'German language',          slugs: ['language', 'german'] },
   { key: 'others',     label: 'Others',     icon: FolderOpen,    color: '#64748b', desc: 'Other topics',             slugs: ['guides', 'tips', 'life'] },
@@ -135,81 +135,162 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
-function TestimonialSlider({ testimonials }: { testimonials: typeof TESTIMONIALS }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 3;
-  const maxIndex = Math.max(0, testimonials.length - itemsPerPage);
+function FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const handlePrev = () => {
-    setCurrentIndex(prev => Math.max(0, prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex(prev => Math.min(maxIndex, prev + 1));
-  };
-
-  const visibleTestimonials = testimonials.slice(currentIndex, currentIndex + itemsPerPage);
+  const faqs = [
+    {
+      question: 'Are public universities in Germany really tuition-free?',
+      answer: 'Yes! Most public universities in Germany charge no tuition fees for bachelor and master programs — even for international students. You only pay a semester contribution of €150-350 which often includes public transport.'
+    },
+    {
+      question: 'Can I transfer if I don\'t have a direct access?',
+      answer: 'Yes, you can transfer credits from your previous studies. Requirements vary by university and program. You typically need to provide course descriptions and transcripts for evaluation.'
+    },
+    {
+      question: 'What is the "Blocked Account" and do I need one?',
+      answer: 'A blocked account (Sperrkonto) is required for your student visa. You need to prove €11,904 per year (€992/month) in a blocked account. This ensures you can support yourself financially during your studies.'
+    },
+    {
+      question: 'How much money do I need to live in Germany monthly?',
+      answer: 'On average, students need €850-1,200 per month depending on the city. This includes rent (€300-500), food (€200-250), health insurance (€110), transport (€50-80), and other expenses.'
+    }
+  ];
 
   return (
-    <section className="testimonial-section" id="stories">
+    <section className="faq-section-new" id="faq">
       <div className="section-container">
-        <div className="section-header scroll-reveal" style={{ textAlign: 'center', marginBottom: '64px' }}>
+        <div className="section-header" style={{ textAlign: 'center', marginBottom: '64px' }}>
           <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>
-            Loved by applicants across Asia & Africa
+            Frequently Asked Questions
           </h2>
           <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px', color: '#737373' }}>
-            Join 50,000+ students who navigated their German journey with us.
+            Got a question? We've got answers. If you have any other questions, see our full documentation.
           </p>
         </div>
 
-        <div style={{ position: 'relative' }}>
-          {currentIndex > 0 && (
-            <button
-              onClick={handlePrev}
-              className="testimonial-nav-btn testimonial-nav-prev"
-              aria-label="Previous testimonials"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-          )}
+        <div className="faq-accordion" style={{ maxWidth: '800px', margin: '0 auto' }}>
+          {faqs.map((faq, index) => (
+            <div key={index} className="faq-accordion-item">
+              <button
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="faq-accordion-button"
+              >
+                <span>{faq.question}</span>
+                <ChevronDown 
+                  className="w-5 h-5 transition-transform" 
+                  style={{ transform: openIndex === index ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                />
+              </button>
+              {openIndex === index && (
+                <div className="faq-accordion-content">
+                  <p>{faq.answer}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-          <div className="testimonial-grid">
-            {visibleTestimonials.map((person, idx) => (
-              <article key={person.name} className="testimonial-card">
-                <div className="testimonial-card-header">
-                  <div className="testimonial-avatar">
+function CTASection() {
+  return (
+    <section style={{ padding: '80px 24px', background: '#fafafa', borderTop: '1px solid #ebebeb' }}>
+      <div className="section-container" style={{ maxWidth: '900px', margin: '0 auto' }}>
+        <div className="cta-box-new">
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#fff', marginBottom: '16px', textAlign: 'center' }}>
+            Ready to start your journey?
+          </h2>
+          <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.9)', marginBottom: '32px', textAlign: 'center', maxWidth: '600px', margin: '0 auto 32px' }}>
+            Join thousands of students who have already found their dream programs in Germany. Access AI tools and guides for free today.
+          </p>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/auth/signup" className="cta-btn-white">
+              Create Free Account
+            </Link>
+            <Link href="#hero" className="cta-btn-outline">
+              Browse Programs
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TestimonialSlider({ testimonials }: { testimonials: typeof TESTIMONIALS }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const itemsPerPage = 3;
+  const totalSlides = testimonials.length - itemsPerPage + 1;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % totalSlides);
+    }, 5000); // Auto-slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [totalSlides]);
+
+  const handlePrev = () => {
+    setCurrentIndex(prev => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  const handleNext = () => {
+    setCurrentIndex(prev => (prev + 1) % totalSlides);
+  };
+
+  // Duplicate testimonials for infinite scrolling
+  const allTestimonials = [...testimonials, ...testimonials, ...testimonials];
+  const displayIndex = currentIndex + testimonials.length; // Start from middle copy
+  const displayTestimonials = allTestimonials.slice(displayIndex, displayIndex + itemsPerPage);
+
+  return (
+    <section className="testimonial-section-new" id="stories">
+      <div className="section-container">
+        <div className="section-header" style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>
+            Loved by students worldwide
+          </h2>
+          <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px', color: '#737373' }}>
+            Join 50,000+ students who successfully navigated their German journey with us.
+          </p>
+        </div>
+
+        <div className="testimonial-slider-wrapper-new" style={{ position: 'relative', maxWidth: '1200px', margin: '0 auto' }}>
+          <div className="testimonial-grid-new">
+            {displayTestimonials.map((person, idx) => (
+              <article key={`${person.name}-${idx}-${currentIndex}`} className="testimonial-card-new">
+                <div className="testimonial-quote-icon">"</div>
+                <p className="testimonial-quote-text">{person.quote}</p>
+                <div className="testimonial-footer">
+                  <div className="testimonial-avatar-new">
                     <Image
                       src={`https://flagcdn.com/w80/${person.flag.toLowerCase()}.png`}
                       alt={person.location}
-                      width={40}
-                      height={30}
+                      width={32}
+                      height={24}
                       style={{ borderRadius: '4px', objectFit: 'cover' }}
                     />
                   </div>
-                  <div className="testimonial-info">
-                    <p className="testimonial-name">{person.name}</p>
-                    <p className="testimonial-location">{person.location}</p>
+                  <div className="testimonial-info-new">
+                    <p className="testimonial-name-new">{person.name}</p>
+                    <p className="testimonial-location-new">{person.location}</p>
                   </div>
-                </div>
-                <p className="testimonial-quote">{person.quote}</p>
-                <div className="testimonial-stars">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} style={{ color: '#dd0000', fontSize: '16px' }}>★</span>
-                  ))}
                 </div>
               </article>
             ))}
           </div>
 
-          {currentIndex < maxIndex && (
-            <button
-              onClick={handleNext}
-              className="testimonial-nav-btn testimonial-nav-next"
-              aria-label="Next testimonials"
-            >
-              <ChevronRight className="w-6 h-6" />
+          <div className="testimonial-nav-new">
+            <button onClick={handlePrev} className="testimonial-nav-btn-new" aria-label="Previous">
+              <ChevronLeft className="w-5 h-5" />
             </button>
-          )}
+            <button onClick={handleNext} className="testimonial-nav-btn-new" aria-label="Next">
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -1157,51 +1238,10 @@ export default function HomePage() {
       </section>
 
       {/* ══ FAQ ══ */}
-      <section className="faq-section scroll-reveal" id="faq">
-        <div className="section-container">
-          <div className="section-header">
-            <div className="section-label">Common Questions</div>
-            <h2 className="section-title">Frequently Asked Questions</h2>
-            <p className="section-desc">Quick answers to the most common questions about studying in Germany.</p>
-          </div>
-          <div className="faq-grid">
-            <div className="faq-item">
-              <h3>Is studying in Germany really free?</h3>
-              <p>Yes! Most public universities in Germany charge no tuition fees for bachelor and master programs — even for international students. You only pay a semester fee of €150-350 which includes public transport.</p>
-            </div>
-            <div className="faq-item">
-              <h3>Do I need to speak German?</h3>
-              <p>Not necessarily. There are 2,000+ English-taught programs in Germany. However, learning basic German helps with daily life and job opportunities after graduation.</p>
-            </div>
-            <div className="faq-item">
-              <h3>How much money do I need for a student visa?</h3>
-              <p>You need to prove €11,904 per year (€992/month) in a blocked account. This is the minimum required for a German student visa as of 2024.</p>
-            </div>
-            <div className="faq-item">
-              <h3>Can I work while studying?</h3>
-              <p>Yes! International students can work 140 full days or 280 half days per year. Many students work part-time jobs to cover living expenses.</p>
-            </div>
-            <div className="faq-item">
-              <h3>What are the requirements for admission?</h3>
-              <p>Requirements vary by program, but typically include: recognized school-leaving certificate, language proficiency (English/German), and sometimes entrance exams or portfolios.</p>
-            </div>
-            <div className="faq-item">
-              <h3>Can I stay in Germany after graduation?</h3>
-              <p>Yes! Graduates get an 18-month job-seeker visa to find employment in Germany. With a job, you can transition to a work permit and eventually permanent residency.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FAQSection />
 
       {/* ══ CTA ══ */}
-      <section className="cta-section scroll-reveal">
-        <div className="cta-bg" />
-        <div className="section-container cta-content">
-          <h2 className="cta-title">Ready to start your Germany journey?</h2>
-          <p className="cta-desc">Search 20,000+ programs and use our AI tools to prepare your application. Start free, upgrade anytime.</p>
-          <a href="#hero" className="cta-btn-primary"><Search className="w-5 h-5" />Search Programs Now</a>
-        </div>
-      </section>
+      <CTASection />
 
       {/* ══ MOBILE BOTTOM TAB BAR ══ */}
       <nav className="mobile-tab-bar">
