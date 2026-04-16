@@ -97,6 +97,7 @@ export default function RootLayout({
               },
               sameAs: [
                 SITE_URL,
+                'https://www.facebook.com/studyingermay1',
               ],
             }),
           }}
