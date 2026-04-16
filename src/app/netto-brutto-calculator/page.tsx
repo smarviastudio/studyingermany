@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Calculator, Euro, TrendingDown, Building2, Users, Heart, Shield, Coins, Sparkles } from 'lucide-react';
+import { ArrowLeft, Calculator, Euro, TrendingDown, Building2, Users, Heart, Shield, Coins, Sparkles, Loader2 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import {
   calculateGermanPayroll2026,
@@ -39,6 +39,7 @@ export default function SalaryCalculatorPage() {
   const [healthInsuranceType, setHealthInsuranceType] = useState<HealthInsuranceType>('public');
   const [healthInsuranceRate, setHealthInsuranceRate] = useState('2.9');
   const [hasCalculated, setHasCalculated] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
 
   const annualGross = useMemo(() => {
     const gross = parseFloat(grossSalary) || 0;
@@ -69,7 +70,12 @@ export default function SalaryCalculatorPage() {
   }, [hasCalculated, annualGross, taxClass, bundesland, childrenCount, churchTax, healthInsuranceType, healthInsuranceRate]);
 
   const handleCalculate = () => {
-    setHasCalculated(true);
+    setIsCalculating(true);
+    setHasCalculated(false);
+    setTimeout(() => {
+      setHasCalculated(true);
+      setIsCalculating(false);
+    }, 1200);
   };
 
   const monthlyGross = annualGross / 12;
@@ -209,31 +215,51 @@ export default function SalaryCalculatorPage() {
             {/* Calculate Button */}
             <button
               onClick={handleCalculate}
+              disabled={isCalculating}
               style={{
                 width: '100%',
                 padding: '14px',
-                background: '#dc2626',
+                background: isCalculating ? '#94a3b8' : '#dc2626',
                 border: 'none',
                 borderRadius: 10,
                 fontSize: 16,
                 fontWeight: 700,
                 color: '#fff',
-                cursor: 'pointer',
+                cursor: isCalculating ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 8,
-                boxShadow: '0 4px 12px rgba(220,38,38,0.3)',
+                boxShadow: isCalculating ? 'none' : '0 4px 12px rgba(220,38,38,0.3)',
+                transition: 'all 0.2s',
               }}
             >
-              <Calculator className="w-5 h-5" />
-              Calculate
+              {isCalculating ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Calculating...
+                </>
+              ) : (
+                <>
+                  <Calculator className="w-5 h-5" />
+                  Calculate
+                </>
+              )}
             </button>
           </div>
 
           {/* RIGHT: Results */}
           <div>
-            {!result ? (
+            {isCalculating ? (
+              <div style={{ background: '#fff', borderRadius: 16, padding: 60, textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                  <Loader2 className="w-10 h-10 animate-spin" style={{ color: '#dc2626' }} />
+                </div>
+                <p style={{ fontSize: 16, color: '#64748b', margin: 0, fontWeight: 600 }}>
+                  Calculating your take-home pay...
+                </p>
+              </div>
+            ) : !result ? (
               <div style={{ background: '#fff', borderRadius: 16, padding: 60, textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
                 <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
                   <Calculator className="w-10 h-10" style={{ color: '#94a3b8' }} />
@@ -320,11 +346,116 @@ export default function SalaryCalculatorPage() {
           </div>
         </div>
 
+        {/* Tax Class FAQs */}
+        <div style={{ marginTop: 40, background: '#fff', borderRadius: 16, padding: 32, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', margin: '0 0 8px' }}>
+            Understanding German Tax Classes (Steuerklassen)
+          </h2>
+          <p style={{ fontSize: 14, color: '#64748b', margin: '0 0 24px' }}>
+            Germany has 6 tax classes that determine how much income tax is withheld from your salary. Your tax class depends on your marital status, family situation, and employment.
+          </p>
+
+          <div style={{ display: 'grid', gap: 16 }}>
+            <TaxClassFAQ
+              number="1"
+              title="Tax Class 1 — Single"
+              color="#0891b2"
+              description="For unmarried, widowed (after the transition year), divorced, or permanently separated employees without children. This is the default class for most single workers in Germany."
+              bestFor="Single employees with one job and no children"
+            />
+            <TaxClassFAQ
+              number="2"
+              title="Tax Class 2 — Single Parent"
+              color="#059669"
+              description="For single parents who live alone with at least one child and receive child benefits (Kindergeld). Provides an additional tax relief (Alleinerziehendenentlastung) of €4,260/year plus €240 for each additional child."
+              bestFor="Single parents raising children alone"
+            />
+            <TaxClassFAQ
+              number="3"
+              title="Tax Class 3 — Married (Higher Earner)"
+              color="#dc2626"
+              description="For married couples or registered civil partners where one spouse earns significantly more than the other. The higher earner uses Class 3 (lowest tax) while the other spouse must take Class 5. Also applies to widowed persons in the first year after the spouse's death."
+              bestFor="Married couples where one earns significantly more (60/40 split or greater)"
+            />
+            <TaxClassFAQ
+              number="4"
+              title="Tax Class 4 — Married (Equal Earners)"
+              color="#7c3aed"
+              description="The default for married couples and registered partnerships. Both spouses pay the same tax rate as if they were single. Best when both partners earn similar amounts. Couples can also opt for Class 4 with a 'factor' (Faktorverfahren) for more accurate withholding."
+              bestFor="Married couples with similar incomes"
+            />
+            <TaxClassFAQ
+              number="5"
+              title="Tax Class 5 — Married (Lower Earner)"
+              color="#ea580c"
+              description="The counterpart to Class 3. If one spouse takes Class 3, the other automatically gets Class 5, which has the highest tax withholding. The combination 3/5 makes sense only when there's a big income difference between partners."
+              bestFor="Lower-earning spouse in a 3/5 combination"
+            />
+            <TaxClassFAQ
+              number="6"
+              title="Tax Class 6 — Second Job"
+              color="#9333ea"
+              description="For employees with a second or additional job. Applied to any income beyond your primary employment (which uses your normal tax class 1-5). Has the highest tax rate with no tax-free allowance, because allowances already apply to your main job."
+              bestFor="Employees with multiple jobs (second job only)"
+            />
+          </div>
+
+          <div style={{ marginTop: 24, padding: 16, background: '#f1f5f9', borderRadius: 12, borderLeft: '4px solid #dc2626' }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', margin: '0 0 6px' }}>💡 Can I change my tax class?</p>
+            <p style={{ fontSize: 13, color: '#475569', margin: 0, lineHeight: 1.6 }}>
+              Yes! Married couples can switch between 3/5, 4/4, and 4/4 with factor combinations once per year (or after major life events like marriage, divorce, or birth of a child) at their local Finanzamt or online via ELSTER. The change applies to future paychecks.
+            </p>
+          </div>
+
+          <div style={{ marginTop: 12, padding: 16, background: '#fef3c7', borderRadius: 12, borderLeft: '4px solid #f59e0b' }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', margin: '0 0 6px' }}>ℹ️ Important note</p>
+            <p style={{ fontSize: 13, color: '#475569', margin: 0, lineHeight: 1.6 }}>
+              The tax class only affects <strong>monthly withholding</strong>, not your total yearly tax. Any over- or under-payment is reconciled when you file your annual tax return (Einkommensteuererklärung). The total tax owed for the year is the same regardless of class combination chosen.
+            </p>
+          </div>
+        </div>
+
         {/* Footer */}
         <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 20, textAlign: 'center' }}>
           Based on 2026 German tax rules (BMF). For employees only. Click Calculate after changing any input.
         </p>
       </main>
+    </div>
+  );
+}
+
+function TaxClassFAQ({ number, title, color, description, bestFor }: {
+  number: string;
+  title: string;
+  color: string;
+  description: string;
+  bestFor: string;
+}) {
+  return (
+    <div style={{ display: 'flex', gap: 16, padding: 20, borderRadius: 12, border: '1px solid #e2e8f0', background: '#fafbfc' }}>
+      <div style={{
+        width: 48,
+        height: 48,
+        flexShrink: 0,
+        borderRadius: 12,
+        background: color + '15',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 22,
+        fontWeight: 800,
+        color: color,
+      }}>
+        {number}
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', margin: '0 0 6px' }}>{title}</h3>
+        <p style={{ fontSize: 13, color: '#475569', margin: '0 0 8px', lineHeight: 1.6 }}>{description}</p>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 999, background: color + '10', border: `1px solid ${color}30` }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: color, textTransform: 'uppercase', letterSpacing: '0.02em' }}>Best for:</span>
+          <span style={{ fontSize: 12, color: color, fontWeight: 600 }}>{bestFor}</span>
+        </div>
+      </div>
     </div>
   );
 }
