@@ -339,6 +339,11 @@ export default function BlogGeneratorPage() {
   const [metaDescription, setMetaDescription] = useState('');
   const [canonicalUrl, setCanonicalUrl] = useState('');
   const [faqs, setFaqs] = useState<FAQItem[]>([]);
+
+  // News-specific direct input (no AI)
+  const [newsContent, setNewsContent] = useState('');
+  const [newsExcerpt, setNewsExcerpt] = useState('');
+  const [newsTags, setNewsTags] = useState('');
   
   // Collapsible sections state
   const [showWordPressSettings, setShowWordPressSettings] = useState(true);
@@ -473,6 +478,64 @@ export default function BlogGeneratorPage() {
   const clearSelectedImage = () => {
     setSelectedImage(null);
     setFeaturedMediaId(null);
+  };
+
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .slice(0, 80);
+
+  const handlePrepareNews = () => {
+    if (!topic.trim() || !newsContent.trim()) return;
+
+    setGenError(null);
+    setPublishResult(null);
+    setSelectedImage(null);
+    setFeaturedMediaId(null);
+
+    const title = topic.trim();
+    const rawContent = newsContent.trim();
+    // Wrap plain text in <p> tags if no HTML detected
+    const htmlContent = /<[a-z][\s\S]*>/i.test(rawContent)
+      ? rawContent
+      : rawContent
+          .split(/\n\s*\n/)
+          .map((para) => `<p>${para.trim().replace(/\n/g, '<br />')}</p>`)
+          .join('\n');
+
+    const excerpt = newsExcerpt.trim() || rawContent.replace(/<[^>]+>/g, '').slice(0, 155);
+    const slug = slugify(title);
+    const tagList = newsTags.split(',').map((t) => t.trim()).filter(Boolean);
+
+    const preparedPost: GeneratedPost = {
+      title,
+      excerpt,
+      content: htmlContent,
+      tags: tagList,
+      seo_slug: slug,
+      seo_title: title,
+      meta_description: excerpt,
+      faqs: [],
+    };
+
+    setPost(preparedPost);
+    setEditTitle(title);
+    setEditExcerpt(excerpt);
+    setEditContent(htmlContent);
+    setEditTags(tagList.join(', '));
+    setSeoTitle(title);
+    setMetaDescription(excerpt);
+    setCanonicalUrl(buildCanonicalUrl(slug));
+    setFaqs([]);
+
+    // Auto-search for image based on news headline
+    const defaultQuery = title || 'Germany student news';
+    setImageQuery(defaultQuery);
+    handleUnsplashSearch(defaultQuery);
   };
 
   const handleGenerate = async () => {
@@ -711,25 +774,75 @@ export default function BlogGeneratorPage() {
               />
               {contentType === 'news' && (
                 <p style={{ fontSize: 12, color: '#64748b', marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
-                  📰 News articles are optimized for ticker display. Use the checkbox below to control ticker visibility.
+                  📰 News articles are published directly without AI generation. Provide the full text below.
                 </p>
               )}
-              <div style={{ marginTop: 16 }}>
-                <p style={{ fontSize: 13, color: '#737373', marginBottom: 8 }}>Quick ideas:</p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                  {(contentType === 'news' ? NEWS_IDEAS : TOPIC_IDEAS).map((idea) => (
-                    <button
-                      key={idea}
-                      onClick={() => setTopic(idea)}
-                      style={{ fontSize: 11, padding: '6px 12px', borderRadius: 20, border: '1px solid #e5e5e5', background: '#fff', color: '#666', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left' }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.color = '#dd0000'; }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e5e5'; e.currentTarget.style.color = '#666'; }}
-                    >
-                      {idea}
-                    </button>
-                  ))}
+
+              {/* News-specific direct input fields */}
+              {contentType === 'news' && (
+                <>
+                  <div style={{ marginTop: 20 }}>
+                    <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
+                      News Content <span style={{ color: '#dd0000' }}>*</span>
+                    </label>
+                    <textarea
+                      value={newsContent}
+                      onChange={(e) => setNewsContent(e.target.value)}
+                      placeholder="Paste your complete news article here. Plain text will be auto-formatted into paragraphs, or you can paste HTML directly."
+                      rows={12}
+                      style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.6 }}
+                    />
+                    <p style={{ fontSize: 11, color: '#94a3b8', margin: '6px 0 0' }}>
+                      Supports both plain text (auto-wrapped in paragraphs) and HTML (e.g. &lt;p&gt;, &lt;strong&gt;, &lt;a&gt;).
+                    </p>
+                  </div>
+
+                  <div style={{ marginTop: 16 }}>
+                    <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
+                      Excerpt / Summary <span style={{ color: '#94a3b8', textTransform: 'none' }}>(optional)</span>
+                    </label>
+                    <textarea
+                      value={newsExcerpt}
+                      onChange={(e) => setNewsExcerpt(e.target.value)}
+                      placeholder="A short 1-2 sentence summary (used for SEO meta description). Will auto-generate from content if left blank."
+                      rows={2}
+                      style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none', resize: 'vertical', fontFamily: 'inherit' }}
+                    />
+                  </div>
+
+                  <div style={{ marginTop: 16 }}>
+                    <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>
+                      Tags <span style={{ color: '#94a3b8', textTransform: 'none' }}>(comma-separated)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={newsTags}
+                      onChange={(e) => setNewsTags(e.target.value)}
+                      placeholder="e.g. Germany, International Students, Visa Update"
+                      style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid #e5e5e5', background: '#fff', fontSize: 14, color: '#111', outline: 'none' }}
+                    />
+                  </div>
+                </>
+              )}
+
+              {contentType === 'blog' && (
+                <div style={{ marginTop: 16 }}>
+                  <p style={{ fontSize: 13, color: '#737373', marginBottom: 8 }}>Quick ideas:</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {TOPIC_IDEAS.map((idea) => (
+                      <button
+                        key={idea}
+                        onClick={() => setTopic(idea)}
+                        style={{ fontSize: 11, padding: '6px 12px', borderRadius: 20, border: '1px solid #e5e5e5', background: '#fff', color: '#666', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left' }}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = '#dd0000'; e.currentTarget.style.color = '#dd0000'; }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e5e5'; e.currentTarget.style.color = '#666'; }}
+                      >
+                        {idea}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </section>
 
         {/* Settings */}
@@ -780,7 +893,8 @@ export default function BlogGeneratorPage() {
                   </div>
                 </div>
 
-                {/* Tone */}
+                {/* Tone — only for AI-generated blog posts */}
+                {contentType === 'blog' && (
                 <div>
                   <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Tone</label>
                   <div style={{ position: 'relative' }}>
@@ -796,8 +910,10 @@ export default function BlogGeneratorPage() {
                     <ChevronDown className="w-4 h-4" style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', color: '#999', pointerEvents: 'none' }} />
                   </div>
                 </div>
+                )}
 
-                {/* Length */}
+                {/* Length — only for AI-generated blog posts */}
+                {contentType === 'blog' && (
                 <div>
                   <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Length</label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
@@ -827,8 +943,10 @@ export default function BlogGeneratorPage() {
                     ))}
                   </div>
                 </div>
+                )}
 
-                {/* Focus Keyword */}
+                {/* Focus Keyword — only for AI-generated blog posts */}
+                {contentType === 'blog' && (
                 <div>
                   <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Focus Keyword</label>
                   <input
@@ -842,8 +960,10 @@ export default function BlogGeneratorPage() {
                     Optional - AI will generate appropriate keywords if left empty
                   </p>
                 </div>
+                )}
 
-                {/* Semantic Keywords */}
+                {/* Semantic Keywords — only for AI-generated blog posts */}
+                {contentType === 'blog' && (
                 <div>
                   <label style={{ fontSize: 12, color: '#737373', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 6 }}>Semantic Keywords</label>
                   <input
@@ -857,50 +977,71 @@ export default function BlogGeneratorPage() {
                     Optional - AI will generate supporting terms if left empty
                   </p>
                 </div>
+                )}
 
-                {/* Generate Button */}
-                <button
-                  onClick={() => {
-                    console.log('Generate clicked, topic:', topic);
-                    handleGenerate();
-                  }}
-                  disabled={!topic.trim() || generating}
-                  style={{
-                    width: '100%',
-                    padding: '14px 24px',
-                    borderRadius: 12,
-                    fontSize: 15,
-                    fontWeight: 700,
-                    color: '#fff',
-                    background: generating || !topic.trim() ? '#ccc' : 'linear-gradient(135deg, #dd0000, #7c3aed)',
-                    border: 'none',
-                    cursor: generating || !topic.trim() ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.2s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 8,
-                    boxShadow: generating || !topic.trim() ? 'none' : '0 4px 16px rgba(221,0,0,0.2)',
-                    opacity: generating || !topic.trim() ? 0.5 : 1
-                  }}
-                >
-                  {generating ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-5 h-5" />
-                      Generate Post
-                    </>
-                  )}
-                </button>
-
-                {/* Debug info */}
-                <div style={{ fontSize: 11, color: '#999', marginTop: 8 }}>
-                  Debug: Topic length = {topic.length}, Topic = "{topic}"
-                </div>
+                {/* Generate / Prepare Button */}
+                {contentType === 'news' ? (
+                  <button
+                    onClick={handlePrepareNews}
+                    disabled={!topic.trim() || !newsContent.trim()}
+                    style={{
+                      width: '100%',
+                      padding: '14px 24px',
+                      borderRadius: 12,
+                      fontSize: 15,
+                      fontWeight: 700,
+                      color: '#fff',
+                      background: (!topic.trim() || !newsContent.trim()) ? '#ccc' : 'linear-gradient(135deg, #dd0000, #ef4444)',
+                      border: 'none',
+                      cursor: (!topic.trim() || !newsContent.trim()) ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 8,
+                      boxShadow: (!topic.trim() || !newsContent.trim()) ? 'none' : '0 4px 16px rgba(221,0,0,0.2)',
+                      opacity: (!topic.trim() || !newsContent.trim()) ? 0.5 : 1
+                    }}
+                  >
+                    <FileText className="w-5 h-5" />
+                    Prepare News for Publishing
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleGenerate}
+                    disabled={!topic.trim() || generating}
+                    style={{
+                      width: '100%',
+                      padding: '14px 24px',
+                      borderRadius: 12,
+                      fontSize: 15,
+                      fontWeight: 700,
+                      color: '#fff',
+                      background: generating || !topic.trim() ? '#ccc' : 'linear-gradient(135deg, #dd0000, #7c3aed)',
+                      border: 'none',
+                      cursor: generating || !topic.trim() ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 8,
+                      boxShadow: generating || !topic.trim() ? 'none' : '0 4px 16px rgba(221,0,0,0.2)',
+                      opacity: generating || !topic.trim() ? 0.5 : 1
+                    }}
+                  >
+                    {generating ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-5 h-5" />
+                        Generate Post
+                      </>
+                    )}
+                  </button>
+                )}
 
                 {genError && (
                   <div style={{ padding: '12px 16px', borderRadius: 12, border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.1)', color: '#dc2626', fontSize: 13 }}>
