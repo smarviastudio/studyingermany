@@ -18,11 +18,11 @@ type GradingPreset = {
 };
 
 const PRESETS: GradingPreset[] = [
-  { id: 'pakistan-4', country: 'Pakistan', flag: '��', name: 'CGPA (4.0)', max: '4', min: '2', placeholder: 'e.g. 3.2' },
+  { id: 'pakistan-4', country: 'Pakistan', flag: '🇵🇰', name: 'CGPA (4.0)', max: '4', min: '2', placeholder: 'e.g. 3.2' },
   { id: 'india-10', country: 'India', flag: '🇮🇳', name: 'CGPA (10.0)', max: '10', min: '4', placeholder: 'e.g. 8.5' },
-  { id: 'india-pct', country: 'India', flag: '��', name: 'Percentage (100)', max: '100', min: '40', placeholder: 'e.g. 78' },
-  { id: 'us-4', country: 'USA', flag: '��', name: 'GPA (4.0)', max: '4', min: '1', placeholder: 'e.g. 3.5' },
-  { id: 'uk-100', country: 'UK', flag: '��', name: 'Percentage (100)', max: '100', min: '40', placeholder: 'e.g. 65' },
+  { id: 'india-pct', country: 'India', flag: '🇮🇳', name: 'Percentage (100)', max: '100', min: '40', placeholder: 'e.g. 78' },
+  { id: 'us-4', country: 'USA', flag: '🇺🇸', name: 'GPA (4.0)', max: '4', min: '1', placeholder: 'e.g. 3.5' },
+  { id: 'uk-100', country: 'UK', flag: '🇬🇧', name: 'Percentage (100)', max: '100', min: '40', placeholder: 'e.g. 65' },
   { id: 'bangladesh-4', country: 'Bangladesh', flag: '🇧🇩', name: 'CGPA (4.0)', max: '4', min: '2', placeholder: 'e.g. 3.4' },
   { id: 'nigeria-5', country: 'Nigeria', flag: '🇳🇬', name: 'CGPA (5.0)', max: '5', min: '1', placeholder: 'e.g. 4.2' },
   { id: 'nigeria-7', country: 'Nigeria', flag: '🇳🇬', name: 'CGPA (7.0)', max: '7', min: '1', placeholder: 'e.g. 5.5' },
