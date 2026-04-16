@@ -81,14 +81,14 @@ const TESTIMONIALS = [
 
 const JOURNEY_CATEGORIES = [
   { key: 'phd',        label: 'PhD',        icon: GraduationCap, color: '#7c3aed', desc: 'Doctoral programs & research', slugs: ['phd', 'doctorate', 'doctoral'] },
-  { key: 'master',     label: 'Master',     icon: BookOpen,       color: '#dd0000', desc: 'Master programs',              slugs: ['master', 'masters'] },
-  { key: 'bachelor',   label: 'Bachelor',   icon: School,        color: '#059669', desc: 'Bachelor programs',          slugs: ['bachelor', 'bachelors'] },
-  { key: 'visa',       label: 'Visa',       icon: Plane,         color: '#d97706', desc: 'Visa & immigration',         slugs: ['visa', 'immigration'] },
-  { key: 'housing',    label: 'Housing',    icon: Home,          color: '#0284c7', desc: 'Accommodation',              slugs: ['housing', 'accommodation'] },
-  { key: 'finance',    label: 'Finance',    icon: CreditCard,    color: '#be185d', desc: 'Money matters',            slugs: ['finance', 'financial', 'money', 'cost', 'expenses', 'budget', 'blocked-account', 'sperrkonto', 'insurance', 'scholarship', 'funding', 'tuition', 'fees', 'living-costs', 'expenses'] },
-  { key: 'jobs',       label: 'Jobs',       icon: Briefcase,     color: '#0891b2', desc: 'Working in Germany',       slugs: ['jobs', 'career', 'work', 'employment', 'job', 'working', 'internship', 'part-time', 'student-jobs', 'german-jobs', 'job-market', 'salary', 'wage'] },
-  { key: 'language',   label: 'Language',   icon: Languages,     color: '#ea580c', desc: 'German language',          slugs: ['language', 'german'] },
-  { key: 'others',     label: 'Others',     icon: FolderOpen,    color: '#64748b', desc: 'Other topics',             slugs: ['guides', 'tips', 'life'] },
+  { key: 'master',     label: 'Master',     icon: BookOpen,       color: '#dd0000', desc: 'Master programs',              slugs: ['master', 'masters', 'postgraduate'] },
+  { key: 'bachelor',   label: 'Bachelor',   icon: School,        color: '#059669', desc: 'Bachelor programs',          slugs: ['bachelor', 'bachelors', 'undergraduate', 'studienkolleg'] },
+  { key: 'visa',       label: 'Visa',       icon: Plane,         color: '#d97706', desc: 'Visa & immigration',         slugs: ['visa', 'immigration', 'residence-permit', 'aufenthaltstitel'] },
+  { key: 'housing',    label: 'Housing',    icon: Home,          color: '#0284c7', desc: 'Accommodation',              slugs: ['housing', 'accommodation', 'apartment', 'wg', 'dormitory', 'wohnheim'] },
+  { key: 'finance',    label: 'Finance',    icon: CreditCard,    color: '#be185d', desc: 'Money matters',            slugs: ['finance', 'financial', 'money', 'cost', 'expenses', 'budget', 'blocked-account', 'sperrkonto', 'insurance', 'scholarship', 'funding', 'tuition', 'fees', 'living-costs'] },
+  { key: 'jobs',       label: 'Jobs',       icon: Briefcase,     color: '#0891b2', desc: 'Working in Germany',       slugs: ['jobs', 'job', 'career', 'work', 'employment', 'working', 'internship', 'part-time', 'student-jobs', 'werkstudent', 'minijob'] },
+  { key: 'language',   label: 'Language',   icon: Languages,     color: '#ea580c', desc: 'German language',          slugs: ['language', 'german', 'deutsch', 'learning', 'course'] },
+  { key: 'others',     label: 'Others',     icon: FolderOpen,    color: '#64748b', desc: 'Other topics',             slugs: ['guides', 'tips', 'life', 'culture', 'lifestyle'] },
 ];
 
 type WpPost = {
