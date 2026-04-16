@@ -86,7 +86,7 @@ const JOURNEY_CATEGORIES = [
   { key: 'visa',       label: 'Visa',       icon: Plane,         color: '#d97706', desc: 'Visa & immigration',         slugs: ['visa', 'immigration'] },
   { key: 'housing',    label: 'Housing',    icon: Home,          color: '#0284c7', desc: 'Accommodation',              slugs: ['housing', 'accommodation'] },
   { key: 'finance',    label: 'Finance',    icon: CreditCard,    color: '#be185d', desc: 'Money matters',            slugs: ['finance', 'financial', 'money', 'cost', 'expenses', 'budget', 'blocked-account', 'sperrkonto', 'insurance', 'scholarship', 'funding', 'tuition', 'fees', 'living-costs', 'expenses'] },
-  { key: 'jobs',       label: 'Jobs',       icon: Briefcase,     color: '#0891b2', desc: 'Working in Germany',       slugs: ['jobs', 'career', 'work'] },
+  { key: 'jobs',       label: 'Jobs',       icon: Briefcase,     color: '#0891b2', desc: 'Working in Germany',       slugs: ['jobs', 'career', 'work', 'employment', 'job', 'working', 'internship', 'part-time', 'student-jobs', 'german-jobs', 'job-market', 'salary', 'wage'] },
   { key: 'language',   label: 'Language',   icon: Languages,     color: '#ea580c', desc: 'German language',          slugs: ['language', 'german'] },
   { key: 'others',     label: 'Others',     icon: FolderOpen,    color: '#64748b', desc: 'Other topics',             slugs: ['guides', 'tips', 'life'] },
 ];
