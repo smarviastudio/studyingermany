@@ -390,7 +390,7 @@ export default function HomePage() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('/api/wp-posts?per_page=30');
+        const res = await fetch('/api/wp-posts?per_page=100');
         if (res.ok) {
           const data = await res.json();
           setWpPosts(data.posts || []);
@@ -446,14 +446,13 @@ export default function HomePage() {
       const postSlugs = post.categories.map(c => c.slug.toLowerCase());
       const postNames = post.categories.map(c => c.name.toLowerCase());
       let placed = false;
+      // Allow a post to appear in multiple matching categories (not just the first)
       for (const journeyCat of JOURNEY_CATEGORIES) {
-        // Check if any post category slug or name matches any of our search terms
-        const matchesSlug = postSlugs.some(ps => journeyCat.slugs.some(s => ps.includes(s) || s.includes(ps)));
-        const matchesName = postNames.some(pn => journeyCat.slugs.some(s => pn.includes(s) || s.includes(pn)));
+        const matchesSlug = postSlugs.some(ps => journeyCat.slugs.some(s => ps === s || ps.includes(s) || s.includes(ps)));
+        const matchesName = postNames.some(pn => journeyCat.slugs.some(s => pn === s || pn.includes(s) || s.includes(pn)));
         if (matchesSlug || matchesName) {
           groups[journeyCat.key].push(post);
           placed = true;
-          break;
         }
       }
       if (!placed) groups['other'].push(post);

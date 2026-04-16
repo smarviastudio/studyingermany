@@ -3,7 +3,10 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const tickerOnly = searchParams.get('ticker_only') === '1';
-  const perPage = tickerOnly ? (searchParams.get('per_page') || '8') : (searchParams.get('per_page') || '6');
+  const requestedPerPage = searchParams.get('per_page');
+  const perPage = tickerOnly
+    ? (requestedPerPage || '8')
+    : (requestedPerPage ? Math.min(parseInt(requestedPerPage, 10) || 6, 100).toString() : '6');
   const category = searchParams.get('category') || '';
   const search = searchParams.get('search') || '';
 
