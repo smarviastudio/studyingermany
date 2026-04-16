@@ -656,9 +656,9 @@ export default async function BlogPostPage({ params }: Props) {
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.255 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                   Twitter
                 </a>
-                <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://germanpath.com/blog/${slug}`)}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-800 text-sm font-semibold hover:bg-[#e8f0f8] hover:border-[#b3cfe8] hover:text-[#0a66c2] transition-all">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-                  LinkedIn
+                <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://germanpath.com/blog/${slug}`)}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-800 text-sm font-semibold hover:bg-[#f0f2f5] hover:border-[#bcc1c9] hover:text-[#1877f2] transition-all">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  Facebook
                 </a>
               </div>
             </div>
