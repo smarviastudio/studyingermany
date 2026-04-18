@@ -7,7 +7,7 @@ import Link from 'next/link';
 import {
   ArrowLeft, Loader2, Download, Copy, Check, Sparkles, GraduationCap,
   ChevronDown, FileText, Wand2, User, BookOpen, Target, Briefcase,
-  Heart, RefreshCw, CheckCircle2, Upload, X, Edit3
+  Heart, RefreshCw, CheckCircle2, X, Edit3
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
@@ -252,13 +252,8 @@ function MotivationLetterContent() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showProgramExtras, setShowProgramExtras] = useState(false);
   const [showOptionalDetails, setShowOptionalDetails] = useState(false);
-  const [cvText, setCvText] = useState<string>('');
-  const [cvFileName, setCvFileName] = useState<string>('');
-  const [cvParsing, setCvParsing] = useState(false);
-  const [cvError, setCvError] = useState<string>('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const letterRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [userInput, setUserInput] = useState({
     fullName: '',
@@ -360,67 +355,6 @@ function MotivationLetterContent() {
     setError(null);
   };
 
-  const parseCv = async (file: File) => {
-    console.log('[CV Parser Frontend] Starting CV parse for file:', file.name);
-    
-    if (file.type !== 'application/pdf') {
-      console.log('[CV Parser Frontend] Invalid file type:', file.type);
-      setCvError('Please upload a PDF file');
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      console.log('[CV Parser Frontend] File too large:', file.size);
-      setCvError('File too large (max 5MB)');
-      return;
-    }
-    try {
-      setCvParsing(true);
-      setCvError('');
-      const formData = new FormData();
-      formData.append('file', file);
-      
-      console.log('[CV Parser Frontend] Sending request to API');
-      const res = await fetch('/api/parse-cv', { method: 'POST', body: formData });
-      
-      console.log('[CV Parser Frontend] API response status:', res.status);
-      
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        console.log('[CV Parser Frontend] API error:', err);
-        throw new Error(err.error || 'Failed to parse CV');
-      }
-      
-      const data = await res.json();
-      console.log('[CV Parser Frontend] Successfully parsed CV, text length:', data.text?.length || 0);
-      
-      setCvText(data.text);
-      setCvFileName(file.name);
-
-      // Try to auto-fill name from first line of CV text
-      const lines = data.text.split('\n').map((l: string) => l.trim()).filter(Boolean);
-      if (lines.length > 0 && !userInput.fullName) {
-        // First non-empty line is often the name — use it if it's short enough (likely a name)
-        const firstLine = lines[0];
-        if (firstLine.length <= 60 && !/[@|\d{4}]/.test(firstLine)) {
-          console.log('[CV Parser Frontend] Auto-filling name:', firstLine);
-          setUserInput(p => ({ ...p, fullName: firstLine }));
-        }
-      }
-    } catch (err) {
-      console.error('[CV Parser Frontend] Error:', err);
-      setCvError(err instanceof Error ? err.message : 'Failed to parse CV');
-    } finally {
-      setCvParsing(false);
-    }
-  };
-
-  const removeCv = () => {
-    setCvText('');
-    setCvFileName('');
-    setCvError('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
-
   const resolvedProgram = () => {
     if (useManualProgram) {
       if (!manualProgram.program_name.trim() || !manualProgram.university.trim()) return null;
@@ -446,7 +380,7 @@ function MotivationLetterContent() {
       const response = await fetch('/api/motivation-letter/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ program: programPayload, userInput, cvText: cvText || undefined })
+        body: JSON.stringify({ program: programPayload, userInput })
       });
       if (response.status === 402) {
         const errData = await response.json().catch(() => ({}));
@@ -698,31 +632,6 @@ function MotivationLetterContent() {
               </div>
             </div>
 
-            {/* CV Upload - Cleaner design */}
-            <div style={{ background: '#fff', borderRadius: 16, padding: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', border: '2px dashed #e2e8f0' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(239,68,68,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Upload size={18} color="#ef4444" /></div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', margin: '0 0 2px' }}>Upload CV <span style={{ color: '#64748b', fontWeight: 400, fontSize: 12 }}>(optional)</span></p>
-                  <p style={{ fontSize: 12, color: '#64748b', margin: 0 }}>We&apos;ll extract relevant details for your letter</p>
-                </div>
-                {!cvText ? (
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 10, background: '#f5f5f5', border: '1px solid #e5e5e5', fontSize: 13, color: '#555', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                    {cvParsing ? <Loader2 size={14} className="animate-spin" style={{ color: '#dd0000' }} /> : <Upload size={14} />}
-                    {cvParsing ? 'Reading…' : 'Upload PDF'}
-                    <input ref={fileInputRef} type="file" accept="application/pdf" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) parseCv(f); }} />
-                  </label>
-                ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '6px 12px' }}>
-                    <Check size={13} color="#22c55e" />
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#16a34a', maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cvFileName}</span>
-                    <button onClick={removeCv} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 0, display: 'flex' }}><X size={12} /></button>
-                  </div>
-                )}
-              </div>
-              {cvError && <p style={{ fontSize: 12, color: '#dc2626', marginTop: 8, marginBottom: 0 }}>{cvError}</p>}
-            </div>
-
             {/* Generate - Cleaner design */}
             <div style={{ background: '#fff', borderRadius: 16, padding: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', border: '1px solid #f1f5f9' }}>
               {error && <div style={{ fontSize: 13, color: '#dc2626', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '10px 14px', marginBottom: 14 }}>{error}</div>}
@@ -730,7 +639,7 @@ function MotivationLetterContent() {
                 {loading ? <><Loader2 size={18} className="animate-spin" /> Generating…</> : <><Wand2 size={18} /> Generate Letter</>}
               </button>
               {!canGenerate && <p style={{ fontSize: 12, color: '#64748b', textAlign: 'center', marginTop: 8, marginBottom: 0 }}>Complete required fields to continue</p>}
-              <button type="button" onClick={() => { setUserInput({ fullName: '', background: '', motivation: '', careerGoals: '', whyThisProgram: '', relevantExperience: '' }); setLetter(''); removeCv(); }} style={{ width: '100%', marginTop: 12, padding: '10px', borderRadius: 10, border: '1px solid #e2e8f0', fontSize: 13, color: '#64748b', background: 'transparent', cursor: 'pointer', fontWeight: 500 }}>
+              <button type="button" onClick={() => { setUserInput({ fullName: '', background: '', motivation: '', careerGoals: '', whyThisProgram: '', relevantExperience: '' }); setLetter(''); }} style={{ width: '100%', marginTop: 12, padding: '10px', borderRadius: 10, border: '1px solid #e2e8f0', fontSize: 13, color: '#64748b', background: 'transparent', cursor: 'pointer', fontWeight: 500 }}>
                 <RefreshCw size={13} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />Clear form
               </button>
             </div>

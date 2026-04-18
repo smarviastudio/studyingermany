@@ -4,9 +4,9 @@ import { useState, useRef, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {
-  ArrowLeft, Loader2, Wand2, NotebookPen, Paperclip,
-  FileText, Sparkles, Upload, Check, Copy, X, RefreshCw,
-  Briefcase, User, ChevronRight, Download,
+  ArrowLeft, Loader2, Wand2, NotebookPen,
+  FileText, Sparkles, Check, Copy, RefreshCw,
+  Briefcase, User, Download,
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
@@ -53,11 +53,6 @@ export default function CoverLetterPage() {
   const [paywallData, setPaywallData] = useState<{ current: number; limit: number } | null>(null);
   const [signInPrompt, setSignInPrompt] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [cvParsing, setCvParsing] = useState(false);
-  const [cvError, setCvError] = useState('');
-  const [cvSummary, setCvSummary] = useState('');
-  const [cvFileName, setCvFileName] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
   const requiredReady2 = role.trim() && company.trim() && fullName.trim() && background.trim();
@@ -74,52 +69,6 @@ export default function CoverLetterPage() {
     if (!achievements && profileData.experienceHighlights) setAchievements(profileData.experienceHighlights);
   }, [profileData, fullName, background, strengths, achievements]);
 
-  const parseCv = async (file: File) => {
-    console.log('[CV Parser Cover Letter] Starting CV parse for file:', file.name);
-    
-    if (file.type !== 'application/pdf') { 
-      console.log('[CV Parser Cover Letter] Invalid file type:', file.type);
-      setCvError('Please upload a PDF file.'); 
-      return; 
-    }
-    if (file.size > 5 * 1024 * 1024) { 
-      console.log('[CV Parser Cover Letter] File too large:', file.size);
-      setCvError('File too large (max 5MB).'); 
-      return; 
-    }
-    try {
-      setCvParsing(true); setCvError('');
-      const fd = new FormData(); fd.append('file', file);
-      
-      console.log('[CV Parser Cover Letter] Sending request to API');
-      const res = await fetch('/api/parse-cv', { method: 'POST', body: fd });
-      
-      console.log('[CV Parser Cover Letter] API response status:', res.status);
-      
-      if (!res.ok) { 
-        const e = await res.json().catch(() => ({})); 
-        console.log('[CV Parser Cover Letter] API error:', e);
-        throw new Error(e.error || 'Failed'); 
-      }
-      
-      const data = await res.json();
-      console.log('[CV Parser Cover Letter] Successfully parsed CV, text length:', data.text?.length || 0);
-      
-      setCvSummary(data.text); setCvFileName(file.name);
-      if (!background.trim()) {
-        const autoBackground = data.text.split('\n').slice(0, 3).join(' ').slice(0, 200);
-        console.log('[CV Parser Cover Letter] Auto-filling background:', autoBackground.substring(0, 50) + '...');
-        setBackground(autoBackground);
-      }
-    } catch (err) { 
-      console.error('[CV Parser Cover Letter] Error:', err);
-      setCvError(err instanceof Error ? err.message : 'Failed to parse CV'); 
-    }
-    finally { setCvParsing(false); }
-  };
-
-  const removeCv = () => { setCvSummary(''); setCvFileName(''); setCvError(''); if (fileInputRef.current) fileInputRef.current.value = ''; };
-
   const handleGenerate = async () => {
     if (!requiredReady2) return;
     if (!session) { setSignInPrompt(true); return; }
@@ -127,7 +76,7 @@ export default function CoverLetterPage() {
       setLoading(true); setError(null);
       const response = await fetch('/api/cover-letter/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: 'generate', job: { role, company, jobDescription, tone }, applicant: { fullName, summary: background, strengths, achievements, closing: '' }, cvText: cvSummary || undefined }),
+        body: JSON.stringify({ mode: 'generate', job: { role, company, jobDescription, tone }, applicant: { fullName, summary: background, strengths, achievements, closing: '' } }),
       });
       if (response.status === 402) { const e = await response.json().catch(() => ({})); setPaywallData({ current: e.current ?? 0, limit: e.limit ?? 3 }); setPaywallOpen(true); return; }
       if (!response.ok) { const e = await response.json().catch(() => ({})); throw new Error(e.message || e.error || 'Failed'); }
@@ -274,33 +223,6 @@ export default function CoverLetterPage() {
               </div>
             </div>
 
-            {/* CV Upload */}
-            <div style={{ background: '#fff', borderRadius: 20, padding: 20, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px dashed #d1d5db' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(221,0,0,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Paperclip size={18} color="#dd0000" />
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: '#111', margin: '0 0 1px' }}>Attach CV <span style={{ color: '#9ca3af', fontWeight: 400, fontSize: 12 }}>(optional)</span></p>
-                  <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>We extract context to personalise the letter</p>
-                </div>
-                {!cvSummary ? (
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 10, background: '#f5f5f5', border: '1px solid #e5e5e5', fontSize: 13, color: '#555', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                    {cvParsing ? <Loader2 size={14} className="animate-spin" style={{ color: '#dd0000' }} /> : <Upload size={14} />}
-                    {cvParsing ? 'Reading…' : 'Upload PDF'}
-                    <input ref={fileInputRef} type="file" accept="application/pdf" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) parseCv(f); }} />
-                  </label>
-                ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '6px 12px' }}>
-                    <Check size={14} color="#22c55e" />
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#16a34a', maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cvFileName}</span>
-                    <button onClick={removeCv} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 0, display: 'flex' }}><X size={12} /></button>
-                  </div>
-                )}
-              </div>
-              {cvError && <p style={{ fontSize: 12, color: '#dc2626', marginTop: 8, marginBottom: 0 }}>{cvError}</p>}
-            </div>
-
             {/* Generate Button */}
             <div style={{ background: '#fff', borderRadius: 20, padding: 20, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', border: '1px solid #e5e7eb' }}>
               {error && <div style={{ fontSize: 13, color: '#dc2626', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '10px 14px', marginBottom: 14 }}>{error}</div>}
@@ -312,7 +234,7 @@ export default function CoverLetterPage() {
                 {loading ? <><Loader2 size={18} className="animate-spin" /> Generating…</> : <><Wand2 size={18} /> Generate Cover Letter</>}
               </button>
               {!requiredReady2 && <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', marginTop: 8, marginBottom: 0 }}>Fill in role, company, your name and background to continue</p>}
-              <button onClick={() => { setRole(''); setCompany(''); setJobDescription(''); setTone('Professional & warm'); setFullName(''); setBackground(''); setStrengths(''); setAchievements(''); setLetter(''); removeCv(); }} style={{ width: '100%', marginTop: 10, padding: '10px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 13, color: '#666', background: 'transparent', cursor: 'pointer', fontWeight: 600 }}>
+              <button onClick={() => { setRole(''); setCompany(''); setJobDescription(''); setTone('Professional & warm'); setFullName(''); setBackground(''); setStrengths(''); setAchievements(''); setLetter(''); }} style={{ width: '100%', marginTop: 10, padding: '10px', borderRadius: 10, border: '1px solid #e5e5e5', fontSize: 13, color: '#666', background: 'transparent', cursor: 'pointer', fontWeight: 600 }}>
                 <RefreshCw size={13} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />Reset all
               </button>
             </div>
