@@ -1171,7 +1171,7 @@ export default function HomePage() {
             <div className="section-label">About German Path</div>
             <h2 className="section-title">Who is German Path for?</h2>
             <p className="section-desc">
-              German Path (GermanPath UG) is an AI-powered platform helping international students study in Germany. 
+              German Path (operated by Smarvia Studio) is an AI-powered platform helping international students study in Germany. 
               Whether you&apos;re from Pakistan, India, Bangladesh, Nigeria, or anywhere else in the world — we&apos;re here to guide you.
             </p>
           </div>

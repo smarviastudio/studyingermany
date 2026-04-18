@@ -21,23 +21,43 @@ export default function ImpressumPage() {
 
           <Section title="Service Provider / Dienstanbieter">
             <Row label="Company name" value="Smarvia Studio" />
+            <Row label="Legal form" value="Sole proprietorship (Einzelunternehmen)" />
+            <Row label="Owner / Inhaber" value="Salman Shahid" />
             <Row label="Address" value="Schoeneggstrasse 45, 8953 Dietikon" />
             <Row label="Country" value="Switzerland" />
+            <Row label="Swiss UID / VAT ID" value="On request via email (where applicable)" />
           </Section>
 
           <Section title="Contact / Kontakt">
             <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, margin: 0 }}>
-              Email:&nbsp;
+              Email (general):&nbsp;
               <a href="mailto:smarviastudio@gmail.com" style={{ color: '#dd0000' }}>smarviastudio@gmail.com</a>
               <br />
-              Phone available on request via email.
+              Email (privacy / Datenschutz):&nbsp;
+              <a href="mailto:privacy@germanpath.com" style={{ color: '#dd0000' }}>privacy@germanpath.com</a>
+              <br />
+              Email (billing):&nbsp;
+              <a href="mailto:billing@germanpath.com" style={{ color: '#dd0000' }}>billing@germanpath.com</a>
+              <br />
+              Email (support):&nbsp;
+              <a href="mailto:support@germanpath.com" style={{ color: '#dd0000' }}>support@germanpath.com</a>
+              <br />
+              We aim to respond within 2 working days. A direct telephone number is available on request via email.
             </p>
           </Section>
 
-          <Section title="Responsible for content / Inhaltlich Verantwortlicher">
+          <Section title="Responsible for content / Inhaltlich Verantwortlicher (§ 18 Abs. 2 MStV)">
             <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, margin: 0 }}>
+              Responsible for journalistic-editorial content (e.g. blog and news articles) within the meaning of § 18 (2) of the German Medienstaatsvertrag (MStV):
+              <br /><br />
               Salman Shahid<br />
               Schoeneggstrasse 45, 8953 Dietikon, Switzerland
+            </p>
+          </Section>
+
+          <Section title="EU Representative (Art. 27 GDPR)">
+            <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, margin: 0 }}>
+              As we are established outside the EU/EEA but offer services to data subjects in the EU, we have appointed an EU representative under Art. 27 GDPR. Contact details will be published on this page once finalised. In the meantime, GDPR-related enquiries may be sent to <a href="mailto:privacy@germanpath.com" style={{ color: '#dd0000' }}>privacy@germanpath.com</a>.
             </p>
           </Section>
 
@@ -68,6 +88,8 @@ export default function ImpressumPage() {
           <div style={{ marginTop: 40, paddingTop: 24, borderTop: '1px solid #e5e7eb', display: 'flex', gap: 20, flexWrap: 'wrap' }}>
             <Link href="/privacy-policy" style={{ fontSize: 13, fontWeight: 600, color: '#dd0000', textDecoration: 'none' }}>Privacy Policy →</Link>
             <Link href="/terms" style={{ fontSize: 13, fontWeight: 600, color: '#dd0000', textDecoration: 'none' }}>Terms of Service →</Link>
+            <Link href="/cookie-policy" style={{ fontSize: 13, fontWeight: 600, color: '#dd0000', textDecoration: 'none' }}>Cookie Policy →</Link>
+            <Link href="/withdrawal-form" style={{ fontSize: 13, fontWeight: 600, color: '#dd0000', textDecoration: 'none' }}>Withdrawal Form →</Link>
           </div>
         </div>
       </main>

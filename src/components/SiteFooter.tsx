@@ -54,6 +54,8 @@ export function SiteFooter() {
               { href: '/impressum', label: 'Impressum' },
               { href: '/privacy-policy', label: 'Privacy' },
               { href: '/terms', label: 'Terms' },
+              { href: '/cookie-policy', label: 'Cookie Policy' },
+              { href: '/withdrawal-form', label: 'Withdrawal' },
             ]} />
             <button
               onClick={handleCookiePreferences}
@@ -89,7 +91,7 @@ export function SiteFooter() {
         {/* Bottom */}
         <div style={{ borderTop: '1px solid #1f1f1f', paddingTop: 20, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
           <p style={{ fontSize: 12, color: '#525252', margin: 0 }}>
-            © {new Date().getFullYear()} GermanPath UG. All rights reserved.
+            © {new Date().getFullYear()} Smarvia Studio. All rights reserved.
           </p>
           <div style={{ display: 'flex', gap: 16, fontSize: 11, color: '#525252' }}>
             <span>🇪🇺 EU Hosted</span>
