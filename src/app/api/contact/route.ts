@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       });
     } else {
       const { data, error } = await resend.emails.send({
-        from: 'GermanPath <noreply@germanpath.com>',
+        from: 'GermanPath Contact <onboarding@resend.dev>',
         to: ['smarviastudio@gmail.com'],
         replyTo: email,
         subject: `Contact Form: ${name}`,
