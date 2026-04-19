@@ -814,7 +814,7 @@ export default function HomePage() {
           <div style={{ background: '#fff', borderRadius: 24, maxWidth: 800, width: '100%', padding: 32, boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)', maxHeight: 'calc(100vh - 40px)', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #dd0000, #b91c1c)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #dd0000, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Filter className="w-6 h-6" style={{ color: '#fff' }} />
                 </div>
                 <div>
@@ -833,7 +833,7 @@ export default function HomePage() {
               <div>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 8 }}>Degree Level</label>
                 <select value={advancedFilters.degreeLevel} onChange={(e) => setAdvancedFilters({...advancedFilters, degreeLevel: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
-                  onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#8b5cf6'; }}
                   onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}>
                   <option value="">All Levels</option>
                   <option value="bachelor">Bachelor</option>
@@ -846,7 +846,7 @@ export default function HomePage() {
               <div>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 8 }}>Language of Study</label>
                 <select value={advancedFilters.language} onChange={(e) => setAdvancedFilters({...advancedFilters, language: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
-                  onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#8b5cf6'; }}
                   onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}>
                   <option value="">Any Language</option>
                   <option value="english">English</option>
@@ -858,14 +858,14 @@ export default function HomePage() {
               <div>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 8 }}>City</label>
                 <input type="text" value={advancedFilters.city} onChange={(e) => setAdvancedFilters({...advancedFilters, city: e.target.value})} placeholder="e.g. Berlin, Munich" style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
-                  onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#8b5cf6'; }}
                   onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }} />
               </div>
 
               <div>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 8 }}>Subject Area</label>
                 <select value={advancedFilters.subjectArea} onChange={(e) => setAdvancedFilters({...advancedFilters, subjectArea: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
-                  onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#8b5cf6'; }}
                   onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}>
                   <option value="">All Subjects</option>
                   <option value="engineering">Engineering</option>
@@ -886,7 +886,7 @@ export default function HomePage() {
               <div>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 8 }}>Intake Season</label>
                 <select value={advancedFilters.intake} onChange={(e) => setAdvancedFilters({...advancedFilters, intake: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
-                  onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#8b5cf6'; }}
                   onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}>
                   <option value="">Any Intake</option>
                   <option value="winter">Winter Semester</option>
@@ -898,10 +898,10 @@ export default function HomePage() {
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#333', marginBottom: 12 }}>Tuition Fee Range (EUR/year)</label>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <input type="number" value={advancedFilters.tuitionMin} onChange={(e) => setAdvancedFilters({...advancedFilters, tuitionMin: e.target.value})} placeholder="Min (e.g. 0)" style={{ padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
-                    onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                    onFocus={e => { e.currentTarget.style.borderColor = '#8b5cf6'; }}
                     onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }} />
                   <input type="number" value={advancedFilters.tuitionMax} onChange={(e) => setAdvancedFilters({...advancedFilters, tuitionMax: e.target.value})} placeholder="Max (e.g. 5000)" style={{ padding: '12px 14px', border: '2px solid #e5e5e5', borderRadius: 12, fontSize: 15, fontWeight: 500, outline: 'none', transition: 'all 0.2s' }}
-                    onFocus={e => { e.currentTarget.style.borderColor = '#dd0000'; }}
+                    onFocus={e => { e.currentTarget.style.borderColor = '#8b5cf6'; }}
                     onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }} />
                 </div>
               </div>
@@ -938,9 +938,9 @@ export default function HomePage() {
                 onMouseLeave={e => { e.currentTarget.style.background = '#f5f5f5'; }}>
                 Clear All
               </button>
-              <button onClick={handleAdvancedSearch} style={{ flex: 2, padding: '14px 24px', background: 'linear-gradient(135deg, #dd0000, #b91c1c)', border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700, color: '#fff', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221, 0, 0, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(221, 0, 0, 0.4)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(221, 0, 0, 0.3)'; }}>
+              <button onClick={handleAdvancedSearch} style={{ flex: 2, padding: '14px 24px', background: 'linear-gradient(135deg, #dd0000, #8b5cf6)', border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700, color: '#fff', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(139, 92, 246, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(139, 92, 246, 0.4)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(139, 92, 246, 0.3)'; }}>
                 <Sparkles className="w-5 h-5" /> Search Programs
               </button>
             </div>
