@@ -1207,23 +1207,26 @@ function CVMakerContent() {
           )}
 
           {/* Template Grid */}
-          <div className="cvmaker-template-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16, paddingBottom: 100 }}>
+          <div className="cvmaker-template-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 16, paddingBottom: 100 }}>
             {TEMPLATES.map((t, idx) => {
-              const isPremium = !canAccessCvTemplate(planType, idx);
+              const isPremiumTpl = getTemplateAccessLabel(idx) !== null;
+              const isLocked = !canAccessCvTemplate(planType, idx);
               const accessLabel = getTemplateAccessLabel(idx);
               return (
                 <button key={t.id} onClick={() => {
                   setTplId(t.id); setAccent(t.accent);
-                }} className="cv-template-card" style={{ position: 'relative', textAlign: 'left', borderRadius: 16, overflow: 'hidden', border: `2px solid ${tplId === t.id ? (isPremium ? '#f59e0b' : '#dd0000') : isPremium ? 'rgba(234,179,8,0.4)' : '#ebebeb'}`, background: '#fff', cursor: 'pointer', transition: 'all 0.3s', boxShadow: tplId === t.id ? (isPremium ? '0 8px 24px rgba(245,158,11,0.2)' : '0 8px 24px rgba(221,0,0,0.15)') : 'none' }}>
+                }} className="cv-template-card" style={{ position: 'relative', textAlign: 'left', borderRadius: 16, overflow: 'hidden', border: `2px solid ${tplId === t.id ? (isPremiumTpl ? '#f59e0b' : '#dd0000') : isPremiumTpl ? 'rgba(234,179,8,0.4)' : '#ebebeb'}`, background: '#fff', cursor: 'pointer', transition: 'all 0.3s', boxShadow: tplId === t.id ? (isPremiumTpl ? '0 8px 24px rgba(245,158,11,0.2)' : '0 8px 24px rgba(221,0,0,0.15)') : 'none' }}>
                   <div style={{ background: '#fff', overflow: 'hidden', display: 'flex', justifyContent: 'center', height: 180, position: 'relative' }}>
                     <MiniCV tpl={t} />
-                    {isPremium && (
+                    {isPremiumTpl && (
                       <>
-                        {/* Diagonal watermark text */}
-                        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', overflow: 'hidden' }}>
-                          <span style={{ transform: 'rotate(-30deg)', fontSize: 22, fontWeight: 900, color: 'rgba(234,179,8,0.22)', letterSpacing: '0.12em', whiteSpace: 'nowrap', userSelect: 'none', textTransform: 'uppercase' }}>PREMIUM</span>
-                        </div>
-                        {/* Top-right badge */}
+                        {/* Diagonal watermark text — only if locked */}
+                        {isLocked && (
+                          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', overflow: 'hidden' }}>
+                            <span style={{ transform: 'rotate(-30deg)', fontSize: 22, fontWeight: 900, color: 'rgba(234,179,8,0.22)', letterSpacing: '0.12em', whiteSpace: 'nowrap', userSelect: 'none', textTransform: 'uppercase' }}>PREMIUM</span>
+                          </div>
+                        )}
+                        {/* Top-right badge — always show if premium template */}
                         <div style={{ position: 'absolute', top: 8, right: 8, display: 'flex', alignItems: 'center', gap: 4, background: 'linear-gradient(135deg,#f59e0b,#d97706)', borderRadius: 20, padding: '3px 8px 3px 5px', boxShadow: '0 2px 8px rgba(245,158,11,0.4)' }}>
                           <Crown size={10} color="#fff" />
                           <span style={{ fontSize: 9, fontWeight: 800, color: '#fff', letterSpacing: '0.04em' }}>PRO</span>
@@ -1231,13 +1234,13 @@ function CVMakerContent() {
                       </>
                     )}
                   </div>
-                  <div style={{ padding: '12px 14px', background: isPremium ? '#fefce8' : '#fafafa', borderTop: `1px solid ${isPremium ? 'rgba(234,179,8,0.3)' : '#ebebeb'}` }}>
+                  <div style={{ padding: '12px 14px', background: isPremiumTpl ? '#fefce8' : '#fafafa', borderTop: `1px solid ${isPremiumTpl ? 'rgba(234,179,8,0.3)' : '#ebebeb'}` }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
                       <div style={{ minWidth: 0, flex: 1 }}>
                         <p style={{ fontSize: 13, fontWeight: 700, color: '#111', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</p>
-                        <p style={{ fontSize: 11, color: isPremium ? '#a16207' : '#999', margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{isPremium ? `✦ ${accessLabel}` : t.description}</p>
+                        <p style={{ fontSize: 11, color: isPremiumTpl ? '#a16207' : '#999', margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{isPremiumTpl ? `✦ ${accessLabel}` : t.description}</p>
                       </div>
-                      {isPremium
+                      {isPremiumTpl
                         ? <Crown size={14} color="#f59e0b" style={{ flexShrink: 0 }} />
                         : t.hasPhoto && (
                           <span style={{ padding: '3px 8px', borderRadius: 6, background: 'rgba(221,0,0,0.1)', color: '#dd0000', fontSize: 10, fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -1246,7 +1249,7 @@ function CVMakerContent() {
                         )}
                     </div>
                   </div>
-                  {tplId === t.id && <div style={{ position: 'absolute', top: 12, right: 12, width: 28, height: 28, borderRadius: 999, background: isPremium ? 'linear-gradient(135deg,#f59e0b,#d97706)' : '#dd0000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: isPremium ? '0 4px 12px rgba(245,158,11,0.4)' : '0 4px 12px rgba(221,0,0,0.3)' }}><Check className="w-4 h-4" style={{ color: '#fff' }} /></div>}
+                  {tplId === t.id && <div style={{ position: 'absolute', top: 12, right: 12, width: 28, height: 28, borderRadius: 999, background: isPremiumTpl ? 'linear-gradient(135deg,#f59e0b,#d97706)' : '#dd0000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: isPremiumTpl ? '0 4px 12px rgba(245,158,11,0.4)' : '0 4px 12px rgba(221,0,0,0.3)' }}><Check className="w-4 h-4" style={{ color: '#fff' }} /></div>}
                 </button>
               );
             })}
