@@ -16,7 +16,6 @@ import type { ProgramSummary } from '@/lib/types';
 import { SiteNav } from '@/components/SiteNav';
 import { PromoPopup } from '@/components/PromoPopup';
 
-const RED = '#dd0000';
 const SEARCH_RESULTS_LIMIT = 120;
 const RESULTS_PER_PAGE = 12;
 
@@ -641,9 +640,9 @@ export default function HomePage() {
       {signInToast && (
         <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[60]">
           <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white border border-gray-200 shadow-lg">
-            <Bookmark className="w-4 h-4 flex-shrink-0" style={{ color: RED }} />
+            <Bookmark className="w-4 h-4 flex-shrink-0 text-red-600" />
             <p className="text-gray-800 text-sm font-medium">Sign in to save programs</p>
-            <Link href="/auth/signin" className="ml-1 px-3 py-1 rounded-lg text-white text-xs font-semibold" style={{ background: RED }}>Sign in</Link>
+            <Link href="/auth/signin" className="ml-1 px-3 py-1 rounded-lg text-white text-xs font-semibold bg-gradient-to-r from-red-600 to-purple-600">Sign in</Link>
             <button onClick={() => setSignInToast(false)}><X className="w-3.5 h-3.5 text-gray-400" /></button>
           </div>
         </div>
