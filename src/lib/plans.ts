@@ -5,6 +5,13 @@ const FREE_TEMPLATE_COUNT = 2;
 const FREE_AI_CREDIT_LIMIT = 3;
 const PRO_AI_CREDIT_LIMIT = 20;
 
+/**
+ * Launch promo — when true, every signed-in user gets access to all premium
+ * CV templates for free. AI credit limits remain enforced server-side.
+ * Flip to `false` to end the promo.
+ */
+export const PROMO_UNLOCK_PREMIUM_TEMPLATES_FOR_AUTH = true;
+
 export function getRawPlanType(planType?: string | null): RawPlanType {
   switch (planType) {
     case 'starter':

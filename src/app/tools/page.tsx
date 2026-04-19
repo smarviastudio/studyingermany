@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { SiteNav } from '@/components/SiteNav';
+import { PromoPopup } from '@/components/PromoPopup';
 
 const TOOLS = [
   {
@@ -112,6 +113,9 @@ export default function ToolsPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
+
+      {/* First-visit launch promo */}
+      <PromoPopup storageKey="gp_promo_seen_tools_v1" />
       
       {/* Hero */}
       <section style={{ 

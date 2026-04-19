@@ -14,6 +14,7 @@ import { ProgramModal } from '@/components/ProgramModal';
 import { ProgramCard } from '@/components/ProgramCard';
 import type { ProgramSummary } from '@/lib/types';
 import { SiteNav } from '@/components/SiteNav';
+import { PromoPopup } from '@/components/PromoPopup';
 
 const RED = '#dd0000';
 const SEARCH_RESULTS_LIMIT = 120;
@@ -804,6 +805,9 @@ export default function HomePage() {
       )}
 
       <SiteNav />
+
+      {/* First-visit launch promo */}
+      <PromoPopup storageKey="gp_promo_seen_home_v1" />
 
       {/* Advanced Search Modal */}
       {showAdvancedSearch && (

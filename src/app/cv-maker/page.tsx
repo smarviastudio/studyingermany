@@ -17,7 +17,7 @@ import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
 import { templates as TEMPLATE_LIBRARY } from '@/lib/cv-maker/templates';
 import { useProfileData } from '@/hooks/useProfileData';
 import type { Program } from '@/lib/types';
-import { canAccessCvTemplate, getTemplateAccessLabel } from '@/lib/plans';
+import { canAccessCvTemplate, getTemplateAccessLabel, PROMO_UNLOCK_PREMIUM_TEMPLATES_FOR_AUTH } from '@/lib/plans';
 
 interface ShortlistItem {
   id: string;
@@ -831,6 +831,12 @@ function CVMakerContent() {
       return;
     }
 
+    // Promo: every signed-in user gets premium templates for free during launch.
+    if (PROMO_UNLOCK_PREMIUM_TEMPLATES_FOR_AUTH) {
+      setPlanType('pro');
+      return;
+    }
+
     fetch('/api/user/subscription')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => setPlanType(data?.subscription?.planType || 'free'))
@@ -1186,6 +1192,19 @@ function CVMakerContent() {
               <Sparkles className="w-5 h-5" /> Generate with AI
             </button>
           </div>
+
+          {/* Promo unlock banner */}
+          {PROMO_UNLOCK_PREMIUM_TEMPLATES_FOR_AUTH && status === 'authenticated' && (
+            <div style={{ marginBottom: 24, borderRadius: 14, padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 12, background: 'linear-gradient(135deg, rgba(221,0,0,0.08), rgba(139,92,246,0.1))', border: '1px solid rgba(139,92,246,0.25)' }}>
+              <div style={{ width: 34, height: 34, borderRadius: 10, background: 'linear-gradient(135deg,#dd0000,#8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(139,92,246,0.3)' }}>
+                <Crown size={16} color="#fff" />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#0a0a0a', margin: 0 }}>All premium templates unlocked for you</p>
+                <p style={{ fontSize: 12, color: '#525252', margin: 0 }}>Limited-time launch offer — enjoy every template free while you have an account.</p>
+              </div>
+            </div>
+          )}
 
           {/* Template Grid */}
           <div className="cvmaker-template-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16, paddingBottom: 100 }}>
