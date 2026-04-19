@@ -1827,17 +1827,33 @@ function CVMakerContent() {
     if (tpl.layout === 'infographic') {
       const infoSkills = (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {cv.skills.map((s, i) => (
-            <div key={i} className={forPrint ? '' : 'group/skill relative'}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#111827', marginBottom: 3, fontWeight: 700 }}>
-                <span>{s}</span><span style={{ color: accent, fontWeight: 600 }}>{85 - (i % 6) * 9}%</span>
+          {cv.skills.map((s, i) => {
+            const level = getSkillLevel(i);
+            return (
+              <div key={i} className={forPrint ? '' : 'group/skill relative'}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#111827', marginBottom: 3, fontWeight: 700, alignItems: 'center' }}>
+                  <span>{s}</span>
+                  {!forPrint ? (
+                    <button type="button" onClick={() => setEditingSkillIndex(editingSkillIndex === i ? null : i)} style={{ color: accent, background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 600, padding: 0 }} title="Click to edit percentage">{level}%</button>
+                  ) : (
+                    <span style={{ color: accent, fontWeight: 600 }}>{level}%</span>
+                  )}
+                </div>
+                <div style={{ height: 4, background: '#F3F4F6', borderRadius: 99 }}>
+                  <div style={{ width: `${level}%`, height: '100%', background: accent, borderRadius: 99 }} />
+                </div>
+                {!forPrint && (
+                  editingSkillIndex === i ? (
+                    <div className="mt-1 flex items-center gap-2 text-[9px] text-gray-500">
+                      <input type="range" min={10} max={100} value={level} onChange={e => setSkillLevels(prev => prev.map((val, idx) => (idx === i ? Number(e.target.value) : val)))} onMouseUp={closeSkillEditor} onTouchEnd={closeSkillEditor} className="flex-1" />
+                      <input type="number" min={0} max={100} value={level} onChange={e => { const next = Math.min(100, Math.max(0, Number(e.target.value))); setSkillLevels(prev => prev.map((val, idx) => (idx === i ? next : val))); }} onBlur={closeSkillEditor} className="w-10 bg-gray-50 border border-gray-200 rounded px-1 py-0.5 text-gray-700 text-[9px]" />
+                    </div>
+                  ) : null
+                )}
+                {!forPrint && <button onClick={() => rmSkill(i)} className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white opacity-0 group-hover/skill:opacity-100 flex items-center justify-center"><X className="w-2 h-2" /></button>}
               </div>
-              <div style={{ height: 4, background: '#F3F4F6', borderRadius: 99 }}>
-                <div style={{ width: `${85 - (i % 6) * 9}%`, height: '100%', background: accent, borderRadius: 99 }} />
-              </div>
-              {!forPrint && <button onClick={() => rmSkill(i)} className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white opacity-0 group-hover/skill:opacity-100 flex items-center justify-center"><X className="w-2 h-2" /></button>}
-            </div>
-          ))}
+            );
+          })}
           {!forPrint && <form onSubmit={e => { e.preventDefault(); if (newSkill.trim()) { setCv(p => ({ ...p, skills: [...p.skills, newSkill.trim()] })); setNewSkill(''); } }}><input value={newSkill} onChange={e => setNewSkill(e.target.value)} placeholder="+ Add skill" className="text-[10px] bg-transparent border border-dashed border-gray-300 rounded-full px-2 py-0.5 outline-none focus:border-blue-400 w-24" /></form>}
         </div>
       );
