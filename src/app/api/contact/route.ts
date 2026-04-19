@@ -6,21 +6,32 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, message } = await req.json();
+    console.log('[Contact API] Received request');
+    const body = await req.json();
+    console.log('[Contact API] Request body:', { ...body, message: body.message?.substring(0, 50) + '...' });
+    
+    const { name, email, message } = body;
 
     if (!name || !email || !message) {
+      console.error('[Contact API] Missing fields:', { name: !!name, email: !!email, message: !!message });
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      console.error('[Contact API] Invalid email format:', email);
       return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
     }
 
     if (!resend) {
       console.warn('[Contact API] RESEND_API_KEY missing. Logging contact submission only.');
       console.log('Contact form submission (not emailed):', { name, email, message });
+      // Still return success even without Resend configured
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Message received! (Email service not configured)' 
+      });
     } else {
       const { data, error } = await resend.emails.send({
         from: 'StudyInGermany <noreply@studyingermany.org>',
