@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       });
     } else {
       const { data, error } = await resend.emails.send({
-        from: 'StudyInGermany <noreply@studyingermany.org>',
+        from: 'GermanPath <noreply@germanpath.com>',
         to: ['smarviastudio@gmail.com'],
         replyTo: email,
         subject: `Contact Form: ${name}`,
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
             </div>
             <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e5e5;" />
             <p style="font-size: 12px; color: #999;">
-              This email was sent from the StudyInGermany contact form.
+              This email was sent from the GermanPath contact form.
             </p>
           </div>
         `,
