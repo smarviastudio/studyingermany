@@ -26,12 +26,12 @@ const HERO_SUGGESTIONS = [
 ];
 
 const TOOLS = [
-  { href: '/cv-maker/landing',                  label: 'AI CV Maker',            desc: 'Build a German-format CV in minutes with AI assistance',              icon: FileText,    gradient: 'from-red-500 to-rose-600' },
-  { href: '/cover-letter/landing',              label: 'Cover Letter',           desc: 'Draft professional cover letters tailored to German employers',        icon: Briefcase,   gradient: 'from-amber-500 to-orange-600' },
-  { href: '/motivation-letter/landing',         label: 'Motivation Letter',      desc: 'Create compelling motivation letters for university applications',     icon: Star,        gradient: 'from-violet-500 to-purple-600' },
-  { href: '/gpa-converter/landing',             label: 'GPA Converter',          desc: 'Convert your grades to the German grading scale instantly',           icon: TrendingUp,  gradient: 'from-emerald-500 to-green-600' },
-  { href: '/netto-brutto-calculator/landing',   label: 'Salary Calculator',      desc: 'Calculate your net salary after German taxes and deductions',         icon: Calculator,  gradient: 'from-teal-500 to-cyan-600' },
-  { href: '/dashboard/landing',                 label: 'My Dashboard',           desc: 'Track your applications, shortlists and study plans',                 icon: Zap,         gradient: 'from-blue-500 to-indigo-600' },
+  { href: '/cv-maker/landing',                  label: 'AI CV Maker',            desc: 'Build a German-format CV in minutes with AI assistance',              icon: FileText,    gradient: 'from-red-500 to-rose-600',     premium: true  },
+  { href: '/cover-letter/landing',              label: 'Cover Letter',           desc: 'Draft professional cover letters tailored to German employers',        icon: Briefcase,   gradient: 'from-emerald-500 to-green-600', premium: true  },
+  { href: '/motivation-letter/landing',         label: 'Motivation Letter',      desc: 'Create compelling motivation letters for university applications',     icon: Star,        gradient: 'from-violet-500 to-purple-600', premium: true  },
+  { href: '/gpa-converter/landing',             label: 'GPA Converter',          desc: 'Convert your grades to the German grading scale instantly',           icon: TrendingUp,  gradient: 'from-blue-500 to-indigo-600',   premium: false },
+  { href: '/netto-brutto-calculator/landing',   label: 'Salary Calculator',      desc: 'Calculate your net salary after German taxes and deductions',         icon: Calculator,  gradient: 'from-amber-500 to-orange-600',  premium: false },
+  { href: '/dashboard/landing',                 label: 'My Dashboard',           desc: 'Track your applications, shortlists and study plans',                 icon: Zap,         gradient: 'from-slate-700 to-slate-900',   premium: false },
 ];
 
 const TESTIMONIALS = [
@@ -1148,8 +1148,19 @@ export default function HomePage() {
             <p className="section-desc">AI-powered assistants for CVs, cover letters, GPA conversion — free to try, with credits for extended AI use.</p>
           </div>
           <div className="tools-grid">
-            {TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
-              <Link key={href} href={href} className="tool-card scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
+            {TOOLS.map(({ href, label, desc, icon: Icon, gradient, premium }, idx) => (
+              <Link
+                key={href}
+                href={href}
+                className={`tool-card scroll-reveal${premium ? ' tool-card--premium' : ''}`}
+                style={{ transitionDelay: `${idx * 0.08}s` }}
+              >
+                {premium && (
+                  <span className="tool-premium-badge" aria-label="AI premium tool">
+                    <Sparkles className="w-3 h-3" />
+                    AI Premium
+                  </span>
+                )}
                 <div className={`tool-icon bg-gradient-to-br ${gradient}`}>
                   <Icon className="w-7 h-7 text-white" />
                 </div>

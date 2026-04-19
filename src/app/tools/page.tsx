@@ -15,10 +15,23 @@ const TOOLS = [
     subtitle: 'German Lebenslauf',
     description: 'Create a professional German-format CV in minutes. AI-powered suggestions tailored for university applications and jobs.',
     icon: FileText,
-    color: '#3b82f6',
-    bgColor: '#eff6ff',
+    color: '#dc2626',
+    bgColor: '#fef2f2',
     features: ['German CV format', 'AI suggestions', 'PDF export'],
     popular: true,
+    premium: true,
+  },
+  {
+    href: '/cover-letter',
+    title: 'Cover Letter',
+    subtitle: 'Job Applications',
+    description: 'Generate professional cover letters (Anschreiben) tailored for German employers and university applications.',
+    icon: Mail,
+    color: '#10b981',
+    bgColor: '#ecfdf5',
+    features: ['Business style', 'Industry-specific', 'Instant generation'],
+    popular: true,
+    premium: true,
   },
   {
     href: '/motivation-letter',
@@ -30,17 +43,7 @@ const TOOLS = [
     bgColor: '#f5f3ff',
     features: ['University-focused', 'Program-specific', 'AI assistance'],
     popular: true,
-  },
-  {
-    href: '/cover-letter',
-    title: 'Cover Letter',
-    subtitle: 'Job Applications',
-    description: 'Generate professional cover letters (Anschreiben) tailored for German employers and university applications.',
-    icon: Mail,
-    color: '#10b981',
-    bgColor: '#ecfdf5',
-    features: ['Business style', 'Industry-specific', 'Instant generation'],
-    popular: false,
+    premium: true,
   },
   {
     href: '/gpa-converter',
@@ -48,10 +51,11 @@ const TOOLS = [
     subtitle: 'German Grading',
     description: 'Convert your grades to the German grading system. Essential for university applications and transcript evaluation.',
     icon: Calculator,
-    color: '#f59e0b',
-    bgColor: '#fffbeb',
+    color: '#3b82f6',
+    bgColor: '#eff6ff',
     features: ['Multiple systems', 'German scale (1-5)', 'Explanations'],
     popular: false,
+    premium: false,
   },
   {
     href: '/netto-brutto-calculator',
@@ -59,10 +63,11 @@ const TOOLS = [
     subtitle: 'Net vs Gross',
     description: 'Calculate your net salary in Germany after taxes and social contributions. Plan your finances before moving.',
     icon: Briefcase,
-    color: '#ec4899',
-    bgColor: '#fdf2f8',
+    color: '#f59e0b',
+    bgColor: '#fffbeb',
     features: ['Tax calculation', 'Social contributions', '2026 rates'],
     popular: false,
+    premium: false,
   },
   {
     href: '/',
@@ -70,10 +75,11 @@ const TOOLS = [
     subtitle: '20,000+ Programs',
     description: 'Search English-taught bachelor and master programs at German universities with AI-powered recommendations.',
     icon: Search,
-    color: '#dc2626',
-    bgColor: '#fef2f2',
+    color: '#0f172a',
+    bgColor: '#f1f5f9',
     features: ['20,000+ programs', 'AI search', 'Save favorites'],
     popular: true,
+    premium: false,
   },
 ];
 
@@ -181,32 +187,62 @@ export default function ToolsPage() {
           }}>
             {TOOLS.map((tool, i) => {
               const Icon = tool.icon;
+              const premiumBg = tool.premium
+                ? 'linear-gradient(#fff,#fff) padding-box, linear-gradient(135deg, rgba(220,38,38,0.55), rgba(139,92,246,0.55) 55%, rgba(16,185,129,0.5)) border-box'
+                : '#fff';
+              const premiumShadow = tool.premium
+                ? '0 1px 2px rgba(0,0,0,0.03), 0 10px 30px -14px rgba(139,92,246,0.25)'
+                : '0 4px 6px -1px rgba(0,0,0,0.1)';
               return (
                 <Link
                   key={tool.href}
                   href={tool.href}
                   style={{
                     display: 'block',
-                    background: '#fff',
+                    background: premiumBg,
+                    border: tool.premium ? '1.5px solid transparent' : '1px solid #eef0f3',
                     borderRadius: 20,
                     padding: 32,
                     textDecoration: 'none',
-                    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
+                    boxShadow: premiumShadow,
                     transition: 'all 0.3s ease',
                     position: 'relative',
                     overflow: 'hidden',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-8px)';
-                    e.currentTarget.style.boxShadow = '0 20px 40px -12px rgba(0,0,0,0.15)';
+                    e.currentTarget.style.boxShadow = tool.premium
+                      ? '0 20px 50px -15px rgba(220,38,38,0.25), 0 8px 30px -12px rgba(139,92,246,0.3)'
+                      : '0 20px 40px -12px rgba(0,0,0,0.15)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.1)';
+                    e.currentTarget.style.boxShadow = premiumShadow;
                   }}
                 >
-                  {/* Popular Badge */}
-                  {tool.popular && (
+                  {/* Badges */}
+                  {tool.premium ? (
+                    <div style={{
+                      position: 'absolute',
+                      top: 16,
+                      right: 16,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 4,
+                      background: 'linear-gradient(135deg, #dc2626 0%, #8b5cf6 100%)',
+                      color: '#fff',
+                      padding: '4px 10px',
+                      borderRadius: 999,
+                      fontSize: 10,
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      boxShadow: '0 4px 10px -4px rgba(139,92,246,0.5), inset 0 1px 0 rgba(255,255,255,0.25)',
+                    }}>
+                      <Sparkles style={{ width: 12, height: 12 }} />
+                      AI Premium
+                    </div>
+                  ) : tool.popular && (
                     <div style={{
                       position: 'absolute',
                       top: 16,
@@ -214,7 +250,7 @@ export default function ToolsPage() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 4,
-                      background: '#dc2626',
+                      background: '#111827',
                       color: '#fff',
                       padding: '4px 10px',
                       borderRadius: 20,
