@@ -25,10 +25,7 @@ function SignInPageContent() {
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [emailLoading, setEmailLoading] = useState(false);
   const [error, setError] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -64,31 +61,6 @@ function SignInPageContent() {
     } catch {
       setError('Google sign-in could not be started. Please try again.');
       setGoogleLoading(false);
-    }
-  };
-
-  const handleEmailSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (emailLoading) return;
-    setEmailLoading(true);
-    setError('');
-    
-    try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError('Invalid email or password. Please try again.');
-        setEmailLoading(false);
-      } else if (result?.ok) {
-        router.push(callbackUrl);
-      }
-    } catch {
-      setError('Sign-in failed. Please try again.');
-      setEmailLoading(false);
     }
   };
 
@@ -156,65 +128,57 @@ function SignInPageContent() {
             <div className="flex-1 h-px bg-[#ebebeb]" />
           </div>
 
-          {/* Email/Password Sign-in Form */}
-          <form onSubmit={handleEmailSignIn} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em] block">
-                Email address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="your@email.com"
-                  className="w-full h-11 rounded-xl border border-[#e0e0e0] bg-white pl-11 pr-4 text-sm focus:outline-none focus:border-[#dd0000] transition-colors"
-                />
+          {/* Email/Password Sign-in Form — temporarily disabled */}
+          <div className="relative" aria-hidden="true">
+            <div className="space-y-4 pointer-events-none select-none blur-[6px] opacity-60">
+              <div>
+                <label className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em] block">
+                  Email address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
+                  <input
+                    type="email"
+                    disabled
+                    placeholder="your@email.com"
+                    className="w-full h-11 rounded-xl border border-[#e0e0e0] bg-white pl-11 pr-4 text-sm"
+                  />
+                </div>
               </div>
+              <div>
+                <label className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em] block">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
+                  <input
+                    type="password"
+                    disabled
+                    placeholder="••••••••"
+                    className="w-full h-11 rounded-xl border border-[#e0e0e0] bg-white pl-11 pr-4 text-sm"
+                  />
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled
+                className="w-full bg-[#dd0000] text-white font-semibold py-3 rounded-2xl"
+              >
+                Sign in with Email
+              </button>
             </div>
 
-            <div>
-              <label htmlFor="password" className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em] block">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="••••••••"
-                  className="w-full h-11 rounded-xl border border-[#e0e0e0] bg-white pl-11 pr-4 text-sm focus:outline-none focus:border-[#dd0000] transition-colors"
-                />
+            {/* Coming soon overlay */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="bg-white/90 backdrop-blur-sm border border-[#e5e5e5] rounded-2xl px-5 py-3 shadow-sm flex items-center gap-2">
+                <span className="inline-block w-2 h-2 rounded-full bg-[#dd0000] animate-pulse" />
+                <span className="text-xs font-bold tracking-[0.18em] uppercase text-[#111]">Email sign-in — coming soon</span>
               </div>
             </div>
-
-            <button
-              type="submit"
-              disabled={emailLoading}
-              className="w-full bg-[#dd0000] text-white font-semibold py-3 rounded-2xl transition-all hover:bg-[#b30000] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {emailLoading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                'Sign in with Email'
-              )}
-            </button>
-          </form>
+          </div>
 
           <div className="mt-6 text-sm text-[#6b6b6b] text-center">
-            Don&apos;t have an account?{' '}
-            <Link href="/auth/signup" className="text-[#dd0000] font-semibold">
-              Create one
-            </Link>
+            For now, please continue with Google above.
           </div>
         </div>
       </div>
