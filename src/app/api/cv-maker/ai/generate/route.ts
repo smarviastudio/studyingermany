@@ -21,7 +21,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const { name, jobTitle, years, skills, background, hobbies, degree, university, additionalEducation, workExperience, programId } = await request.json();
+    const { name, jobTitle, years, skills, background, hobbies, degree, university, additionalEducation, workExperience, programId, language } = await request.json();
+    const cvLanguage = (typeof language === 'string' && language.trim()) ? language.trim() : 'English';
     
     if (!name || !jobTitle) {
       return NextResponse.json({ message: 'Name and job title are required' }, { status: 400 });
@@ -62,7 +63,9 @@ Academic Requirements: ${programDetails.academic_background_requirements || 'Not
 IMPORTANT: Tailor the CV content to align with this specific program. Highlight relevant skills, experiences, and achievements that match the program's requirements and field of study. Make the professional summary emphasize the applicant's fit for this program.`;
     }
 
-    const prompt = `You are a professional CV writer specializing in German university applications. Generate comprehensive CV content based on the following information:
+    const prompt = `You are a professional CV writer specializing in German university applications. Generate comprehensive CV content based on the following information.
+
+OUTPUT LANGUAGE: Write ALL generated text content (summary, experience role/company/description/bullets, skills, education degree/school, period labels where appropriate) in ${cvLanguage}. Use native phrasing and conventions of ${cvLanguage}. Do NOT translate proper nouns (names of people, specific companies, or universities the user provided). Keep JSON keys in English exactly as specified in the schema.
 
 Name: ${name}
 Job Title/Target Role: ${jobTitle}
@@ -104,7 +107,8 @@ ${workExperience ? `- Use the provided work experience details to create realist
 ${hobbies ? `- Consider incorporating hobbies (${hobbies}) if relevant to the target role or program` : ''}
 - Make the content professional and achievement-focused${programDetails ? ', specifically tailored to demonstrate qualifications for the target program' : ''}
 ${programDetails ? `- Emphasize skills and experiences relevant to ${programDetails.subject_area} and ${programDetails.degree_level} studies` : ''}
-- Only return valid JSON, no additional text or markdown`;
+- Only return valid JSON, no additional text or markdown
+- All human-readable text values MUST be in ${cvLanguage}`;
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -121,7 +125,7 @@ ${programDetails ? `- Emphasize skills and experiences relevant to ${programDeta
         body: JSON.stringify({
           model: MODEL,
           messages: [
-            { role: 'system', content: 'You are a professional CV writer. Return only valid JSON, no markdown, no extra text.' },
+            { role: 'system', content: `You are a professional CV writer. Write all CV content in ${cvLanguage}. Return only valid JSON, no markdown, no extra text.` },
             { role: 'user', content: prompt }
           ],
           temperature: 0.7,

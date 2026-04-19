@@ -2835,7 +2835,27 @@ function CVMakerContent() {
                   </div>
                 )}
 
-                <form onSubmit={e => { e.preventDefault(); const fd = new FormData(e.currentTarget); handleAI({ name: fd.get('name'), jobTitle: fd.get('jobTitle'), years: fd.get('years'), skills: fd.get('skills'), background: fd.get('background'), degree: fd.get('degree'), university: fd.get('university'), additionalEducation: fd.get('additionalEducation'), workExperience: fd.get('workExperience'), hobbies: fd.get('hobbies'), programId: !useManualInput ? selectedProgramId : undefined }); }} className="space-y-3">
+                <form onSubmit={e => { e.preventDefault(); const fd = new FormData(e.currentTarget); handleAI({ name: fd.get('name'), jobTitle: fd.get('jobTitle'), years: fd.get('years'), skills: fd.get('skills'), background: fd.get('background'), degree: fd.get('degree'), university: fd.get('university'), additionalEducation: fd.get('additionalEducation'), workExperience: fd.get('workExperience'), hobbies: fd.get('hobbies'), language: fd.get('language'), programId: !useManualInput ? selectedProgramId : undefined }); }} className="space-y-3">
+                  <div>
+                    <label className="text-gray-600 text-[11px] uppercase tracking-wider mb-1.5 block font-semibold">CV Language</label>
+                    <select name="language" defaultValue="English" className="w-full bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 px-3 py-2.5 transition-colors">
+                      <option value="English">English</option>
+                      <option value="German">German (Deutsch)</option>
+                      <option value="French">French (Français)</option>
+                      <option value="Spanish">Spanish (Español)</option>
+                      <option value="Italian">Italian (Italiano)</option>
+                      <option value="Portuguese">Portuguese (Português)</option>
+                      <option value="Dutch">Dutch (Nederlands)</option>
+                      <option value="Polish">Polish (Polski)</option>
+                      <option value="Turkish">Turkish (Türkçe)</option>
+                      <option value="Arabic">Arabic (العربية)</option>
+                      <option value="Russian">Russian (Русский)</option>
+                      <option value="Chinese">Chinese (中文)</option>
+                      <option value="Hindi">Hindi (हिन्दी)</option>
+                      <option value="Urdu">Urdu (اردو)</option>
+                    </select>
+                    <p className="text-[10px] text-gray-400 mt-1">The AI will write your entire CV in this language</p>
+                  </div>
                   {[
                     { name: 'name', label: 'Your Name', ph: 'Maria Schmidt', req: true },
                     { name: 'jobTitle', label: 'Target Role', ph: 'Software Engineer', req: true },
