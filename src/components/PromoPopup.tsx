@@ -20,13 +20,15 @@ const FEATURES = [
 
 export function PromoPopup({
   storageKey = 'gp_promo_seen_v1',
-  delayMs = 900,
+  delayMs = 12000,
   ctaHref = '/auth/signup',
 }: PromoPopupProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (window.matchMedia('(max-width: 767px)').matches) return;
+
     let seen = false;
     try {
       seen = !!localStorage.getItem(storageKey);
