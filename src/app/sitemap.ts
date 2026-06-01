@@ -4,7 +4,39 @@ import { SITE_URL } from '@/lib/seo';
 
 const BASE_URL = SITE_URL;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+type WpSitemapPost = {
+  slug: string;
+  date?: string;
+  modified?: string;
+};
+
+async function fetchWpSitemapPosts(): Promise<MetadataRoute.Sitemap> {
+  const wpUrl =
+    process.env.WP_URL ||
+    (process.env.NODE_ENV === 'production' ? 'https://cms.germanpath.com' : 'http://localhost:8000');
+
+  try {
+    const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts?per_page=100&status=publish&_fields=slug,date,modified`, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!res.ok) return [];
+
+    const posts = (await res.json()) as WpSitemapPost[];
+    return posts
+      .filter((post) => post.slug)
+      .map((post) => ({
+        url: `${BASE_URL}/blog/${post.slug}`,
+        lastModified: new Date(post.modified || post.date || Date.now()),
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      }));
+  } catch {
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     // Main pages
     { url: BASE_URL, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },
@@ -39,12 +71,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
   ];
 
-  const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map(post => ({
+  const staticBlogPages: MetadataRoute.Sitemap = BLOG_POSTS.map(post => ({
     url: `${BASE_URL}/blog/${post.slug}`,
     lastModified: new Date(post.updatedAt || post.publishedAt),
     changeFrequency: 'monthly' as const,
     priority: post.featured ? 0.8 : 0.7,
   }));
 
-  return [...staticPages, ...blogPages];
+  const wpBlogPages = await fetchWpSitemapPosts();
+  const seen = new Set<string>();
+
+  return [...staticPages, ...wpBlogPages, ...staticBlogPages].filter((entry) => {
+    if (seen.has(entry.url)) return false;
+    seen.add(entry.url);
+    return true;
+  });
 }
