@@ -7,8 +7,6 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { SiteNav } from '@/components/SiteNav';
-import { PromoPopup } from '@/components/PromoPopup';
-
 const TOOLS = [
   {
     href: '/cv-maker',
@@ -114,9 +112,6 @@ export default function ToolsPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
 
-      {/* First-visit launch promo */}
-      <PromoPopup storageKey="gp_promo_seen_tools_v1" />
-      
       {/* Hero */}
       <section style={{ 
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
