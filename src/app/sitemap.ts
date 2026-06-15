@@ -1,89 +1,73 @@
 import type { MetadataRoute } from 'next';
 import { BLOG_POSTS } from '@/content/blog';
-import { SITE_URL } from '@/lib/seo';
+import { buildCanonicalUrl, getWpBlogSitemapEntries, SITE_URL } from '@/lib/seo';
 
-const BASE_URL = SITE_URL;
+const STATIC_PAGES: MetadataRoute.Sitemap = [
+  { url: SITE_URL, changeFrequency: 'weekly', priority: 1.0 },
+  { url: buildCanonicalUrl('/blog'), changeFrequency: 'daily', priority: 0.9 },
+  { url: buildCanonicalUrl('/pricing'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/tools'), changeFrequency: 'monthly', priority: 0.9 },
+  { url: buildCanonicalUrl('/cv-maker/landing'), changeFrequency: 'monthly', priority: 0.9 },
+  { url: buildCanonicalUrl('/cv-maker'), changeFrequency: 'monthly', priority: 0.85 },
+  { url: buildCanonicalUrl('/cover-letter/landing'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/cover-letter'), changeFrequency: 'monthly', priority: 0.75 },
+  { url: buildCanonicalUrl('/motivation-letter/landing'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/motivation-letter'), changeFrequency: 'monthly', priority: 0.75 },
+  { url: buildCanonicalUrl('/gpa-converter/landing'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/gpa-converter'), changeFrequency: 'monthly', priority: 0.75 },
+  { url: buildCanonicalUrl('/netto-brutto-calculator/landing'), changeFrequency: 'monthly', priority: 0.7 },
+  { url: buildCanonicalUrl('/netto-brutto-calculator'), changeFrequency: 'monthly', priority: 0.65 },
+  { url: buildCanonicalUrl('/study-in-germany'), changeFrequency: 'weekly', priority: 0.9 },
+  { url: buildCanonicalUrl('/masters-in-germany'), changeFrequency: 'weekly', priority: 0.8 },
+  { url: buildCanonicalUrl('/bachelor-in-germany'), changeFrequency: 'weekly', priority: 0.8 },
+  { url: buildCanonicalUrl('/english-taught-programs'), changeFrequency: 'weekly', priority: 0.8 },
+  { url: buildCanonicalUrl('/study-in-germany-from-pakistan'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/study-in-germany-from-india'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/study-in-germany-from-nigeria'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/study-in-germany-from-bangladesh'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/study-in-germany-from-turkey'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/study-in-germany-from-nepal'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/einbuergerungstest-2026-app'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/lesenlab-german-reading-app'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/impressum'), changeFrequency: 'yearly', priority: 0.3 },
+  { url: buildCanonicalUrl('/privacy-policy'), changeFrequency: 'yearly', priority: 0.3 },
+  { url: buildCanonicalUrl('/terms'), changeFrequency: 'yearly', priority: 0.3 },
+  { url: buildCanonicalUrl('/cookie-policy'), changeFrequency: 'yearly', priority: 0.3 },
+];
 
-type WpSitemapPost = {
-  slug: string;
-  date?: string;
-  modified?: string;
-};
-
-async function fetchWpSitemapPosts(): Promise<MetadataRoute.Sitemap> {
-  const wpUrl =
-    process.env.WP_URL ||
-    (process.env.NODE_ENV === 'production' ? 'https://cms.germanpath.com' : 'http://localhost:8000');
-
-  try {
-    const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts?per_page=100&status=publish&_fields=slug,date,modified`, {
-      next: { revalidate: 3600 },
-    });
-
-    if (!res.ok) return [];
-
-    const posts = (await res.json()) as WpSitemapPost[];
-    return posts
-      .filter((post) => post.slug)
-      .map((post) => ({
-        url: `${BASE_URL}/blog/${post.slug}`,
-        lastModified: new Date(post.modified || post.date || Date.now()),
-        changeFrequency: 'monthly' as const,
-        priority: 0.7,
-      }));
-  } catch {
-    return [];
+function dedupeSitemap(entries: MetadataRoute.Sitemap): MetadataRoute.Sitemap {
+  const seen = new Map<string, MetadataRoute.Sitemap[number]>();
+  for (const entry of entries) {
+    const existing = seen.get(entry.url);
+    if (!existing) {
+      seen.set(entry.url, entry);
+      continue;
+    }
+    const existingDate = existing.lastModified ? new Date(existing.lastModified).getTime() : 0;
+    const nextDate = entry.lastModified ? new Date(entry.lastModified).getTime() : 0;
+    if (nextDate >= existingDate) {
+      seen.set(entry.url, entry);
+    }
   }
+  return Array.from(seen.values());
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticPages: MetadataRoute.Sitemap = [
-    // Main pages
-    { url: BASE_URL, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },
-    { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
-    { url: `${BASE_URL}/pricing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
-    
-    // Tools (high priority - main product)
-    { url: `${BASE_URL}/tools`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${BASE_URL}/cv-maker/landing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${BASE_URL}/cover-letter/landing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/motivation-letter/landing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/gpa-converter/landing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/netto-brutto-calculator/landing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
-    
-    // SEO hub pages
-    { url: `${BASE_URL}/study-in-germany`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${BASE_URL}/masters-in-germany`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${BASE_URL}/bachelor-in-germany`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${BASE_URL}/english-taught-programs`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    
-    // Country-specific guides
-    { url: `${BASE_URL}/study-in-germany-from-pakistan`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/study-in-germany-from-india`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    
-    // App landing pages
-    { url: `${BASE_URL}/einbuergerungstest-2026-app`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/lesenlab-german-reading-app`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+  const now = new Date();
 
-    // Legal pages
-    { url: `${BASE_URL}/impressum`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
-    { url: `${BASE_URL}/privacy-policy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
-    { url: `${BASE_URL}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
-  ];
+  const staticPages = STATIC_PAGES.map((page) => ({
+    ...page,
+    lastModified: now,
+  }));
 
-  const staticBlogPages: MetadataRoute.Sitemap = BLOG_POSTS.map(post => ({
-    url: `${BASE_URL}/blog/${post.slug}`,
+  const staticBlogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+    url: buildCanonicalUrl(`/blog/${post.slug}`),
     lastModified: new Date(post.updatedAt || post.publishedAt),
     changeFrequency: 'monthly' as const,
     priority: post.featured ? 0.8 : 0.7,
   }));
 
-  const wpBlogPages = await fetchWpSitemapPosts();
-  const seen = new Set<string>();
+  const wpBlogPages = await getWpBlogSitemapEntries();
 
-  return [...staticPages, ...wpBlogPages, ...staticBlogPages].filter((entry) => {
-    if (seen.has(entry.url)) return false;
-    seen.add(entry.url);
-    return true;
-  });
+  return dedupeSitemap([...staticPages, ...staticBlogPages, ...wpBlogPages]);
 }

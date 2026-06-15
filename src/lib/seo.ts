@@ -1,13 +1,104 @@
-import type { Metadata } from 'next';
+import type { Metadata, MetadataRoute } from 'next';
 
 export const SITE_NAME = 'German Path';
 export const SITE_URL = 'https://germanpath.com';
+export const SITE_TAGLINE = 'Study in Germany with AI tools and 20,000+ university programs';
 export const DEFAULT_OG_IMAGE = {
-  url: `${SITE_URL}/og-image.jpg`,
+  url: `${SITE_URL}/opengraph-image`,
   width: 1200,
   height: 630,
   alt: 'German Path - Study in Germany for International Students',
 } as const;
+
+type FaqItem = { q: string; a: string };
+
+export function buildFaqSchema(faqs: FaqItem[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: { '@type': 'Answer', text: faq.a },
+    })),
+  };
+}
+
+export function buildWebSiteSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_TAGLINE,
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+}
+
+export function buildOrganizationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    legalName: 'Smarvia Studio',
+    url: SITE_URL,
+    logo: `${SITE_URL}/opengraph-image`,
+    description:
+      'German Path helps international students study in Germany with AI-powered program search, CV tools, and step-by-step application guidance.',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Schoeneggstrasse 45',
+      postalCode: '8953',
+      addressLocality: 'Dietikon',
+      addressCountry: 'CH',
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'support@germanpath.com',
+      contactType: 'Customer Service',
+    },
+    sameAs: [SITE_URL, 'https://www.facebook.com/studyingermay1'],
+  };
+}
+
+function getWpUrl() {
+  return (
+    process.env.WP_URL ||
+    (process.env.NODE_ENV === 'production' ? 'https://cms.germanpath.com' : 'http://localhost:8000')
+  );
+}
+
+export async function getWpBlogSitemapEntries(): Promise<MetadataRoute.Sitemap> {
+  try {
+    const res = await fetch(
+      `${getWpUrl()}/wp-json/wp/v2/posts?per_page=100&status=publish&_fields=slug,modified`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return [];
+
+    const posts: Array<{ slug: string; modified: string }> = await res.json();
+    return posts.map((post) => ({
+      url: buildCanonicalUrl(`/blog/${post.slug}`),
+      lastModified: new Date(post.modified),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    }));
+  } catch {
+    return [];
+  }
+}
 
 type MetadataInput = {
   title: string;

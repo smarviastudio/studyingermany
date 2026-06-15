@@ -5,14 +5,14 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Providers } from "./providers";
 import { ClientProviders } from "@/components/ClientProviders";
-import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, buildOrganizationSchema, buildWebSiteSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: {
     default: 'German Path – Study in Germany: 20,000+ Programs, AI Tools & Free Guides',
     template: '%s | German Path',
   },
-  description: 'Study in Germany with German Path. Search 20,000+ English-taught bachelor & master programs, build your CV with AI, and get step-by-step guidance for international students from Pakistan, India, and worldwide.',
+  description: 'Study in Germany with German Path. Search 20,000+ English-taught bachelor and master programs, build your German CV with AI, and get step-by-step guidance for international students from Pakistan, India, and worldwide.',
   metadataBase: new URL(SITE_URL),
   keywords: [
     'study in Germany',
@@ -79,43 +79,13 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: SITE_NAME,
-              legalName: 'Smarvia Studio',
-              url: SITE_URL,
-              logo: `${SITE_URL}/logo.png`,
-              description: 'German Path is an AI-powered platform helping international students study in Germany. Search 20,000+ English-taught bachelor and master programs, build your CV, and get step-by-step guidance.',
-              address: {
-                '@type': 'PostalAddress',
-                streetAddress: 'Schoeneggstrasse 45',
-                postalCode: '8953',
-                addressLocality: 'Dietikon',
-                addressCountry: 'CH',
-              },
-              contactPoint: {
-                '@type': 'ContactPoint',
-                email: 'smarviastudio@gmail.com',
-                contactType: 'Customer Service',
-              },
-              sameAs: [
-                SITE_URL,
-                'https://www.facebook.com/studyingermay1',
-              ],
-            }),
+            __html: JSON.stringify(buildOrganizationSchema()),
           }}
         />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'WebSite',
-              name: SITE_NAME,
-              url: SITE_URL,
-              description: 'Study in Germany with AI-powered tools. Search 20,000+ programs, build your CV, and get free guidance.',
-            }),
+            __html: JSON.stringify(buildWebSiteSchema()),
           }}
         />
       </head>
