@@ -115,7 +115,7 @@ export default function ToolsPage() {
       {/* Hero */}
       <section style={{ 
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: '100px 24px 80px',
+        padding: '24px 24px 80px',
         position: 'relative',
         overflow: 'hidden'
       }}>

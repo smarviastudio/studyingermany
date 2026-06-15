@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { GraduationCap, Euro, FileText, Plane, CheckCircle, Search, ArrowRight, Globe, Briefcase } from 'lucide-react';
+import { HubBreadcrumbs } from '@/components/HubBreadcrumbs';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata = buildPageMetadata({
@@ -20,8 +21,15 @@ export const metadata = buildPageMetadata({
 export default function StudyFromIndiaPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
+      <HubBreadcrumbs
+        items={[
+          { name: 'Home', path: '/' },
+          { name: 'Study in Germany', path: '/study-in-germany' },
+          { name: 'From India' },
+        ]}
+      />
       {/* Hero */}
-      <section style={{ background: 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)', padding: '100px 24px 80px', borderBottom: '1px solid #e5e5e5' }}>
+      <section style={{ background: 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)', padding: '24px 24px 80px', borderBottom: '1px solid #e5e5e5' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(221,0,0,0.08)', padding: '8px 16px', borderRadius: 99, marginBottom: 20 }}>
             <span style={{ fontSize: 20 }}>🇮🇳</span>
@@ -185,7 +193,10 @@ export default function StudyFromIndiaPage() {
                 <Search style={{ width: 16, height: 16 }} /> Search Programs
               </Link>
               <Link href="/tools" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', color: '#fff', padding: '12px 24px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none', border: '2px solid rgba(255,255,255,0.4)' }}>
-                <FileText style={{ width: 16, height: 16 }} /> Free AI Tools
+                <FileText style={{ width: 16, height: 16 }} /> AI Tools
+              </Link>
+              <Link href="/pricing" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', color: '#fff', padding: '12px 24px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none', border: '2px solid rgba(255,255,255,0.4)' }}>
+                View Pricing
               </Link>
             </div>
           </div>

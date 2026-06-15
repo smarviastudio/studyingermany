@@ -1,4 +1,5 @@
 import { buildPageMetadata } from '@/lib/seo';
+import { HubBreadcrumbs } from '@/components/HubBreadcrumbs';
 
 export const metadata = buildPageMetadata({
   title: 'AI Tools for German University Applications',
@@ -19,5 +20,10 @@ export const metadata = buildPageMetadata({
 });
 
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <HubBreadcrumbs items={[{ name: 'Home', path: '/' }, { name: 'Tools' }]} />
+      {children}
+    </>
+  );
 }

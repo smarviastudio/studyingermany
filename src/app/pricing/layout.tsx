@@ -1,4 +1,5 @@
 import { buildFaqSchema, buildPageMetadata } from '@/lib/seo';
+import { HubBreadcrumbs } from '@/components/HubBreadcrumbs';
 
 const PRICING_FAQS = [
   {
@@ -69,6 +70,7 @@ export const metadata = buildPageMetadata({
 export default function PricingLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <HubBreadcrumbs items={[{ name: 'Home', path: '/' }, { name: 'Pricing' }]} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema(PRICING_FAQS)) }}

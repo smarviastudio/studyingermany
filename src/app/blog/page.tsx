@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { GraduationCap, Clock, ArrowRight, ChevronRight } from 'lucide-react';
 import { BLOG_POSTS, CATEGORIES, type BlogPost } from '@/content/blog';
-import { buildPageMetadata } from '@/lib/seo';
+import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 
 export const metadata = buildPageMetadata({
   title: 'Study in Germany Blog — Visa, Costs, Scholarships & Student Life',
@@ -180,6 +180,17 @@ export default async function BlogPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a1a]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbSchema([
+              { name: 'Home', path: '/' },
+              { name: 'Blog' },
+            ])
+          ),
+        }}
+      />
       {/* Nav */}
       <nav className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0a0a1a]/80 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-6 h-14">
@@ -266,10 +277,18 @@ export default async function BlogPage() {
           <div className="inline-flex flex-col items-center gap-3 p-8 rounded-2xl border border-white/[0.06] bg-gradient-to-br from-blue-500/[0.04] to-purple-500/[0.04]">
             <span className="text-3xl">🚀</span>
             <h3 className="text-white font-bold text-lg">Ready to start your journey?</h3>
-            <p className="text-white/35 text-sm max-w-md">Use our free AI-powered tools to find programs, build your CV, and write motivation letters.</p>
-            <Link href="/dashboard" className="mt-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all">
-              Get Started Free
-            </Link>
+            <p className="text-white/35 text-sm max-w-md">Search programs with AI, build your German CV, and upgrade on pricing when you need more credits.</p>
+            <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/tools" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all">
+                Explore AI Tools
+              </Link>
+              <Link href="/pricing" className="px-5 py-2.5 rounded-lg border border-white/15 text-white/85 text-sm font-medium hover:border-white/30 hover:text-white transition-all">
+                View Pricing
+              </Link>
+              <Link href="/#hero" className="px-5 py-2.5 rounded-lg border border-white/15 text-white/85 text-sm font-medium hover:border-white/30 hover:text-white transition-all">
+                Find Programs
+              </Link>
+            </div>
           </div>
         </div>
       </div>

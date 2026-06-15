@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { GraduationCap, Search, ArrowRight } from 'lucide-react';
-import { buildPageMetadata } from '@/lib/seo';
+import { HubBreadcrumbs } from '@/components/HubBreadcrumbs';
+import { buildFaqSchema, buildPageMetadata } from '@/lib/seo';
 
 const FAQS = [
   { q: 'Can international students do a bachelor\'s degree in Germany for free?', a: 'Yes — public universities in Germany charge no tuition fees for bachelor\'s programs, including for international students. You only pay a semester contribution of €150–350 per semester, which usually includes a public transport pass.' },
@@ -11,15 +12,7 @@ const FAQS = [
   { q: 'How long is a bachelor\'s degree in Germany?', a: 'Bachelor\'s degrees in Germany are typically 3 years (6 semesters, 180 ECTS) for most subjects, or 3.5–4 years for engineering and some science programs. The final semester includes a bachelor\'s thesis.' },
 ];
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQS.map(faq => ({
-    '@type': 'Question',
-    name: faq.q,
-    acceptedAnswer: { '@type': 'Answer', text: faq.a },
-  })),
-};
+const faqSchema = buildFaqSchema(FAQS);
 
 export const metadata = buildPageMetadata({
   title: 'Bachelor\'s Programs in Germany - Guide for International Students',
@@ -38,8 +31,15 @@ export const metadata = buildPageMetadata({
 export default function BachelorInGermanyPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
+      <HubBreadcrumbs
+        items={[
+          { name: 'Home', path: '/' },
+          { name: 'Study in Germany', path: '/study-in-germany' },
+          { name: "Bachelor's in Germany" },
+        ]}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <section style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', padding: '100px 24px 80px', color: '#fff' }}>
+      <section style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', padding: '24px 24px 80px', color: '#fff' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
           <GraduationCap style={{ width: 48, height: 48, marginBottom: 20, opacity: 0.9 }} />
           <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 800, margin: '0 0 16px', lineHeight: 1.2 }}>

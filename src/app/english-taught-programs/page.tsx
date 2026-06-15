@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Globe, Search, ArrowRight } from 'lucide-react';
+import { HubBreadcrumbs } from '@/components/HubBreadcrumbs';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata = buildPageMetadata({
@@ -18,7 +19,14 @@ export const metadata = buildPageMetadata({
 export default function EnglishTaughtProgramsPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
-      <section style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', padding: '100px 24px 80px', color: '#fff' }}>
+      <HubBreadcrumbs
+        items={[
+          { name: 'Home', path: '/' },
+          { name: 'Study in Germany', path: '/study-in-germany' },
+          { name: 'English-Taught Programs' },
+        ]}
+      />
+      <section style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', padding: '24px 24px 80px', color: '#fff' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
           <Globe style={{ width: 48, height: 48, marginBottom: 20, opacity: 0.9 }} />
           <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 800, margin: '0 0 16px', lineHeight: 1.2 }}>

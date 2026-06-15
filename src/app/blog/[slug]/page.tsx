@@ -4,7 +4,8 @@ import { Clock, ChevronRight, ArrowLeft, Calendar } from 'lucide-react';
 import { BLOG_POSTS, CATEGORIES, getPostBySlug, type BlogPost } from '@/content/blog';
 import type { Metadata } from 'next';
 import { SiteNav } from '@/components/SiteNav';
-import { buildPageMetadata, SITE_URL } from '@/lib/seo';
+import { BlogPostCta } from '@/components/BlogPostCta';
+import { buildBreadcrumbSchema, buildPageMetadata, SITE_URL } from '@/lib/seo';
 
 type WpPost = {
   id: number;
@@ -423,7 +424,7 @@ export default async function BlogPostPage({ params }: Props) {
             '@type': 'Article',
             headline: post.title,
             description: post.excerpt,
-            image: `${SITE_URL}/og-image.jpg`,
+            image: `${SITE_URL}/opengraph-image`,
             datePublished: post.publishedAt,
             dateModified: post.updatedAt || post.publishedAt,
             author: {
@@ -437,7 +438,7 @@ export default async function BlogPostPage({ params }: Props) {
               url: SITE_URL,
               logo: {
                 '@type': 'ImageObject',
-                url: `${SITE_URL}/logo.png`,
+                url: `${SITE_URL}/opengraph-image`,
               },
             },
             mainEntityOfPage: {
@@ -450,15 +451,13 @@ export default async function BlogPostPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-              { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
-              { '@type': 'ListItem', position: 3, name: post.title },
-            ],
-          }),
+          __html: JSON.stringify(
+            buildBreadcrumbSchema([
+              { name: 'Home', path: '/' },
+              { name: 'Blog', path: '/blog' },
+              { name: post.title },
+            ])
+          ),
         }}
       />
       <SiteNav />
@@ -536,14 +535,7 @@ export default async function BlogPostPage({ params }: Props) {
           </section>
         )}
 
-        {/* CTA */}
-        <div className="mt-10 p-6 rounded-xl border border-white/[0.06] bg-gradient-to-br from-blue-500/[0.04] to-purple-500/[0.04] text-center">
-          <h3 className="text-white font-bold mb-1">Ready to apply?</h3>
-          <p className="text-white/35 text-xs mb-4">Use our free AI tools to find programs, build your CV, and write motivation letters.</p>
-          <Link href="/dashboard" className="inline-flex px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all">
-            Get Started Free
-          </Link>
-        </div>
+        <BlogPostCta variant="dark" />
       </article>
     </div>
     );
@@ -559,7 +551,7 @@ export default async function BlogPostPage({ params }: Props) {
   const title = wpPost.title.rendered;
   const content = renderWordPressHtml(wpPost.content.rendered);
   const seoDescription = wpPost.seo.description || stripHtml(wpPost.excerpt.rendered);
-  const seoImage = wpPost.seo.image || wpPost.featuredImage || `${SITE_URL}/og-image.jpg`;
+  const seoImage = wpPost.seo.image || wpPost.featuredImage || `${SITE_URL}/opengraph-image`;
   const publishedAt = new Date(wpPost.date);
   const updatedAt = wpPost.modified ? new Date(wpPost.modified) : null;
   const wordCount = wpPost.content.rendered.replace(/<[^>]*>/g, '').split(/\s+/).length;
@@ -589,7 +581,7 @@ export default async function BlogPostPage({ params }: Props) {
               url: SITE_URL,
               logo: {
                 '@type': 'ImageObject',
-                url: `${SITE_URL}/logo.png`,
+                url: `${SITE_URL}/opengraph-image`,
               },
             },
             mainEntityOfPage: {
@@ -602,15 +594,13 @@ export default async function BlogPostPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-              { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
-              { '@type': 'ListItem', position: 3, name: stripHtml(title) },
-            ],
-          }),
+          __html: JSON.stringify(
+            buildBreadcrumbSchema([
+              { name: 'Home', path: '/' },
+              { name: 'Blog', path: '/blog' },
+              { name: stripHtml(title) },
+            ])
+          ),
         }}
       />
       <SiteNav />
@@ -662,6 +652,8 @@ export default async function BlogPostPage({ params }: Props) {
                 </a>
               </div>
             </div>
+
+            <BlogPostCta variant="light" />
           </article>
 
           {/* Sidebar */}
@@ -685,7 +677,7 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="bg-white rounded-2xl p-5 shadow-lg border border-gray-100">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-lg">🛠️</span>
-                <h4 className="text-[13px] font-bold uppercase tracking-wider text-gray-800">Free Tools</h4>
+                <h4 className="text-[13px] font-bold uppercase tracking-wider text-gray-800">Application Tools</h4>
               </div>
               <ul className="space-y-2.5">
                 <li>
@@ -742,6 +734,15 @@ export default async function BlogPostPage({ params }: Props) {
                     </div>
                   </Link>
                 </li>
+                <li>
+                  <Link href="/pricing" className="group flex items-start gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:border-[#dd0000] hover:bg-[#fff8f8] transition-all">
+                    <span className="text-xl mt-0.5">⭐</span>
+                    <div>
+                      <strong className="block text-[13px] text-gray-900 group-hover:text-[#dd0000] transition-colors">Pricing & Pro</strong>
+                      <span className="text-xs text-gray-500">More AI credits and premium templates</span>
+                    </div>
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -749,10 +750,15 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-2xl p-5 text-white shadow-lg">
               <span className="inline-block px-2.5 py-1 bg-[#ffce00] text-gray-900 text-[11px] font-bold uppercase tracking-wide rounded mb-3">Get Started</span>
               <h4 className="text-lg font-bold mb-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Plan your move to Germany</h4>
-              <p className="text-sm text-white/75 mb-5 leading-relaxed">AI tools for visa, housing, CV, and motivation letters — all in one place.</p>
-              <Link href="/dashboard" className="block text-center py-3 px-5 bg-[#dd0000] text-white font-bold text-sm rounded-lg hover:bg-[#bb0000] transition-all">
-                Explore Dashboard →
-              </Link>
+              <p className="text-sm text-white/75 mb-5 leading-relaxed">Use AI tools for your CV, motivation letter, and program search.</p>
+              <div className="flex flex-col gap-2">
+                <Link href="/tools" className="block text-center py-3 px-5 bg-[#dd0000] text-white font-bold text-sm rounded-lg hover:bg-[#bb0000] transition-all">
+                  Explore AI Tools →
+                </Link>
+                <Link href="/pricing" className="block text-center py-3 px-5 border border-white/20 text-white font-bold text-sm rounded-lg hover:border-white/40 transition-all">
+                  View Pricing
+                </Link>
+              </div>
             </div>
           </aside>
 

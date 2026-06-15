@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { GraduationCap, Euro, Globe, FileText, Plane, Briefcase, ArrowRight, CheckCircle, Search } from 'lucide-react';
-import { buildPageMetadata } from '@/lib/seo';
+import { HubBreadcrumbs } from '@/components/HubBreadcrumbs';
+import { COUNTRY_GUIDE_LINKS } from '@/lib/country-guides';
+import { buildFaqSchema, buildPageMetadata } from '@/lib/seo';
 
 const FAQS = [
   { q: 'Is studying in Germany really free?', a: 'Yes — public universities in Germany charge no tuition fees for bachelor\'s and master\'s programs, including for international students. You only pay a semester contribution of €150–350, which typically includes a public transport pass.' },
@@ -11,15 +13,7 @@ const FAQS = [
   { q: 'What is uni-assist and do I need it?', a: 'Uni-assist is a centralized application service used by many German universities for international applicants. They verify your foreign credentials and forward your application. Not all universities use it — some accept direct applications. Check each university\'s website.' },
 ];
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQS.map(faq => ({
-    '@type': 'Question',
-    name: faq.q,
-    acceptedAnswer: { '@type': 'Answer', text: faq.a },
-  })),
-};
+const faqSchema = buildFaqSchema(FAQS);
 
 export const metadata = buildPageMetadata({
   title: 'Study in Germany - Complete Guide for International Students',
@@ -92,9 +86,10 @@ const RELATED_PAGES = [
 export default function StudyInGermanyPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
+      <HubBreadcrumbs items={[{ name: 'Home', path: '/' }, { name: 'Study in Germany' }]} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* Hero */}
-      <section style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)', padding: '100px 24px 80px', color: '#fff' }}>
+      <section style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)', padding: '24px 24px 80px', color: '#fff' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
           <h1 style={{ fontSize: 'clamp(36px, 6vw, 56px)', fontWeight: 800, margin: '0 0 20px', lineHeight: 1.15 }}>
             Study in Germany:<br />
@@ -211,6 +206,38 @@ export default function StudyInGermanyPage() {
                 <CheckCircle style={{ width: 20, height: 20, color: '#16a34a', flexShrink: 0, marginTop: 2 }} />
                 <span style={{ fontSize: 15, color: '#525252' }}>{req}</span>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Country Guides */}
+      <section style={{ padding: '60px 24px', background: '#fff', borderTop: '1px solid #e5e5e5' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 24, fontWeight: 700, color: '#171717', margin: '0 0 24px', textAlign: 'center' }}>
+            Guides by Country
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+            {COUNTRY_GUIDE_LINKS.map((country) => (
+              <Link
+                key={country.href}
+                href={country.href}
+                style={{
+                  display: 'block',
+                  padding: 20,
+                  background: '#fafafa',
+                  borderRadius: 12,
+                  border: '1px solid #e5e5e5',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <span style={{ fontSize: 28, display: 'block', marginBottom: 8 }}>{country.flag}</span>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#171717', margin: '0 0 4px' }}>
+                  From {country.title}
+                </h3>
+                <p style={{ fontSize: 13, color: '#737373', margin: 0 }}>Visa, costs & application steps</p>
+              </Link>
             ))}
           </div>
         </div>

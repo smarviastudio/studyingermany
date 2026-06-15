@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { GraduationCap, Search, ArrowRight } from 'lucide-react';
-import { buildPageMetadata } from '@/lib/seo';
+import { HubBreadcrumbs } from '@/components/HubBreadcrumbs';
+import { buildFaqSchema, buildPageMetadata } from '@/lib/seo';
 
 const FAQS = [
   { q: 'Can I do a master\'s in Germany without speaking German?', a: 'Yes. Germany has over 1,500 master\'s programs taught entirely in English, especially in STEM, business, and social sciences. For German-taught programs you need TestDaF (level 4) or DSH-2 certificate.' },
@@ -11,15 +12,7 @@ const FAQS = [
   { q: 'Do I need a motivation letter for German master\'s applications?', a: 'Yes — almost every German master\'s program requires a motivation letter (Motivationsschreiben). It should explain your academic background, why you chose this program, your career goals, and why Germany. Use our AI Motivation Letter tool to create one.' },
 ];
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQS.map(faq => ({
-    '@type': 'Question',
-    name: faq.q,
-    acceptedAnswer: { '@type': 'Answer', text: faq.a },
-  })),
-};
+const faqSchema = buildFaqSchema(FAQS);
 
 export const metadata = buildPageMetadata({
   title: 'Master\'s Programs in Germany - Guide for International Students',
@@ -38,8 +31,15 @@ export const metadata = buildPageMetadata({
 export default function MastersInGermanyPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
+      <HubBreadcrumbs
+        items={[
+          { name: 'Home', path: '/' },
+          { name: 'Study in Germany', path: '/study-in-germany' },
+          { name: "Master's in Germany" },
+        ]}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <section style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)', padding: '100px 24px 80px', color: '#fff' }}>
+      <section style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)', padding: '24px 24px 80px', color: '#fff' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
           <GraduationCap style={{ width: 48, height: 48, marginBottom: 20, opacity: 0.9 }} />
           <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 800, margin: '0 0 16px', lineHeight: 1.2 }}>
