@@ -10,10 +10,12 @@ import {
   Plane, Star, Zap, TrendingUp, Users, Globe, Calculator, LayoutDashboard,
   Settings, Filter, Sparkles, School, FolderOpen, ChevronLeft, ChevronRight, ChevronDown
 } from 'lucide-react';
+import { track } from '@vercel/analytics';
 import { ProgramModal } from '@/components/ProgramModal';
 import { ProgramCard } from '@/components/ProgramCard';
 import type { ProgramSummary } from '@/lib/types';
 import { SiteNav } from '@/components/SiteNav';
+import { BLOG_POSTS, CATEGORIES } from '@/content/blog';
 
 const SEARCH_RESULTS_LIMIT = 120;
 const RESULTS_PER_PAGE = 12;
@@ -109,8 +111,29 @@ type WpPost = {
   date: string;
   link: string;
   featuredImage: string | null;
+  coverEmoji?: string;
   categories: { id: number; name: string; slug: string }[];
 };
+
+// Native articles from src/content/blog.ts, mapped to the same shape as WordPress
+// posts so they render in the guides section server-side (real crawlable links).
+const STATIC_GUIDE_POSTS: WpPost[] = [...BLOG_POSTS]
+  .sort((a, b) => (b.updatedAt || b.publishedAt).localeCompare(a.updatedAt || a.publishedAt))
+  .map((post, idx) => ({
+  id: -(idx + 1),
+  title: post.title,
+  excerpt: post.excerpt,
+  slug: post.slug,
+  date: post.publishedAt,
+  link: `/blog/${post.slug}`,
+  featuredImage: null,
+  coverEmoji: post.coverEmoji,
+  categories: (post.tags && post.tags.length > 0 ? post.tags : [post.category]).map((tag, tagIdx) => ({
+    id: -(idx * 10 + tagIdx + 1),
+    name: tag === post.category ? CATEGORIES[post.category].label : tag.charAt(0).toUpperCase() + tag.slice(1),
+    slug: tag,
+  })),
+  }));
 
 const HTML_ENTITY_MAP: Record<string, string> = {
   amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
@@ -154,11 +177,33 @@ function FAQSection() {
     {
       question: 'How much money do I need to live in Germany monthly?',
       answer: 'On average, students need €850-1,200 per month depending on the city. This includes rent (€300-500), food (€200-250), health insurance (€110), transport (€50-80), and other expenses.'
+    },
+    {
+      question: 'Is German Path free to use?',
+      answer: 'Yes. Searching 20,000+ programs, the GPA converter, the salary calculator and all guides are completely free — no account needed. Only the AI document tools (CV, motivation letter, cover letter) use one-time credit packs starting at €2.99. No subscription, credits never expire.'
+    },
+    {
+      question: 'When are the application deadlines for German universities?',
+      answer: 'For the winter semester (October start) most programs close on July 15; for the summer semester (April start) on January 15. Many programs — and uni-assist processing — need documents weeks earlier, so start your application 3-4 months before the deadline.'
     }
   ];
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  };
+
   return (
     <section className="faq-section-new" id="faq">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <div className="section-container">
         <div className="section-header" style={{ textAlign: 'center', marginBottom: '64px' }}>
           <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>
@@ -314,8 +359,7 @@ export default function HomePage() {
   const [shortlistedPrograms, setShortlistedPrograms] = useState<string[]>([]);
   const [shortlistingId, setShortlistingId] = useState<string | null>(null);
   const [signInToast, setSignInToast] = useState(false);
-  const [wpPosts, setWpPosts] = useState<WpPost[]>([]);
-  const [postsLoading, setPostsLoading] = useState(true);
+  const [wpPosts, setWpPosts] = useState<WpPost[]>(STATIC_GUIDE_POSTS);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
   const [visibleCount, setVisibleCount] = useState(6);
@@ -369,7 +413,7 @@ export default function HomePage() {
     );
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
     return () => observer.disconnect();
-  }, [wpPosts, postsLoading, activeCategory]);
+  }, [wpPosts, activeCategory]);
 
   useEffect(() => {
     (async () => {
@@ -377,11 +421,11 @@ export default function HomePage() {
         const res = await fetch('/api/wp-posts?per_page=100');
         if (res.ok) {
           const data = await res.json();
-          setWpPosts(data.posts || []);
+          const staticSlugs = new Set(STATIC_GUIDE_POSTS.map(p => p.slug));
+          const fetched: WpPost[] = (data.posts || []).filter((p: WpPost) => !staticSlugs.has(p.slug));
+          setWpPosts([...fetched, ...STATIC_GUIDE_POSTS]);
         }
-      } catch { /* silent */ } finally {
-        setPostsLoading(false);
-      }
+      } catch { /* silent */ }
     })();
   }, []);
 
@@ -464,6 +508,7 @@ export default function HomePage() {
   const runSearch = async (searchText: string) => {
     const trimmed = searchText.trim();
     if (!trimmed) return;
+    track('program_search', { authed: isAuthenticated });
     setQuery(trimmed);
     setSearching(true);
     setSearchError(null);
@@ -1099,7 +1144,7 @@ export default function HomePage() {
           </div>
 
           {/* Articles Grid */}
-          {!postsLoading && filteredPosts.length > 0 && (
+          {filteredPosts.length > 0 && (
             <div className="guides-articles scroll-reveal">
               <div className="guides-articles-row">
                 {filteredPosts.slice(0, visibleCount).map((post) => (
@@ -1107,6 +1152,10 @@ export default function HomePage() {
                     <div className="guides-article-image">
                       {post.featuredImage ? (
                         <Image src={post.featuredImage} alt={stripHtml(post.title)} loading="lazy" className="guides-article-img" width={300} height={160} />
+                      ) : post.coverEmoji ? (
+                        <div className="guides-article-img-placeholder" style={{ fontSize: 44, background: 'linear-gradient(135deg, #fef2f2, #f5f3ff)' }} aria-hidden>
+                          {post.coverEmoji}
+                        </div>
                       ) : (
                         <div className="guides-article-img-placeholder"><BookOpen className="w-6 h-6" style={{ color: '#d4d4d4' }} /></div>
                       )}
@@ -1137,21 +1186,6 @@ export default function HomePage() {
             </div>
           )}
 
-          {postsLoading && (
-            <div className="guides-articles scroll-reveal">
-              <div className="guides-articles-row">
-                {[1,2,3].map(i => (
-                  <div key={i} className="guides-article-skeleton">
-                    <div className="guides-skeleton-image" />
-                    <div className="guides-skeleton-body">
-                      <div className="guides-skeleton-line w80" />
-                      <div className="guides-skeleton-line w60" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </section>
 

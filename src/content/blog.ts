@@ -8,6 +8,8 @@ export type BlogPost = {
   updatedAt?: string;
   coverEmoji: string;
   featured?: boolean;
+  /** Topic tags used to group posts into homepage journey categories (visa, housing, jobs, finance, ...). */
+  tags?: string[];
   body: string;
 };
 
@@ -1030,6 +1032,512 @@ Need to keep your application moving this week? Start with our **[Tools](/tools)
 ---
 
 *Last updated: 15 June 2026. AI platform availability changes quickly; check Anthropic and official EU statements for the latest status.*`,
+  },
+  {
+    slug: 'aps-certificate-germany-guide',
+    title: 'APS Certificate for Germany: Complete Guide for India, China & Vietnam (2026)',
+    excerpt: 'Everything about the APS certificate — who needs it, documents, fees, processing time, and how to avoid the mistakes that delay thousands of applications every year.',
+    category: 'visa',
+    readTime: 9,
+    publishedAt: '2026-05-12',
+    updatedAt: '2026-07-01',
+    coverEmoji: '✅',
+    featured: true,
+    tags: ['visa', 'master', 'bachelor'],
+    body: `## What is the APS Certificate?
+
+The **APS certificate** (Akademische Prüfstelle) is a mandatory document verification for students from **India, China, and Vietnam** who want to study in Germany. It confirms that your academic documents are genuine and that your degree qualifies you for German higher education.
+
+**Without an APS certificate you cannot:**
+
+- Apply to most German universities (uni-assist and many direct applications require it)
+- Book a student visa appointment at the German embassy
+
+> ⚠️ APS processing takes **several weeks to a few months** depending on the country and season. Apply **before** you start your university applications — this is the single most common reason students miss the July 15 deadline.
+
+## Who needs APS?
+
+| Country | APS required? | Type |
+|---------|--------------|------|
+| India | Yes (since Nov 2022) | Document verification only |
+| China | Yes | Verification + possible interview |
+| Vietnam | Yes | Verification + possible interview |
+| All other countries | No | — |
+
+Some applicants are exempt, e.g. DAAD scholarship holders and applicants for pure PhD/research positions — check the official APS website for your country before paying the fee.
+
+## Documents you typically need (India)
+
+1. Completed **online application form** (APS India portal)
+2. **Passport copy**
+3. **Class 10 and 12 certificates** and mark sheets
+4. **Bachelor degree certificate + all semester mark sheets** (or current transcript if still studying)
+5. **APS fee payment proof** (₹18,000 for India, as of recent cycles)
+6. Passport-size **photo**
+
+All documents must usually be submitted as attested copies — check the current checklist on the APS portal, requirements are updated frequently.
+
+## Step-by-step process
+
+### Step 1: Register online
+Create an account on the APS portal for your country and fill in your academic history exactly as it appears on your certificates. Small mismatches (name spelling, dates) cause rejections.
+
+### Step 2: Pay the fee and send documents
+Pay the verification fee and courier your document set to the APS office (New Delhi for India, Beijing for China, Hanoi for Vietnam).
+
+### Step 3: Verification (and interview for China/Vietnam)
+APS contacts your university to verify your records. Students from China and Vietnam may also need a **short academic interview** about their study subject.
+
+### Step 4: Receive your certificate
+You receive **10 original certificates** by post plus a digital confirmation. Universities and the embassy each need one — don't send your last copy away.
+
+## How long does it take?
+
+- **India**: officially ~2–3 weeks after documents arrive, but plan for **4–8 weeks** in peak season (March–June)
+- **China/Vietnam**: longer if an interview is required
+
+**Rule of thumb:** apply for APS **at least 3 months** before your first university deadline.
+
+## Common mistakes to avoid
+
+1. **Starting APS too late** — it blocks both admission and visa
+2. **Name mismatches** between passport and certificates without an affidavit
+3. **Missing mark sheets** — every semester must be included
+4. **Wrong fee payment reference** — your application sits unprocessed
+5. Assuming APS = admission. APS only verifies documents; your **grades still decide** admission. Use our free [GPA Converter](/gpa-converter) to see your German grade equivalent before shortlisting universities.
+
+## After APS: your next steps
+
+1. [Search programs](/) that match your profile — filter English-taught, tuition-free, by city
+2. Prepare your [German-format CV](/cv-maker) and [motivation letter](/motivation-letter)
+3. Apply via [uni-assist or directly](/blog/uni-assist-application-guide)
+4. Open a [blocked account](/blog/blocked-account-germany-guide) and book your visa appointment
+
+## FAQ
+
+**How long is the APS certificate valid?**
+Indefinitely — it does not expire.
+
+**Can I apply to universities while APS is pending?**
+Some universities accept proof of application, but most (and uni-assist) require the final certificate. Don't gamble with deadlines.
+
+**Do I need APS for a second master's or PhD?**
+Pure research PhD positions are generally exempt; taught programs still require it. Confirm with the APS office.
+
+---
+
+*Fees and processing times change — always confirm on the official APS website for your country before applying.*`,
+  },
+  {
+    slug: 'uni-assist-application-guide',
+    title: 'How to Apply via uni-assist: Step-by-Step Guide (2026)',
+    excerpt: 'uni-assist explained simply — VPD, fees, document upload, processing times, and how to avoid the rejection reasons that hit thousands of international applicants.',
+    category: 'guide',
+    readTime: 8,
+    publishedAt: '2026-05-26',
+    coverEmoji: '📨',
+    featured: true,
+    tags: ['master', 'bachelor'],
+    body: `## What is uni-assist?
+
+**uni-assist** is the centralized application service used by **170+ German universities**. It checks whether your international certificates meet German admission requirements before your application reaches the university.
+
+There are two ways universities use it:
+
+1. **Full application via uni-assist** — you apply through the My assist portal and uni-assist forwards your application
+2. **VPD (Vorprüfungsdokumentation)** — uni-assist only evaluates your documents and issues a **VPD certificate**, which you then upload to the university's own portal (common for TU Berlin, and many others)
+
+Always check the program page: it tells you whether you need a full uni-assist application or just a VPD.
+
+## Step-by-step: applying through uni-assist
+
+### Step 1: Create your My assist account
+Register at my.uni-assist.de. Enter your personal data **exactly as in your passport**.
+
+### Step 2: Enter your educational history
+Add your school leaving certificate and university degrees. Use our [GPA Converter](/gpa-converter) first — if your converted German grade is far above a program's cutoff, don't waste the application fee.
+
+### Step 3: Select your programs
+Search for your university + program + semester. Double-check the **semester** (winter vs. summer) — applying to the wrong intake is an instant rejection.
+
+### Step 4: Upload documents
+Typical checklist:
+
+- School and university **certificates + transcripts** (with certified translations if not in German/English)
+- **Language certificates** (IELTS/TOEFL or TestDaF/DSH)
+- **APS certificate** if you're from India, China, or Vietnam ([full APS guide](/blog/aps-certificate-germany-guide))
+- **CV** — use the [AI CV Maker](/cv-maker) for the German format universities expect
+- **Motivation letter** if the program requires one — generate a program-specific draft with our [Motivation Letter tool](/motivation-letter)
+
+### Step 5: Pay the fee
+As of recent cycles: **€75 for the first application** per semester and **€30 for each additional** one. VPD costs the same as a first application.
+
+### Step 6: Track your status
+Processing takes **4–6 weeks** (longer near deadlines). uni-assist emails you if documents are missing — **check spam weekly**.
+
+## Key deadlines
+
+| Intake | Typical deadline | Apply by (recommended) |
+|--------|-----------------|------------------------|
+| Winter semester (October) | July 15 | May–June |
+| Summer semester (April) | January 15 | November–December |
+
+Many programs close **earlier** — always verify on the program page. Since uni-assist needs weeks to process, submitting on deadline day with a document error means missing the intake entirely.
+
+## Top rejection reasons (and how to avoid them)
+
+1. **Missing certified translations** — sworn translator required for documents not in German or English
+2. **Wrong or missing VPD** — the university wanted a VPD, you sent a full application (or vice versa)
+3. **Grade below cutoff** — check the NC and convert your GPA honestly first
+4. **Missing APS** — non-negotiable for India, China, Vietnam
+5. **Late payment** — the application only counts once the fee arrives
+
+## After you apply
+
+- Track every application, deadline and status in one place with our free [Application Tracker](/dashboard/landing)
+- Got an admission letter? Move straight to the [blocked account](/blog/blocked-account-germany-guide) and [visa process](/blog/german-student-visa-guide)
+
+## FAQ
+
+**Can I apply to multiple universities?**
+Yes — most students apply to 5–8 programs. Budget €75 + €30 per extra application.
+
+**Do all German universities use uni-assist?**
+No. Many (e.g. most Bavarian universities, RWTH Aachen for some programs) take direct applications. The [program search](/) shows you where to apply.
+
+**How long is a VPD valid?**
+Usually one year — reusable for multiple universities within that time.`,
+  },
+  {
+    slug: 'part-time-jobs-students-germany',
+    title: 'Part-Time Jobs for International Students in Germany (2026): Rules, Pay & Where to Find Them',
+    excerpt: 'How many hours you can legally work, what a Werkstudent job pays, minijob rules, taxes — and how much lands in your bank account.',
+    category: 'finance',
+    readTime: 9,
+    publishedAt: '2026-06-09',
+    coverEmoji: '💼',
+    featured: true,
+    tags: ['jobs', 'finance'],
+    body: `## Can international students work in Germany?
+
+Yes. As a non-EU student you can legally work **140 full days or 280 half days per year** — roughly equivalent to **20 hours per week** during the semester. During semester breaks you can work full-time.
+
+EU/EEA students have no restrictions (same rules as German students).
+
+> ⚠️ The 20-hour rule during lecture periods matters for your **health insurance status and visa** — exceed it regularly and you lose your student status benefits.
+
+## The three types of student jobs
+
+### 1. Minijob (up to ~€600/month)
+- **Tax-free** for you, minimal paperwork
+- Typical: retail, cafés, delivery, campus jobs
+- The minijob limit rises with minimum wage — around **€600/month in 2026**
+
+### 2. Werkstudent (working student) — the best option
+- **12–20 hours/week** at a company in your field of study
+- Typical pay: **€13–18/hour**, more in tech and engineering
+- You pay only pension contributions — **no full social security**, which means noticeably more net pay
+- Doubles as CV experience and often converts into a full-time offer after graduation
+
+### 3. HiWi (university research/teaching assistant)
+- Work for a professor or institute
+- Great for master's students planning a PhD; pay is modest but the network is gold
+
+## How much will you actually earn?
+
+Germany's minimum wage is **€13.90/hour (2026)**. A typical Werkstudent doing 18 h/week at €15/hour earns about **€1,170 gross/month**.
+
+What lands in your account depends on taxes and pension contributions. **Don't guess** — use our free [Netto-Brutto Salary Calculator](/netto-brutto-calculator/landing) to see your exact net pay as a student, and again for your first full-time salary after graduation.
+
+## Typical student budgets: does a part-time job cover it?
+
+| Item | Monthly |
+|------|---------|
+| Rent (shared flat/dorm) | €350–550 |
+| Health insurance | €110–130 |
+| Food | €200–250 |
+| Phone, transport, misc | €80–150 |
+| **Total** | **€750–1,050** |
+
+A Werkstudent job at 18–20 h/week typically covers **most or all** living costs in mid-sized cities. In Munich or Hamburg, plan for savings or family support on top.
+
+## Where to find student jobs
+
+1. **University job boards** (Schwarzes Brett / career portal) — HiWi and campus jobs
+2. **LinkedIn / XING / StepStone / Indeed** — search "Werkstudent + your field"
+3. **Company career pages** — big employers (Siemens, SAP, Bosch, Zalando) run permanent Werkstudent programs
+4. **Studentenwerk** — local job placement for cafeteria, library and event jobs
+
+## What you need to apply
+
+German employers expect a **German-format CV (Lebenslauf)** — one to two pages, structured, factual. Our [AI CV Maker](/cv-maker) generates one from your profile in minutes, and the [Cover Letter tool](/cover-letter) writes the Anschreiben German companies still expect for Werkstudent roles.
+
+**Documents checklist:**
+
+- German-format CV
+- Short cover letter
+- Enrollment certificate (Immatrikulationsbescheinigung)
+- Tax ID (you get it after your Anmeldung)
+
+## Do you need German?
+
+- **Minijobs in hospitality/retail**: basic German (A2–B1) usually required
+- **Werkstudent in tech/engineering**: many roles are English-friendly, but B1 German dramatically widens your options
+- Start learning before you arrive — see our guide on [learning German for university](/blog/learn-german-for-university)
+
+## FAQ
+
+**Does part-time work affect my visa?**
+Not if you stay within 140 full days/year. Your studies must remain your main activity.
+
+**Do I pay taxes as a student?**
+Below the basic tax-free allowance (~€12,000/year) you get income tax back via a tax return. Pension contributions on Werkstudent jobs are mandatory.
+
+**Can I freelance as a student?**
+Only with permission from the immigration office (Ausländerbehörde) — freelancing is not covered by the standard student work allowance.`,
+  },
+  {
+    slug: 'health-insurance-students-germany',
+    title: 'Health Insurance for International Students in Germany (2026): Public vs Private',
+    excerpt: 'Health insurance is mandatory for your visa and enrollment. Which providers to choose, what it costs, the over-30 trap, and how to enroll in 15 minutes.',
+    category: 'finance',
+    readTime: 7,
+    publishedAt: '2026-06-18',
+    coverEmoji: '🏥',
+    tags: ['finance', 'visa'],
+    body: `## Why you can't skip this
+
+Health insurance in Germany is **legally mandatory**. You need proof of coverage for:
+
+1. Your **student visa application**
+2. **University enrollment** (Immatrikulation)
+3. Opening some bank accounts and renting flats
+
+No insurance = no enrollment. It's that simple.
+
+## Public vs private: the 30-second answer
+
+**If you're under 30 and enrolled in a degree program → choose public (gesetzliche) insurance.** It costs about **€120–135/month** at the student rate, covers virtually everything (doctor visits, hospital, most medications, mental health), and every provider charges nearly the same.
+
+The big public providers popular with international students:
+
+- **TK (Techniker Krankenkasse)** — most English-friendly service
+- **AOK** — largest network of local offices
+- **Barmer** and **DAK** — comparable coverage
+
+Honestly: coverage differences are minimal. Pick one with English support and enroll online before you travel — you'll get the confirmation your university needs.
+
+## When you need private insurance instead
+
+- **Over 30 years old** at enrollment → public student rate no longer available; you'll pay the higher voluntary public rate (~€220+/month) or take private insurance
+- **Language course / Studienkolleg students** → often not eligible for public student insurance; you need private coverage (e.g. incoming-student tariffs from €30–70/month) until you enroll in a degree program
+- **PhD candidates without employment contract** → case-by-case
+
+> ⚠️ Cheap "incoming" private plans are fine for a visa and a language course, but they cover less and pre-existing conditions are usually excluded. Switch to public insurance as soon as you're eligible.
+
+## What it costs in your monthly budget
+
+| Situation | Monthly cost |
+|-----------|-------------|
+| Degree student under 30 (public) | €120–135 |
+| Student over 30 (voluntary public) | €220–260 |
+| Language/prep student (private incoming tariff) | €30–70 |
+
+The student rate is set by law, so "shopping around" between public providers saves you almost nothing — service language matters more.
+
+## How to enroll (15 minutes)
+
+1. Apply online with TK/AOK/Barmer — passport + admission letter is enough
+2. Receive your **membership confirmation (Mitgliedsbescheinigung)** by email
+3. The provider reports your coverage electronically to your university
+4. After arrival, you'll get your physical insurance card (eGK) by post
+
+Do this **before** your visa appointment — the embassy wants proof of coverage from day one in Germany. Travel insurance for the first days is often bundled free.
+
+## Health insurance and your part-time job
+
+If you work a [Werkstudent job](/blog/part-time-jobs-students-germany) within 20 hours/week during the semester, you keep your cheap student insurance. Exceed the limit regularly and you're reclassified as an employee — with full social contributions. Check the impact on your net pay with the [salary calculator](/netto-brutto-calculator/landing).
+
+## FAQ
+
+**Is insurance included in the semester fee?**
+No. The semester contribution covers administration and transport — health insurance is separate.
+
+**Can I use insurance from my home country?**
+Only EU EHIC cards and a few treaty countries qualify. Insurance from India, Pakistan, Nigeria etc. is **not accepted** for enrollment.
+
+**What about my spouse and kids?**
+Public insurance offers **free family coverage** for dependents without income — a huge advantage over private plans.
+
+---
+
+*Planning your total budget? Read the full [cost of studying in Germany](/blog/cost-of-studying-in-germany) breakdown.*`,
+  },
+  {
+    slug: 'student-accommodation-germany',
+    title: 'Student Accommodation in Germany: How to Find Housing in 2026 (Dorms, WG, Private)',
+    excerpt: 'Housing is the hardest part of moving to Germany. Where to search, what rent costs per city, how to spot scams, and a proven timeline for finding a room from abroad.',
+    category: 'life',
+    readTime: 9,
+    publishedAt: '2026-06-25',
+    coverEmoji: '🏠',
+    tags: ['housing'],
+    body: `## The honest truth about student housing
+
+Finding accommodation is **harder than getting admitted** for many international students. In Munich, Berlin, Hamburg and Cologne, demand massively exceeds supply. The students who succeed start searching **3–4 months before arrival** and apply to dozens of options in parallel.
+
+## Your three main options
+
+### 1. Student dormitories (Studentenwohnheim) — cheapest
+- Run by the local **Studentenwerk**
+- **€250–450/month** including utilities
+- Apply **immediately after admission** (some cities let you apply before) — waiting lists run 2–6 semesters in big cities
+- Apply at the Studentenwerk of your university's city, not the university itself
+
+### 2. Shared flat (WG — Wohngemeinschaft) — most popular
+- Private room in a shared apartment, **€350–650/month**
+- Found via **wg-gesucht.de** (the market leader), Studenten-WG.de, Facebook groups
+- You'll write many short applications — a friendly, personal message in basic German noticeably increases replies
+
+### 3. Private studio / apartment — most expensive
+- **€500–1,200/month** depending on city
+- Portals: ImmobilienScout24, Immowelt, Kleinanzeigen
+- Landlords typically want proof of income or a guarantor — hard from abroad; consider furnished platforms (HousingAnywhere, Wunderflats) for the first semester
+
+## What rent really costs per city (single room / WG)
+
+| City | Typical WG room | Dorm |
+|------|----------------|------|
+| Munich | €600–850 | €300–450 |
+| Berlin | €500–750 | €280–420 |
+| Hamburg | €500–700 | €280–400 |
+| Cologne/Frankfurt/Stuttgart | €450–650 | €270–400 |
+| Leipzig, Dresden, Magdeburg | €300–450 | €230–330 |
+| Smaller university towns | €300–500 | €250–350 |
+
+**Strategy tip:** tuition is free almost everywhere — a program in Leipzig instead of Munich saves you **€3,000–5,000 per year** in rent alone. Compare programs by city with our [program search](/).
+
+## The scam checklist (read this twice)
+
+Housing scams specifically target international students. **Never:**
+
+1. Transfer deposit money **before** signing a contract and seeing the flat (in person or live video call)
+2. Pay via Western Union, gift cards, or crypto
+3. Trust a "landlord abroad" who'll "mail you the keys" via a courier service
+4. Send passport scans to unverified private contacts
+
+Rule: if the rent looks too good for that city, it's a scam.
+
+## Your housing timeline
+
+- **4 months before**: apply for dorm waiting lists, set up wg-gesucht profile and alerts
+- **3–2 months before**: apply to 5–10 listings per week; take video viewings
+- **1 month before**: book a fallback — hostel, temporary sublet (Zwischenmiete), or furnished platform for month one
+- **After arrival**: viewing in person massively improves your chances; many students find their long-term room within the first 4–6 weeks
+
+## Don't forget the Anmeldung
+
+Within 14 days of moving in, register your address at the **Bürgeramt**. You need the landlord's confirmation (**Wohnungsgeberbestätigung**) — make sure your contract includes it. Without Anmeldung: no bank account, no tax ID, no residence permit.
+
+## FAQ
+
+**Can I get a dorm room guaranteed with admission?**
+A few universities offer reserved contingents for internationals — check your admission letter. Otherwise: waiting list.
+
+**What is Kaltmiete vs Warmmiete?**
+*Kaltmiete* = base rent; *Warmmiete* = rent including heating/utilities. Always compare Warmmiete.
+
+**How much deposit is normal?**
+Up to 3 months' Kaltmiete, paid after signing — legally protected in a separate account.
+
+---
+
+*Next step after housing: the [Anmeldung, bank account and residence permit checklist](/blog/complete-guide-study-in-germany).*`,
+  },
+  {
+    slug: 'work-in-germany-after-graduation',
+    title: 'Working in Germany After Graduation (2026): 18-Month Visa, Blue Card & Salaries',
+    excerpt: 'Your options after finishing your degree — the 18-month job seeker permit, EU Blue Card thresholds, permanent residency timeline, and realistic starting salaries.',
+    category: 'visa',
+    readTime: 8,
+    publishedAt: '2026-07-01',
+    featured: true,
+    coverEmoji: '🚀',
+    tags: ['jobs', 'visa'],
+    body: `## Germany wants you to stay
+
+Unlike many countries, Germany makes it genuinely easy to stay after graduation. A German degree is the **strongest possible entry ticket** into the EU job market: no labor-market test, an 18-month runway to find a job, and one of the fastest routes to permanent residency.
+
+## Option 1: The 18-month job seeker residence permit
+
+After graduating from a German university you can extend your residence permit by **18 months** to look for a job matching your qualification.
+
+**Requirements:**
+
+- Degree certificate from a German university
+- Proof of financial means (savings, part-time job — the [blocked account](/blog/blocked-account-germany-guide) level is the benchmark)
+- Health insurance
+
+**The key advantage:** during these 18 months you can work **any job without restrictions** — waiting tables while interviewing for engineering roles is completely fine.
+
+## Option 2: EU Blue Card — the fast track
+
+Once you have a qualified job offer, the **EU Blue Card** is usually the best permit:
+
+- Salary threshold: roughly **€48,000–50,000/year** for regular professions, lower (~€43,000–45,000) for shortage occupations (IT, engineering, medicine) and **recent graduates**
+- Permanent residency after **27 months** — or just **21 months** with B1 German
+- Easier family reunification; spouse gets full work rights
+
+Fresh graduates from German universities benefit from the **reduced threshold**, which most engineering and IT starting salaries already clear.
+
+## What will you earn? Realistic starting salaries
+
+| Field | Typical gross starting salary |
+|-------|------------------------------|
+| Software engineering / IT | €48,000–60,000 |
+| Mechanical / electrical engineering | €48,000–58,000 |
+| Data science / AI | €50,000–65,000 |
+| Finance & consulting | €45,000–60,000 |
+| Natural sciences (industry) | €45,000–55,000 |
+| Humanities / social sciences | €36,000–45,000 |
+
+Gross is not what you take home — German taxes and social contributions take 30–40%. Check your actual net pay with our free [Netto-Brutto Salary Calculator](/netto-brutto-calculator/landing) before negotiating.
+
+## Your job-hunt toolkit
+
+German hiring is document-driven and formal:
+
+1. **German-format CV (Lebenslauf)** — tabular, 1–2 pages, no creative layouts. Generate one with the [AI CV Maker](/cv-maker)
+2. **Cover letter (Anschreiben)** — still expected by most German companies; tailor it per company with the [Cover Letter tool](/cover-letter)
+3. **References (Arbeitszeugnisse)** — collect one from every Werkstudent job and internship
+4. **German level B1+** — the single biggest salary and opportunity multiplier outside pure tech roles
+
+**Start before you graduate:** a [Werkstudent job](/blog/part-time-jobs-students-germany) in your field converts to a full-time offer more often than any job portal.
+
+## Timeline to permanent residency & citizenship
+
+- **Blue Card**: permanent residency after 21–27 months
+- **Regular work permit**: permanent residency after 24 months (as German graduate)
+- **Citizenship**: possible after **5 years** of legal residence (3 years with exceptional integration) — your study years count at half
+
+## What if you don't find a job in 18 months?
+
+Options include the **Opportunity Card (Chancenkarte)** points system, switching to a further degree, or vocational training pathways. In practice, graduates in STEM fields who apply actively and speak basic German rarely exhaust the 18 months.
+
+## FAQ
+
+**Can I leave Germany and come back for job hunting?**
+The 18-month permit requires residence in Germany. If you leave long-term, you'd apply later for a job seeker or Opportunity Card visa from abroad.
+
+**Does the 18-month permit work for any degree?**
+Yes — bachelor, master, or PhD from any recognized German university.
+
+**Can I start a company instead?**
+Yes, graduates can get a residence permit for self-employment with a viable business plan.
+
+---
+
+*Still choosing your program? Pick a degree with strong job prospects — [search 20,000+ programs](/) and compare cities, tuition and language requirements.*`,
   },
 ];
 
