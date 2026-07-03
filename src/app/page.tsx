@@ -4,32 +4,44 @@ import { useState, useEffect, useMemo, FormEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import { 
-  Search, Loader2, Bookmark, X, ArrowRight, BookOpen, Newspaper, Calendar,
+import {
+  Search, Loader2, Bookmark, X, ArrowRight, BookOpen,
   GraduationCap, FileText, Languages, Home, Briefcase, CreditCard, Shield,
-  Plane, Star, Zap, TrendingUp, Users, Globe, Clock, Calculator, LayoutDashboard, MapPin,
+  Plane, Star, Zap, TrendingUp, Users, Globe, Calculator, LayoutDashboard,
   Settings, Filter, Sparkles, School, FolderOpen, ChevronLeft, ChevronRight, ChevronDown
 } from 'lucide-react';
 import { ProgramModal } from '@/components/ProgramModal';
 import { ProgramCard } from '@/components/ProgramCard';
 import type { ProgramSummary } from '@/lib/types';
 import { SiteNav } from '@/components/SiteNav';
+
 const SEARCH_RESULTS_LIMIT = 120;
 const RESULTS_PER_PAGE = 12;
 
 const HERO_SUGGESTIONS = [
   'English-taught master in AI',
-  'No-tuition engineering bachelor',
-  'MBA in Berlin · summer intake',
+  'Tuition-free engineering bachelor',
+  'MBA in Berlin',
+  'Data science master, winter 2026',
 ];
 
-const TOOLS = [
-  { href: '/cv-maker/landing',                  label: 'AI CV Maker',            desc: 'Build a German-format CV in minutes with AI assistance',              icon: FileText,    gradient: 'from-red-500 to-rose-600',     premium: true  },
-  { href: '/cover-letter/landing',              label: 'Cover Letter',           desc: 'Draft professional cover letters tailored to German employers',        icon: Briefcase,   gradient: 'from-emerald-500 to-green-600', premium: true  },
-  { href: '/motivation-letter/landing',         label: 'Motivation Letter',      desc: 'Create compelling motivation letters for university applications',     icon: Star,        gradient: 'from-violet-500 to-purple-600', premium: true  },
-  { href: '/gpa-converter/landing',             label: 'GPA Converter',          desc: 'Convert your grades to the German grading scale instantly',           icon: TrendingUp,  gradient: 'from-blue-500 to-indigo-600',   premium: false },
-  { href: '/netto-brutto-calculator/landing',   label: 'Salary Calculator',      desc: 'Calculate your net salary after German taxes and deductions',         icon: Calculator,  gradient: 'from-amber-500 to-orange-600',  premium: false },
-  { href: '/dashboard/landing',                 label: 'My Dashboard',           desc: 'Track your applications, shortlists and study plans',                 icon: Zap,         gradient: 'from-slate-700 to-slate-900',   premium: false },
+const QUICK_LINKS = [
+  { href: '/masters-in-germany', label: 'Masters in Germany' },
+  { href: '/bachelor-in-germany', label: 'Bachelors in Germany' },
+  { href: '/english-taught-programs', label: 'English-taught programs' },
+  { href: '/study-in-germany', label: 'Study in Germany guide' },
+];
+
+const FREE_TOOLS = [
+  { href: '/gpa-converter/landing',           label: 'GPA Converter',      desc: 'Convert your grades to the German scale instantly. Know where you stand before you apply.', icon: TrendingUp, gradient: 'from-blue-500 to-indigo-600' },
+  { href: '/netto-brutto-calculator/landing', label: 'Salary Calculator',  desc: 'See your real net salary after German taxes — for student jobs and your first job after graduation.', icon: Calculator, gradient: 'from-amber-500 to-orange-600' },
+  { href: '/dashboard/landing',               label: 'Application Tracker', desc: 'Track your applications, deadlines and shortlisted programs in one place.', icon: LayoutDashboard, gradient: 'from-slate-700 to-slate-900' },
+];
+
+const AI_TOOLS = [
+  { href: '/cv-maker/landing',          label: 'AI CV Maker',       desc: 'A recruiter-ready German-format CV (Lebenslauf), written for you in minutes.', icon: FileText,  gradient: 'from-red-500 to-rose-600' },
+  { href: '/motivation-letter/landing', label: 'Motivation Letter', desc: 'A compelling, university-specific motivation letter that gets you noticed.',   icon: Star,      gradient: 'from-violet-500 to-purple-600' },
+  { href: '/cover-letter/landing',      label: 'Cover Letter',      desc: 'Professional cover letters tailored to German employers and internships.',     icon: Briefcase, gradient: 'from-emerald-500 to-green-600' },
 ];
 
 const TESTIMONIALS = [
@@ -123,16 +135,6 @@ function stripHtml(html: string) {
   );
 }
 
-function timeAgo(dateStr: string) {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const days = Math.floor(diff / 86400000);
-  if (days === 0) return 'Today';
-  if (days === 1) return 'Yesterday';
-  if (days < 7) return `${days}d ago`;
-  if (days < 30) return `${Math.floor(days / 7)}w ago`;
-  return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-}
-
 function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -142,8 +144,8 @@ function FAQSection() {
       answer: 'Yes! Most public universities in Germany charge no tuition fees for bachelor and master programs — even for international students. You only pay a semester contribution of €150-350 which often includes public transport.'
     },
     {
-      question: 'Can I transfer if I don\'t have a direct access?',
-      answer: 'Yes, you can transfer credits from your previous studies. Requirements vary by university and program. You typically need to provide course descriptions and transcripts for evaluation.'
+      question: 'Do I need to speak German to study in Germany?',
+      answer: 'Not necessarily. There are over 2,000 English-taught programs, especially at master level. For German-taught programs you typically need B2/C1 (TestDaF or DSH). Basic German still helps enormously with daily life and part-time jobs.'
     },
     {
       question: 'What is the "Blocked Account" and do I need one?',
@@ -163,7 +165,7 @@ function FAQSection() {
             Frequently Asked Questions
           </h2>
           <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px', color: '#737373' }}>
-            Got a question? We've got answers. If you have any other questions, see our full documentation.
+            The questions every future international student asks first.
           </p>
         </div>
 
@@ -175,8 +177,8 @@ function FAQSection() {
                 className="faq-accordion-button"
               >
                 <span>{faq.question}</span>
-                <ChevronDown 
-                  className="w-5 h-5 transition-transform" 
+                <ChevronDown
+                  className="w-5 h-5 transition-transform"
                   style={{ transform: openIndex === index ? 'rotate(180deg)' : 'rotate(0deg)' }}
                 />
               </button>
@@ -202,14 +204,14 @@ function CTASection() {
             Ready to start your journey?
           </h2>
           <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.9)', marginBottom: '32px', textAlign: 'center', maxWidth: '600px', margin: '0 auto 32px' }}>
-            Join thousands of students who have already found their dream programs in Germany. Access AI tools and guides for free today.
+            Search programs, convert your GPA and read the guides — all free, no account needed. Sign up when you want to save programs and build your application.
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/auth/signup" className="cta-btn-white">
               Create Free Account
             </Link>
             <Link href="#hero" className="cta-btn-outline">
-              Browse Programs
+              Search Programs
             </Link>
           </div>
         </div>
@@ -249,10 +251,10 @@ function TestimonialSlider({ testimonials }: { testimonials: typeof TESTIMONIALS
       <div className="section-container">
         <div className="section-header" style={{ textAlign: 'center', marginBottom: '64px' }}>
           <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>
-            Loved by students worldwide
+            Students who made it to Germany
           </h2>
           <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px', color: '#737373' }}>
-            Join 50,000+ students who successfully navigated their German journey with us.
+            Join 2,500+ students who found their path with German Path.
           </p>
         </div>
 
@@ -260,7 +262,7 @@ function TestimonialSlider({ testimonials }: { testimonials: typeof TESTIMONIALS
           <div className="testimonial-grid-new">
             {displayTestimonials.map((person, idx) => (
               <article key={`${person.name}-${idx}-${currentIndex}`} className="testimonial-card-new">
-                <div className="testimonial-quote-icon">"</div>
+                <div className="testimonial-quote-icon">&quot;</div>
                 <p className="testimonial-quote-text">{person.quote}</p>
                 <div className="testimonial-footer">
                   <div className="testimonial-avatar-new">
@@ -318,7 +320,6 @@ export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [visibleCount, setVisibleCount] = useState(6);
   const [filters, setFilters] = useState({ language: 'all', city: 'all', degreeLevel: 'all', tuition: 'all' });
-  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [advancedFilters, setAdvancedFilters] = useState({
     degreeLevel: '',
@@ -337,24 +338,16 @@ export default function HomePage() {
     subjectArea: '',
   });
 
-  const heroSlides = [
-    { main: 'Study in Germany —', highlight: '20,000+ Programs' },
-    { main: 'Say goodbye to', highlight: 'expensive consultants' },
-    { main: 'Find your program', highlight: 'in minutes, not months' },
-    { main: 'Save thousands on', highlight: 'consultant fees' },
-    { main: 'AI-powered guidance', highlight: 'completely free' },
-  ];
-
   const filteredResults = useMemo(() => {
     return results.filter(program => {
       const degreeLevel = program.degree_level?.toLowerCase() || '';
       const languages = program.languages_array?.map(l => l.toLowerCase()) || [];
-      
+
       if (filters.language !== 'all' && !languages.some(l => l.includes(filters.language))) return false;
       if (filters.degreeLevel !== 'all' && !degreeLevel.includes(filters.degreeLevel)) return false;
       if (filters.tuition === 'free' && !program.is_free) return false;
       if (filters.tuition === 'paid' && program.is_free) return false;
-      
+
       return true;
     });
   }, [results, filters]);
@@ -377,13 +370,6 @@ export default function HomePage() {
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, [wpPosts, postsLoading, activeCategory]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHeroSlideIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [heroSlides.length]);
 
   useEffect(() => {
     (async () => {
@@ -431,7 +417,7 @@ export default function HomePage() {
     const groups: Record<string, WpPost[]> = {};
     JOURNEY_CATEGORIES.forEach(cat => { groups[cat.key] = []; });
     groups['other'] = [];
-    
+
     // Filter out posts that ONLY have "News" category
     const guidePosts = wpPosts.filter(post => {
       const hasNews = post.categories.some(c => c.slug.toLowerCase() === 'news');
@@ -439,7 +425,7 @@ export default function HomePage() {
       // Exclude if it ONLY has News category (News but no other categories)
       return !(hasNews && !hasOtherCategories);
     });
-    
+
     guidePosts.forEach(post => {
       const postSlugs = post.categories.map(c => c.slug.toLowerCase());
       const postNames = post.categories.map(c => c.name.toLowerCase());
@@ -465,11 +451,8 @@ export default function HomePage() {
       const hasOtherCategories = post.categories.some(c => c.slug.toLowerCase() !== 'news');
       return !(hasNews && !hasOtherCategories);
     });
-    
-    if (activeCategory === 'all') {
-      // Shuffle posts randomly for "All Guides"
-      return [...guidePosts].sort(() => Math.random() - 0.5);
-    }
+
+    if (activeCategory === 'all') return guidePosts;
     return categorizedPosts[activeCategory] || [];
   }, [activeCategory, wpPosts, categorizedPosts]);
 
@@ -478,82 +461,10 @@ export default function HomePage() {
     setVisibleCount(6);
   }, [activeCategory]);
 
-  const featuredPost = useMemo(() => {
-    // Exclude News-only posts from featured
-    const guidePosts = wpPosts.filter(post => {
-      const hasNews = post.categories.some(c => c.slug.toLowerCase() === 'news');
-      const hasOtherCategories = post.categories.some(c => c.slug.toLowerCase() !== 'news');
-      return !(hasNews && !hasOtherCategories);
-    });
-    return guidePosts.find(p => p.featuredImage) || guidePosts[0] || null;
-  }, [wpPosts]);
-
-  const handleAdvancedSearch = async () => {
-    setShowAdvancedSearch(false);
-    setSearching(true);
-    setSearchError(null);
-    setResults([]);
-    setTotalMatches(0);
-    setResultsPage(1);
-    setReasoning(null);
-    setNonCourseMessage(null);
-    setShowSearchResults(true);
-
-    try {
-      // Construct natural language query from filters
-      const queryParts: string[] = [];
-      
-      if (advancedFilters.isFree) queryParts.push('tuition-free');
-      else if (advancedFilters.tuitionMin || advancedFilters.tuitionMax) {
-        if (advancedFilters.tuitionMin && advancedFilters.tuitionMax) {
-          queryParts.push(`tuition between €${advancedFilters.tuitionMin} and €${advancedFilters.tuitionMax}`);
-        } else if (advancedFilters.tuitionMin) {
-          queryParts.push(`tuition minimum €${advancedFilters.tuitionMin}`);
-        } else if (advancedFilters.tuitionMax) {
-          queryParts.push(`tuition maximum €${advancedFilters.tuitionMax}`);
-        }
-      }
-      
-      if (advancedFilters.subjectArea) queryParts.push(advancedFilters.subjectArea);
-      if (advancedFilters.degreeLevel) queryParts.push(advancedFilters.degreeLevel);
-      if (advancedFilters.language) queryParts.push(`in ${advancedFilters.language}`);
-      if (advancedFilters.city) queryParts.push(`in ${advancedFilters.city}`);
-      if (advancedFilters.intake) queryParts.push(`${advancedFilters.intake} intake`);
-      if (advancedFilters.onlineAvailable) queryParts.push('online');
-      if (advancedFilters.scholarshipAvailable) queryParts.push('with scholarships');
-      if (advancedFilters.englishRequired) queryParts.push('english proficiency required');
-      if (advancedFilters.germanRequired) queryParts.push('german proficiency required');
-      if (advancedFilters.ieltsRequired) queryParts.push('ielts required');
-      if (advancedFilters.toeflRequired) queryParts.push('toefl required');
-      
-      const constructedQuery = queryParts.length > 0 ? queryParts.join(' ') : 'programs in Germany';
-      
-      const res = await fetch('/api/course-finder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: constructedQuery, limit: SEARCH_RESULTS_LIMIT }),
-      });
-      
-      if (!res.ok) throw new Error('Search failed');
-      const data = await res.json();
-      
-      if (data.is_non_course_query) {
-        setNonCourseMessage(data.reasoning || 'Please search for academic programs.');
-      } else {
-        setResults(data.programs || []);
-        setTotalMatches(data.total_matches || data.programs?.length || 0);
-        setReasoning(data.reasoning || 'Advanced filter search');
-      }
-    } catch {
-      setSearchError('Failed to search programs. Please try again.');
-    } finally {
-      setSearching(false);
-    }
-  };
-
-  const handleSearch = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
+  const runSearch = async (searchText: string) => {
+    const trimmed = searchText.trim();
+    if (!trimmed) return;
+    setQuery(trimmed);
     setSearching(true);
     setSearchError(null);
     setResults([]);
@@ -566,7 +477,7 @@ export default function HomePage() {
       const res = await fetch('/api/course-finder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: query.trim(), limit: SEARCH_RESULTS_LIMIT }),
+        body: JSON.stringify({ query: trimmed, limit: SEARCH_RESULTS_LIMIT }),
       });
       if (!res.ok) throw new Error((await res.json().catch(() => null))?.error || 'Something went wrong');
       const data = await res.json();
@@ -582,6 +493,43 @@ export default function HomePage() {
     } finally {
       setSearching(false);
     }
+  };
+
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    runSearch(query);
+  };
+
+  const handleAdvancedSearch = async () => {
+    setShowAdvancedSearch(false);
+
+    // Construct natural language query from filters
+    const queryParts: string[] = [];
+
+    if (advancedFilters.isFree) queryParts.push('tuition-free');
+    else if (advancedFilters.tuitionMin || advancedFilters.tuitionMax) {
+      if (advancedFilters.tuitionMin && advancedFilters.tuitionMax) {
+        queryParts.push(`tuition between €${advancedFilters.tuitionMin} and €${advancedFilters.tuitionMax}`);
+      } else if (advancedFilters.tuitionMin) {
+        queryParts.push(`tuition minimum €${advancedFilters.tuitionMin}`);
+      } else if (advancedFilters.tuitionMax) {
+        queryParts.push(`tuition maximum €${advancedFilters.tuitionMax}`);
+      }
+    }
+
+    if (advancedFilters.subjectArea) queryParts.push(advancedFilters.subjectArea);
+    if (advancedFilters.degreeLevel) queryParts.push(advancedFilters.degreeLevel);
+    if (advancedFilters.language) queryParts.push(`in ${advancedFilters.language}`);
+    if (advancedFilters.city) queryParts.push(`in ${advancedFilters.city}`);
+    if (advancedFilters.intake) queryParts.push(`${advancedFilters.intake} intake`);
+    if (advancedFilters.onlineAvailable) queryParts.push('online');
+    if (advancedFilters.scholarshipAvailable) queryParts.push('with scholarships');
+    if (advancedFilters.englishRequired) queryParts.push('english proficiency required');
+    if (advancedFilters.germanRequired) queryParts.push('german proficiency required');
+    if (advancedFilters.ieltsRequired) queryParts.push('ielts required');
+    if (advancedFilters.toeflRequired) queryParts.push('toefl required');
+
+    await runSearch(queryParts.length > 0 ? queryParts.join(' ') : 'programs in Germany');
   };
 
   const handleShortlist = async (program: ProgramSummary) => {
@@ -687,8 +635,8 @@ export default function HomePage() {
             <div className="search-modal-body">
               {!searching && results.length > 0 && (
                 <div className="flex gap-3 mb-6 pb-4 border-b border-slate-200 flex-wrap">
-                  <select 
-                    value={filters.language} 
+                  <select
+                    value={filters.language}
                     onChange={(e) => setFilters({...filters, language: e.target.value})}
                     className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   >
@@ -696,8 +644,8 @@ export default function HomePage() {
                     <option value="english">English</option>
                     <option value="german">German</option>
                   </select>
-                  <select 
-                    value={filters.degreeLevel} 
+                  <select
+                    value={filters.degreeLevel}
                     onChange={(e) => setFilters({...filters, degreeLevel: e.target.value})}
                     className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   >
@@ -707,8 +655,8 @@ export default function HomePage() {
                     <option value="phd">PhD</option>
                     <option value="language_course">Language Course</option>
                   </select>
-                  <select 
-                    value={filters.tuition} 
+                  <select
+                    value={filters.tuition}
                     onChange={(e) => setFilters({...filters, tuition: e.target.value})}
                     className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   >
@@ -748,7 +696,7 @@ export default function HomePage() {
                     <>
                   <div className="program-list">
                       {paginatedResults.map(program => (
-                        <ProgramCard 
+                        <ProgramCard
                           key={program.id}
                           program={program}
                           onClick={() => handleProgramCardClick(program.id)}
@@ -846,7 +794,7 @@ export default function HomePage() {
                   <option value="">Any Language</option>
                   <option value="english">English</option>
                   <option value="german">German</option>
-                  <option value="bilingual">Bilingual (English & German)</option>
+                  <option value="bilingual">Bilingual (English &amp; German)</option>
                 </select>
               </div>
 
@@ -864,13 +812,13 @@ export default function HomePage() {
                   onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}>
                   <option value="">All Subjects</option>
                   <option value="engineering">Engineering</option>
-                  <option value="computer science">Computer Science & IT</option>
-                  <option value="business">Business & Management</option>
+                  <option value="computer science">Computer Science &amp; IT</option>
+                  <option value="business">Business &amp; Management</option>
                   <option value="economics">Economics</option>
                   <option value="natural sciences">Natural Sciences</option>
-                  <option value="medicine">Medicine & Health</option>
+                  <option value="medicine">Medicine &amp; Health</option>
                   <option value="social sciences">Social Sciences</option>
-                  <option value="arts">Arts & Humanities</option>
+                  <option value="arts">Arts &amp; Humanities</option>
                   <option value="law">Law</option>
                   <option value="mathematics">Mathematics</option>
                   <option value="architecture">Architecture</option>
@@ -951,20 +899,18 @@ export default function HomePage() {
           <div className="hero-orb hero-orb-3" />
         </div>
         <div className="hero-content">
-          {/* Static SEO H1 — hidden visually, readable by crawlers */}
-          <h1 className="sr-only">Study in Germany — Search 20,000+ English-Taught Programs for International Students</h1>
           <div className="hero-badge animate-fade-up-1">
             <span className="hero-badge-dot" />
-            <span>AI-POWERED · 20,000+ PROGRAMS</span>
+            <span>FREE AI SEARCH · 20,000+ PROGRAMS</span>
           </div>
-          <p className="hero-title animate-fade-up-2" aria-hidden="true">
-            <span className="hero-slide-text" key={heroSlideIndex}>
-              {heroSlides[heroSlideIndex].main}<br />
-              <span className="hero-title-gradient">{heroSlides[heroSlideIndex].highlight}</span>
+          <h1 className="hero-title animate-fade-up-2">
+            <span style={{ display: 'block' }}>
+              Find your degree program<br />
+              <span className="hero-title-gradient">in Germany — free</span>
             </span>
-          </p>
+          </h1>
           <p className="hero-subtitle animate-fade-up-3">
-            AI-powered search for 20,000+ German university programs. Save thousands on consultant fees and join 2,500+ students who found their path to Germany.
+            Describe what you want to study in plain English. Our AI searches every German university program — no consultant, no fees, no account needed.
           </p>
           <form onSubmit={handleSearch} className="hero-search-form animate-fade-up-4">
             <div className="hero-search-bar">
@@ -972,9 +918,9 @@ export default function HomePage() {
               <textarea
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSearch(e as unknown as FormEvent); } }}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runSearch(query); } }}
                 rows={1}
-                placeholder="e.g. tuition-free data science master in English, Berlin intake 2025"
+                placeholder="e.g. tuition-free data science master in English, winter 2026"
                 className="hero-search-input"
               />
               <button type="button" onClick={() => setShowAdvancedSearch(true)} className="hero-advanced-btn" title="Advanced Search">
@@ -986,8 +932,9 @@ export default function HomePage() {
             </div>
           </form>
           <div className="hero-suggestions animate-fade-up-4">
+            <span style={{ fontSize: 13, color: '#8a8a94', alignSelf: 'center' }}>Try:</span>
             {HERO_SUGGESTIONS.map((s) => (
-              <button key={s} type="button" onClick={() => setQuery(s)} className="hero-chip">{s}</button>
+              <button key={s} type="button" onClick={() => runSearch(s)} className="hero-chip">{s}</button>
             ))}
           </div>
           <div className="hero-trust animate-fade-up-4">
@@ -997,6 +944,121 @@ export default function HomePage() {
             <div className="hero-trust-divider" />
             <div className="hero-trust-item"><Globe className="w-4 h-4" /><span>All German universities</span></div>
           </div>
+          <div className="hero-quicklinks animate-fade-up-4" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 28 }}>
+            {QUICK_LINKS.map(({ href, label }) => (
+              <Link key={href} href={href} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 999, background: '#fff', border: '1px solid #e8e6ea', fontSize: 13, fontWeight: 600, color: '#444', textDecoration: 'none' }}>
+                {label} <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══ TOOLS (one unified section — free tools first) ══ */}
+      <section className="tools-section" id="tools" style={{ paddingTop: 72, paddingBottom: 72 }}>
+        <div className="section-container">
+          <div className="section-header scroll-reveal">
+            <div className="section-label">Free Tools</div>
+            <h2 className="section-title">Start here — no account needed</h2>
+            <p className="section-desc">Check your grades, plan your budget and organize your applications. Instant and free.</p>
+          </div>
+          <div className="tools-grid">
+            {FREE_TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
+              <Link
+                key={href}
+                href={href}
+                className="tool-card scroll-reveal"
+                style={{ transitionDelay: `${idx * 0.08}s` }}
+              >
+                <span style={{ position: 'absolute', top: 16, right: 16, display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 999, background: '#ecfdf5', color: '#059669', fontSize: 11, fontWeight: 800, letterSpacing: '0.03em' }}>
+                  FREE
+                </span>
+                <div className={`tool-icon bg-gradient-to-br ${gradient}`}>
+                  <Icon className="w-7 h-7 text-white" />
+                </div>
+                <div className="tool-info">
+                  <h3 className="tool-label">{label}</h3>
+                  <p className="tool-desc">{desc}</p>
+                </div>
+                <div className="tool-arrow"><ArrowRight className="w-5 h-5" /></div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="section-header scroll-reveal" style={{ marginTop: 72 }}>
+            <div className="section-label">AI Application Tools</div>
+            <h2 className="section-title">Ready to apply? Let AI write your documents</h2>
+            <p className="section-desc">German-format CV, motivation letter and cover letter — generated for your profile. One-time credit packs from €2.99, no subscription.</p>
+          </div>
+          <div className="tools-grid">
+            {AI_TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
+              <Link
+                key={href}
+                href={href}
+                className="tool-card tool-card--premium scroll-reveal"
+                style={{ transitionDelay: `${idx * 0.08}s` }}
+              >
+                <span className="tool-premium-badge" aria-label="AI tool">
+                  <Sparkles className="w-3 h-3" />
+                  AI
+                </span>
+                <div className={`tool-icon bg-gradient-to-br ${gradient}`}>
+                  <Icon className="w-7 h-7 text-white" />
+                </div>
+                <div className="tool-info">
+                  <h3 className="tool-label">{label}</h3>
+                  <p className="tool-desc">{desc}</p>
+                </div>
+                <div className="tool-arrow"><ArrowRight className="w-5 h-5" /></div>
+              </Link>
+            ))}
+          </div>
+          <div className="scroll-reveal" style={{ textAlign: 'center', marginTop: 32 }}>
+            <Link href="/pricing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 28px', borderRadius: 14, background: '#111', color: '#fff', fontSize: 15, fontWeight: 700, textDecoration: 'none' }}>
+              See pricing — packs from €2.99 <ArrowRight className="w-4 h-4" />
+            </Link>
+            <p style={{ fontSize: 12.5, color: '#8a8a94', margin: '12px 0 0' }}>
+              No consultant fees · Credits never expire
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ HOW IT WORKS ══ */}
+      <section className="howto-section scroll-reveal" style={{ padding: '96px 24px', background: '#fafafa', borderTop: '1px solid #ebebeb' }}>
+        <div className="section-container">
+          <div className="section-header" style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>Your Path, Simplified</h2>
+            <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px' }}>We&apos;ve broken down the complex process of moving to Germany into five clear, manageable milestones.</p>
+          </div>
+          <div className="howto-steps-container">
+            <div className="howto-progress-line" style={{ position: 'absolute', top: '50%', left: 0, width: '100%', height: '1px', background: '#ebe7e7', transform: 'translateY(-50%)', zIndex: -1 }} />
+            <div className="howto-step">
+              <div className="howto-step-circle gradient">01</div>
+              <h4>Find Programs</h4>
+              <p>Search 20,000+ courses with AI.</p>
+            </div>
+            <div className="howto-step">
+              <div className="howto-step-circle gray">02</div>
+              <h4>Prepare Docs</h4>
+              <p>Build your CV and motivation letter.</p>
+            </div>
+            <div className="howto-step">
+              <div className="howto-step-circle gray">03</div>
+              <h4>Apply</h4>
+              <p>Submit through Uni-Assist or directly.</p>
+            </div>
+            <div className="howto-step">
+              <div className="howto-step-circle gray">04</div>
+              <h4>Get Visa</h4>
+              <p>Navigate embassy requirements with ease.</p>
+            </div>
+            <div className="howto-step">
+              <div className="howto-step-circle gray">05</div>
+              <h4>Arrive</h4>
+              <p>Land in Germany and start your life.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1004,31 +1066,9 @@ export default function HomePage() {
       <section className="guides-section" id="guides">
         <div className="section-container">
           <div className="section-header scroll-reveal">
-            <div className="section-label">Guides & Resources</div>
+            <div className="section-label">Guides &amp; Resources</div>
             <h2 className="section-title">Everything you need to know</h2>
-            <p className="section-desc">Browse guides by topic or search for specific information</p>
-          </div>
-
-          <div className="guides-search-wrapper scroll-reveal">
-            <div className="guides-search-bar">
-              <Search className="w-5 h-5" style={{ color: '#737373' }} />
-              <input
-                type="text"
-                placeholder="Search guides: visa, housing, jobs..."
-                className="guides-search-input"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    const searchQuery = (e.target as HTMLInputElement).value;
-                    if (searchQuery.trim()) {
-                      window.location.href = `/blog?search=${encodeURIComponent(searchQuery.trim())}`;
-                    }
-                  }
-                }}
-              />
-              <Link href="/blog" className="guides-browse-btn">
-                Browse All <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
+            <p className="section-desc">Visa, housing, finances, language — written for international students.</p>
           </div>
 
           {/* Category Filter Pills */}
@@ -1042,6 +1082,7 @@ export default function HomePage() {
             {JOURNEY_CATEGORIES.map((cat) => {
               const Icon = cat.icon;
               const count = categorizedPosts[cat.key]?.length || 0;
+              if (count === 0) return null;
               return (
                 <button
                   key={cat.key}
@@ -1051,7 +1092,7 @@ export default function HomePage() {
                 >
                   <Icon className="w-4 h-4" />
                   {cat.label}
-                  {count > 0 && <span className="guides-category-count">{count}</span>}
+                  <span className="guides-category-count">{count}</span>
                 </button>
               );
             })}
@@ -1079,9 +1120,8 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {/* See More Button */}
-              {filteredPosts.length > visibleCount && (
-                <div className="guides-load-more">
+              <div className="guides-load-more">
+                {filteredPosts.length > visibleCount && (
                   <button
                     onClick={() => setVisibleCount(prev => prev + 6)}
                     className="guides-load-more-btn"
@@ -1089,11 +1129,11 @@ export default function HomePage() {
                     See more articles
                     <ArrowRight className="w-4 h-4" />
                   </button>
-                  <span className="guides-load-more-count">
-                    Showing {visibleCount} of {filteredPosts.length}
-                  </span>
-                </div>
-              )}
+                )}
+                <Link href="/blog" className="guides-load-more-count" style={{ textDecoration: 'underline' }}>
+                  Browse all guides →
+                </Link>
+              </div>
             </div>
           )}
 
@@ -1122,7 +1162,7 @@ export default function HomePage() {
           {[
             { num: '20,000+', label: 'Programs indexed', icon: GraduationCap },
             { num: '2,500+', label: 'Students helped', icon: Users },
-            { num: 'AI-Powered', label: 'Smart tools', icon: Zap },
+            { num: '€0', label: 'To search & explore', icon: Shield },
             { num: '100+', label: 'Expert guides', icon: BookOpen },
           ].map(({ num, label, icon: Icon }, idx) => (
             <div key={label} className="stat-card scroll-reveal" style={{ transitionDelay: `${idx * 0.1}s` }}>
@@ -1136,117 +1176,6 @@ export default function HomePage() {
 
       {/* ══ TESTIMONIALS ══ */}
       <TestimonialSlider testimonials={TESTIMONIALS} />
-
-      {/* ══ TOOLS ══ */}
-      <section className="tools-section" id="tools">
-        <div className="section-container">
-          <div className="section-header scroll-reveal">
-            <div className="section-label">AI Tools</div>
-            <h2 className="section-title">Everything you need to apply</h2>
-            <p className="section-desc">AI-powered assistants for CVs, cover letters, GPA conversion — free to try, with credits for extended AI use.</p>
-          </div>
-          <div className="tools-grid">
-            {TOOLS.map(({ href, label, desc, icon: Icon, gradient, premium }, idx) => (
-              <Link
-                key={href}
-                href={href}
-                className={`tool-card scroll-reveal${premium ? ' tool-card--premium' : ''}`}
-                style={{ transitionDelay: `${idx * 0.08}s` }}
-              >
-                {premium && (
-                  <span className="tool-premium-badge" aria-label="AI premium tool">
-                    <Sparkles className="w-3 h-3" />
-                    AI Premium
-                  </span>
-                )}
-                <div className={`tool-icon bg-gradient-to-br ${gradient}`}>
-                  <Icon className="w-7 h-7 text-white" />
-                </div>
-                <div className="tool-info">
-                  <h3 className="tool-label">{label}</h3>
-                  <p className="tool-desc">{desc}</p>
-                </div>
-                <div className="tool-arrow"><ArrowRight className="w-5 h-5" /></div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══ WHO IS GERMAN PATH FOR ══ */}
-      <section className="about-section scroll-reveal" id="about">
-        <div className="section-container">
-          <div className="section-header">
-            <div className="section-label">About German Path</div>
-            <h2 className="section-title">Who is German Path for?</h2>
-            <p className="section-desc">
-              German Path (operated by Smarvia Studio) is an AI-powered platform helping international students study in Germany. 
-              Whether you&apos;re from Pakistan, India, Bangladesh, Nigeria, or anywhere else in the world — we&apos;re here to guide you.
-            </p>
-          </div>
-          <div className="about-grid">
-            <div className="about-card">
-              <div className="about-icon" style={{ background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)' }}>
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <h3>Bachelor & Master Students</h3>
-              <p>Search 20,000+ English-taught degree programs at German universities, from tuition-free public universities to top private institutions.</p>
-            </div>
-            <div className="about-card">
-              <div className="about-icon" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
-                <Globe className="w-6 h-6 text-white" />
-              </div>
-              <h3>Non-EU International Students</h3>
-              <p>Get guidance on student visas, blocked accounts, health insurance, and everything non-EU students need to study in Germany legally.</p>
-            </div>
-            <div className="about-card">
-              <div className="about-icon" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <h3>Career-Focused Applicants</h3>
-              <p>Build German-style CVs, write motivation letters, and prepare applications that meet German university standards — all with AI assistance.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══ HOW IT WORKS ══ */}
-      <section className="howto-section scroll-reveal" style={{ padding: '128px 24px' }}>
-        <div className="section-container">
-          <div className="section-header" style={{ textAlign: 'center', marginBottom: '80px' }}>
-            <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>Your Path, Simplified</h2>
-            <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px' }}>We've broken down the complex process of moving to Germany into five clear, manageable milestones.</p>
-          </div>
-          <div className="howto-steps-container">
-            <div className="howto-progress-line" style={{ position: 'absolute', top: '50%', left: 0, width: '100%', height: '1px', background: '#ebe7e7', transform: 'translateY(-50%)', zIndex: -1 }} />
-            <div className="howto-step">
-              <div className="howto-step-circle gradient">01</div>
-              <h4>Find Programs</h4>
-              <p>Match your profile with 2,000+ courses.</p>
-            </div>
-            <div className="howto-step">
-              <div className="howto-step-circle gray">02</div>
-              <h4>Prepare Docs</h4>
-              <p>Optimize CVs and Motivation Letters.</p>
-            </div>
-            <div className="howto-step">
-              <div className="howto-step-circle gray">03</div>
-              <h4>Apply</h4>
-              <p>Submit through Uni-Assist or directly.</p>
-            </div>
-            <div className="howto-step">
-              <div className="howto-step-circle gray">04</div>
-              <h4>Get Visa</h4>
-              <p>Navigate embassy requirements with ease.</p>
-            </div>
-            <div className="howto-step">
-              <div className="howto-step-circle gray">05</div>
-              <h4>Arrive</h4>
-              <p>Land in Germany and start your life.</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ══ FAQ ══ */}
       <FAQSection />

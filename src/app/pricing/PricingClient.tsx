@@ -6,25 +6,21 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Check, Shield, RefreshCw, Globe, MessageCircle, ChevronDown, ChevronUp, Loader2, AlertCircle } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
+import { CREDIT_PACKS, CREDIT_PACK_PRICE_IDS } from '@/lib/creditPacks';
 
 const RED = '#dd0000';
 
-// Price IDs configuration - automatically switches based on environment
-// Live prices from Stripe dashboard (Essential Plan = prod_UFsSSCfmCYDQRM)
+// Subscription price IDs - automatically switches based on environment.
+// Credit-pack price IDs live in @/lib/creditPacks (shared with the checkout API
+// and the paywall modal) so they can never drift out of sync again.
 const PRICE_IDS = {
   live: {
     pro_monthly: 'price_1THMhjBhIRngoSRXvbQyNKcE',  // Essential €9.99/month
     pro_yearly: 'price_1THMhjBhIRngoSRXNhX1dcad',   // Essential €79.99/year
-    credits_20: 'price_1THMl6BhIRngoSRXMBbRuS2m',   // €2.99
-    credits_100: 'price_1THMl6BhIRngoSRXEH2UHrYP',  // €9.99
-    credits_300: 'price_1THMl6BhIRngoSRXrR48BBwX',  // €24.99
   },
   test: {
     pro_monthly: 'price_1THN89BhIRngoSRXlgKJkghi',
     pro_yearly: 'price_1THN89BhIRngoSRXlgKJkghi',
-    credits_20: 'price_1THNNCBhIRngoSRXEd8VpVkv',
-    credits_100: 'price_1THNNCBhIRngoSRXR97jnrrf',
-    credits_300: 'price_1THNNCBhIRngoSRXROohsxsl',
   },
 };
 
@@ -46,6 +42,7 @@ export default function PricingClient() {
 
   // Get the correct price IDs based on mode
   const priceIds = isTestMode ? PRICE_IDS.test : PRICE_IDS.live;
+  const creditPackPriceIds = isTestMode ? CREDIT_PACK_PRICE_IDS.test : CREDIT_PACK_PRICE_IDS.live;
 
   // Handle pending checkout after login
   useEffect(() => {
@@ -357,11 +354,7 @@ export default function PricingClient() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24, maxWidth: 900, margin: '0 auto' }}>
-            {[
-              { credits: 20, price: 2.99, priceId: priceIds.credits_20, perCredit: 0.15, label: 'Best for trying' },
-              { credits: 100, price: 9.99, priceId: priceIds.credits_100, perCredit: 0.10, label: 'Most popular', popular: true },
-              { credits: 300, price: 24.99, priceId: priceIds.credits_300, perCredit: 0.08, label: 'Best value 🔥', badge: true },
-            ].map((pack) => (
+            {CREDIT_PACKS.map((pack) => ({ ...pack, priceId: creditPackPriceIds[pack.key] })).map((pack) => (
               <div
                 key={pack.credits}
                 style={{

@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import Stripe from 'stripe';
 import { getPlans, getStripeSecretKey, isStripeTestMode } from '@/lib/stripe';
+import { PRICE_ID_TO_CREDITS } from '@/lib/creditPacks';
 
 export async function POST(request: NextRequest) {
   try {
@@ -91,15 +92,14 @@ export async function POST(request: NextRequest) {
       metadata: { userId },
     };
 
-    // Add credits metadata for one-time purchases
+    // Add credits metadata for one-time purchases. PRICE_ID_TO_CREDITS covers
+    // BOTH live and test price IDs — the webhook only grants credits when this
+    // metadata is present, so a missing live ID means the customer pays and
+    // gets nothing.
     if (mode === 'payment') {
-      const creditsMap: Record<string, string> = {
-        'price_1THNNCBhIRngoSRXEd8VpVkv': '20',
-        'price_1THNNCBhIRngoSRXR97jnrrf': '100',
-        'price_1THNNCBhIRngoSRXROohsxsl': '300',
-      };
-      if (creditsMap[resolvedPriceId]) {
-        sessionConfig.metadata!.credits = creditsMap[resolvedPriceId];
+      const credits = PRICE_ID_TO_CREDITS[resolvedPriceId];
+      if (credits) {
+        sessionConfig.metadata!.credits = String(credits);
       }
     }
     

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Zap, Check, Loader2, Crown, Sparkles, ShieldCheck } from 'lucide-react';
+import { CREDIT_PACKS, CREDIT_PACK_PRICE_IDS } from '@/lib/creditPacks';
 
 interface PaywallModalProps {
   isOpen: boolean;
@@ -26,9 +27,23 @@ const HERO_BADGES = [
   { icon: <Zap size={14} />, label: 'Cancel anytime' },
 ];
 
+// The single cheapest pack is the low-commitment "just let me finish my
+// application" offer that converts one-time applicants far better than a
+// recurring subscription.
+const STARTER_PACK = CREDIT_PACKS[0]; // 20 credits / €2.99
+
 export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: PaywallModalProps) {
   const [loading, setLoading] = useState<string | null>(null);
   const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('month');
+  const [isTestMode, setIsTestMode] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    fetch('/api/stripe/mode')
+      .then((res) => res.json())
+      .then((data) => setIsTestMode(Boolean(data.testMode)))
+      .catch(() => setIsTestMode(false));
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -46,6 +61,26 @@ export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: 
       }
     } catch (err) {
       console.error('Checkout error:', err);
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  const handleBuyCredits = async () => {
+    const priceId = (isTestMode ? CREDIT_PACK_PRICE_IDS.test : CREDIT_PACK_PRICE_IDS.live)[STARTER_PACK.key];
+    setLoading(STARTER_PACK.key);
+    try {
+      const res = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId, mode: 'payment' }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error('Credit checkout error:', err);
     } finally {
       setLoading(null);
     }
@@ -141,7 +176,7 @@ export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: 
               : 'Unlock Pro'}
           </h2>
           <p style={{ fontSize: 15, opacity: 0.9, margin: '0 auto', maxWidth: 420, position: 'relative', zIndex: 1 }}>
-            Upgrade for premium templates and 20 monthly AI credits across your core document tools.
+            Top up with a one-time credit pack to finish your application — no subscription needed.
           </p>
           <div style={{
             marginTop: 18,
@@ -170,7 +205,63 @@ export function PaywallModal({ isOpen, onClose, feature, currentUsage, limit }: 
           </div>
         </div>
 
-        <div style={{ padding: '28px clamp(20px,4vw,40px) 0', display: 'flex', justifyContent: 'center' }}>
+        {/* PRIMARY: one-time credit pack — low commitment, fits a one-time applicant */}
+        <div style={{ padding: '28px clamp(20px,4vw,40px) 0' }}>
+          <div style={{
+            border: '2px solid #dd0000',
+            borderRadius: 24,
+            padding: '22px 24px',
+            background: 'linear-gradient(135deg, rgba(221,0,0,0.04), rgba(124,58,237,0.04))',
+            boxShadow: '0 18px 40px rgba(221,0,0,0.12)',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                  <span style={{ fontSize: 30, fontWeight: 800, color: '#111' }}>€{STARTER_PACK.price.toFixed(2)}</span>
+                  <span style={{ fontSize: 14, color: '#737373', fontWeight: 600 }}>one-time</span>
+                </div>
+                <p style={{ fontSize: 13, color: '#555', margin: '4px 0 0', fontWeight: 600 }}>
+                  {STARTER_PACK.credits} AI credits · no subscription · credits never expire
+                </p>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 800, color: '#dd0000', background: 'rgba(221,0,0,0.1)', borderRadius: 999, padding: '6px 12px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Most popular
+              </span>
+            </div>
+            <button
+              onClick={handleBuyCredits}
+              disabled={loading !== null}
+              style={{
+                width: '100%',
+                marginTop: 16,
+                padding: '14px',
+                borderRadius: 14,
+                border: 'none',
+                background: loading === STARTER_PACK.key ? '#ccc' : 'linear-gradient(135deg, #dd0000, #b91c1c)',
+                color: '#fff',
+                fontSize: 15,
+                fontWeight: 800,
+                cursor: loading !== null ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                boxShadow: '0 4px 16px rgba(221,0,0,0.25)',
+              }}
+            >
+              {loading === STARTER_PACK.key ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
+              {loading === STARTER_PACK.key ? 'Redirecting...' : `Buy ${STARTER_PACK.credits} credits — €${STARTER_PACK.price.toFixed(2)}`}
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '24px 0 4px' }}>
+            <div style={{ flex: 1, height: 1, background: '#e5e5e5' }} />
+            <span style={{ fontSize: 12, color: '#999', fontWeight: 600 }}>or go unlimited with Pro</span>
+            <div style={{ flex: 1, height: 1, background: '#e5e5e5' }} />
+          </div>
+        </div>
+
+        <div style={{ padding: '16px clamp(20px,4vw,40px) 0', display: 'flex', justifyContent: 'center' }}>
           <div style={{
             display: 'flex',
             background: '#f5f5f5',
