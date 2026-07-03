@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { auth } from '@/lib/auth';
 import { checkUsageLimit, incrementUsage } from '@/lib/usage-tracker';
+import { anonLimitResponse, checkAnonUsage, recordAnonUsage } from '@/lib/anon-usage';
 
 const MotivationLetterRequestSchema = z.object({
   program: z.object({
@@ -155,6 +156,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Anonymous visitors get a limited number of free previews (value-first)
+    const anon = session?.user?.id ? null : checkAnonUsage(request);
+    if (anon && !anon.allowed) {
+      return anonLimitResponse(anon.current, anon.limit);
+    }
+
     const body = await request.json();
     
     const { program, userInput, cvText } = MotivationLetterRequestSchema.parse(body);
@@ -165,12 +172,11 @@ export async function POST(request: NextRequest) {
     
     console.log(`[Motivation Letter ${requestId}] Letter generated successfully`);
 
-    const session2 = await auth();
-    if (session2?.user?.id) {
-      await incrementUsage(session2.user.id, 'motivation');
+    if (session?.user?.id) {
+      await incrementUsage(session.user.id, 'motivation');
     }
-    
-    return NextResponse.json({
+
+    const jsonResponse = NextResponse.json({
       letter,
       generatedAt: new Date().toISOString()
     }, {
@@ -180,6 +186,10 @@ export async function POST(request: NextRequest) {
         'Expires': '0'
       }
     });
+    if (anon) {
+      recordAnonUsage(request, jsonResponse, anon.usage);
+    }
+    return jsonResponse;
     
   } catch (error) {
     console.error(`[Motivation Letter ${requestId}] Error:`, error);

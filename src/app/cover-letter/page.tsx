@@ -8,6 +8,7 @@ import {
   FileText, Sparkles, Check, Copy, RefreshCw,
   Briefcase, User, Download,
 } from 'lucide-react';
+import { track } from '@vercel/analytics';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import { useProfileData } from '@/hooks/useProfileData';
@@ -52,8 +53,15 @@ export default function CoverLetterPage() {
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallData, setPaywallData] = useState<{ current: number; limit: number } | null>(null);
   const [signInPrompt, setSignInPrompt] = useState(false);
+  const [signInMessage, setSignInMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
+
+  const promptSignIn = (trigger: 'limit' | 'download' | 'copy', message: string | null) => {
+    setSignInMessage(message);
+    setSignInPrompt(true);
+    track('signup_prompt', { tool: 'cover-letter', trigger });
+  };
 
   const requiredReady2 = role.trim() && company.trim() && fullName.trim() && background.trim();
 
@@ -71,25 +79,40 @@ export default function CoverLetterPage() {
 
   const handleGenerate = async () => {
     if (!requiredReady2) return;
-    if (!session) { setSignInPrompt(true); return; }
+    track('ai_generate', { tool: 'cover-letter', authed: !!session });
     try {
       setLoading(true); setError(null);
       const response = await fetch('/api/cover-letter/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mode: 'generate', job: { role, company, jobDescription, tone }, applicant: { fullName, summary: background, strengths, achievements, closing: '' } }),
       });
-      if (response.status === 402) { const e = await response.json().catch(() => ({})); setPaywallData({ current: e.current ?? 0, limit: e.limit ?? 3 }); setPaywallOpen(true); return; }
+      if (response.status === 402) {
+        const e = await response.json().catch(() => ({}));
+        if (e.signupRequired) {
+          promptSignIn('limit', e.message || 'You’ve used your free previews this month. Create a free account to keep generating — no credit card needed.');
+          return;
+        }
+        setPaywallData({ current: e.current ?? 0, limit: e.limit ?? 3 });
+        setPaywallOpen(true);
+        track('paywall_shown', { tool: 'cover-letter' });
+        return;
+      }
       if (!response.ok) { const e = await response.json().catch(() => ({})); throw new Error(e.message || e.error || 'Failed'); }
       const data = await response.json();
       setLetter(data.letter);
+      track('ai_generate_success', { tool: 'cover-letter', authed: !!session });
       setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     } catch (err) { setError(err instanceof Error ? err.message : 'Failed to generate'); }
     finally { setLoading(false); }
   };
 
-  const copyToClipboard = () => { navigator.clipboard.writeText(letter); setCopied(true); setTimeout(() => setCopied(false), 2000); };
+  const copyToClipboard = () => {
+    if (!session) { promptSignIn('copy', 'Create a free account to copy, download and save your letters — your draft stays right here.'); return; }
+    navigator.clipboard.writeText(letter); setCopied(true); setTimeout(() => setCopied(false), 2000);
+  };
 
   const downloadLetter = () => {
+    if (!session) { promptSignIn('download', 'Create a free account to copy, download and save your letters — your draft stays right here.'); return; }
     const blob = new Blob([letter], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = `cover-letter-${company || 'letter'}.txt`;
@@ -110,11 +133,11 @@ export default function CoverLetterPage() {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)', zIndex: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 16px', overflowY: 'auto' }} onClick={() => setSignInPrompt(false)}>
           <div style={{ background: '#fff', borderRadius: 24, padding: '40px 36px', maxWidth: 400, width: '100%', maxHeight: 'calc(100vh - 48px)', overflowY: 'auto', textAlign: 'center', boxShadow: '0 32px 80px rgba(0,0,0,0.22)', margin: 'auto 0' }} onClick={e => e.stopPropagation()}>
             <div style={{ width: 60, height: 60, borderRadius: 18, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}><NotebookPen size={26} color="#fff" /></div>
-            <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111', margin: '0 0 8px' }}>Sign in to generate</h2>
-            <p style={{ fontSize: 14, color: '#666', lineHeight: 1.6, margin: '0 0 24px' }}>Free account gives you 3 cover letters per month — no credit card needed.</p>
+            <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111', margin: '0 0 8px' }}>Create your free account</h2>
+            <p style={{ fontSize: 14, color: '#666', lineHeight: 1.6, margin: '0 0 24px' }}>{signInMessage || 'A free account gives you 3 AI generations per month plus saving and downloads — no credit card needed.'}</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <a href="/auth/signin?callbackUrl=/cover-letter" style={{ padding: '13px', borderRadius: 12, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', color: '#fff', fontWeight: 700, fontSize: 14, textDecoration: 'none', display: 'block' }}>Sign in</a>
-              <a href="/auth/register?callbackUrl=/cover-letter" style={{ padding: '13px', borderRadius: 12, background: '#f5f5f5', color: '#111', fontWeight: 700, fontSize: 14, textDecoration: 'none', display: 'block' }}>Create free account</a>
+              <a href="/auth/signup?callbackUrl=/cover-letter" style={{ padding: '13px', borderRadius: 12, background: 'linear-gradient(135deg,#dd0000,#7c3aed)', color: '#fff', fontWeight: 700, fontSize: 14, textDecoration: 'none', display: 'block' }}>Create free account</a>
+              <a href="/auth/signin?callbackUrl=/cover-letter" style={{ padding: '13px', borderRadius: 12, background: '#f5f5f5', color: '#111', fontWeight: 700, fontSize: 14, textDecoration: 'none', display: 'block' }}>I already have an account</a>
             </div>
             <button onClick={() => setSignInPrompt(false)} style={{ marginTop: 14, background: 'none', border: 'none', color: '#aaa', fontSize: 13, cursor: 'pointer' }}>Maybe later</button>
           </div>

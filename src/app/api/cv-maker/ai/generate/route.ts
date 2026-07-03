@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { checkUsageLimit, incrementUsage } from '@/lib/usage-tracker';
+import { anonLimitResponse, checkAnonUsage, recordAnonUsage } from '@/lib/anon-usage';
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'openai/gpt-4o-mini';
@@ -19,6 +20,12 @@ export async function POST(request: NextRequest) {
           message: `You've used ${current}/${limit} free CV AI generations this month.`,
         }, { status: 402 });
       }
+    }
+
+    // Anonymous visitors get a limited number of free previews (value-first)
+    const anon = session?.user?.id ? null : checkAnonUsage(request);
+    if (anon && !anon.allowed) {
+      return anonLimitResponse(anon.current, anon.limit);
     }
 
     const { name, jobTitle, years, skills, background, hobbies, degree, university, additionalEducation, workExperience, programId, language } = await request.json();
@@ -161,11 +168,14 @@ ${programDetails ? `- Emphasize skills and experiences relevant to ${programDeta
       
       const cvData = JSON.parse(jsonMatch[0]);
       console.log('[CV AI] Successfully parsed CV data');
-      const session2 = await auth();
-      if (session2?.user?.id) {
-        await incrementUsage(session2.user.id, 'cv');
+      if (session?.user?.id) {
+        await incrementUsage(session.user.id, 'cv');
       }
-      return NextResponse.json(cvData);
+      const jsonResponse = NextResponse.json(cvData);
+      if (anon) {
+        recordAnonUsage(request, jsonResponse, anon.usage);
+      }
+      return jsonResponse;
     } finally {
       delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;
     }

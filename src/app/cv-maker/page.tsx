@@ -11,6 +11,7 @@ import {
   ChevronRight, X, Wand2, Printer, Save, Type, AArrowUp, User, LogIn, FolderOpen, Crown, FileText,
   ChevronDown, CheckCircle2, Eye, EyeOff
 } from 'lucide-react';
+import { track } from '@vercel/analytics';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
@@ -772,6 +773,7 @@ function CVMakerContent() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiDone, setAiDone] = useState(false);
   const [aiError, setAiError] = useState('');
+  const [aiSignupNeeded, setAiSignupNeeded] = useState(false);
   const [showPrintPreview, setShowPrintPreview] = useState(false);
   const [newSkill, setNewSkill] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -973,8 +975,22 @@ function CVMakerContent() {
     setAiLoading(true);
     setAiDone(false);
     setAiError('');
+    setAiSignupNeeded(false);
+    track('ai_generate', { tool: 'cv-maker', authed: !!session });
     try {
       const res = await fetch('/api/cv-maker/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(fd) });
+      if (res.status === 402) {
+        const errData = await res.json().catch(() => ({}));
+        if (errData.signupRequired) {
+          setAiSignupNeeded(true);
+          setAiError(errData.message || 'You’ve used your free previews this month. Create a free account to keep generating.');
+          track('signup_prompt', { tool: 'cv-maker', trigger: 'limit' });
+          return;
+        }
+        setPaywallOpen(true);
+        track('paywall_shown', { tool: 'cv-maker' });
+        return;
+      }
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         console.error('AI API error:', res.status, errData);
@@ -982,6 +998,7 @@ function CVMakerContent() {
       }
       const data = await res.json();
       setCv(p => ({ ...p, name: (fd.name as string) || p.name, title: (fd.jobTitle as string) || p.title, summary: data.summary || p.summary, experience: data.experience || p.experience, skills: data.skills || p.skills, education: data.education || p.education }));
+      track('ai_generate_success', { tool: 'cv-maker', authed: !!session });
       setAiDone(true);
       setTimeout(() => { setShowAI(false); setAiDone(false); }, 1500);
     } catch (err) {
@@ -1180,7 +1197,7 @@ function CVMakerContent() {
               <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Let AI write your CV</h3>
               <p style={{ fontSize: 14, color: '#666', margin: 0, lineHeight: 1.5 }}>Tell us about yourself and AI generates professional content for every section.</p>
             </div>
-            <button onClick={() => { if (!session) { window.location.href = '/auth/signin?callbackUrl=' + encodeURIComponent(window.location.href); return; } setPhase('editor'); setTimeout(() => setShowAI(true), 400); }} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 24px', borderRadius: 12, background: '#dd0000', color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)', flexShrink: 0 }}
+            <button onClick={() => { setPhase('editor'); setTimeout(() => setShowAI(true), 400); }} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 24px', borderRadius: 12, background: '#dd0000', color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(221,0,0,0.2)', flexShrink: 0 }}
               onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.background = '#dd0000'; e.currentTarget.style.transform = 'none'; }}>
               <Sparkles className="w-5 h-5" /> Generate with AI
@@ -2424,7 +2441,7 @@ function CVMakerContent() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {/* AI Button — full label on desktop, icon-only on mobile */}
-            <button onClick={() => { if (!session) { window.location.href = '/auth/signin?callbackUrl=' + encodeURIComponent(window.location.href); return; } setShowAI(true); }} className="cvmaker-topbar-btn cvmaker-topbar-btn-ai"
+            <button onClick={() => setShowAI(true)} className="cvmaker-topbar-btn cvmaker-topbar-btn-ai"
               style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 16px', borderRadius: 10, background: 'linear-gradient(135deg, #dd0000, #7c3aed)', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(221,0,0,0.2)', whiteSpace: 'nowrap' }}
               onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
               onMouseLeave={e => e.currentTarget.style.transform = 'none'}>
@@ -2884,8 +2901,14 @@ function CVMakerContent() {
                   </div>
                   {aiError && (
                     <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs">
-                      <p className="font-medium mb-0.5">Generation failed</p>
+                      <p className="font-medium mb-0.5">{aiSignupNeeded ? 'Free previews used up' : 'Generation failed'}</p>
                       <p className="opacity-70">{aiError}</p>
+                      {aiSignupNeeded && (
+                        <div className="flex gap-2 mt-2">
+                          <a href={'/auth/signup?callbackUrl=' + encodeURIComponent('/cv-maker')} className="flex-1 text-center px-3 py-2 rounded-lg bg-red-600 text-white font-semibold no-underline">Create free account</a>
+                          <a href={'/auth/signin?callbackUrl=' + encodeURIComponent('/cv-maker')} className="flex-1 text-center px-3 py-2 rounded-lg bg-white border border-red-200 text-red-600 font-semibold no-underline">Sign in</a>
+                        </div>
+                      )}
                     </div>
                   )}
                   <div className="flex gap-3 pt-2">

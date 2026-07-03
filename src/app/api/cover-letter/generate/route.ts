@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { auth } from '@/lib/auth';
 import { checkUsageLimit, incrementUsage } from '@/lib/usage-tracker';
+import { anonLimitResponse, checkAnonUsage, recordAnonUsage } from '@/lib/anon-usage';
 
 const CoverLetterRequestSchema = z.object({
   mode: z.enum(['generate', 'improve']),
@@ -131,6 +132,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Anonymous visitors get a limited number of free previews (value-first)
+    const anon = session?.user?.id ? null : checkAnonUsage(request);
+    if (anon && !anon.allowed) {
+      return anonLimitResponse(anon.current, anon.limit);
+    }
+
     const body = await request.json();
     const payload = CoverLetterRequestSchema.parse(body);
 
@@ -141,10 +148,14 @@ export async function POST(request: NextRequest) {
       await incrementUsage(session.user.id, 'cover');
     }
 
-    return NextResponse.json({
+    const jsonResponse = NextResponse.json({
       letter,
       generatedAt: new Date().toISOString(),
     });
+    if (anon) {
+      recordAnonUsage(request, jsonResponse, anon.usage);
+    }
+    return jsonResponse;
   } catch (error) {
     console.error(`[Cover Letter ${requestId}] Error`, error);
     if (error instanceof z.ZodError) {

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { track } from '@vercel/analytics';
 import { Check, Shield, RefreshCw, Globe, MessageCircle, ChevronDown, ChevronUp, Loader2, AlertCircle } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { CREDIT_PACKS, CREDIT_PACK_PRICE_IDS } from '@/lib/creditPacks';
@@ -57,6 +58,7 @@ export default function PricingClient() {
   }, [status]);
 
   const handleCheckout = async (planKeyOrPriceId: string, mode: 'subscription' | 'payment') => {
+    track('checkout_click', { plan: planKeyOrPriceId, mode, authed: status === 'authenticated' });
     // Check if user is logged in
     if (status === 'unauthenticated') {
       // Store the intended purchase in sessionStorage
