@@ -57,13 +57,17 @@ const FAQS = [
   {
     q: 'How long should a German cover letter be?',
     a: 'German cover letters should typically be one page (about 300-500 words). They should be concise yet comprehensive, covering all essential points without unnecessary filler. Our AI helps you create focused content that fits this standard.'
+  },
+  {
+    q: 'How much does it cost?',
+    a: 'Your first 2 AI generations are free to preview — no account needed. A free account adds 3 more credits per month plus saving and downloads. After that, one-time credit packs start at €2.99 for 20 credits. No subscription, credits never expire.'
   }
 ];
 
 const STATS = [
-  { num: '15,000+', label: 'Letters Created' },
-  { num: '85%', label: 'Interview Rate' },
-  { num: '4.8/5', label: 'User Rating' }
+  { num: '60 seconds', label: 'to a finished letter' },
+  { num: '2 free previews', label: 'no account needed' },
+  { num: 'from €2.99', label: 'one-time credit packs' }
 ];
 
 export default function CoverLetterLanding() {
@@ -113,7 +117,7 @@ export default function CoverLetterLanding() {
                 href="/cover-letter" 
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/30 hover:-translate-y-0.5"
               >
-                Create Your Cover Letter
+                Try It Free — No Signup
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <a 

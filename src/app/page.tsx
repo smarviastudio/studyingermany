@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, FormEvent } from 'react';
+import { useState, useEffect, useMemo, useRef, FormEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -8,7 +8,8 @@ import {
   Search, Loader2, Bookmark, X, ArrowRight, BookOpen,
   GraduationCap, FileText, Languages, Home, Briefcase, CreditCard, Shield,
   Plane, Star, Zap, TrendingUp, Users, Globe, Calculator, LayoutDashboard,
-  Settings, Filter, Sparkles, School, FolderOpen, ChevronLeft, ChevronRight, ChevronDown
+  Settings, Filter, Sparkles, School, FolderOpen, ChevronDown, Check,
+  FileCheck, Send, BadgeCheck, Clock, Euro
 } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import { ProgramModal } from '@/components/ProgramModal';
@@ -49,44 +50,44 @@ const AI_TOOLS = [
 const TESTIMONIALS = [
   {
     name: 'Fatima Z.',
-    location: 'LAHORE, PAKISTAN',
-    quote: 'From Lahore to Leipzig in 6 months. The AI tools helped me translate my Pakistani qualifications to German standards. Now pursuing my dream of studying Computer Science at a top university.',
+    location: 'Lahore, Pakistan',
+    quote: 'From Lahore to Leipzig in 6 months. The AI tools helped me translate my Pakistani qualifications to German standards.',
     flag: 'PK'
   },
   {
     name: 'Zainab O.',
-    location: 'NAIROBI, KENYA',
-    quote: 'The AI CV Maker was a game changer. I got accepted into three TU9 universities for Data Science. German Path made the complex simple.',
+    location: 'Nairobi, Kenya',
+    quote: 'The AI CV Maker was a game changer. I got accepted into three TU9 universities for Data Science.',
     flag: 'KE'
   },
   {
     name: 'Arjun M.',
-    location: 'MUMBAI, INDIA',
-    quote: 'Navigating the visa process from India was stressful until I found their step-by-step guides. Currently studying in Munich thanks to them!',
+    location: 'Mumbai, India',
+    quote: 'Navigating the visa process from India was stressful until I found their step-by-step guides. Currently studying in Munich!',
     flag: 'IN'
   },
   {
     name: 'Linh T.',
-    location: 'HANOI, VIETNAM',
-    quote: 'The GPA converter showed me that my grades were actually eligible for top public universities. It changed my entire application strategy.',
+    location: 'Hanoi, Vietnam',
+    quote: 'The GPA converter showed me that my grades were actually eligible for top public universities. It changed my entire strategy.',
     flag: 'VN'
   },
   {
     name: 'Ahmed K.',
-    location: 'CAIRO, EGYPT',
-    quote: 'The motivation letter tool helped me craft a compelling story. Got accepted to RWTH Aachen with a scholarship for my Master in Engineering.',
+    location: 'Cairo, Egypt',
+    quote: 'The motivation letter tool helped me craft a compelling story. Accepted to RWTH Aachen with a scholarship.',
     flag: 'EG'
   },
   {
     name: 'Maria S.',
-    location: 'MANILA, PHILIPPINES',
-    quote: 'Finding English-taught programs was overwhelming until I used German Path. Now I am studying Business Analytics in Berlin!',
+    location: 'Manila, Philippines',
+    quote: 'Finding English-taught programs was overwhelming until I used German Path. Now studying Business Analytics in Berlin!',
     flag: 'PH'
   },
   {
     name: 'David N.',
-    location: 'LAGOS, NIGERIA',
-    quote: 'The blocked account guide and visa checklist saved me months of confusion. Successfully got my student visa on the first try.',
+    location: 'Lagos, Nigeria',
+    quote: 'The blocked account guide and visa checklist saved me months of confusion. Got my student visa on the first try.',
     flag: 'NG'
   }
 ];
@@ -120,19 +121,19 @@ type WpPost = {
 const STATIC_GUIDE_POSTS: WpPost[] = [...BLOG_POSTS]
   .sort((a, b) => (b.updatedAt || b.publishedAt).localeCompare(a.updatedAt || a.publishedAt))
   .map((post, idx) => ({
-  id: -(idx + 1),
-  title: post.title,
-  excerpt: post.excerpt,
-  slug: post.slug,
-  date: post.publishedAt,
-  link: `/blog/${post.slug}`,
-  featuredImage: null,
-  coverEmoji: post.coverEmoji,
-  categories: (post.tags && post.tags.length > 0 ? post.tags : [post.category]).map((tag, tagIdx) => ({
-    id: -(idx * 10 + tagIdx + 1),
-    name: tag === post.category ? CATEGORIES[post.category].label : tag.charAt(0).toUpperCase() + tag.slice(1),
-    slug: tag,
-  })),
+    id: -(idx + 1),
+    title: post.title,
+    excerpt: post.excerpt,
+    slug: post.slug,
+    date: post.publishedAt,
+    link: `/blog/${post.slug}`,
+    featuredImage: null,
+    coverEmoji: post.coverEmoji,
+    categories: (post.tags && post.tags.length > 0 ? post.tags : [post.category]).map((tag, tagIdx) => ({
+      id: -(idx * 10 + tagIdx + 1),
+      name: tag === post.category ? CATEGORIES[post.category].label : tag.charAt(0).toUpperCase() + tag.slice(1),
+      slug: tag,
+    })),
   }));
 
 const HTML_ENTITY_MAP: Record<string, string> = {
@@ -158,8 +159,171 @@ function stripHtml(html: string) {
   );
 }
 
+/* ────────────────────────────────────────────────
+   Animated hero demo: search → results → AI letter
+   ──────────────────────────────────────────────── */
+const DEMO_QUERY = 'Tuition-free Master in Data Science, taught in English';
+const DEMO_RESULTS = [
+  { name: 'M.Sc. Data Science',        uni: 'TU Berlin',   tag: '€0 tuition' },
+  { name: 'M.Sc. Data Engineering',    uni: 'RWTH Aachen', tag: 'English' },
+  { name: 'M.Sc. AI & Data Analytics', uni: 'TU München',  tag: 'Winter intake' },
+];
+const DEMO_LETTER_LINES = [88, 100, 94, 72, 97, 60];
+
+function HeroDemo() {
+  const [typed, setTyped] = useState('');
+  const [phase, setPhase] = useState<'typing' | 'results' | 'letter' | 'done'>('typing');
+  const [shown, setShown] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setTyped(DEMO_QUERY);
+      setPhase('done');
+      setShown(DEMO_LETTER_LINES.length);
+      return;
+    }
+    let alive = true;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const wait = (ms: number) => new Promise<void>(res => { timers.push(setTimeout(res, ms)); });
+
+    (async () => {
+      while (alive) {
+        setPhase('typing'); setTyped(''); setShown(0);
+        await wait(700);
+        for (let i = 1; i <= DEMO_QUERY.length && alive; i++) {
+          setTyped(DEMO_QUERY.slice(0, i));
+          await wait(34);
+        }
+        await wait(500);
+        if (!alive) break;
+        setPhase('results');
+        for (let i = 1; i <= DEMO_RESULTS.length && alive; i++) {
+          setShown(i);
+          await wait(380);
+        }
+        await wait(1500);
+        if (!alive) break;
+        setPhase('letter'); setShown(0);
+        await wait(400);
+        for (let i = 1; i <= DEMO_LETTER_LINES.length && alive; i++) {
+          setShown(i);
+          await wait(300);
+        }
+        await wait(500);
+        if (!alive) break;
+        setPhase('done');
+        await wait(2600);
+      }
+    })();
+
+    return () => { alive = false; timers.forEach(clearTimeout); };
+  }, []);
+
+  return (
+    <div className="gp-demo" aria-hidden="true">
+      <div className="gp-demo-window">
+        <div className="gp-demo-titlebar">
+          <span className="gp-demo-dot" /><span className="gp-demo-dot" /><span className="gp-demo-dot" />
+          <span className="gp-demo-title">German Path AI</span>
+        </div>
+
+        <div className="gp-demo-searchbar">
+          <Search className="w-3.5 h-3.5" style={{ color: '#a1a1aa', flexShrink: 0 }} />
+          <span className="gp-demo-query">
+            {typed}
+            {phase === 'typing' && <span className="gp-demo-caret" />}
+          </span>
+        </div>
+
+        <div className="gp-demo-stage">
+          {(phase === 'results') && (
+            <div className="gp-demo-results">
+              {DEMO_RESULTS.slice(0, shown).map((r) => (
+                <div key={r.name} className="gp-demo-card">
+                  <div className="gp-demo-card-icon"><GraduationCap className="w-3.5 h-3.5" /></div>
+                  <div className="gp-demo-card-body">
+                    <p className="gp-demo-card-name">{r.name}</p>
+                    <p className="gp-demo-card-uni">{r.uni}</p>
+                  </div>
+                  <span className="gp-demo-card-tag">{r.tag}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {(phase === 'letter' || phase === 'done') && (
+            <div className="gp-demo-letter">
+              <div className="gp-demo-letter-head">
+                <FileText className="w-3.5 h-3.5" style={{ color: '#dd0000' }} />
+                <span>Motivation Letter — TU Berlin</span>
+                {phase === 'letter' && <span className="gp-demo-writing"><Sparkles className="w-3 h-3" /> AI writing…</span>}
+                {phase === 'done' && <span className="gp-demo-ready"><Check className="w-3 h-3" /> Ready</span>}
+              </div>
+              <div className="gp-demo-letter-lines">
+                {DEMO_LETTER_LINES.map((w, i) => (
+                  <span
+                    key={i}
+                    className={`gp-demo-line ${i < shown || phase === 'done' ? 'on' : ''}`}
+                    style={{ width: `${w}%` }}
+                  />
+                ))}
+              </div>
+              {phase === 'done' && (
+                <div className="gp-demo-stamp">
+                  <BadgeCheck className="w-4 h-4" /> German format · 60 seconds
+                </div>
+              )}
+            </div>
+          )}
+
+          {phase === 'typing' && (
+            <div className="gp-demo-placeholder">
+              <Sparkles className="w-4 h-4" />
+              <span>Searching 20,000+ programs…</span>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="gp-demo-glow" />
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────
+   Count-up number that animates when scrolled into view
+   ──────────────────────────────────────────────── */
+function CountUp({ end, prefix = '', suffix = '', duration = 1500 }: { end: number; prefix?: string; suffix?: string; duration?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [val, setVal] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setVal(end); return; }
+    let raf = 0;
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      io.disconnect();
+      const t0 = performance.now();
+      const tick = (t: number) => {
+        const p = Math.min(1, (t - t0) / duration);
+        setVal(Math.round(end * (1 - Math.pow(1 - p, 3))));
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }, { threshold: 0.4 });
+    io.observe(el);
+    return () => { io.disconnect(); cancelAnimationFrame(raf); };
+  }, [end, duration]);
+
+  return <span ref={ref}>{prefix}{val.toLocaleString('en-US')}{suffix}</span>;
+}
+
+/* ────────────────────────────────────────────────
+   FAQ with FAQPage JSON-LD
+   ──────────────────────────────────────────────── */
 function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const faqs = [
     {
@@ -199,143 +363,32 @@ function FAQSection() {
   };
 
   return (
-    <section className="faq-section-new" id="faq">
+    <section className="gp-section" id="faq">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <div className="section-container">
-        <div className="section-header" style={{ textAlign: 'center', marginBottom: '64px' }}>
-          <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>
-            Frequently Asked Questions
-          </h2>
-          <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px', color: '#737373' }}>
-            The questions every future international student asks first.
-          </p>
+      <div className="gp-container" style={{ maxWidth: 860 }}>
+        <div className="gp-head scroll-reveal">
+          <span className="gp-eyebrow">FAQ</span>
+          <h2 className="gp-h2">Questions every future student asks</h2>
         </div>
-
-        <div className="faq-accordion" style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div className="gp-faq scroll-reveal">
           {faqs.map((faq, index) => (
-            <div key={index} className="faq-accordion-item">
+            <div key={index} className={`gp-faq-item ${openIndex === index ? 'open' : ''}`}>
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="faq-accordion-button"
+                className="gp-faq-q"
+                aria-expanded={openIndex === index}
               >
                 <span>{faq.question}</span>
-                <ChevronDown
-                  className="w-5 h-5 transition-transform"
-                  style={{ transform: openIndex === index ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                />
+                <span className="gp-faq-icon"><ChevronDown className="w-5 h-5" /></span>
               </button>
-              {openIndex === index && (
-                <div className="faq-accordion-content">
-                  <p>{faq.answer}</p>
-                </div>
-              )}
+              <div className="gp-faq-a" style={{ maxHeight: openIndex === index ? 220 : 0 }}>
+                <p>{faq.answer}</p>
+              </div>
             </div>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CTASection() {
-  return (
-    <section style={{ padding: '80px 24px', background: '#fafafa', borderTop: '1px solid #ebebeb' }}>
-      <div className="section-container" style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <div className="cta-box-new">
-          <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#fff', marginBottom: '16px', textAlign: 'center' }}>
-            Ready to start your journey?
-          </h2>
-          <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.9)', marginBottom: '32px', textAlign: 'center', maxWidth: '600px', margin: '0 auto 32px' }}>
-            Search programs, convert your GPA and read the guides — all free, no account needed. Sign up when you want to save programs and build your application.
-          </p>
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/auth/signup" className="cta-btn-white">
-              Create Free Account
-            </Link>
-            <Link href="#hero" className="cta-btn-outline">
-              Search Programs
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function TestimonialSlider({ testimonials }: { testimonials: typeof TESTIMONIALS }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 3;
-  const totalSlides = testimonials.length - itemsPerPage + 1;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % totalSlides);
-    }, 5000); // Auto-slide every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [totalSlides]);
-
-  const handlePrev = () => {
-    setCurrentIndex(prev => (prev - 1 + totalSlides) % totalSlides);
-  };
-
-  const handleNext = () => {
-    setCurrentIndex(prev => (prev + 1) % totalSlides);
-  };
-
-  // Duplicate testimonials for infinite scrolling
-  const allTestimonials = [...testimonials, ...testimonials, ...testimonials];
-  const displayIndex = currentIndex + testimonials.length; // Start from middle copy
-  const displayTestimonials = allTestimonials.slice(displayIndex, displayIndex + itemsPerPage);
-
-  return (
-    <section className="testimonial-section-new" id="stories">
-      <div className="section-container">
-        <div className="section-header" style={{ textAlign: 'center', marginBottom: '64px' }}>
-          <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>
-            Students who made it to Germany
-          </h2>
-          <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px', color: '#737373' }}>
-            Join 2,500+ students who found their path with German Path.
-          </p>
-        </div>
-
-        <div className="testimonial-slider-wrapper-new" style={{ position: 'relative', maxWidth: '1200px', margin: '0 auto' }}>
-          <div className="testimonial-grid-new">
-            {displayTestimonials.map((person, idx) => (
-              <article key={`${person.name}-${idx}-${currentIndex}`} className="testimonial-card-new">
-                <div className="testimonial-quote-icon">&quot;</div>
-                <p className="testimonial-quote-text">{person.quote}</p>
-                <div className="testimonial-footer">
-                  <div className="testimonial-avatar-new">
-                    <Image
-                      src={`https://flagcdn.com/w80/${person.flag.toLowerCase()}.png`}
-                      alt={person.location}
-                      width={32}
-                      height={24}
-                      style={{ borderRadius: '4px', objectFit: 'cover' }}
-                    />
-                  </div>
-                  <div className="testimonial-info-new">
-                    <p className="testimonial-name-new">{person.name}</p>
-                    <p className="testimonial-location-new">{person.location}</p>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="testimonial-nav-new">
-            <button onClick={handlePrev} className="testimonial-nav-btn-new" aria-label="Previous">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button onClick={handleNext} className="testimonial-nav-btn-new" aria-label="Next">
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
         </div>
       </div>
     </section>
@@ -466,7 +519,6 @@ export default function HomePage() {
     const guidePosts = wpPosts.filter(post => {
       const hasNews = post.categories.some(c => c.slug.toLowerCase() === 'news');
       const hasOtherCategories = post.categories.some(c => c.slug.toLowerCase() !== 'news');
-      // Exclude if it ONLY has News category (News but no other categories)
       return !(hasNews && !hasOtherCategories);
     });
 
@@ -474,7 +526,6 @@ export default function HomePage() {
       const postSlugs = post.categories.map(c => c.slug.toLowerCase());
       const postNames = post.categories.map(c => c.name.toLowerCase());
       let placed = false;
-      // Allow a post to appear in multiple matching categories (not just the first)
       for (const journeyCat of JOURNEY_CATEGORIES) {
         const matchesSlug = postSlugs.some(ps => journeyCat.slugs.some(s => ps === s || ps.includes(s) || s.includes(ps)));
         const matchesName = postNames.some(pn => journeyCat.slugs.some(s => pn === s || pn.includes(s) || s.includes(pn)));
@@ -489,7 +540,6 @@ export default function HomePage() {
   }, [wpPosts]);
 
   const filteredPosts = useMemo(() => {
-    // Filter out News-only posts
     const guidePosts = wpPosts.filter(post => {
       const hasNews = post.categories.some(c => c.slug.toLowerCase() === 'news');
       const hasOtherCategories = post.categories.some(c => c.slug.toLowerCase() !== 'news');
@@ -500,7 +550,6 @@ export default function HomePage() {
     return categorizedPosts[activeCategory] || [];
   }, [activeCategory, wpPosts, categorizedPosts]);
 
-  // Reset visible count when category changes
   useEffect(() => {
     setVisibleCount(6);
   }, [activeCategory]);
@@ -548,7 +597,6 @@ export default function HomePage() {
   const handleAdvancedSearch = async () => {
     setShowAdvancedSearch(false);
 
-    // Construct natural language query from filters
     const queryParts: string[] = [];
 
     if (advancedFilters.isFree) queryParts.push('tuition-free');
@@ -626,7 +674,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="homepage-root">
+    <div className="homepage-root gp-root">
 
       {signInToast && (
         <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[60]">
@@ -937,129 +985,186 @@ export default function HomePage() {
       )}
 
       {/* ══ HERO ══ */}
-      <section className="hero-section" id="hero">
-        <div className="hero-bg-orbs">
-          <div className="hero-orb hero-orb-1" />
-          <div className="hero-orb hero-orb-2" />
-          <div className="hero-orb hero-orb-3" />
+      <section className="gp-hero" id="hero">
+        <div className="gp-hero-bg">
+          <div className="gp-hero-grid" />
+          <div className="gp-orb gp-orb-1" />
+          <div className="gp-orb gp-orb-2" />
         </div>
-        <div className="hero-content">
-          <div className="hero-badge animate-fade-up-1">
-            <span className="hero-badge-dot" />
-            <span>FREE AI SEARCH · 20,000+ PROGRAMS</span>
-          </div>
-          <h1 className="hero-title animate-fade-up-2">
-            <span style={{ display: 'block' }}>
-              Find your degree program<br />
-              <span className="hero-title-gradient">in Germany — free</span>
-            </span>
-          </h1>
-          <p className="hero-subtitle animate-fade-up-3">
-            Describe what you want to study in plain English. Our AI searches every German university program — no consultant, no fees, no account needed.
-          </p>
-          <form onSubmit={handleSearch} className="hero-search-form animate-fade-up-4">
-            <div className="hero-search-bar">
-              <Search className="hero-search-icon" />
-              <textarea
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runSearch(query); } }}
-                rows={1}
-                placeholder="e.g. tuition-free data science master in English, winter 2026"
-                className="hero-search-input"
-              />
-              <button type="button" onClick={() => setShowAdvancedSearch(true)} className="hero-advanced-btn" title="Advanced Search">
-                <Settings className="w-5 h-5" />
-              </button>
-              <button type="submit" disabled={searching || !query.trim()} className="hero-search-btn">
-                {searching ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Search'}
-              </button>
+        <div className="gp-hero-inner">
+          <div className="gp-hero-copy">
+            <div className="gp-badge animate-fade-up-1">
+              <span className="gp-badge-flag"><i /><i /><i /></span>
+              <span>AI-powered · Built for international students</span>
             </div>
-          </form>
-          <div className="hero-suggestions animate-fade-up-4">
-            <span style={{ fontSize: 13, color: '#8a8a94', alignSelf: 'center' }}>Try:</span>
-            {HERO_SUGGESTIONS.map((s) => (
-              <button key={s} type="button" onClick={() => runSearch(s)} className="hero-chip">{s}</button>
-            ))}
+            <h1 className="gp-h1 animate-fade-up-2">
+              Get into a German university —{' '}
+              <span className="gp-h1-accent">without paying a consultant&nbsp;€3,000</span>
+            </h1>
+            <p className="gp-sub animate-fade-up-3">
+              Search all <strong>20,000+ degree programs</strong> with AI, check your grades against German requirements,
+              and generate your CV and motivation letter in the exact format universities expect.
+              Free to start — documents from <strong>€2.99</strong>, not €2,999.
+            </p>
+
+            <form onSubmit={handleSearch} className="gp-search animate-fade-up-4">
+              <div className="gp-search-bar">
+                <Search className="gp-search-icon" />
+                <textarea
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runSearch(query); } }}
+                  rows={1}
+                  placeholder="e.g. tuition-free data science master in English"
+                  className="gp-search-input"
+                />
+                <button type="button" onClick={() => setShowAdvancedSearch(true)} className="gp-search-adv" title="Advanced Search">
+                  <Settings className="w-5 h-5" />
+                </button>
+                <button type="submit" disabled={searching || !query.trim()} className="gp-search-btn">
+                  {searching ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Search <ArrowRight className="w-4 h-4" /></>}
+                </button>
+              </div>
+            </form>
+
+            <div className="gp-chips animate-fade-up-4">
+              {HERO_SUGGESTIONS.map((s) => (
+                <button key={s} type="button" onClick={() => runSearch(s)} className="gp-chip">{s}</button>
+              ))}
+            </div>
+
+            <div className="gp-trust animate-fade-up-4">
+              <span><Shield className="w-4 h-4" /> Free AI search</span>
+              <i />
+              <span><Users className="w-4 h-4" /> 2,500+ students helped</span>
+              <i />
+              <span><Globe className="w-4 h-4" /> Every German university</span>
+            </div>
           </div>
-          <div className="hero-trust animate-fade-up-4">
-            <div className="hero-trust-item"><Shield className="w-4 h-4" /><span>Free to use</span></div>
-            <div className="hero-trust-divider" />
-            <div className="hero-trust-item"><Users className="w-4 h-4" /><span>2,500+ students helped</span></div>
-            <div className="hero-trust-divider" />
-            <div className="hero-trust-item"><Globe className="w-4 h-4" /><span>All German universities</span></div>
+
+          <div className="gp-hero-visual animate-fade-up-3">
+            <HeroDemo />
           </div>
-          <div className="hero-quicklinks animate-fade-up-4" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 28 }}>
-            {QUICK_LINKS.map(({ href, label }) => (
-              <Link key={href} href={href} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 999, background: '#fff', border: '1px solid #e8e6ea', fontSize: 13, fontWeight: 600, color: '#444', textDecoration: 'none' }}>
-                {label} <ArrowRight className="w-3.5 h-3.5" />
+        </div>
+
+        <div className="gp-quicklinks">
+          {QUICK_LINKS.map(({ href, label }) => (
+            <Link key={href} href={href} className="gp-quicklink">
+              {label} <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ══ CONSULTANT VS GERMAN PATH ══ */}
+      <section className="gp-section gp-compare-section">
+        <div className="gp-container">
+          <div className="gp-head scroll-reveal">
+            <span className="gp-eyebrow">Why students switch</span>
+            <h2 className="gp-h2">Education agents charge a fortune.<br />The work is now automated.</h2>
+            <p className="gp-lead">Same program search. Same application documents. A very different bill.</p>
+          </div>
+
+          <div className="gp-compare scroll-reveal">
+            <div className="gp-compare-card gp-compare-old">
+              <p className="gp-compare-label"><Briefcase className="w-4 h-4" /> Education consultant</p>
+              <p className="gp-compare-price gp-strike">€500 – €3,000</p>
+              <ul>
+                <li><X className="w-4 h-4" /> Weeks of waiting for drafts</li>
+                <li><X className="w-4 h-4" /> Generic template letters</li>
+                <li><X className="w-4 h-4" /> Pushes partner universities, not your best fit</li>
+                <li><X className="w-4 h-4" /> Hidden fees after you commit</li>
+              </ul>
+            </div>
+
+            <div className="gp-compare-vs"><span>VS</span></div>
+
+            <div className="gp-compare-card gp-compare-new">
+              <p className="gp-compare-label"><Sparkles className="w-4 h-4" /> German Path</p>
+              <p className="gp-compare-price">
+                €0 <span className="gp-compare-price-sub">to search · docs from €2.99</span>
+              </p>
+              <ul>
+                <li><Check className="w-4 h-4" /> AI search across all 20,000+ programs — no bias</li>
+                <li><Check className="w-4 h-4" /> CV &amp; motivation letter in 60 seconds, German format</li>
+                <li><Check className="w-4 h-4" /> Try before you sign up — 2 free previews</li>
+                <li><Check className="w-4 h-4" /> One-time credits, no subscription, never expire</li>
+              </ul>
+              <Link href="/pricing" className="gp-btn-primary" style={{ marginTop: 18 }}>
+                See pricing <ArrowRight className="w-4 h-4" />
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ HOW IT WORKS ══ */}
+      <section className="gp-section gp-steps-section">
+        <div className="gp-container">
+          <div className="gp-head scroll-reveal">
+            <span className="gp-eyebrow">How it works</span>
+            <h2 className="gp-h2">From “where do I start?” to enrolled — in 3 steps</h2>
+          </div>
+          <div className="gp-steps">
+            {[
+              { n: '01', icon: Search,    title: 'Find your program',    text: 'Describe what you want to study in plain English. AI matches you with real programs — tuition, language, deadlines included.', cta: { label: 'Try the search', href: '#hero' } },
+              { n: '02', icon: FileCheck, title: 'Generate your documents', text: 'CV, motivation letter and cover letter — written by AI in the German format admissions offices expect. Preview free.', cta: { label: 'See the tools', href: '#tools' } },
+              { n: '03', icon: Send,      title: 'Apply & get your visa', text: 'Follow our step-by-step guides for uni-assist, blocked account and the embassy — written for your country.', cta: { label: 'Read the guides', href: '#guides' } },
+            ].map(({ n, icon: Icon, title, text, cta }, idx) => (
+              <div key={n} className="gp-step scroll-reveal" style={{ transitionDelay: `${idx * 0.12}s` }}>
+                <div className="gp-step-num">{n}</div>
+                <div className="gp-step-icon"><Icon className="w-5 h-5" /></div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+                <a href={cta.href} className="gp-step-link">{cta.label} <ArrowRight className="w-3.5 h-3.5" /></a>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══ TOOLS (one unified section — free tools first) ══ */}
-      <section className="tools-section" id="tools" style={{ paddingTop: 72, paddingBottom: 72 }}>
-        <div className="section-container">
-          <div className="section-header scroll-reveal">
-            <div className="section-label">Free Tools</div>
-            <h2 className="section-title">Start here — no account needed</h2>
-            <p className="section-desc">Check your grades, plan your budget and organize your applications. Instant and free.</p>
+      {/* ══ TOOLS ══ */}
+      <section className="gp-section gp-tools-section" id="tools">
+        <div className="gp-container">
+          <div className="gp-head scroll-reveal">
+            <span className="gp-eyebrow">Free tools</span>
+            <h2 className="gp-h2">Start here — no account needed</h2>
+            <p className="gp-lead">Check your grades, plan your budget and organize your applications. Instant and free.</p>
           </div>
-          <div className="tools-grid">
+          <div className="gp-tools-grid">
             {FREE_TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
-              <Link
-                key={href}
-                href={href}
-                className="tool-card scroll-reveal"
-                style={{ transitionDelay: `${idx * 0.08}s` }}
-              >
-                <span style={{ position: 'absolute', top: 16, right: 16, display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 999, background: '#ecfdf5', color: '#059669', fontSize: 11, fontWeight: 800, letterSpacing: '0.03em' }}>
-                  FREE
-                </span>
-                <div className={`tool-icon bg-gradient-to-br ${gradient}`}>
-                  <Icon className="w-7 h-7 text-white" />
+              <Link key={href} href={href} className="gp-tool scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
+                <span className="gp-tool-badge gp-tool-badge-free">FREE</span>
+                <div className={`gp-tool-icon bg-gradient-to-br ${gradient}`}>
+                  <Icon className="w-6 h-6 text-white" />
                 </div>
-                <div className="tool-info">
-                  <h3 className="tool-label">{label}</h3>
-                  <p className="tool-desc">{desc}</p>
-                </div>
-                <div className="tool-arrow"><ArrowRight className="w-5 h-5" /></div>
+                <h3>{label}</h3>
+                <p>{desc}</p>
+                <span className="gp-tool-arrow"><ArrowRight className="w-4 h-4" /></span>
               </Link>
             ))}
           </div>
 
-          <div className="section-header scroll-reveal" style={{ marginTop: 72 }}>
-            <div className="section-label">AI Application Tools</div>
-            <h2 className="section-title">Ready to apply? Let AI write your documents</h2>
-            <p className="section-desc">German-format CV, motivation letter and cover letter — generated for your profile. One-time credit packs from €2.99, no subscription.</p>
+          <div className="gp-head scroll-reveal" style={{ marginTop: 80 }}>
+            <span className="gp-eyebrow">AI document tools</span>
+            <h2 className="gp-h2">Ready to apply? Let AI write your documents</h2>
+            <p className="gp-lead">Preview free — 2 generations, no account. Then one-time credit packs from €2.99. No subscription.</p>
           </div>
-          <div className="tools-grid">
+          <div className="gp-tools-grid">
             {AI_TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
-              <Link
-                key={href}
-                href={href}
-                className="tool-card tool-card--premium scroll-reveal"
-                style={{ transitionDelay: `${idx * 0.08}s` }}
-              >
-                <span className="tool-premium-badge" aria-label="AI tool">
-                  <Sparkles className="w-3 h-3" />
-                  AI
-                </span>
-                <div className={`tool-icon bg-gradient-to-br ${gradient}`}>
-                  <Icon className="w-7 h-7 text-white" />
+              <Link key={href} href={href} className="gp-tool gp-tool-ai scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
+                <span className="gp-tool-badge gp-tool-badge-ai"><Sparkles className="w-3 h-3" /> AI</span>
+                <div className={`gp-tool-icon bg-gradient-to-br ${gradient}`}>
+                  <Icon className="w-6 h-6 text-white" />
                 </div>
-                <div className="tool-info">
-                  <h3 className="tool-label">{label}</h3>
-                  <p className="tool-desc">{desc}</p>
-                </div>
-                <div className="tool-arrow"><ArrowRight className="w-5 h-5" /></div>
+                <h3>{label}</h3>
+                <p>{desc}</p>
+                <span className="gp-tool-arrow"><ArrowRight className="w-4 h-4" /></span>
               </Link>
             ))}
           </div>
-          <div className="scroll-reveal" style={{ textAlign: 'center', marginTop: 32 }}>
-            <Link href="/pricing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 28px', borderRadius: 14, background: '#111', color: '#fff', fontSize: 15, fontWeight: 700, textDecoration: 'none' }}>
+          <div className="scroll-reveal" style={{ textAlign: 'center', marginTop: 36 }}>
+            <Link href="/pricing" className="gp-btn-dark">
               See pricing — packs from €2.99 <ArrowRight className="w-4 h-4" />
             </Link>
             <p style={{ fontSize: 12.5, color: '#8a8a94', margin: '12px 0 0' }}>
@@ -1069,51 +1174,61 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══ HOW IT WORKS ══ */}
-      <section className="howto-section scroll-reveal" style={{ padding: '96px 24px', background: '#fafafa', borderTop: '1px solid #ebebeb' }}>
-        <div className="section-container">
-          <div className="section-header" style={{ textAlign: 'center', marginBottom: '64px' }}>
-            <h2 className="section-title" style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, marginBottom: '16px' }}>Your Path, Simplified</h2>
-            <p className="section-desc" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '16px' }}>We&apos;ve broken down the complex process of moving to Germany into five clear, manageable milestones.</p>
-          </div>
-          <div className="howto-steps-container">
-            <div className="howto-progress-line" style={{ position: 'absolute', top: '50%', left: 0, width: '100%', height: '1px', background: '#ebe7e7', transform: 'translateY(-50%)', zIndex: -1 }} />
-            <div className="howto-step">
-              <div className="howto-step-circle gradient">01</div>
-              <h4>Find Programs</h4>
-              <p>Search 20,000+ courses with AI.</p>
+      {/* ══ STATS ══ */}
+      <section className="gp-stats">
+        <div className="gp-container gp-stats-grid">
+          {[
+            { end: 20000, suffix: '+', label: 'Programs indexed', icon: GraduationCap },
+            { end: 2500,  suffix: '+', label: 'Students helped',  icon: Users },
+            { end: 0,     prefix: '€', label: 'To search & explore', icon: Shield },
+            { end: 60,    suffix: 's', label: 'To a finished document', icon: Clock },
+          ].map(({ end, prefix, suffix, label, icon: Icon }, idx) => (
+            <div key={label} className="gp-stat scroll-reveal" style={{ transitionDelay: `${idx * 0.1}s` }}>
+              <div className="gp-stat-icon"><Icon className="w-5 h-5" /></div>
+              <p className="gp-stat-num"><CountUp end={end} prefix={prefix} suffix={suffix} /></p>
+              <p className="gp-stat-label">{label}</p>
             </div>
-            <div className="howto-step">
-              <div className="howto-step-circle gray">02</div>
-              <h4>Prepare Docs</h4>
-              <p>Build your CV and motivation letter.</p>
-            </div>
-            <div className="howto-step">
-              <div className="howto-step-circle gray">03</div>
-              <h4>Apply</h4>
-              <p>Submit through Uni-Assist or directly.</p>
-            </div>
-            <div className="howto-step">
-              <div className="howto-step-circle gray">04</div>
-              <h4>Get Visa</h4>
-              <p>Navigate embassy requirements with ease.</p>
-            </div>
-            <div className="howto-step">
-              <div className="howto-step-circle gray">05</div>
-              <h4>Arrive</h4>
-              <p>Land in Germany and start your life.</p>
-            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ══ TESTIMONIALS (marquee) ══ */}
+      <section className="gp-section" id="stories">
+        <div className="gp-head scroll-reveal">
+          <span className="gp-eyebrow">Success stories</span>
+          <h2 className="gp-h2">Students who made it to Germany</h2>
+        </div>
+        <div className="gp-marquee scroll-reveal" aria-label="Student testimonials">
+          <div className="gp-marquee-track">
+            {[...TESTIMONIALS, ...TESTIMONIALS].map((person, idx) => (
+              <figure key={`${person.name}-${idx}`} className="gp-quote-card">
+                <blockquote>“{person.quote}”</blockquote>
+                <figcaption>
+                  <Image
+                    src={`https://flagcdn.com/w80/${person.flag.toLowerCase()}.png`}
+                    alt={person.location}
+                    width={28}
+                    height={21}
+                    style={{ borderRadius: 4, objectFit: 'cover' }}
+                  />
+                  <div>
+                    <p className="gp-quote-name">{person.name}</p>
+                    <p className="gp-quote-loc">{person.location}</p>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ══ GUIDES & RESOURCES ══ */}
-      <section className="guides-section" id="guides">
+      <section className="guides-section gp-guides" id="guides">
         <div className="section-container">
-          <div className="section-header scroll-reveal">
-            <div className="section-label">Guides &amp; Resources</div>
-            <h2 className="section-title">Everything you need to know</h2>
-            <p className="section-desc">Visa, housing, finances, language — written for international students.</p>
+          <div className="gp-head scroll-reveal">
+            <span className="gp-eyebrow">Guides &amp; resources</span>
+            <h2 className="gp-h2">Everything you need to know</h2>
+            <p className="gp-lead">Visa, housing, finances, language — written for international students.</p>
           </div>
 
           {/* Category Filter Pills */}
@@ -1185,37 +1300,28 @@ export default function HomePage() {
               </div>
             </div>
           )}
-
         </div>
       </section>
-
-      {/* ══ STATS ══ */}
-      <section className="stats-section">
-        <div className="stats-bg-pattern" />
-        <div className="section-container stats-grid">
-          {[
-            { num: '20,000+', label: 'Programs indexed', icon: GraduationCap },
-            { num: '2,500+', label: 'Students helped', icon: Users },
-            { num: '€0', label: 'To search & explore', icon: Shield },
-            { num: '100+', label: 'Expert guides', icon: BookOpen },
-          ].map(({ num, label, icon: Icon }, idx) => (
-            <div key={label} className="stat-card scroll-reveal" style={{ transitionDelay: `${idx * 0.1}s` }}>
-              <div className="stat-icon-wrap"><Icon className="w-6 h-6" /></div>
-              <p className="stat-number">{num}</p>
-              <p className="stat-label">{label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══ TESTIMONIALS ══ */}
-      <TestimonialSlider testimonials={TESTIMONIALS} />
 
       {/* ══ FAQ ══ */}
       <FAQSection />
 
-      {/* ══ CTA ══ */}
-      <CTASection />
+      {/* ══ FINAL CTA ══ */}
+      <section className="gp-cta-section">
+        <div className="gp-container">
+          <div className="gp-cta scroll-reveal">
+            <div className="gp-cta-flag"><i /><i /><i /></div>
+            <div className="gp-cta-orb gp-cta-orb-1" />
+            <div className="gp-cta-orb gp-cta-orb-2" />
+            <h2>Start free. Pay only when you need documents.</h2>
+            <p>Search programs, convert your GPA and read every guide — no account, no fees. Your first two AI documents are free to preview.</p>
+            <div className="gp-cta-actions">
+              <a href="#hero" className="gp-btn-white">Search programs — free</a>
+              <Link href="/pricing" className="gp-btn-ghost">See pricing <Euro className="w-4 h-4" /></Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ══ MOBILE BOTTOM TAB BAR ══ */}
       <nav className="mobile-tab-bar">

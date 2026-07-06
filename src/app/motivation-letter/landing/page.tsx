@@ -57,13 +57,17 @@ const FAQS = [
   {
     q: 'Is the AI-generated content unique?',
     a: 'Yes, each motivation letter is generated uniquely based on your personal information, background, and goals. The AI creates original content tailored to your specific situation, ensuring your letter stands out from generic templates.'
+  },
+  {
+    q: 'How much does it cost?',
+    a: 'Your first 2 AI generations are free to preview — no account needed. A free account adds 3 more credits per month plus saving and downloads. After that, one-time credit packs start at €2.99 for 20 credits. No subscription, credits never expire. Compare that to the €500–€3,000 an education consultant charges for the same letter.'
   }
 ];
 
 const STATS = [
-  { num: '10,000+', label: 'Letters Generated' },
-  { num: '500+', label: 'Universities Covered' },
-  { num: '90%', label: 'User Satisfaction' }
+  { num: '60 seconds', label: 'to a finished letter' },
+  { num: '2 free previews', label: 'no account needed' },
+  { num: 'from €2.99', label: 'one-time credit packs' }
 ];
 
 export default function MotivationLetterLanding() {
@@ -113,11 +117,11 @@ export default function MotivationLetterLanding() {
                 href="/motivation-letter" 
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-all shadow-lg shadow-purple-600/25 hover:shadow-xl hover:shadow-purple-600/30 hover:-translate-y-0.5"
               >
-                Generate Your Letter
+                Try It Free — No Signup
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <a 
-                href="#features" 
+              <a
+                href="#features"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all"
               >
                 Learn More

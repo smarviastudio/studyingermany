@@ -40,7 +40,7 @@ const FAQS = [
   },
   {
     q: 'Is this CV maker free to use?',
-    a: 'Yes! You can create, edit, and download your CV for free. We offer AI-powered content generation that uses credits - new users receive free credits to try the AI features. Premium templates are available for subscribers.'
+    a: 'You can try it right now without an account — your first 2 AI generations are free to preview. A free account adds 3 more credits per month plus saving and PDF download. After that, one-time credit packs start at €2.99 (20 credits). No subscription required, credits never expire.'
   },
   {
     q: 'What CV format should I use for German universities?',
@@ -61,9 +61,9 @@ const FAQS = [
 ];
 
 const STATS = [
-  { num: '50,000+', label: 'CVs Created' },
-  { num: '2,500+', label: 'Students Helped' },
-  { num: '95%', label: 'Success Rate' }
+  { num: '60 seconds', label: 'to a finished draft' },
+  { num: '2 free previews', label: 'no account needed' },
+  { num: 'from €2.99', label: 'one-time credit packs' }
 ];
 
 export default function CVMakerLanding() {
@@ -113,7 +113,7 @@ export default function CVMakerLanding() {
                 href="/cv-maker" 
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-600/25 hover:shadow-xl hover:shadow-red-600/30 hover:-translate-y-0.5"
               >
-                Start Building Your CV
+                Try It Free — No Signup
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <a 
