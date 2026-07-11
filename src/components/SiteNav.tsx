@@ -9,6 +9,18 @@ import { useContactModal } from './ContactModalProvider';
 
 const RED = '#dd0000';
 
+const NAV_APPS = [
+  { slug: 'lesenlab-german-reading-app', title: 'Lesen Lab', desc: 'German Reading App (A1–B2)', icon: '/apps/lesenlab/icon.webp' },
+  { slug: 'einbuergerungstest-2026-app', title: 'Einbürgerungstest 2026', desc: 'German Citizenship Test', icon: '/apps/einbuergerungstest/icon.webp' },
+  { slug: 'cv-maker-resume-builder-app', title: 'CV Maker', desc: 'Resume Builder App', icon: '/apps/cvmaker/icon.webp' },
+  { slug: 'dosebuddy-pill-reminder-app', title: 'DoseBuddy', desc: 'Pill Reminder & Med Tracker', icon: '/apps/dosebuddy/icon.webp' },
+  { slug: 'macromora-ai-calorie-tracker', title: 'MacroMora', desc: 'AI Calorie Tracker', icon: '/apps/macromora/icon.webp' },
+  { slug: 'baby-name-matcher-app', title: 'BabyName', desc: 'Swipe Names With Your Partner', icon: '/apps/babyname/icon.webp' },
+  { slug: 'abc-letter-tracing-app', title: 'ABC Tracing', desc: 'Letters, Numbers & Phonics', icon: '/apps/abctracing/icon.webp' },
+  { slug: 'world-cup-2026-schedule-app', title: 'Football Planner 2026', desc: 'World Cup Schedule & Widgets', icon: '/apps/football/icon.webp' },
+  { slug: 'kennzeichen-scanner-app', title: 'KennzeichenSammler', desc: 'Nummernschilder Spiel & Karte', icon: '/apps/kennzeichen/icon.webp' },
+];
+
 const HTML_ENTITY_MAP: Record<string, string> = {
   amp: '&',
   lt: '<',
@@ -330,13 +342,15 @@ export function SiteNav() {
           <a href="/#tools" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}><Wrench size={20} />Free AI Tools</a>
           <div className="sitenav-drawer-section">
             <span className="sitenav-drawer-section-title">Apps</span>
-            <Link href="/lesenlab-german-reading-app" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}>
-              <Image src="/lesenlab/logo-ios.png" alt="LesenLab" width={20} height={20} className="sitenav-drawer-app-icon" />
-              LesenLab – German Reading
-            </Link>
-            <Link href="/einbuergerungstest-2026-app" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}>
-              <Image src="/einbuergerungstest/logo-ios.png" alt="Einbürgerungstest" width={20} height={20} className="sitenav-drawer-app-icon" />
-              Einbürgerungstest 2026
+            {NAV_APPS.map((app) => (
+              <Link key={app.slug} href={`/${app.slug}`} className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}>
+                <Image src={app.icon} alt={app.title} width={20} height={20} className="sitenav-drawer-app-icon" />
+                {app.title}
+              </Link>
+            ))}
+            <Link href="/apps" className="sitenav-drawer-link" onClick={() => setDrawerOpen(false)}>
+              <LayoutDashboard size={20} />
+              All Apps
             </Link>
           </div>
           <a href="/pricing" className="sitenav-drawer-link red" onClick={() => setDrawerOpen(false)}><Tag size={20} />Pricing</a>
@@ -389,42 +403,26 @@ export function SiteNav() {
               </button>
               {appsDropdownOpen && (
                 <div className="sitenav-apps-menu">
-                  <Link
-                    href="/lesenlab-german-reading-app"
-                    className="sitenav-apps-item"
-                    onClick={() => setAppsDropdownOpen(false)}
-                  >
-                    <div className="sitenav-apps-icon">
-                      <Image
-                        src="/lesenlab/logo-ios.png"
-                        alt="LesenLab"
-                        width={40}
-                        height={40}
-                        className="sitenav-apps-logo"
-                      />
-                    </div>
+                  {NAV_APPS.map((app) => (
+                    <Link
+                      key={app.slug}
+                      href={`/${app.slug}`}
+                      className="sitenav-apps-item"
+                      onClick={() => setAppsDropdownOpen(false)}
+                    >
+                      <div className="sitenav-apps-icon">
+                        <Image src={app.icon} alt={app.title} width={40} height={40} className="sitenav-apps-logo" />
+                      </div>
+                      <div className="sitenav-apps-info">
+                        <span className="sitenav-apps-title">{app.title}</span>
+                        <span className="sitenav-apps-desc">{app.desc}</span>
+                      </div>
+                    </Link>
+                  ))}
+                  <Link href="/apps" className="sitenav-apps-item" onClick={() => setAppsDropdownOpen(false)}>
                     <div className="sitenav-apps-info">
-                      <span className="sitenav-apps-title">LesenLab</span>
-                      <span className="sitenav-apps-desc">German Reading App (A1–B2)</span>
-                    </div>
-                  </Link>
-                  <Link
-                    href="/einbuergerungstest-2026-app"
-                    className="sitenav-apps-item"
-                    onClick={() => setAppsDropdownOpen(false)}
-                  >
-                    <div className="sitenav-apps-icon">
-                      <Image
-                        src="/einbuergerungstest/logo-ios.png"
-                        alt="Einbürgerungstest"
-                        width={40}
-                        height={40}
-                        className="sitenav-apps-logo"
-                      />
-                    </div>
-                    <div className="sitenav-apps-info">
-                      <span className="sitenav-apps-title">Einbürgerungstest</span>
-                      <span className="sitenav-apps-desc">German Citizenship Test</span>
+                      <span className="sitenav-apps-title">All Apps →</span>
+                      <span className="sitenav-apps-desc">Browse every app we make</span>
                     </div>
                   </Link>
                 </div>

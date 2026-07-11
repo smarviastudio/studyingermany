@@ -47,6 +47,19 @@ export function SiteFooter() {
             ]} />
           </div>
 
+          {/* iOS Apps */}
+          <div>
+            <h4 style={{ fontSize: 12, fontWeight: 600, color: '#fff', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>iOS Apps</h4>
+            <FooterLinks links={[
+              { href: '/lesenlab-german-reading-app', label: 'Lesen Lab – Learn German' },
+              { href: '/einbuergerungstest-2026-app', label: 'Einbürgerungstest 2026' },
+              { href: '/cv-maker-resume-builder-app', label: 'CV Maker App' },
+              { href: '/dosebuddy-pill-reminder-app', label: 'DoseBuddy Pill Reminder' },
+              { href: '/macromora-ai-calorie-tracker', label: 'MacroMora Calorie Tracker' },
+              { href: '/apps', label: 'All Apps →' },
+            ]} />
+          </div>
+
           {/* Legal */}
           <div>
             <h4 style={{ fontSize: 12, fontWeight: 600, color: '#fff', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Legal</h4>

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { BLOG_POSTS } from '@/content/blog';
+import { ALL_APPS } from '@/content/apps';
 import { buildCanonicalUrl, getWpBlogSitemapEntries, SITE_URL } from '@/lib/seo';
 
 const STATIC_PAGES: MetadataRoute.Sitemap = [
@@ -27,8 +28,7 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
   { url: buildCanonicalUrl('/study-in-germany-from-bangladesh'), changeFrequency: 'monthly', priority: 0.8 },
   { url: buildCanonicalUrl('/study-in-germany-from-turkey'), changeFrequency: 'monthly', priority: 0.8 },
   { url: buildCanonicalUrl('/study-in-germany-from-nepal'), changeFrequency: 'monthly', priority: 0.8 },
-  { url: buildCanonicalUrl('/einbuergerungstest-2026-app'), changeFrequency: 'monthly', priority: 0.8 },
-  { url: buildCanonicalUrl('/lesenlab-german-reading-app'), changeFrequency: 'monthly', priority: 0.8 },
+  { url: buildCanonicalUrl('/apps'), changeFrequency: 'weekly', priority: 0.85 },
   { url: buildCanonicalUrl('/impressum'), changeFrequency: 'yearly', priority: 0.3 },
   { url: buildCanonicalUrl('/privacy-policy'), changeFrequency: 'yearly', priority: 0.3 },
   { url: buildCanonicalUrl('/terms'), changeFrequency: 'yearly', priority: 0.3 },
@@ -67,7 +67,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: post.featured ? 0.8 : 0.7,
   }));
 
+  const appPages: MetadataRoute.Sitemap = ALL_APPS.flatMap((app) => [
+    {
+      url: buildCanonicalUrl(`/${app.slug}`),
+      lastModified: now,
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    ...app.guides.map((guide) => ({
+      url: buildCanonicalUrl(`/${app.slug}/guides/${guide.slug}`),
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.75,
+    })),
+  ]);
+
   const wpBlogPages = await getWpBlogSitemapEntries();
 
-  return dedupeSitemap([...staticPages, ...staticBlogPages, ...wpBlogPages]);
+  return dedupeSitemap([...staticPages, ...staticBlogPages, ...appPages, ...wpBlogPages]);
 }

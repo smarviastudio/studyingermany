@@ -1,6 +1,6 @@
 import { AppLandingPage } from '@/components/apps/AppLandingPage';
 import { buildAppMetadata } from '@/lib/appPages';
-import { einbuergerungstest as app } from '@/content/apps';
+import { abctracing as app } from '@/content/apps';
 
 export const metadata = buildAppMetadata(app);
 
