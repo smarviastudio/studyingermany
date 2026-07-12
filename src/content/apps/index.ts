@@ -1,4 +1,5 @@
 import type { AppContent } from './types';
+import { APP_PAGE_PREFIXES } from './slugs';
 import { lesenlab } from './lesenlab';
 import { einbuergerungstest } from './einbuergerungstest';
 import { dosebuddy } from './dosebuddy';
@@ -20,6 +21,13 @@ export const ALL_APPS: AppContent[] = [
   football,
   kennzeichen,
 ];
+
+// Keep slugs.ts (used client-side to suppress site chrome) in sync with the registry.
+for (const app of ALL_APPS) {
+  if (!APP_PAGE_PREFIXES.includes(`/${app.slug}` as (typeof APP_PAGE_PREFIXES)[number])) {
+    throw new Error(`App slug "/${app.slug}" is missing from src/content/apps/slugs.ts APP_PAGE_PREFIXES`);
+  }
+}
 
 export function getAppBySlug(slug: string): AppContent | undefined {
   return ALL_APPS.find((app) => app.slug === slug);
