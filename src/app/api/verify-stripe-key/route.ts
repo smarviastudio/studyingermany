@@ -2,8 +2,13 @@ export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
 import { getStripeSecretKey, isStripeTestMode } from '@/lib/stripe';
+import { requireDiagnosticsAccess } from '@/lib/adminGuard';
 
 export async function GET() {
+  if (!(await requireDiagnosticsAccess())) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   let stripeSecretKey: string;
   try {
     stripeSecretKey = getStripeSecretKey();

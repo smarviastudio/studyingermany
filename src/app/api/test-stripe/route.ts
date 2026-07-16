@@ -2,8 +2,13 @@ export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
 import { isStripeTestMode } from '@/lib/stripe';
+import { requireDiagnosticsAccess } from '@/lib/adminGuard';
 
 export async function GET() {
+  if (!(await requireDiagnosticsAccess())) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   const envVars = {
     stripeMode: isStripeTestMode() ? 'test' : 'live',
     stripeSecret: process.env.STRIPE_SECRET_KEY ? 'SET' : 'NOT SET',
