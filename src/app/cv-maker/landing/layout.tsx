@@ -1,8 +1,8 @@
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata = buildPageMetadata({
-  title: 'AI CV Maker - Create German-Style CV (Lebenslauf)',
-  description: 'Build a professional German CV (Lebenslauf) with AI assistance. Optimized for German university applications and job searches. Free templates, PDF export, and AI-powered suggestions.',
+  title: 'German CV Maker – Free AI Lebenslauf Builder (PDF Export)',
+  description: 'Create a German-style CV (Lebenslauf) in minutes with AI — try it free, no signup. ATS-friendly template that German employers and universities expect, with instant PDF download.',
   path: '/cv-maker/landing',
   keywords: [
     'German CV maker',

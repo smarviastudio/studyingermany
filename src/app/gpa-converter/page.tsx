@@ -6,6 +6,7 @@ import {
   ArrowLeft, Calculator, Info, GraduationCap, ChevronDown, RotateCcw
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
+import { GPA_CONVERTER_FAQS } from './faqs';
 
 type GradingPreset = {
   id: string;
@@ -138,12 +139,12 @@ export default function GPAConverterPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
       <SiteNav />
 
-      {/* Back button to landing page */}
+      {/* Back button to tools */}
       <div style={{ padding: '90px 24px', marginTop: 0 }}>
-        <Link href="/gpa-converter/landing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#666', textDecoration: 'none', padding: '8px 16px', borderRadius: 8, transition: 'all 0.2s' }}
+        <Link href="/tools" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#666', textDecoration: 'none', padding: '8px 16px', borderRadius: 8, transition: 'all 0.2s' }}
           onMouseEnter={(e) => { e.currentTarget.style.color = '#10b981'; e.currentTarget.style.background = '#f0fdf4'; }}
           onMouseLeave={(e) => { e.currentTarget.style.color = '#666'; e.currentTarget.style.background = 'transparent'; }}>
-          <ArrowLeft className="w-4 h-4" /> Back to GPA Converter Info
+          <ArrowLeft className="w-4 h-4" /> All Free Tools
         </Link>
       </div>
 
@@ -153,8 +154,8 @@ export default function GPAConverterPage() {
           <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #10b981, #059669)', marginBottom: 16, boxShadow: '0 8px 24px rgba(16,185,129,0.2)' }}>
             <Calculator className="w-8 h-8" style={{ color: '#fff' }} />
           </div>
-          <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 12px' }}>GPA Converter</h1>
-          <p style={{ fontSize: 16, color: '#737373', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 }}>Convert your grades to the German scale using the Modified Bavarian Formula</p>
+          <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#0a0a0a', margin: '0 0 12px' }}>German GPA Calculator</h1>
+          <p style={{ fontSize: 16, color: '#737373', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 }}>Convert your GPA, CGPA or percentage to the German 1.0–5.0 scale using the Modified Bavarian Formula — the same one uni-assist uses. Free, no signup.</p>
         </div>
 
         {/* Main card */}
@@ -339,6 +340,41 @@ export default function GPAConverterPage() {
               <p style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 4 }}>My country isn&apos;t listed</p>
               <p style={{ fontSize: 13, color: '#666', lineHeight: 1.6, margin: 0 }}>Choose &quot;Other — Custom scale&quot; and enter your system&apos;s max and min passing grades manually.</p>
             </div>
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div style={{ marginTop: 24, borderRadius: 20, border: '1px solid #ebebeb', background: '#fff', padding: 28 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0a0a0a', margin: '0 0 16px' }}>
+            German Grade Conversion — Frequently Asked Questions
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {GPA_CONVERTER_FAQS.map((faq) => (
+              <details key={faq.q} style={{ border: '1px solid #ebebeb', borderRadius: 12, padding: '14px 18px', background: '#fafafa' }}>
+                <summary style={{ fontSize: 14, fontWeight: 700, color: '#111', cursor: 'pointer' }}>{faq.q}</summary>
+                <p style={{ fontSize: 13, color: '#666', lineHeight: 1.7, margin: '10px 0 0' }}>{faq.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        {/* Next steps */}
+        <div style={{ marginTop: 24, borderRadius: 20, background: 'linear-gradient(135deg, #064e3b, #065f46)', padding: 28 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 6px' }}>Grade converted — what&apos;s next?</h2>
+          <p style={{ fontSize: 13, color: '#a7f3d0', margin: '0 0 16px' }}>Use your German grade to find programs you actually qualify for.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
+            <Link href="/study-in-germany" style={{ display: 'block', padding: 16, borderRadius: 12, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', textDecoration: 'none' }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>Find your program →</p>
+              <p style={{ fontSize: 12, color: '#a7f3d0', margin: 0 }}>Search 20,000+ degree programs in Germany.</p>
+            </Link>
+            <Link href="/motivation-letter/landing" style={{ display: 'block', padding: 16, borderRadius: 12, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', textDecoration: 'none' }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>Write your motivation letter →</p>
+              <p style={{ fontSize: 12, color: '#a7f3d0', margin: 0 }}>AI-drafted, tailored to your program. Try free.</p>
+            </Link>
+            <Link href="/netto-brutto-calculator" style={{ display: 'block', padding: 16, borderRadius: 12, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', textDecoration: 'none' }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>German tax calculator →</p>
+              <p style={{ fontSize: 12, color: '#a7f3d0', margin: 0 }}>See what a German salary is really worth.</p>
+            </Link>
           </div>
         </div>
       </div>

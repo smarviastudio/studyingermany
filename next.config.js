@@ -13,6 +13,17 @@ const nextConfig = {
         destination: 'https://germanpath.com/:path*',
         permanent: true,
       },
+      // Calculator landing pages merged into the tools themselves (SEO consolidation)
+      {
+        source: '/netto-brutto-calculator/landing',
+        destination: '/netto-brutto-calculator',
+        permanent: true,
+      },
+      {
+        source: '/gpa-converter/landing',
+        destination: '/gpa-converter',
+        permanent: true,
+      },
     ];
   },
   images: {

@@ -29,15 +29,16 @@ const HERO_SUGGESTIONS = [
 ];
 
 const QUICK_LINKS = [
+  { href: '/netto-brutto-calculator', label: 'German Tax Calculator' },
+  { href: '/gpa-converter', label: 'GPA Converter' },
   { href: '/masters-in-germany', label: 'Masters in Germany' },
-  { href: '/bachelor-in-germany', label: 'Bachelors in Germany' },
   { href: '/english-taught-programs', label: 'English-taught programs' },
   { href: '/study-in-germany', label: 'Study in Germany guide' },
 ];
 
 const FREE_TOOLS = [
-  { href: '/gpa-converter/landing',           label: 'GPA Converter',      desc: 'Convert your grades to the German scale instantly. Know where you stand before you apply.', icon: TrendingUp, gradient: 'from-blue-500 to-indigo-600' },
-  { href: '/netto-brutto-calculator/landing', label: 'Salary Calculator',  desc: 'See your real net salary after German taxes — for student jobs and your first job after graduation.', icon: Calculator, gradient: 'from-amber-500 to-orange-600' },
+  { href: '/gpa-converter',           label: 'GPA Converter',      desc: 'Convert your grades to the German scale instantly. Know where you stand before you apply.', icon: TrendingUp, gradient: 'from-blue-500 to-indigo-600' },
+  { href: '/netto-brutto-calculator', label: 'German Tax Calculator',  desc: 'See your real net salary after German taxes — for student jobs and your first job after graduation.', icon: Calculator, gradient: 'from-amber-500 to-orange-600' },
   { href: '/dashboard/landing',               label: 'Application Tracker', desc: 'Track your applications, deadlines and shortlisted programs in one place.', icon: LayoutDashboard, gradient: 'from-slate-700 to-slate-900' },
 ];
 
@@ -1056,6 +1057,57 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ══ TOOLS ══ */}
+      <section className="gp-section gp-tools-section" id="tools">
+        <div className="gp-container">
+          <div className="gp-head scroll-reveal">
+            <span className="gp-eyebrow">Free tools</span>
+            <h2 className="gp-h2">Start here — no account needed</h2>
+            <p className="gp-lead">Check your grades, plan your budget and organize your applications. Instant and free.</p>
+          </div>
+          <div className="gp-tools-grid">
+            {FREE_TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
+              <Link key={href} href={href} className="gp-tool scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
+                <span className="gp-tool-badge gp-tool-badge-free">FREE</span>
+                <div className={`gp-tool-icon bg-gradient-to-br ${gradient}`}>
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <h3>{label}</h3>
+                <p>{desc}</p>
+                <span className="gp-tool-arrow"><ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            ))}
+          </div>
+
+          <div className="gp-head scroll-reveal" style={{ marginTop: 80 }}>
+            <span className="gp-eyebrow">AI document tools</span>
+            <h2 className="gp-h2">Ready to apply? Let AI write your documents</h2>
+            <p className="gp-lead">Preview free — 2 generations, no account. Then one-time credit packs from €2.99. No subscription.</p>
+          </div>
+          <div className="gp-tools-grid">
+            {AI_TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
+              <Link key={href} href={href} className="gp-tool gp-tool-ai scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
+                <span className="gp-tool-badge gp-tool-badge-ai"><Sparkles className="w-3 h-3" /> AI</span>
+                <div className={`gp-tool-icon bg-gradient-to-br ${gradient}`}>
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <h3>{label}</h3>
+                <p>{desc}</p>
+                <span className="gp-tool-arrow"><ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            ))}
+          </div>
+          <div className="scroll-reveal" style={{ textAlign: 'center', marginTop: 36 }}>
+            <Link href="/pricing" className="gp-btn-dark">
+              See pricing — packs from €2.99 <ArrowRight className="w-4 h-4" />
+            </Link>
+            <p style={{ fontSize: 12.5, color: '#8a8a94', margin: '12px 0 0' }}>
+              No consultant fees · Credits never expire
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ══ CONSULTANT VS GERMAN PATH ══ */}
       <section className="gp-section gp-compare-section">
         <div className="gp-container">
@@ -1119,57 +1171,6 @@ export default function HomePage() {
                 <a href={cta.href} className="gp-step-link">{cta.label} <ArrowRight className="w-3.5 h-3.5" /></a>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══ TOOLS ══ */}
-      <section className="gp-section gp-tools-section" id="tools">
-        <div className="gp-container">
-          <div className="gp-head scroll-reveal">
-            <span className="gp-eyebrow">Free tools</span>
-            <h2 className="gp-h2">Start here — no account needed</h2>
-            <p className="gp-lead">Check your grades, plan your budget and organize your applications. Instant and free.</p>
-          </div>
-          <div className="gp-tools-grid">
-            {FREE_TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
-              <Link key={href} href={href} className="gp-tool scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
-                <span className="gp-tool-badge gp-tool-badge-free">FREE</span>
-                <div className={`gp-tool-icon bg-gradient-to-br ${gradient}`}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <h3>{label}</h3>
-                <p>{desc}</p>
-                <span className="gp-tool-arrow"><ArrowRight className="w-4 h-4" /></span>
-              </Link>
-            ))}
-          </div>
-
-          <div className="gp-head scroll-reveal" style={{ marginTop: 80 }}>
-            <span className="gp-eyebrow">AI document tools</span>
-            <h2 className="gp-h2">Ready to apply? Let AI write your documents</h2>
-            <p className="gp-lead">Preview free — 2 generations, no account. Then one-time credit packs from €2.99. No subscription.</p>
-          </div>
-          <div className="gp-tools-grid">
-            {AI_TOOLS.map(({ href, label, desc, icon: Icon, gradient }, idx) => (
-              <Link key={href} href={href} className="gp-tool gp-tool-ai scroll-reveal" style={{ transitionDelay: `${idx * 0.08}s` }}>
-                <span className="gp-tool-badge gp-tool-badge-ai"><Sparkles className="w-3 h-3" /> AI</span>
-                <div className={`gp-tool-icon bg-gradient-to-br ${gradient}`}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <h3>{label}</h3>
-                <p>{desc}</p>
-                <span className="gp-tool-arrow"><ArrowRight className="w-4 h-4" /></span>
-              </Link>
-            ))}
-          </div>
-          <div className="scroll-reveal" style={{ textAlign: 'center', marginTop: 36 }}>
-            <Link href="/pricing" className="gp-btn-dark">
-              See pricing — packs from €2.99 <ArrowRight className="w-4 h-4" />
-            </Link>
-            <p style={{ fontSize: 12.5, color: '#8a8a94', margin: '12px 0 0' }}>
-              No consultant fees · Credits never expire
-            </p>
           </div>
         </div>
       </section>

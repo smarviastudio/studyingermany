@@ -1247,7 +1247,7 @@ EU/EEA students have no restrictions (same rules as German students).
 
 Germany's minimum wage is **€13.90/hour (2026)**. A typical Werkstudent doing 18 h/week at €15/hour earns about **€1,170 gross/month**.
 
-What lands in your account depends on taxes and pension contributions. **Don't guess** — use our free [Netto-Brutto Salary Calculator](/netto-brutto-calculator/landing) to see your exact net pay as a student, and again for your first full-time salary after graduation.
+What lands in your account depends on taxes and pension contributions. **Don't guess** — use our free [Netto-Brutto Salary Calculator](/netto-brutto-calculator) to see your exact net pay as a student, and again for your first full-time salary after graduation.
 
 ## Typical student budgets: does a part-time job cover it?
 
@@ -1356,7 +1356,7 @@ Do this **before** your visa appointment — the embassy wants proof of coverage
 
 ## Health insurance and your part-time job
 
-If you work a [Werkstudent job](/blog/part-time-jobs-students-germany) within 20 hours/week during the semester, you keep your cheap student insurance. Exceed the limit regularly and you're reclassified as an employee — with full social contributions. Check the impact on your net pay with the [salary calculator](/netto-brutto-calculator/landing).
+If you work a [Werkstudent job](/blog/part-time-jobs-students-germany) within 20 hours/week during the semester, you keep your cheap student insurance. Exceed the limit regularly and you're reclassified as an employee — with full social contributions. Check the impact on your net pay with the [salary calculator](/netto-brutto-calculator).
 
 ## FAQ
 
@@ -1501,7 +1501,7 @@ Fresh graduates from German universities benefit from the **reduced threshold**,
 | Natural sciences (industry) | €45,000–55,000 |
 | Humanities / social sciences | €36,000–45,000 |
 
-Gross is not what you take home — German taxes and social contributions take 30–40%. Check your actual net pay with our free [Netto-Brutto Salary Calculator](/netto-brutto-calculator/landing) before negotiating.
+Gross is not what you take home — German taxes and social contributions take 30–40%. Check your actual net pay with our free [Netto-Brutto Salary Calculator](/netto-brutto-calculator) before negotiating.
 
 ## Your job-hunt toolkit
 

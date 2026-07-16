@@ -31,8 +31,8 @@ export function SiteFooter() {
               { href: '/cv-maker/landing', label: 'CV Maker' },
               { href: '/cover-letter/landing', label: 'Cover Letter' },
               { href: '/motivation-letter/landing', label: 'Motivation Letter' },
-              { href: '/gpa-converter/landing', label: 'GPA Converter' },
-              { href: '/netto-brutto-calculator/landing', label: 'Salary Calculator' },
+              { href: '/gpa-converter', label: 'GPA Converter' },
+              { href: '/netto-brutto-calculator', label: 'German Tax Calculator' },
             ]} />
           </div>
 

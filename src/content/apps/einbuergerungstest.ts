@@ -26,9 +26,9 @@ export const einbuergerungstest: AppContent = {
     'Translations in English, Russian, Turkish, Arabic, Ukrainian & more',
     'Works 100% offline — practice anywhere, no account, no ads',
   ],
-  metaTitle: 'Einbürgerungstest 2026 App – All 310 BAMF Questions + Leben in Deutschland',
+  metaTitle: 'Einbürgerungstest 2026 App – Alle 310 BAMF Fragen üben (offline)',
   metaDescription:
-    'Einbürgerungstest 2026 app with all 310 official BAMF questions, Leben in Deutschland test, exam simulation, Bundesland filter and translations in 10 languages. Offline & ad-free on iPhone and iPad.',
+    'Alle 310 offiziellen BAMF-Fragen für den Einbürgerungstest 2026 üben – mit Prüfungssimulation, Leben in Deutschland Test, Bundesland-Fragen und Übersetzungen in 10 Sprachen. Offline, werbefrei, ohne Konto. Für iPhone & iPad.',
   metaKeywords:
     'Einbürgerungstest 2026 App, Einbürgerungstest üben, BAMF test app, German citizenship test app, Leben in Deutschland Test, 310 Fragen, Einbürgerungstest Fragen, German naturalization test, Einbürgerungstest simulation',
   screenshots: [

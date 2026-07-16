@@ -9,6 +9,38 @@ import {
   type HealthInsuranceType,
   type TaxClass,
 } from '@/lib/nettoBrutto2026';
+import { TAX_CALCULATOR_FAQS } from './faqs';
+
+// Reference table: computed once with the same 2026 engine as the calculator
+// (tax class 1, North Rhine-Westphalia, public insurance, no church tax, no children).
+const EXAMPLE_SALARIES = [40000, 45000, 50000, 55000, 60000, 70000, 80000, 100000];
+
+function computeExampleRow(annualGross: number) {
+  const result = calculateGermanPayroll2026({
+    annualGross,
+    taxClass: '1',
+    stateCode: 'NW',
+    churchTax: false,
+    healthInsuranceType: 'public',
+    publicHealthAdditionalRate: 2.9,
+    privateHealthAndCareMonthly: 0,
+    privateEmployerSubsidyMonthly: 0,
+    childrenCount: 0,
+    taxChildAllowance: 0,
+    childlessCareSurcharge: true,
+    birthYear: undefined,
+    annualTaxAllowance: 0,
+    annualTaxAddition: 0,
+    pensionInsuranceMandatory: true,
+    unemploymentInsuranceMandatory: true,
+  });
+  return {
+    gross: annualGross,
+    netAnnual: result.netto,
+    netMonthly: result.netto / 12,
+    rate: result.effectiveRate,
+  };
+}
 
 const BUNDESLAENDER = [
   { value: 'BY', label: 'Bavaria' },
@@ -111,10 +143,10 @@ export default function SalaryCalculatorPage() {
             Back to Tools
           </Link>
           <h1 style={{ fontSize: 28, fontWeight: 800, color: '#0f172a', margin: '0 0 4px' }}>
-            German Salary Calculator 2026
+            German Tax Calculator 2026 — Brutto to Netto
           </h1>
           <p style={{ fontSize: 14, color: '#64748b', margin: 0 }}>
-            Calculate your take-home pay from gross salary
+            Free salary calculator: see your net take-home pay after German income tax, health insurance and social contributions. No signup needed.
           </p>
         </div>
 
@@ -412,6 +444,81 @@ export default function SalaryCalculatorPage() {
             <p style={{ fontSize: 13, color: '#475569', margin: 0, lineHeight: 1.6 }}>
               The tax class only affects <strong>monthly withholding</strong>, not your total yearly tax. Any over- or under-payment is reconciled when you file your annual tax return (Einkommensteuererklärung). The total tax owed for the year is the same regardless of class combination chosen.
             </p>
+          </div>
+        </div>
+
+        {/* Brutto → Netto reference table */}
+        <div style={{ marginTop: 24, background: '#fff', borderRadius: 16, padding: 32, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', margin: '0 0 8px' }}>
+            Brutto to Netto in Germany 2026 — At a Glance
+          </h2>
+          <p style={{ fontSize: 14, color: '#64748b', margin: '0 0 20px' }}>
+            Net salary for common gross salaries, calculated with the 2026 rates for a single employee
+            (tax class 1, public health insurance, no church tax, North Rhine-Westphalia). Use the calculator above for your exact situation.
+          </p>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+              <thead>
+                <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'right' }}>
+                  <th style={{ padding: '10px 12px', textAlign: 'left', color: '#64748b', fontSize: 12, textTransform: 'uppercase' }}>Gross / Year</th>
+                  <th style={{ padding: '10px 12px', color: '#64748b', fontSize: 12, textTransform: 'uppercase' }}>Net / Year</th>
+                  <th style={{ padding: '10px 12px', color: '#64748b', fontSize: 12, textTransform: 'uppercase' }}>Net / Month</th>
+                  <th style={{ padding: '10px 12px', color: '#64748b', fontSize: 12, textTransform: 'uppercase' }}>Deductions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {EXAMPLE_SALARIES.map((gross) => {
+                  const row = computeExampleRow(gross);
+                  return (
+                    <tr key={gross} style={{ borderBottom: '1px solid #f1f5f9', textAlign: 'right' }}>
+                      <td style={{ padding: '10px 12px', textAlign: 'left', fontWeight: 700, color: '#0f172a' }}>{formatEuro(row.gross)}</td>
+                      <td style={{ padding: '10px 12px', fontWeight: 700, color: '#059669' }}>{formatEuro(row.netAnnual)}</td>
+                      <td style={{ padding: '10px 12px', color: '#0f172a' }}>{formatEuro(row.netMonthly)}</td>
+                      <td style={{ padding: '10px 12px', color: '#dc2626' }}>{row.rate.toFixed(1)}%</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div style={{ marginTop: 24, background: '#fff', borderRadius: 16, padding: 32, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', margin: '0 0 20px' }}>
+            German Taxes — Frequently Asked Questions
+          </h2>
+          <div style={{ display: 'grid', gap: 10 }}>
+            {TAX_CALCULATOR_FAQS.map((faq) => (
+              <details key={faq.q} style={{ border: '1px solid #e2e8f0', borderRadius: 12, padding: '14px 18px', background: '#fafbfc' }}>
+                <summary style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', cursor: 'pointer' }}>{faq.q}</summary>
+                <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.7, margin: '10px 0 0' }}>{faq.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        {/* Cross-sell: next steps */}
+        <div style={{ marginTop: 24, background: 'linear-gradient(135deg, #0f172a, #1e293b)', borderRadius: 16, padding: 32 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 6px' }}>
+            Planning your move to Germany?
+          </h2>
+          <p style={{ fontSize: 14, color: '#94a3b8', margin: '0 0 20px' }}>
+            Everything else you need is free too — built for international students and professionals.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+            <Link href="/cv-maker/landing" style={{ display: 'block', padding: 18, borderRadius: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', textDecoration: 'none' }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>German CV Maker →</p>
+              <p style={{ fontSize: 12, color: '#94a3b8', margin: 0 }}>You&apos;ll need a German-style CV (Lebenslauf) for that job. Create one with AI in minutes.</p>
+            </Link>
+            <Link href="/gpa-converter" style={{ display: 'block', padding: 18, borderRadius: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', textDecoration: 'none' }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>German GPA Converter →</p>
+              <p style={{ fontSize: 12, color: '#94a3b8', margin: 0 }}>Applying to study first? Convert your grades to the German 1.0–4.0 scale.</p>
+            </Link>
+            <Link href="/study-in-germany" style={{ display: 'block', padding: 18, borderRadius: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', textDecoration: 'none' }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>Study in Germany →</p>
+              <p style={{ fontSize: 12, color: '#94a3b8', margin: 0 }}>Search 20,000+ degree programs and check your admission chances.</p>
+            </Link>
           </div>
         </div>
 
