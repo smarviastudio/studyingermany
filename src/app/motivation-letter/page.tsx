@@ -9,7 +9,7 @@ import {
   ChevronDown, FileText, Wand2, User, BookOpen, Target, Briefcase,
   Heart, RefreshCw, CheckCircle2, X, Edit3
 } from 'lucide-react';
-import { track } from '@vercel/analytics';
+import { track } from '@/lib/track';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import type { Program } from '@/lib/types';

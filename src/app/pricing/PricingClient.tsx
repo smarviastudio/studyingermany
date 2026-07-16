@@ -4,12 +4,17 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { track } from '@vercel/analytics';
+import { track } from '@/lib/track';
 import { Check, Shield, RefreshCw, Globe, MessageCircle, ChevronDown, Loader2, AlertCircle, Sparkles, Zap } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { CREDIT_PACKS, CREDIT_PACK_PRICE_IDS } from '@/lib/creditPacks';
 
 const RED = '#dd0000';
+
+// The live Stripe price IDs for the Pro subscription (STRIPE_PRICE_PRO_MONTHLY/
+// YEARLY) don't exist on the current live account, so checkout fails. Hide the
+// tier until real live prices are created and the Vercel env vars are updated.
+const SHOW_PRO_SUBSCRIPTION = false;
 
 // Subscription checkout sends planKey ('pro_monthly' | 'pro_yearly'); the
 // create-checkout API resolves the Stripe price ID per environment.
@@ -213,7 +218,9 @@ export default function PricingClient() {
         <section style={{ maxWidth: 1060, margin: '0 auto', padding: '48px 24px 72px' }}>
           <div className="gp-head" style={{ marginBottom: 36 }}>
             <span className="gp-eyebrow">Other options</span>
-            <h2 className="gp-h2" style={{ fontSize: 'clamp(24px, 3vw, 34px)' }}>Start free — or go Pro if you apply a lot</h2>
+            <h2 className="gp-h2" style={{ fontSize: 'clamp(24px, 3vw, 34px)' }}>
+              {SHOW_PRO_SUBSCRIPTION ? 'Start free — or go Pro if you apply a lot' : 'Not ready to buy? Start free'}
+            </h2>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 22, maxWidth: 860, margin: '0 auto' }}>
@@ -240,7 +247,8 @@ export default function PricingClient() {
               </Link>
             </div>
 
-            {/* PRO */}
+            {/* PRO — hidden while live subscription prices are missing */}
+            {SHOW_PRO_SUBSCRIPTION && (
             <div className="gp-tool gp-tool-ai" style={{ cursor: 'default' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                 <p style={{ fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: RED, margin: 0 }}>Pro</p>
@@ -289,6 +297,7 @@ export default function PricingClient() {
                 Get Pro
               </button>
             </div>
+            )}
           </div>
         </section>
 

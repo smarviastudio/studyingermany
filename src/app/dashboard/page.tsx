@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { getPlanDisplayName, normalizePlanType } from '@/lib/plans';
+import { trackPurchase } from '@/lib/track';
 
 // Types
 interface ShortlistEntry {
@@ -44,6 +45,13 @@ function DashboardContent() {
   const isAuthenticated = status === 'authenticated';
   const checkoutSuccess = searchParams.get('success') === 'true';
   const checkoutSessionId = searchParams.get('session_id');
+
+  // GA4 purchase conversion (deduped by transaction_id, safe on reload)
+  useEffect(() => {
+    if (checkoutSuccess && checkoutSessionId) {
+      trackPurchase(checkoutSessionId);
+    }
+  }, [checkoutSuccess, checkoutSessionId]);
 
   // State
   const [shortlistEntries, setShortlistEntries] = useState<ShortlistEntry[]>([]);

@@ -11,7 +11,7 @@ import {
   Settings, Filter, Sparkles, School, FolderOpen, ChevronDown, Check,
   FileCheck, Send, BadgeCheck, Clock, Euro
 } from 'lucide-react';
-import { track } from '@vercel/analytics';
+import { track } from '@/lib/track';
 import { ProgramModal } from '@/components/ProgramModal';
 import { ProgramCard } from '@/components/ProgramCard';
 import type { ProgramSummary } from '@/lib/types';

@@ -8,7 +8,7 @@ import {
   FileText, Sparkles, Check, Copy, RefreshCw,
   Briefcase, User, Download,
 } from 'lucide-react';
-import { track } from '@vercel/analytics';
+import { track } from '@/lib/track';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import { useProfileData } from '@/hooks/useProfileData';

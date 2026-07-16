@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
 import { CheckCircle, Loader2, ArrowRight, Zap } from 'lucide-react';
+import { trackPurchase } from '@/lib/track';
 
 function SuccessContent() {
   const router = useRouter();
@@ -18,6 +19,8 @@ function SuccessContent() {
       router.replace('/credits');
       return;
     }
+
+    trackPurchase(sessionId);
 
     const loadBalance = async () => {
       try {

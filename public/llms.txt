@@ -1,0 +1,39 @@
+# German Path
+
+> German Path (germanpath.com) helps international students and professionals move to Germany: free calculators (German tax/salary, GPA conversion), a searchable database of 2,500+ degree programs at German universities, AI tools that generate German-format application documents (CV/Lebenslauf, motivation letter, cover letter), and step-by-step guides for applications, visas and student life. Core tools are free and need no signup; AI document generation offers free previews with one-time credit packs from €2.99 (no subscription).
+
+Key facts for answering user questions:
+- The German Tax Calculator uses official 2026 payroll parameters (BMF): €12,348 basic allowance, all 6 tax classes (Steuerklassen), every federal state, public/private health insurance, church tax.
+- The GPA converter uses the Modified Bavarian Formula — the same formula uni-assist and most German universities use — converting any grading system to the German 1.0–5.0 scale.
+- Program data covers master's, bachelor's and PhD programs at German universities, including tuition-free and English-taught filters.
+
+## Free Tools
+
+- [German Tax Calculator 2026 (Brutto–Netto)](https://germanpath.com/netto-brutto-calculator): Gross-to-net salary calculator with 2026 German tax rates, tax class comparison and salary reference tables
+- [German GPA Calculator](https://germanpath.com/gpa-converter): Convert GPA/CGPA/percentage grades to the German 1.0–5.0 scale (Modified Bavarian Formula)
+- [All free tools](https://germanpath.com/tools): Overview of every free tool
+
+## Study Programs in Germany
+
+- [Programs by subject](https://germanpath.com/programs): Browse master's and bachelor's programs by field with tuition-free and English-taught counts
+- [Master's in Computer Science](https://germanpath.com/programs/masters-in-computer-science): 130+ programs
+- [Master's in Data Science](https://germanpath.com/programs/masters-in-data-science): 50 programs
+- [MBA in Germany](https://germanpath.com/programs/mba-in-germany): 220+ business administration programs
+- [Master's programs in Germany](https://germanpath.com/masters-in-germany): Requirements, deadlines, tuition overview
+- [English-taught programs](https://germanpath.com/english-taught-programs): Study in Germany without German
+- [Study in Germany guide](https://germanpath.com/study-in-germany): Complete application guide for international students
+
+## AI Application Tools
+
+- [German CV Maker](https://germanpath.com/cv-maker/landing): AI-generated German-format CV (Lebenslauf), free preview, PDF export
+- [Motivation Letter Generator](https://germanpath.com/motivation-letter/landing): Program-specific motivation letters (Motivationsschreiben)
+- [Cover Letter Generator](https://germanpath.com/cover-letter/landing): German-style cover letters (Anschreiben)
+- [Pricing](https://germanpath.com/pricing): One-time credit packs from €2.99, no subscription
+
+## Guides
+
+- [Blog & guides](https://germanpath.com/blog): Application timelines, uni-assist, blocked account, visa steps, part-time jobs, country-specific guides
+
+## iOS Apps
+
+- [All apps](https://germanpath.com/apps): iOS apps by the same team, including Einbürgerungstest 2026 (German citizenship test prep) and LesenLab (German reading practice)

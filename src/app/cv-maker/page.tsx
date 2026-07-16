@@ -11,7 +11,7 @@ import {
   ChevronRight, X, Wand2, Printer, Save, Type, AArrowUp, User, LogIn, FolderOpen, Crown, FileText,
   ChevronDown, CheckCircle2, Eye, EyeOff
 } from 'lucide-react';
-import { track } from '@vercel/analytics';
+import { track } from '@/lib/track';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
