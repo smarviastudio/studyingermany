@@ -26,6 +26,13 @@ function fixEncoding(str: string): string {
     .replace(/Ã´/g, 'ô')
     .replace(/Ã»/g, 'û')
     .replace(/Ã§/g, 'ç')
+    // Known ö/ä words first — the blanket ü fallback below would corrupt them
+    .replace(/K�ln/g, "Köln")
+    .replace(/G�ttingen/g, "Göttingen")
+    .replace(/G�rlitz/g, "Görlitz")
+    .replace(/M�nchengladbach/g, "Mönchengladbach")
+    .replace(/Schw�bisch/g, "Schwäbisch")
+    .replace(/K�then/g, "Köthen")
     .replace(/�/g, 'ü') // Replacement character often means ü
     .replace(/\uFFFD/g, 'ü'); // Unicode replacement character
 }

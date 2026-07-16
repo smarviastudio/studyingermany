@@ -52,12 +52,12 @@ export default function EnglishTaughtProgramsPage() {
           
           <h2 style={{ fontSize: 28, fontWeight: 700, color: '#171717', margin: '48px 0 20px' }}>Popular English-Taught Fields</h2>
           <ul style={{ fontSize: 16, color: '#525252', lineHeight: 2, margin: '0 0 24px', paddingLeft: 24 }}>
-            <li>Engineering & Technology</li>
-            <li>Computer Science & IT</li>
-            <li>Business & Management (MBA)</li>
-            <li>Natural Sciences</li>
-            <li>Economics & Finance</li>
-            <li>Social Sciences</li>
+            <li><Link href="/programs/masters-in-computer-science" style={{ color: '#dd0000' }}>Computer Science &amp; IT</Link></li>
+            <li><Link href="/programs/masters-in-data-science" style={{ color: '#dd0000' }}>Data Science &amp; AI</Link></li>
+            <li><Link href="/programs/mba-in-germany" style={{ color: '#dd0000' }}>Business &amp; Management (MBA)</Link></li>
+            <li><Link href="/programs/masters-in-mechanical-engineering" style={{ color: '#dd0000' }}>Engineering &amp; Technology</Link></li>
+            <li><Link href="/programs/masters-in-economics" style={{ color: '#dd0000' }}>Economics &amp; Finance</Link></li>
+            <li><Link href="/programs" style={{ color: '#dd0000', fontWeight: 600 }}>Browse all subjects →</Link></li>
           </ul>
 
           <h2 style={{ fontSize: 28, fontWeight: 700, color: '#171717', margin: '48px 0 20px' }}>English Requirements</h2>

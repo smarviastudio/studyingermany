@@ -63,6 +63,19 @@ export default function MastersInGermanyPage() {
             world-renowned research facilities, and strong industry connections, a German master&apos;s degree opens doors globally.
           </p>
           
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#171717', margin: '48px 0 20px' }}>Browse Master&apos;s Programs by Subject</h2>
+          <ul style={{ fontSize: 16, color: '#525252', lineHeight: 2, margin: '0 0 24px', paddingLeft: 24 }}>
+            <li><Link href="/programs/masters-in-computer-science" style={{ color: '#dd0000' }}>Computer Science</Link></li>
+            <li><Link href="/programs/masters-in-data-science" style={{ color: '#dd0000' }}>Data Science</Link></li>
+            <li><Link href="/programs/masters-in-artificial-intelligence" style={{ color: '#dd0000' }}>Artificial Intelligence</Link></li>
+            <li><Link href="/programs/mba-in-germany" style={{ color: '#dd0000' }}>Business Administration (MBA)</Link></li>
+            <li><Link href="/programs/masters-in-mechanical-engineering" style={{ color: '#dd0000' }}>Mechanical Engineering</Link></li>
+            <li><Link href="/programs/masters-in-electrical-engineering" style={{ color: '#dd0000' }}>Electrical Engineering</Link></li>
+            <li><Link href="/programs/masters-in-economics" style={{ color: '#dd0000' }}>Economics</Link></li>
+            <li><Link href="/programs/masters-in-psychology" style={{ color: '#dd0000' }}>Psychology</Link></li>
+            <li><Link href="/programs" style={{ color: '#dd0000', fontWeight: 600 }}>All subjects →</Link></li>
+          </ul>
+
           <h2 style={{ fontSize: 28, fontWeight: 700, color: '#171717', margin: '48px 0 20px' }}>Admission Requirements</h2>
           <ul style={{ fontSize: 16, color: '#525252', lineHeight: 2, margin: '0 0 24px', paddingLeft: 24 }}>
             <li>Bachelor&apos;s degree in a related field (usually 180 ECTS)</li>

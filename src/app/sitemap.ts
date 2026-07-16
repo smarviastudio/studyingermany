@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { BLOG_POSTS } from '@/content/blog';
 import { ALL_APPS } from '@/content/apps';
+import { PROGRAM_HUBS } from '@/lib/programHubs';
 import { buildCanonicalUrl, getWpBlogSitemapEntries, SITE_URL } from '@/lib/seo';
 
 const STATIC_PAGES: MetadataRoute.Sitemap = [
@@ -16,6 +17,7 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
   { url: buildCanonicalUrl('/motivation-letter'), changeFrequency: 'monthly', priority: 0.75 },
   { url: buildCanonicalUrl('/gpa-converter'), changeFrequency: 'monthly', priority: 0.85 },
   { url: buildCanonicalUrl('/netto-brutto-calculator'), changeFrequency: 'monthly', priority: 0.9 },
+  { url: buildCanonicalUrl('/programs'), changeFrequency: 'weekly', priority: 0.9 },
   { url: buildCanonicalUrl('/study-in-germany'), changeFrequency: 'weekly', priority: 0.9 },
   { url: buildCanonicalUrl('/masters-in-germany'), changeFrequency: 'weekly', priority: 0.8 },
   { url: buildCanonicalUrl('/bachelor-in-germany'), changeFrequency: 'weekly', priority: 0.8 },
@@ -80,7 +82,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]);
 
+  const programHubPages: MetadataRoute.Sitemap = PROGRAM_HUBS.map((hub) => ({
+    url: buildCanonicalUrl(`/programs/${hub.slug}`),
+    lastModified: now,
+    changeFrequency: 'weekly' as const,
+    priority: 0.85,
+  }));
+
   const wpBlogPages = await getWpBlogSitemapEntries();
 
-  return dedupeSitemap([...staticPages, ...staticBlogPages, ...appPages, ...wpBlogPages]);
+  return dedupeSitemap([...staticPages, ...staticBlogPages, ...appPages, ...programHubPages, ...wpBlogPages]);
 }
