@@ -55,6 +55,16 @@ export async function POST(req: NextRequest) {
         if (session.mode === 'payment' && session.metadata?.credits) {
           const credits = parseInt(session.metadata.credits, 10);
           if (credits > 0) {
+            // Idempotency: Stripe retries deliveries — never grant the same
+            // checkout session twice.
+            const alreadyGranted = await prisma.creditTransaction.findFirst({
+              where: { stripeSessionId: session.id },
+              select: { id: true },
+            });
+            if (alreadyGranted) {
+              console.log(`[Webhook] Session ${session.id} already processed, skipping`);
+              break;
+            }
             await prisma.$transaction(async (tx) => {
               await tx.user.update({
                 where: { id: userId },
