@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
 import { Zap, Check, Loader2, ArrowRight, Sparkles, Crown } from 'lucide-react';
+import { CREDIT_PACKS } from '@/lib/creditPacks';
 
 type CreditBundle = {
   key: string;
@@ -15,10 +16,15 @@ type CreditBundle = {
   popular?: boolean;
 };
 
-const bundles: CreditBundle[] = [
-  { key: 'credits_50', credits: 50, price: '€5.00', priceValue: 5 },
-  { key: 'credits_200', credits: 200, price: '€15.00', priceValue: 15, popular: true },
-];
+// Same packs the pricing page sells. This page used to offer a separate
+// 50/200 pair pointing at different Stripe products.
+const bundles: CreditBundle[] = CREDIT_PACKS.map((pack) => ({
+  key: pack.key,
+  credits: pack.credits,
+  price: `€${pack.price.toFixed(2)}`,
+  priceValue: pack.price,
+  popular: pack.popular,
+}));
 
 export default function CreditsPage() {
   const { data: session, status } = useSession();

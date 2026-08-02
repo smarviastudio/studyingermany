@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { CREDIT_PACKS, CREDIT_PACK_PRICE_IDS, type CreditPackKey } from './creditPacks';
 
 let _stripe: Stripe | null = null;
 
@@ -162,31 +163,39 @@ export const FREE_LIMITS = {
 
 export const FREE_MONTHLY_TOTAL = 3; // shared pool across all AI tools
 
-export type CreditBundleKey = 'credits_50' | 'credits_200';
+export type CreditBundleKey = CreditPackKey;
 
-export function getCreditBundles() {
-  return {
-    credits_50: {
-      priceId: 'price_1TAez6BhIRngoSRXGt4fAgNN',
-      credits: 50,
-      amount: 500,
-      label: '50 AI Credits',
-      description: '50 credits for AI generations',
-    },
-    credits_200: {
-      priceId: 'price_1TAf0dBhIRngoSRX3VguFhEk',
-      credits: 200,
-      amount: 1500,
-      label: '200 AI Credits',
-      description: '200 credits for AI generations',
-    },
-  } as const;
+// Resolved from CREDIT_PACKS so /credits and /pricing sell the same thing.
+// This used to hardcode a separate 50/200 pair against different Stripe
+// products, which meant the two pages advertised different offers.
+export function getCreditBundles(): Record<
+  CreditPackKey,
+  { priceId: string; credits: number; amount: number; label: string; description: string }
+> {
+  const priceIds = CREDIT_PACK_PRICE_IDS[isStripeTestMode() ? 'test' : 'live'];
+
+  return Object.fromEntries(
+    CREDIT_PACKS.map((pack) => [
+      pack.key,
+      {
+        priceId: priceIds[pack.key],
+        credits: pack.credits,
+        amount: Math.round(pack.price * 100),
+        label: `${pack.credits} AI Credits`,
+        description: `${pack.credits} credits for AI generations`,
+      },
+    ])
+  ) as Record<
+    CreditPackKey,
+    { priceId: string; credits: number; amount: number; label: string; description: string }
+  >;
 }
 
 export function getCreditAmountFromPriceId(priceId: string): number {
-  const bundles = getCreditBundles();
-  for (const bundle of Object.values(bundles)) {
-    if (bundle.priceId === priceId) return bundle.credits;
-  }
-  return 0;
+  const pack = CREDIT_PACKS.find(
+    (p) =>
+      CREDIT_PACK_PRICE_IDS.live[p.key] === priceId ||
+      CREDIT_PACK_PRICE_IDS.test[p.key] === priceId
+  );
+  return pack?.credits ?? 0;
 }
