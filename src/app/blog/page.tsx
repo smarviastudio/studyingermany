@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { GraduationCap, Clock, ArrowRight, ChevronRight } from 'lucide-react';
 import { BLOG_POSTS, CATEGORIES, type BlogPost } from '@/content/blog';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
+import { EmailCapture } from '@/components/EmailCapture';
 
 export const metadata = buildPageMetadata({
   title: 'Study in Germany Blog — Visa, Costs, Scholarships & Student Life',
@@ -292,6 +293,8 @@ export default async function BlogPage() {
           </div>
         </div>
       </div>
+
+      <EmailCapture />
     </div>
   );
 }

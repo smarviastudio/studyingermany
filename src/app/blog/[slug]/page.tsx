@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 import { SiteNav } from '@/components/SiteNav';
 import { BlogPostCta } from '@/components/BlogPostCta';
 import { buildBreadcrumbSchema, buildPageMetadata, SITE_URL } from '@/lib/seo';
+import { EmailCapture } from '@/components/EmailCapture';
 
 type WpPost = {
   id: number;
@@ -536,6 +537,7 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         <BlogPostCta variant="dark" />
+        <EmailCapture />
       </article>
     </div>
     );
@@ -654,6 +656,7 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
 
             <BlogPostCta variant="light" />
+            <EmailCapture />
           </article>
 
           {/* Sidebar */}

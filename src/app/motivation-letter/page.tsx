@@ -10,6 +10,7 @@ import {
   Heart, RefreshCw, CheckCircle2, X, Edit3
 } from 'lucide-react';
 import { track } from '@/lib/track';
+import { useFormStart } from '@/lib/useFormStart';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import type { Program } from '@/lib/types';
@@ -266,6 +267,18 @@ function MotivationLetterContent() {
     relevantExperience: '',
   });
   const [lastProgramName, setLastProgramName] = useState('letter');
+
+  // fullName and background can arrive from the saved profile, so only the
+  // fields the visitor has to write themselves count as starting the form.
+  useFormStart(
+    'motivation_letter',
+    Boolean(
+      userInput.motivation.trim() ||
+      userInput.careerGoals.trim() ||
+      userInput.whyThisProgram.trim() ||
+      userInput.relevantExperience.trim()
+    )
+  );
 
   const profileEnabled = status === 'authenticated';
   const { profile: profileData } = useProfileData(profileEnabled);

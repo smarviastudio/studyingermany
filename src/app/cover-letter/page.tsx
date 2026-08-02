@@ -9,6 +9,7 @@ import {
   Briefcase, User, Download,
 } from 'lucide-react';
 import { track } from '@/lib/track';
+import { useFormStart } from '@/lib/useFormStart';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import { useProfileData } from '@/hooks/useProfileData';
@@ -64,6 +65,13 @@ export default function CoverLetterPage() {
   };
 
   const requiredReady2 = role.trim() && company.trim() && fullName.trim() && background.trim();
+
+  // fullName and background can arrive from the saved profile, so only the
+  // fields the visitor has to type themselves count as starting the form.
+  useFormStart(
+    'cover_letter',
+    Boolean(role.trim() || company.trim() || jobDescription.trim() || strengths.trim() || achievements.trim())
+  );
 
   const profileEnabled = !!session?.user;
   const { profile: profileData } = useProfileData(profileEnabled);
