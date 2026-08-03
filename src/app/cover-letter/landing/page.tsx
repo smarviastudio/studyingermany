@@ -65,7 +65,7 @@ const FAQS = [
 ];
 
 const STATS = [
-  { num: '60 seconds', label: 'to a finished letter' },
+  { num: '60 seconds', label: 'to a structured first draft' },
   { num: '2 free previews', label: 'no account needed' },
   { num: 'from €2.99', label: 'one-time credit packs' }
 ];

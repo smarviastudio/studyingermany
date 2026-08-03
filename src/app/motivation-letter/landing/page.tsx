@@ -13,23 +13,23 @@ import { useState } from 'react';
 const FEATURES = [
   {
     icon: Sparkles,
-    title: 'AI-Powered Writing',
-    description: 'Generate compelling motivation letters tailored to your target program and university in Germany.'
+    title: 'Past the blank page in a minute',
+    description: 'The hardest part of a motivation letter is the first paragraph. Start from a structured draft built on your background instead of an empty document.'
   },
   {
     icon: Target,
-    title: 'Program-Specific Content',
-    description: 'Our AI understands German university requirements and creates content that resonates with admission committees.'
+    title: 'Built for German conventions',
+    description: 'German admissions expect a particular structure, tone and level of specificity. The draft follows those conventions so you can focus on the content only you can write.'
   },
   {
     icon: BookOpen,
-    title: 'Structure & Guidelines',
-    description: 'Follow proven structures for motivation letters that German universities expect and appreciate.'
+    title: 'A draft for every program',
+    description: 'Applying to six programs means six different letters. Reworking a solid draft six times is realistic; writing six from scratch usually is not.'
   },
   {
     icon: Download,
-    title: 'Export & Edit',
-    description: 'Download your letter as a document, make edits, and submit with confidence.'
+    title: 'Edit, then export',
+    description: 'Add your own specifics, check every fact against your CV, then download. The editing step is not optional — it is what makes the letter yours.'
   }
 ];
 
@@ -55,8 +55,16 @@ const FAQS = [
     a: 'Yes! Our motivation letter generator is designed for various German applications including DAAD scholarships, Deutschlandstipendium, university admissions, and visa applications. The AI adapts the tone and content based on your specific application type.'
   },
   {
-    q: 'Is the AI-generated content unique?',
-    a: 'Yes, each motivation letter is generated uniquely based on your personal information, background, and goals. The AI creates original content tailored to your specific situation, ensuring your letter stands out from generic templates.'
+    q: 'Will an AI-written motivation letter get me rejected?',
+    a: 'Submitting AI output unedited is a real risk. German universities have started screening applications with AI-detection tools, and there are reports of embassies rejecting student visa applications over letters that read as machine-generated. The problem is not that AI was involved — it is that generic text says nothing specific about you or the program, and reviewers notice that with or without software. Use the draft as a starting point, then add your own specifics: the modules you want to take, the professor whose work you read, the project you actually built. That letter reads as human because it is.'
+  },
+  {
+    q: 'How should I edit the draft before submitting?',
+    a: 'Four things. Replace every general claim with a specific example from your own experience. Name things only you would name — a module in the curriculum, a research group, a lab. Check every factual claim against your CV and transcript, because an AI filling gaps can invent details, and a false statement on a visa application is a serious problem. Finally, read it aloud: if it does not sound like you, rewrite until it does.'
+  },
+  {
+    q: 'Is each draft unique?',
+    a: 'Yes — each one is generated from the background and program details you provide, so no two are the same. But unique is not the same as personal. A draft that is unique to your inputs still needs your specifics added before it is ready to submit.'
   },
   {
     q: 'How much does it cost?',
@@ -65,7 +73,7 @@ const FAQS = [
 ];
 
 const STATS = [
-  { num: '60 seconds', label: 'to a finished letter' },
+  { num: '60 seconds', label: 'to a structured first draft' },
   { num: '2 free previews', label: 'no account needed' },
   { num: 'from €2.99', label: 'one-time credit packs' }
 ];
@@ -99,17 +107,17 @@ export default function MotivationLetterLanding() {
           <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 border border-purple-100 text-purple-600 text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />
-              AI Motivation Letter Generator
+              AI Motivation Letter Drafts
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-              Write Your Perfect
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-500"> Motivation Letter</span>
+              Stop staring at a blank
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-500"> motivation letter</span>
             </h1>
-            
+
             <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto">
-              Create compelling motivation letters for German university applications, DAAD scholarships, and student visas. 
-              AI-powered writing that impresses admission committees.
+              Get a structured first draft for German university, DAAD scholarship and student visa applications —
+              built on your background, in the format German admissions expect. Then make it yours.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
