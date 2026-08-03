@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { track } from '@/lib/track';
 import { useFormStart } from '@/lib/useFormStart';
+import { DraftNotice } from '@/components/DraftNotice';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import type { Program } from '@/lib/types';
@@ -715,6 +716,7 @@ function MotivationLetterContent() {
                   </div>
                 </div>
                 <div style={{ padding: 24 }}>
+                  <DraftNotice />
                   <textarea value={letter} onChange={e => setLetter(e.target.value)} style={{ width: '100%', border: 'none', outline: 'none', fontSize: 14, lineHeight: 1.8, color: '#1f2937', fontFamily: 'Georgia, serif', resize: 'none', minHeight: 520, background: 'transparent', boxSizing: 'border-box' }} />
                 </div>
               </div>

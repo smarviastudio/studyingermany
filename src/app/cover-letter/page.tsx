@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { track } from '@/lib/track';
 import { useFormStart } from '@/lib/useFormStart';
+import { DraftNotice } from '@/components/DraftNotice';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import { useProfileData } from '@/hooks/useProfileData';
@@ -318,6 +319,7 @@ export default function CoverLetterPage() {
                 </div>
                 {/* Letter body */}
                 <div style={{ padding: 24 }}>
+                  <DraftNotice />
                   <textarea
                     value={letter}
                     onChange={e => setLetter(e.target.value)}
