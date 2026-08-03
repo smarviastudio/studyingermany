@@ -10,6 +10,8 @@ import {
   Heart, RefreshCw, CheckCircle2, X, Edit3
 } from 'lucide-react';
 import { track } from '@/lib/track';
+import { useFormStart } from '@/lib/useFormStart';
+import { DraftNotice } from '@/components/DraftNotice';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import type { Program } from '@/lib/types';
@@ -266,6 +268,18 @@ function MotivationLetterContent() {
     relevantExperience: '',
   });
   const [lastProgramName, setLastProgramName] = useState('letter');
+
+  // fullName and background can arrive from the saved profile, so only the
+  // fields the visitor has to write themselves count as starting the form.
+  useFormStart(
+    'motivation_letter',
+    Boolean(
+      userInput.motivation.trim() ||
+      userInput.careerGoals.trim() ||
+      userInput.whyThisProgram.trim() ||
+      userInput.relevantExperience.trim()
+    )
+  );
 
   const profileEnabled = status === 'authenticated';
   const { profile: profileData } = useProfileData(profileEnabled);
@@ -702,6 +716,7 @@ function MotivationLetterContent() {
                   </div>
                 </div>
                 <div style={{ padding: 24 }}>
+                  <DraftNotice />
                   <textarea value={letter} onChange={e => setLetter(e.target.value)} style={{ width: '100%', border: 'none', outline: 'none', fontSize: 14, lineHeight: 1.8, color: '#1f2937', fontFamily: 'Georgia, serif', resize: 'none', minHeight: 520, background: 'transparent', boxSizing: 'border-box' }} />
                 </div>
               </div>

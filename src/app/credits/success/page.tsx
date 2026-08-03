@@ -20,7 +20,20 @@ function SuccessContent() {
       return;
     }
 
-    trackPurchase(sessionId);
+    // Look up what was actually paid so the GA4 purchase event carries revenue.
+    // GA4 dedupes on transaction_id, so a refresh cannot double-count.
+    const reportPurchase = async () => {
+      try {
+        const res = await fetch(
+          `/api/stripe/session-summary?session_id=${encodeURIComponent(sessionId)}`
+        );
+        const data = res.ok ? await res.json() : null;
+        trackPurchase(sessionId, data?.paid ? data.value : undefined);
+      } catch {
+        trackPurchase(sessionId);
+      }
+    };
+    reportPurchase();
 
     const loadBalance = async () => {
       try {

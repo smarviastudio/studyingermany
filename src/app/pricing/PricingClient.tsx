@@ -122,7 +122,7 @@ export default function PricingClient() {
     },
     {
       q: 'What payment methods are accepted?',
-      a: 'Visa, Mastercard, PayPal, iDEAL, and more via Stripe. Payments are processed securely by Stripe — we never see your card details.',
+      a: 'Visa, Mastercard, and PayPal, plus local methods where Stripe supports them. Payments are processed securely by Stripe — we never see your card details. If your card is declined, it is usually your bank blocking international payments; enabling them in your banking app normally fixes it.',
     },
     {
       q: 'Do you offer refunds?',

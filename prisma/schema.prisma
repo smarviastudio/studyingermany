@@ -188,3 +188,20 @@ model ChatMessage {
   @@index([userId, createdAt])
   @@index([userId, role, createdAt])
 }
+
+// Visitors who gave an email without creating an account. Almost everyone
+// arrives once and never comes back, so this is the only way to reach someone
+// again during the months between researching and applying.
+model EmailLead {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  // Which lead magnet produced the signup, e.g. "deadline_calendar".
+  source    String
+  // Page the visitor was on when they subscribed.
+  page      String?
+  country   String?
+  createdAt DateTime @default(now())
+
+  @@index([source, createdAt])
+  @@index([createdAt])
+}

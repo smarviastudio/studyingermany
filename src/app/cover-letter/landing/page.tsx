@@ -65,7 +65,7 @@ const FAQS = [
 ];
 
 const STATS = [
-  { num: '60 seconds', label: 'to a finished letter' },
+  { num: '60 seconds', label: 'to a structured first draft' },
   { num: '2 free previews', label: 'no account needed' },
   { num: 'from €2.99', label: 'one-time credit packs' }
 ];
@@ -108,8 +108,8 @@ export default function CoverLetterLanding() {
             </h1>
             
             <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto">
-              Create professional Anschreiben for German job applications. 
-              AI-powered writing that follows German business conventions and impresses employers.
+              Get a structured Anschreiben draft for German job applications — in the business format
+              employers expect, built on the role you are actually applying for. Then make it yours.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">

@@ -271,7 +271,7 @@ function HeroDemo() {
               </div>
               {phase === 'done' && (
                 <div className="gp-demo-stamp">
-                  <BadgeCheck className="w-4 h-4" /> German format · 60 seconds
+                  <BadgeCheck className="w-4 h-4" /> German format · draft in 60 seconds
                 </div>
               )}
             </div>
@@ -1004,7 +1004,7 @@ export default function HomePage() {
             </h1>
             <p className="gp-sub animate-fade-up-3">
               Search all <strong>20,000+ degree programs</strong> with AI, check your grades against German requirements,
-              and generate your CV and motivation letter in the exact format universities expect.
+              and draft your CV and motivation letter in the exact format universities expect — then make them yours.
               Free to start — documents from <strong>€2.99</strong>, not €2,999.
             </p>
 
@@ -1138,7 +1138,7 @@ export default function HomePage() {
               </p>
               <ul>
                 <li><Check className="w-4 h-4" /> AI search across all 20,000+ programs — no bias</li>
-                <li><Check className="w-4 h-4" /> CV &amp; motivation letter in 60 seconds, German format</li>
+                <li><Check className="w-4 h-4" /> CV &amp; motivation letter drafts in 60 seconds, German format</li>
                 <li><Check className="w-4 h-4" /> Try before you sign up — 2 free previews</li>
                 <li><Check className="w-4 h-4" /> One-time credits, no subscription, never expire</li>
               </ul>

@@ -12,6 +12,7 @@ import {
   ChevronDown, CheckCircle2, Eye, EyeOff
 } from 'lucide-react';
 import { track } from '@/lib/track';
+import { useFormStart } from '@/lib/useFormStart';
 import { SiteNav } from '@/components/SiteNav';
 import { PaywallModal } from '@/components/PaywallModal';
 import type { CVData, CVExperience, CVEducation } from '@/lib/cv-maker/cvStore';
@@ -770,6 +771,9 @@ function CVMakerContent() {
   const [editingSkillIndex, setEditingSkillIndex] = useState<number | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [showAI, setShowAI] = useState(false);
+  // The CV starts from sample data, so text changing is not a reliable signal.
+  // Opening the AI panel is the first unambiguous sign of real intent.
+  useFormStart('cv_maker', showAI);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiDone, setAiDone] = useState(false);
   const [aiError, setAiError] = useState('');

@@ -46,11 +46,23 @@ function DashboardContent() {
   const checkoutSuccess = searchParams.get('success') === 'true';
   const checkoutSessionId = searchParams.get('session_id');
 
-  // GA4 purchase conversion (deduped by transaction_id, safe on reload)
+  // GA4 purchase conversion (deduped by transaction_id, safe on reload). The
+  // amount is read back from Stripe so the event carries real revenue.
   useEffect(() => {
-    if (checkoutSuccess && checkoutSessionId) {
-      trackPurchase(checkoutSessionId);
-    }
+    if (!checkoutSuccess || !checkoutSessionId) return;
+
+    const reportPurchase = async () => {
+      try {
+        const res = await fetch(
+          `/api/stripe/session-summary?session_id=${encodeURIComponent(checkoutSessionId)}`
+        );
+        const data = res.ok ? await res.json() : null;
+        trackPurchase(checkoutSessionId, data?.paid ? data.value : undefined);
+      } catch {
+        trackPurchase(checkoutSessionId);
+      }
+    };
+    reportPurchase();
   }, [checkoutSuccess, checkoutSessionId]);
 
   // State
