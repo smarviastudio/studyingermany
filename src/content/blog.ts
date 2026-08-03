@@ -1883,6 +1883,239 @@ The students who eventually get in are usually not the ones with the best first 
 
 *If your rejection came down to a generic motivation letter or a CV in the wrong format, both are fixable before the next deadline. Our [Motivation Letter tool](/motivation-letter) writes program-specific letters, and the [CV Maker](/cv-maker) formats yours to German expectations. Both give you free previews before you pay anything — and you can [search 20,000+ programs](/) to build a wider, more realistic shortlist.*`,
   },
+  {
+    slug: 'is-germany-still-tuition-free-2026',
+    title: 'Is Germany Still Tuition-Free in 2026? What Actually Changed',
+    excerpt: 'Bavaria opened the door to fees for non-EU students and the headlines got loud. Here is what has genuinely changed, what has not, and how to check before you apply.',
+    category: 'finance',
+    readTime: 9,
+    publishedAt: '2026-08-03',
+    coverEmoji: '💶',
+    featured: true,
+    tags: ['finance', 'planning', 'tuition'],
+    body: `Every few months a headline announces that Germany has started charging international students, and thousands of applicants quietly cross it off their list.
+
+The reality is narrower than the headline, but it is not nothing — and if you are applying now, you need to know which side of the line your university sits on.
+
+## The short answer
+
+**Most public universities in Germany still charge no tuition**, including for non-EU students. What you pay each semester is the **Semesterbeitrag** — an administrative contribution, commonly somewhere in the range of €150–400, which usually includes a public transport pass.
+
+What changed is that one state opened a door.
+
+## What Bavaria actually did
+
+Bavaria passed higher education legislation that **permits** its universities to charge tuition to students from outside the EU/EEA. Permitting is not requiring. Each university decides for itself.
+
+Bavaria has more than 50 higher education institutions. Only a small number have introduced fees. The most prominent is **TU München**, which now charges non-EU students, with master's programs priced well above bachelor's. Reported figures vary by source and by program, and some other Bavarian institutions have announced or trialled fees at lower levels.
+
+Meanwhile large Bavarian universities including **LMU Munich** and the **University of Passau** have not introduced them.
+
+So: a specific state, a specific opt-in, and mostly a small number of highly-ranked institutions.
+
+## Baden-Württemberg, the older case
+
+Bavaria was not first. **Baden-Württemberg** has charged non-EU students a tuition fee per semester for years — an established policy that predates the current headlines, affecting universities such as Heidelberg, Stuttgart and Freiburg.
+
+There are exemptions in that state, including for some refugees and for students who completed their qualifying certificate in Germany. Check your own case rather than assuming.
+
+## Everywhere else
+
+The other fourteen federal states have not introduced general tuition for non-EU students. That includes major destinations across North Rhine-Westphalia, Berlin, Hamburg, Lower Saxony, Hesse and Saxony — home to a very large share of Germany's English-taught programs.
+
+If cost is your binding constraint, the answer is not to abandon Germany. It is to weight your shortlist toward states and universities that remain free, and you can [search 20,000+ programs](/) filtered by tuition to do exactly that.
+
+## What has NOT changed
+
+- **Semesterbeitrag** still applies everywhere. It is not tuition and it is not new.
+- **Blocked account requirements** are set nationally by the Federal Foreign Office based on the BAföG rate — currently in the region of €992 per month, or roughly €11,904 for a year. This figure is reviewed annually, so verify the current number on your embassy's site before depositing.
+- **Long-programme fees** still exist in some states for students who greatly exceed the standard study duration.
+- **Post-study rights** are unchanged: the 18-month residence permit to seek work after graduating remains.
+
+## Germany is still competitive — and more crowded
+
+Around 400,000 international students were registered in Germany in the 2025/26 winter semester, up roughly six percent year on year.
+
+Read that carefully, because it cuts both ways. It confirms Germany is still one of the best value propositions in global higher education. It also means the competition for places has risen, and that competition is the more likely reason you get rejected — not tuition.
+
+## How to check your own case properly
+
+Do not rely on a forum post or on this article. For each program on your list:
+
+1. Open the **university's own fees page**, not a third-party summary.
+2. Check whether the fee applies to **non-EU/EEA (third-country)** students specifically.
+3. Check whether it differs for **bachelor's and master's** — the gap is often large.
+4. Note the **Semesterbeitrag** separately, and whether it includes a transport pass.
+5. Check the **exemptions** list. Refugees, students with a German school-leaving certificate, and some exchange students are frequently exempt.
+
+Fee decisions are made per university and change between cycles. The page on the university's site is the only authority.
+
+## The honest financial picture
+
+Even at a Bavarian university charging fees, the total cost of a German degree usually stays well below the equivalent in the UK, US, Australia or Canada — where five-figure annual tuition is the norm rather than the exception.
+
+And at the great majority of German public universities, tuition remains zero. Your real budget line is living costs, and that is what the blocked account exists to prove.
+
+---
+
+*Cost varies far more by university than by country. [Search 20,000+ programs](/) and compare tuition, language of instruction and deadlines side by side before you commit to a shortlist — and check how your grades convert with the [GPA Converter](/gpa-converter) so you are targeting places you can realistically get into.*`,
+  },
+  {
+    slug: 'ai-motivation-letter-rejection-germany',
+    title: 'Will an AI-Written Motivation Letter Get You Rejected in Germany?',
+    excerpt: 'Universities and embassies are now screening for AI-generated text, and fully generated letters are being discarded. Here is how to use AI without it costing you a place.',
+    category: 'tips',
+    readTime: 9,
+    publishedAt: '2026-08-03',
+    coverEmoji: '🤖',
+    featured: true,
+    tags: ['application', 'documents', 'tips'],
+    body: `Short answer: **submitting a letter written entirely by AI, unedited, is now a genuine risk.** Using AI to draft and structure something you then rewrite in your own voice is not.
+
+That distinction is the whole article, and it is worth understanding properly, because the advice circulating online is mostly at one of two useless extremes — "never touch AI" or "nobody can tell."
+
+## What is actually happening
+
+German universities have begun using AI-detection tooling on application texts — commercial products such as GPTZero, Turnitin's AI detection and Originality.ai, alongside in-house checks. Reporting through 2025 and 2026 indicates that letters judged to be entirely AI-generated are frequently discarded.
+
+The pattern extends to visa applications. There are reports of German embassies rejecting student visa applications over motivation letters that read as machine-generated, with some posts warning applicants directly.
+
+## Why detection is not really the point
+
+AI detectors are unreliable. They produce false positives, they disadvantage non-native English writers, and no serious admissions office should be making decisions on a detector score alone.
+
+But focusing on detectors misses what is actually going wrong.
+
+A reviewer reading two hundred motivation letters develops a very fast instinct for text that says nothing. Generic AI output is fluent, well-organised, grammatically clean — and empty. It describes a passion for innovation, a commitment to excellence, and a deep admiration for the university's world-class reputation, without ever naming a module, a professor, a paper, or a reason.
+
+That letter fails whether or not anyone runs a detector on it. It fails because it could have been submitted to any program at any university on earth.
+
+## The specific tells
+
+Reviewers report the same signals repeatedly:
+
+- **No named specifics.** No module titles, no research groups, no professors, no lab.
+- **Uniform paragraph rhythm.** Every paragraph roughly the same length, every sentence roughly the same shape.
+- **Elevated but hollow vocabulary.** "Leverage", "pivotal", "multifaceted", "testament to".
+- **Claims with no evidence.** "I developed strong analytical skills" with no project attached.
+- **A tone mismatch.** Flawless idiomatic English from an applicant with an IELTS 6.0.
+- **Facts that contradict the CV.** Invented internships and misremembered dates, which is the most damaging one, because it looks like dishonesty rather than laziness.
+
+That last point matters most. An AI drafting from thin information will fill gaps plausibly. If it invents a detail and you submit it, you have made a false statement on an application — and on a visa application, that is a far more serious category of problem than weak writing.
+
+## How to use AI without the risk
+
+The workable approach is to treat AI as a **first draft and a structure**, never as a final document.
+
+**1. Give it real material.** Feed it your actual modules, actual projects, actual grades, the actual program. Generic input guarantees generic output.
+
+**2. Generate a draft, then interrogate it.** Every sentence should survive the question: could this appear in someone else's letter? If yes, cut or replace it.
+
+**3. Replace every abstraction with a specific.** "Strong programming background" becomes the project, the language, the size of the dataset, the result.
+
+**4. Name things only you would name.** The professor whose work you read. The module in the program's curriculum. The lab. This is the single strongest signal that a human who researched the program wrote the letter — and it is the thing generic AI output never has.
+
+**5. Verify every factual claim against your CV and transcript.** Dates, titles, employers, grades. If the draft asserts something you cannot document, delete it.
+
+**6. Read it aloud in your own voice.** If it does not sound like you, the reviewer will notice before any software does.
+
+## Where AI genuinely helps
+
+Used properly, it removes the two things that actually stop people applying:
+
+- **The blank page.** Most applicants stall for weeks on the first paragraph. A structured draft removes that entirely.
+- **Volume.** Applying to six programs means six tailored letters. Rewriting a strong draft six times is achievable; writing six from scratch usually is not, which is why so many people submit three applications instead of eight.
+
+It also handles the parts that are genuinely formulaic — the German structural conventions, the salutation, the ordering — that international applicants get wrong for no good reason.
+
+## The rule worth remembering
+
+**AI should help you say what you actually have to say. It should never decide what you have to say.**
+
+A letter that is 70% your specifics and 30% AI scaffolding will read as human and will survive scrutiny. A letter that is 100% generated and 0% you will read as empty — which is why it gets discarded, detector or no detector.
+
+---
+
+*Our [Motivation Letter tool](/motivation-letter) is built for the first-draft job described above: it takes your real background and the specific program and produces a structured starting point in about a minute. It is a draft to make yours, not a document to submit unread — add your own specifics, check every fact against your CV, and make it sound like you. First previews are free, no account needed.*`,
+  },
+  {
+    slug: 'german-student-visa-appointment-slots',
+    title: 'Getting a German Student Visa Appointment: How to Actually Find a Slot',
+    excerpt: 'Every year students get an offer and then lose the semester to a visa queue. Here is when slots open, how the booking systems behave, and what to do when there are none.',
+    category: 'visa',
+    readTime: 8,
+    publishedAt: '2026-08-03',
+    coverEmoji: '🛂',
+    tags: ['visa', 'planning'],
+    body: `The most avoidable way to lose a semester in Germany is this: receive your admission letter in July, start looking for a visa appointment in August, and discover the next available slot is in December.
+
+The appointment queue is a separate problem from the application, it runs on its own timetable, and it does not care that your documents are ready.
+
+## Book the appointment before you have the offer
+
+This is the single most useful thing in this article.
+
+At most German missions you do **not** need an admission letter to book an appointment — you need it at the appointment. Waiting times commonly run from several weeks to several months depending on the country and the season.
+
+So book as early as your mission allows, and treat the booking as an independent task that starts the moment you submit your university applications, not after you hear back. A booked slot you later cancel costs someone nothing. A missing slot costs you six months.
+
+## Understand the seasonal squeeze
+
+The winter semester begins in October, and admission letters land across June and July. This means demand concentrates hard from roughly **May through August**, which is exactly when everyone is competing for the same slots.
+
+The summer semester intake, with its January-ish deadlines, has a smaller and less brutal peak.
+
+If you are applying for a winter start, assume the appointment queue will be at its worst precisely when you need it.
+
+## How the booking systems behave
+
+This varies by country — some missions use their own portal, others route through an external service provider — but the practical patterns are consistent:
+
+- **Slots are released in batches**, not continuously. When a batch drops, it can be taken within minutes.
+- **Release timing is often predictable** once you know it. Local student groups usually know the pattern for your city. Ask.
+- **Cancellations reappear.** Checking daily, at consistent times, genuinely works. Many students get their slot from someone else's cancellation.
+- **The queue is per mission.** If your country has several German missions, check each one, and check whether you are restricted to the one covering your region.
+
+## What not to do
+
+**Do not pay an agent for a slot.** Appointment booking is free. Anyone selling guaranteed slots is either reselling free appointments or running a scam, and some missions cancel appointments they identify as brokered.
+
+**Do not book several slots to hedge.** Duplicate bookings under one passport get cancelled at many missions, and you can lose all of them.
+
+**Do not skip the document checklist** because you were rushing. Arriving with an incomplete file usually means rebooking, back at the end of the queue.
+
+## Have the slow things ready before the slot
+
+Once you have the appointment, everything else has to be finished by that date. Two items have long lead times:
+
+**Blocked account.** Opening and funding a Sperrkonto takes time, and international transfers can be slow. The required amount is set nationally by the Federal Foreign Office and reviewed annually — verify the current figure with your embassy before transferring.
+
+**Health insurance.** You need confirmation of coverage. Public insurers generally issue this quickly once enrolled, but the paperwork chain still takes days.
+
+Also expect: passport with sufficient validity, biometric photos, admission letter, academic transcripts, language certificates, the completed visa form, and your motivation letter where the mission asks for one.
+
+Requirements differ by mission and change. Your embassy's own checklist is the only authority — not a blog, including this one.
+
+## If there genuinely are no slots
+
+**Ask the university about deferral.** Many German universities will defer admission to the next intake if you have a documented visa delay. This is far more common than students expect, and asking early is much better than asking in September.
+
+**Contact the mission in writing.** Some accept documented urgency cases where the semester start is imminent and you hold a confirmed place.
+
+**Check the summer intake.** If winter is lost, moving to April is a six-month setback rather than a twelve-month one.
+
+## The timeline that works
+
+- **When you apply to universities:** find out your mission's booking system and its release pattern
+- **As soon as booking is permitted:** book the earliest available slot
+- **On receiving your offer:** open and fund the blocked account
+- **Four weeks before the appointment:** arrange health insurance, assemble every document
+- **One week before:** check the mission's current checklist again, in case it changed
+
+---
+
+*The visa queue punishes late applications, and applications get submitted late because the documents take too long to write. Our [Motivation Letter tool](/motivation-letter) and [CV Maker](/cv-maker) turn that part from weeks into minutes, so you reach the offer — and the appointment queue — earlier. Free previews, no account needed.*`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
