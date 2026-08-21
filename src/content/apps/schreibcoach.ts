@@ -26,9 +26,9 @@ export const schreibcoach: AppContent = {
     'Redemittel und Formulierungen für B1',
     'Fortschritt, Bewertungen und wiederkehrende Fehler',
   ],
-  metaTitle: 'Deutsch B1 Schreiben üben – SchreibCoach App mit KI-Korrektur',
+  metaTitle: 'Deutsch B1 Schreiben üben – App mit KI-Korrektur',
   metaDescription:
-    'B1 Prüfung Schreiben trainieren: typische Aufgaben wie E-Mail, Forumsbeitrag und formelle Nachricht, mit Timer schreiben und sofort KI-Feedback zu Grammatik, Aufbau und Wortschatz erhalten.',
+    'B1 Prüfung Schreiben trainieren: E-Mail, Forumsbeitrag und formelle Nachricht mit Timer schreiben und sofort KI-Feedback zu Grammatik erhalten.',
   metaKeywords:
     'b1 schreiben üben, deutsch b1 prüfung, b1 brief schreiben, telc b1 schreiben, goethe b1 schreiben, deutsch schreiben lernen, b1 forumsbeitrag, formelle email deutsch, deutschprüfung vorbereitung',
   screenshots: [
@@ -129,7 +129,7 @@ export const schreibcoach: AppContent = {
       title: 'B1 Prüfung Schreiben: Aufgabentypen, Zeit und Bewertung',
       metaTitle: 'B1 Prüfung Schreiben: Aufgaben, Zeit und Bewertungskriterien',
       metaDescription:
-        'Welche Schreibaufgaben in der B1-Prüfung vorkommen, wie viel Zeit du pro Aufgabe hast, wie bewertet wird und mit welchem Zeitplan du im Prüfungsraum sicher fertig wirst.',
+        'Welche Schreibaufgaben in der B1-Prüfung vorkommen, wie viel Zeit du pro Aufgabe hast, wie bewertet wird und mit welchem Zeitplan du fertig wirst.',
       excerpt: 'Die drei Textsorten, die Bewertungskriterien und ein Zeitplan, mit dem du im Prüfungsraum fertig wirst.',
       intro: [
         'Der Prüfungsteil Schreiben wirkt auf viele Lernende wie der unberechenbarste — dabei ist er der am besten vorhersagbare. Die Textsorten wiederholen sich, die Bewertungskriterien sind veröffentlicht, und die Aufgabenstellung sagt dir fast wörtlich, was im Text stehen muss.',
@@ -189,7 +189,7 @@ export const schreibcoach: AppContent = {
       title: 'Formelle E-Mail auf Deutsch schreiben: Aufbau und Formulierungen',
       metaTitle: 'Formelle E-Mail auf Deutsch: Aufbau, Anrede und Redemittel',
       metaDescription:
-        'Anrede, Einleitung, Anliegen, Bitte, Gruß: der Aufbau einer formellen deutschen E-Mail mit fertigen Redemitteln — für die B1-Prüfung und für echte Briefe an Firmen und Behörden.',
+        'Anrede, Einleitung, Anliegen, Bitte, Gruß: der Aufbau einer formellen deutschen E-Mail mit fertigen Redemitteln — für die B1-Prüfung und den Alltag.',
       excerpt: 'Aufbau und fertige Redemittel für formelle E-Mails — in der Prüfung und im echten Leben.',
       intro: [
         'Die formelle Nachricht ist die Textsorte, die in der Prüfung am häufigsten schiefgeht und im Alltag am meisten gebraucht wird: Beschwerde beim Vermieter, Anfrage bei der Krankenkasse, Kündigung eines Vertrags.',
@@ -253,7 +253,7 @@ export const schreibcoach: AppContent = {
       title: 'Die typischen Fehler im B1-Schreiben — und wie du sie loswirst',
       metaTitle: 'Typische Fehler beim B1 Schreiben und wie du sie vermeidest',
       metaDescription:
-        'Verbstellung, Nebensätze, Fälle, Perfekt, Kommasetzung: die Fehler, die auf B1 am häufigsten vorkommen, warum sie passieren und mit welcher Kontrollroutine du sie selbst findest.',
+        'Verbstellung, Nebensätze, Fälle, Perfekt, Kommasetzung: die häufigsten Fehler auf B1, warum sie passieren und wie du sie selbst findest.',
       excerpt: 'Die Fehler, die auf B1 am häufigsten Punkte kosten — und eine Kontrollroutine in vier Durchgängen.',
       intro: [
         'Fehler auf B1 sind erstaunlich vorhersehbar. Fast alle lassen sich auf eine Handvoll Strukturen zurückführen, die im Deutschen anders funktionieren als in den meisten Ausgangssprachen.',

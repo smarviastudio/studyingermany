@@ -26,9 +26,9 @@ export const vorfahrt: AppContent = {
     'Fahrsimulator mit Gas und Bremse, 23 Level',
     'Komplett auf Deutsch und Englisch',
   ],
-  metaTitle: 'Vorfahrt üben in 3D – Kreuzungen für die Theorieprüfung trainieren',
+  metaTitle: 'Vorfahrt üben in 3D – Kreuzungen für die Theorieprüfung',
   metaDescription:
-    'Rechts vor links, Stoppschild, abknickende Vorfahrt: Übe Vorfahrtsituationen an echten 3D-Kreuzungen aus der Fahrerperspektive — mit StVO-Erklärung, Fahrsimulator und Prüfungsmodus.',
+    'Rechts vor links, Stoppschild, abknickende Vorfahrt: Übe an echten 3D-Kreuzungen aus der Fahrerperspektive — mit StVO-Erklärung und Prüfungsmodus.',
   metaKeywords:
     'vorfahrt üben, rechts vor links, theorieprüfung üben, führerschein app, vorfahrtsregeln lernen, kreuzung vorfahrt, stvo lernen, fahrschule app, vorfahrt achten schild',
   screenshots: [
@@ -127,9 +127,9 @@ export const vorfahrt: AppContent = {
       slug: 'rechts-vor-links-einfach-erklaert',
       keyword: 'rechts vor links regel',
       title: 'Rechts vor links: die Regel, die häufiger gilt als gedacht',
-      metaTitle: 'Rechts vor links einfach erklärt – mit Beispielen und Ausnahmen',
+      metaTitle: 'Rechts vor links erklärt – Beispiele und Ausnahmen',
       metaDescription:
-        'Wann gilt rechts vor links, wann nicht? Die Grundregel nach § 8 StVO, die wichtigsten Ausnahmen, verkehrsberuhigte Bereiche, Parkplätze und die klassischen Prüfungsfallen.',
+        'Wann gilt rechts vor links, wann nicht? Die Grundregel nach § 8 StVO, die wichtigsten Ausnahmen, verkehrsberuhigte Bereiche und Parkplätze.',
       excerpt: 'Wann rechts vor links gilt, wann nicht — inklusive Parkplatz, Verkehrsberuhigung und Pattsituation.',
       intro: [
         'Rechts vor links ist die Grundregel des deutschen Straßenverkehrs: Sie gilt immer dann, wenn nichts anderes geregelt ist — kein Schild, keine Ampel, keine Polizei.',
@@ -185,9 +185,9 @@ export const vorfahrt: AppContent = {
       slug: 'vorfahrtsschilder-uebersicht',
       keyword: 'vorfahrtsschilder bedeutung',
       title: 'Vorfahrtsschilder: Bedeutung und Reihenfolge auf einen Blick',
-      metaTitle: 'Vorfahrtsschilder Übersicht: Bedeutung, Rangfolge & Prüfungsfallen',
+      metaTitle: 'Vorfahrtsschilder: Bedeutung, Rangfolge & Fallen',
       metaDescription:
-        'Vorfahrtsstraße, Vorfahrt gewähren, Stoppschild, abknickende Vorfahrt: was jedes Schild bedeutet, in welcher Rangfolge Regelungen gelten und welche Fallen in der Prüfung vorkommen.',
+        'Vorfahrtsstraße, Vorfahrt gewähren, Stoppschild: was jedes Schild bedeutet, in welcher Rangfolge Regelungen gelten und welche Fallen es gibt.',
       excerpt: 'Was jedes Schild bedeutet, in welcher Rangfolge Regelungen gelten und wo die Prüfungsfallen liegen.',
       intro: [
         'Vorfahrt wird in Deutschland in einer festen Rangfolge geregelt: Polizeibeamte vor Ampeln, Ampeln vor Schildern, Schilder vor rechts vor links. Wer diese Reihenfolge im Kopf hat, kann fast jede Prüfungsfrage systematisch lösen.',
@@ -249,7 +249,7 @@ export const vorfahrt: AppContent = {
       title: 'Theorieprüfung: warum Vorfahrtfragen so oft schiefgehen',
       metaTitle: 'Theorieprüfung Vorfahrt: Fehlerquellen und Lernstrategie',
       metaDescription:
-        'Vorfahrtfragen sind die häufigste Fehlerquelle in der Theorieprüfung. Warum Auswendiglernen hier scheitert, wie du Situationen systematisch löst und wie du sinnvoll übst.',
+        'Vorfahrtfragen sind die häufigste Fehlerquelle in der Theorieprüfung. Warum Auswendiglernen scheitert und wie du Situationen systematisch löst.',
       excerpt: 'Warum Auswendiglernen bei Vorfahrtfragen scheitert — und ein Vier-Schritte-Schema für jede Situation.',
       intro: [
         'Vorfahrtfragen sind in der Theorieprüfung überdurchschnittlich häufig für Fehlerpunkte verantwortlich, und das hat einen strukturellen Grund: Man kann sie nicht auswendig lernen. Es gibt nicht die eine richtige Antwort, sondern eine Kombination aus Schildern, Fahrzeugpositionen und Fahrtrichtungen, die sich jedes Mal ändert.',

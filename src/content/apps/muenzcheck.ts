@@ -26,9 +26,9 @@ export const muenzcheck: AppContent = {
     'Raritäten-Check mit Magnettest zum Selberprüfen',
     'D-Mark-Umrechnung zum amtlichen Kurs',
   ],
-  metaTitle: 'MünzCheck – Münzen Wert Scanner & Sammlung für deutsche Münzen',
+  metaTitle: 'MünzCheck – Münzen Wert Scanner & Sammlung',
   metaDescription:
-    'Münzwert bestimmen ohne Rätselraten: Jahrgang und Prägestätte eingeben oder Münze scannen. MünzCheck zeigt Richtwerte aus geprüftem Katalog, Raritäten und die D-Mark-Umrechnung.',
+    'Münzwert bestimmen ohne Rätselraten: Jahrgang und Prägestätte eingeben oder Münze scannen. Richtwerte aus geprüftem Katalog und D-Mark-Umrechnung.',
   metaKeywords:
     'münzen wert, münzwert bestimmen, münzen scanner app, 2 euro münzen wert, d-mark wert, prägestätte buchstaben, münzsammlung app, seltene münzen deutschland, bundesländer serie münzen',
   screenshots: [
@@ -126,9 +126,9 @@ export const muenzcheck: AppContent = {
       slug: 'muenzwert-bestimmen',
       keyword: 'münzwert bestimmen',
       title: 'Münzwert bestimmen: was den Preis wirklich macht',
-      metaTitle: 'Münzwert bestimmen: Jahrgang, Prägestätte, Erhaltung & Auflage',
+      metaTitle: 'Münzwert bestimmen: Jahrgang, Prägestätte, Erhaltung',
       metaDescription:
-        'Warum dieselbe Münze zwei Euro oder zweihundert wert sein kann: Auflage, Prägestätte, Erhaltungsgrad und Nachfrage — und warum Alter fast nie der entscheidende Faktor ist.',
+        'Warum dieselbe Münze zwei Euro oder zweihundert wert sein kann: Auflage, Prägestätte, Erhaltungsgrad und Nachfrage — Alter zählt fast nie.',
       excerpt: 'Auflage, Prägestätte, Erhaltung, Nachfrage — und warum Alter fast nichts über den Wert sagt.',
       intro: [
         'Die häufigste Annahme beim Münzwert ist auch die falscheste: dass alte Münzen wertvoll sind. Eine römische Münze kostet oft zwanzig Euro, weil Millionen davon existieren; eine deutsche Münze von 1969 kann das Zehnfache bringen, weil ein Prägefehler sie selten gemacht hat.',
@@ -186,7 +186,7 @@ export const muenzcheck: AppContent = {
       title: 'A, D, F, G, J: die Prägestätten-Buchstaben auf deutschen Münzen',
       metaTitle: 'Prägestätten auf deutschen Münzen: A, D, F, G und J erklärt',
       metaDescription:
-        'Was die Buchstaben auf deutschen Münzen bedeuten, welche Prägestätte welche Mengen liefert, warum das G aus Karlsruhe so oft fehlt und wo der Buchstabe zu finden ist.',
+        'Was die Buchstaben auf deutschen Münzen bedeuten, welche Prägestätte welche Mengen liefert und wo der Buchstabe auf der Münze zu finden ist.',
       excerpt: 'Was A, D, F, G und J bedeuten, welche Mengen sie liefern und warum das G am schwersten zu finden ist.',
       intro: [
         'Auf jeder deutschen Umlaufmünze steht ein kleiner Buchstabe. Er verrät, in welcher der fünf staatlichen Prägestätten sie hergestellt wurde — und er ist für Sammler oft wichtiger als der Jahrgang.',
@@ -243,9 +243,9 @@ export const muenzcheck: AppContent = {
       slug: 'd-mark-umtauschen-oder-behalten',
       keyword: 'd-mark umtauschen oder behalten',
       title: 'D-Mark umtauschen oder behalten? Erst prüfen, dann tauschen',
-      metaTitle: 'D-Mark umtauschen: Kurs, Bundesbank und wann sich Behalten lohnt',
+      metaTitle: 'D-Mark umtauschen: Kurs, Bundesbank & Behalten',
       metaDescription:
-        'Die Bundesbank tauscht D-Mark unbefristet und gebührenfrei um. Wann sich das lohnt, welche Münzen mehr wert sind als ihr Umtauschwert und wie du das vorher prüfst.',
+        'Die Bundesbank tauscht D-Mark unbefristet und gebührenfrei um. Wann sich das lohnt und welche Münzen mehr wert sind als ihr Umtauschwert.',
       excerpt: 'Unbefristeter Umtausch zum amtlichen Kurs — und die Münzen, bei denen Tauschen ein teurer Fehler wäre.',
       intro: [
         'Nach der Euro-Einführung sind in deutschen Haushalten Milliardenbeträge in D-Mark geblieben, ein erheblicher Teil davon in Münzen. Die gute Nachricht: Die Deutsche Bundesbank tauscht D-Mark unbefristet und gebührenfrei zum amtlichen Kurs von 1,95583 DM je Euro um.',

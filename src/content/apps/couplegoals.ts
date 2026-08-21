@@ -26,9 +26,9 @@ export const couplegoals: AppContent = {
     'Date ideas by category — cosy, adventure, foodie, budget',
     'Shared goals, mood log and key-date countdowns',
   ],
-  metaTitle: 'CoupleGoals – Couples App with Love Notes, Games & Shared Calendar',
+  metaTitle: 'CoupleGoals – Love Notes, Games & Shared Calendar',
   metaDescription:
-    'A private app for two: draw love notes to your partner’s Home Screen widget, answer a daily question together, play couple games and share a calendar of dates and anniversaries.',
+    'A private app for two: draw love notes to your partner\'s Home Screen widget, answer a daily question together, play games and share a calendar.',
   metaKeywords:
     'couples app, app for couples, love notes app, relationship app, long distance relationship app, daily question for couples, would you rather couples, shared calendar for couples, anniversary countdown app',
   screenshots: [
@@ -129,7 +129,7 @@ export const couplegoals: AppContent = {
       title: 'Making a Long-Distance Relationship Work (Without Living on Video Calls)',
       metaTitle: 'Long-Distance Relationship Apps & Habits That Actually Help',
       metaDescription:
-        'Long-distance couples burn out on scheduled video calls. Here is what actually sustains the connection — asynchronous contact, shared rituals and small daily signals.',
+        'Long-distance couples burn out on scheduled video calls. What actually sustains the connection — asynchronous contact and small daily signals.',
       excerpt: 'Why scheduled video calls burn out, and the asynchronous habits that hold a relationship together instead.',
       intro: [
         'Long-distance couples usually start with a rule: we will video call every evening. It works for a few weeks, then a call gets missed, then the calls become an obligation, and eventually both people are sitting in silence watching each other scroll.',
@@ -188,7 +188,7 @@ export const couplegoals: AppContent = {
       title: 'Daily Questions to Ask Your Partner (That Are Not Small Talk)',
       metaTitle: 'Daily Questions for Couples: 30 That Are Not Small Talk',
       metaDescription:
-        '“How was your day?” gets the same answer every time. Here are better daily questions for couples, why answering separately matters, and how to build the habit.',
+        '"How was your day?" gets the same answer every time. Better daily questions for couples, why answering separately matters, and building the habit.',
       excerpt: 'Better than "how was your day" — questions that produce real answers, and why you should answer them blind.',
       intro: [
         '"How was your day?" is not a question, it is a greeting. Everyone knows the expected answer is "fine, busy", and both people move on. Over years, that exchange can be the majority of a couple’s conversation.',
@@ -250,7 +250,7 @@ export const couplegoals: AppContent = {
       title: 'Date Night Ideas That Actually Happen',
       metaTitle: 'Date Night Ideas That Actually Happen (Not Just Get Saved)',
       metaDescription:
-        'Everyone saves date ideas and nobody does them. Here is why date nights collapse, how to plan ones that survive a busy week, and ideas by budget and energy level.',
+        'Everyone saves date ideas and nobody does them. Why date nights collapse, how to plan ones that survive a busy week, and ideas by budget.',
       excerpt: 'Why saved date ideas never happen, and the planning rule that fixes it.',
       intro: [
         'Most couples do not have a shortage of date ideas. They have a folder of screenshots, a list in someone’s notes app, and three months since the last one.',

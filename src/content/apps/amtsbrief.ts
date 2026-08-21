@@ -26,9 +26,9 @@ export const amtsbrief: AppContent = {
     'Formelle Antwort oder Widerspruch auf Deutsch entwerfen',
     'Fristerinnerung setzen und Antwort als PDF exportieren',
   ],
-  metaTitle: 'Amtsbrief AI – Behördenbriefe scannen, verstehen & beantworten',
+  metaTitle: 'Amtsbrief AI – Behördenbriefe scannen & verstehen',
   metaDescription:
-    'Post vom Finanzamt, Jobcenter oder der Ausländerbehörde verstehen: Amtsbrief AI scannt den Brief, erklärt ihn in deiner Sprache, erkennt Fristen und entwirft eine formelle Antwort auf Deutsch.',
+    'Post vom Finanzamt oder der Ausländerbehörde verstehen: Amtsbrief AI scannt den Brief, erklärt ihn in deiner Sprache und erkennt Fristen.',
   metaKeywords:
     'behördenbrief verstehen, amtsbrief übersetzen, behördendeutsch übersetzer, brief vom jobcenter, finanzamt brief erklären, ausländerbehörde brief, widerspruch schreiben, amtliche post app, deutsche behördenpost',
   screenshots: [
@@ -123,9 +123,9 @@ export const amtsbrief: AppContent = {
       slug: 'behoerdenbrief-verstehen',
       keyword: 'behördenbrief verstehen',
       title: 'Behördenbrief verstehen: die 7 Dinge, auf die es ankommt',
-      metaTitle: 'Behördenbrief verstehen: Frist, Betrag & nächste Schritte finden',
+      metaTitle: 'Behördenbrief verstehen: Frist, Betrag & Schritte',
       metaDescription:
-        'Bescheid, Anhörung oder Mahnung? So liest du einen deutschen Behördenbrief richtig: Absender, Brieftyp, Frist, Betrag, Aktenzeichen und Rechtsbehelfsbelehrung — Schritt für Schritt.',
+        'Bescheid, Anhörung oder Mahnung? So liest du einen deutschen Behördenbrief richtig: Absender, Brieftyp, Frist, Betrag und Aktenzeichen.',
       excerpt: 'Absender, Brieftyp, Frist, Betrag, Aktenzeichen: die sieben Stellen, die in jedem Bescheid wirklich zählen.',
       intro: [
         'Ein deutscher Behördenbrief ist selten kurz und nie freundlich formuliert. Das Entscheidende steht dabei fast immer an denselben Stellen — der Rest ist Verwaltungssprache, die man beim ersten Lesen überspringen kann.',
@@ -186,9 +186,9 @@ export const amtsbrief: AppContent = {
       slug: 'widerspruch-schreiben',
       keyword: 'widerspruch gegen bescheid schreiben',
       title: 'Widerspruch gegen einen Bescheid schreiben: Aufbau und Frist',
-      metaTitle: 'Widerspruch gegen einen Bescheid: Aufbau, Frist & Formulierung',
+      metaTitle: 'Widerspruch gegen einen Bescheid: Aufbau & Frist',
       metaDescription:
-        'Wie ein Widerspruch aufgebaut sein muss, welche Frist gilt, was unbedingt hineingehört — und warum ein kurzer fristwahrender Widerspruch oft der richtige erste Schritt ist.',
+        'Wie ein Widerspruch aufgebaut sein muss, welche Frist gilt und warum ein kurzer fristwahrender Widerspruch oft der richtige erste Schritt ist.',
       excerpt: 'Aufbau, Frist und der fristwahrende Einzeiler, der dir Zeit für die Begründung kauft.',
       intro: [
         'Ein Widerspruch ist kein Streit, sondern ein normaler Verwaltungsvorgang. Er muss nicht juristisch klingen — er muss rechtzeitig da sein, eindeutig zuordenbar sein und erkennen lassen, dass du mit der Entscheidung nicht einverstanden bist.',
@@ -246,9 +246,9 @@ export const amtsbrief: AppContent = {
       slug: 'frist-verpasst-was-tun',
       keyword: 'behördenfrist verpasst was tun',
       title: 'Frist verpasst: was jetzt noch geht',
-      metaTitle: 'Behördenfrist verpasst? Wiedereinsetzung und nächste Schritte',
+      metaTitle: 'Behördenfrist verpasst? Wiedereinsetzung & Schritte',
       metaDescription:
-        'Die Frist im Bescheid ist abgelaufen. Was jetzt noch möglich ist: Wiedereinsetzung in den vorigen Stand, Überprüfungsantrag, Ratenzahlung — und wie du den nächsten Brief nicht verpasst.',
+        'Die Frist im Bescheid ist abgelaufen. Was jetzt noch möglich ist: Wiedereinsetzung, Überprüfungsantrag, Ratenzahlung — und wie es nicht wieder passiert.',
       excerpt: 'Wiedereinsetzung, Überprüfungsantrag, Ratenzahlung — was nach Fristablauf noch möglich ist.',
       intro: [
         'Eine abgelaufene Frist fühlt sich endgültig an, ist es aber nicht immer. Das deutsche Verwaltungsrecht kennt mehrere Wege zurück — sie sind enger als der normale Widerspruch, aber sie existieren.',

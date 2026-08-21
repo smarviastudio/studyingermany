@@ -28,7 +28,7 @@ export const parkspot: AppContent = {
   ],
   metaTitle: 'ParkSpot – Find My Car App with Parking Timer for iPhone',
   metaDescription:
-    'Never lose your car in a parking garage again. ParkSpot saves your parking spot with a photo, runs a parking meter timer on your Lock Screen, and guides you back on the map. Free on iPhone.',
+    'Never lose your car in a parking garage again. ParkSpot saves the spot with a photo, runs a meter timer on your Lock Screen, and guides you back.',
   metaKeywords:
     'find my car app, parking spot app, where did I park, parking timer app, parking meter reminder, car finder app, parking garage app, save parking location, parking history',
   screenshots: [
@@ -126,9 +126,9 @@ export const parkspot: AppContent = {
       slug: 'how-to-find-your-car-in-a-parking-garage',
       keyword: 'how to find your car in a parking garage',
       title: 'How to Find Your Car in a Parking Garage (Every Time)',
-      metaTitle: 'How to Find Your Car in a Parking Garage: 6 Methods That Work',
+      metaTitle: 'How to Find Your Car in a Parking Garage: 6 Ways',
       metaDescription:
-        'Lost your car in a multi-storey garage? Here are six reliable ways to find it again — from level markers and photos to GPS pins — and how to never lose it in the first place.',
+        'Lost your car in a multi-storey garage? Six reliable ways to find it again — from level markers and photos to GPS pins — and how to avoid it.',
       excerpt: 'Six reliable ways to find a car in a multi-storey garage — and the 5-second habit that prevents the search entirely.',
       intro: [
         'Parking garages are designed to be forgettable. Every level looks the same, the signage is inconsistent, and you are usually thinking about the appointment you are late for rather than the letter painted on the pillar next to you.',
@@ -179,7 +179,7 @@ export const parkspot: AppContent = {
       title: 'How to Stop Getting Parking Tickets (Use a Timer, Not Your Memory)',
       metaTitle: 'Parking Timer App: How to Never Get a Parking Ticket Again',
       metaDescription:
-        'Most parking fines are for overstaying by a few minutes. Learn how to use a parking timer with Lock Screen alerts so you always get back to the car before the meter runs out.',
+        'Most parking fines are for overstaying by a few minutes. How to use a parking timer with Lock Screen alerts so you get back before it runs out.',
       excerpt: 'Most fines are for overstaying by minutes. A timer with a warning buffer fixes that for good.',
       intro: [
         'The typical parking fine is not for parking illegally. It is for parking legally and then staying eleven minutes too long, because a two-hour limit that started at 14:07 is not something the human brain tracks in the background.',

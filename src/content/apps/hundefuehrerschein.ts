@@ -28,7 +28,7 @@ export const hundefuehrerschein: AppContent = {
   ],
   metaTitle: 'Hundeführerschein App – Sachkundenachweis Prüfung üben',
   metaDescription:
-    'Sachkundeprüfung nach § 11 TierSchG üben: alle offiziellen Fragen aus den fünf Themenbereichen, Prüfungssimulation mit 35 Fragen in 45 Minuten, Erklärungen und Fehlertraining.',
+    'Sachkundeprüfung nach § 11 TierSchG üben: alle offiziellen Fragen aus fünf Themenbereichen, Prüfungssimulation, Erklärungen und Fehlertraining.',
   metaKeywords:
     'hundeführerschein, sachkundenachweis hund, sachkundeprüfung hund, hundeführerschein fragen, § 11 tierschg, hundeführerschein üben, hundehalter prüfung, hundeführerschein app, theoretische sachkundeprüfung',
   screenshots: [
@@ -125,9 +125,9 @@ export const hundefuehrerschein: AppContent = {
       slug: 'sachkundepruefung-hund-ablauf',
       keyword: 'sachkundeprüfung hund ablauf',
       title: 'Sachkundeprüfung für Hundehalter: Ablauf, Inhalte, Kosten',
-      metaTitle: 'Sachkundeprüfung Hund: Ablauf, Themen und Kosten im Überblick',
+      metaTitle: 'Sachkundeprüfung Hund: Ablauf, Themen und Kosten',
       metaDescription:
-        'Wie die theoretische Sachkundeprüfung abläuft, welche fünf Themenbereiche geprüft werden, wie viele Fragen kommen, was sie kostet und wie du dich sinnvoll vorbereitest.',
+        'Wie die theoretische Sachkundeprüfung abläuft, welche fünf Themenbereiche geprüft werden, was sie kostet und wie du dich sinnvoll vorbereitest.',
       excerpt: 'Ablauf, die fünf Themenbereiche, Kosten und ein realistischer Lernplan für vier Wochen.',
       intro: [
         'Die theoretische Sachkundeprüfung — umgangssprachlich Hundeführerschein — weist nach, dass du die Grundlagen von Haltung, Verhalten und Recht rund um den Hund beherrschst. Grundlage ist § 11 TierSchG in Verbindung mit den Regelungen deines Bundeslandes.',
@@ -187,7 +187,7 @@ export const hundefuehrerschein: AppContent = {
       title: 'Hundeführerschein: Wo er Pflicht ist und was er bringt',
       metaTitle: 'Hundeführerschein Pflicht: Regelungen nach Bundesland',
       metaDescription:
-        'In welchen Bundesländern ein Sachkundenachweis vorgeschrieben ist, für welche Hunde er gilt, welche Vorteile der freiwillige Hundeführerschein bringt und was bei einem Umzug gilt.',
+        'In welchen Bundesländern ein Sachkundenachweis vorgeschrieben ist, für welche Hunde er gilt und welche Vorteile der Hundeführerschein bringt.',
       excerpt: 'Wo der Nachweis Pflicht ist, für welche Hunde er gilt und was der freiwillige Schein bringt.',
       intro: [
         'Hunderecht ist in Deutschland Ländersache, und entsprechend unübersichtlich ist die Lage: Niedersachsen verlangt einen Sachkundenachweis grundsätzlich von allen Haltern, andere Länder knüpfen ihn an bestimmte Rassen, an die Größe oder an einen Vorfall, wieder andere kennen gar keine allgemeine Pflicht.',
@@ -245,9 +245,9 @@ export const hundefuehrerschein: AppContent = {
       slug: 'koerpersprache-hund-erkennen',
       keyword: 'körpersprache hund erkennen',
       title: 'Körpersprache von Hunden lesen: die Signale, die zählen',
-      metaTitle: 'Körpersprache bei Hunden erkennen: Beschwichtigung bis Drohung',
+      metaTitle: 'Körpersprache bei Hunden richtig erkennen',
       metaDescription:
-        'Rute, Ohren, Maul, Blick, Körperhaltung: die wichtigsten Signale der Hundekörpersprache, die häufigsten Fehldeutungen und warum Beschwichtigungssignale so oft übersehen werden.',
+        'Rute, Ohren, Maul, Blick, Körperhaltung: die wichtigsten Signale der Hundekörpersprache und warum Beschwichtigungssignale so oft übersehen werden.',
       excerpt: 'Beschwichtigungssignale, Drohsignale und die Fehldeutungen, die zu Beißvorfällen führen.',
       intro: [
         'Bildfragen zur Körpersprache gehören zu den Aufgaben, an denen in der Sachkundeprüfung am meisten gerätselt wird — und sie sind gleichzeitig der Teil mit dem größten Nutzen im Alltag. Fast jeder Beißvorfall hat eine Vorgeschichte aus Signalen, die niemand gelesen hat.',

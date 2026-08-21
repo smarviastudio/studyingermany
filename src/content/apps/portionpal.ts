@@ -28,7 +28,7 @@ export const portionpal: AppContent = {
   ],
   metaTitle: 'PortionPal – Portion Control App & Balanced Plate Planner',
   metaDescription:
-    'Portion control without calorie counting. PortionPal helps you build balanced plates, learn real serving sizes and plan portions for weight loss and healthier eating. Free on iPhone.',
+    'Portion control without calorie counting. PortionPal helps you build balanced plates, learn real serving sizes and plan portions for weight loss.',
   metaKeywords:
     'portion control app, serving size guide, balanced plate, meal portion planner, portion sizes for weight loss, healthy eating app, plate method, portion guide without calorie counting',
   screenshots: [
@@ -129,7 +129,7 @@ export const portionpal: AppContent = {
       title: 'Portion Control for Weight Loss (Without Counting Calories)',
       metaTitle: 'Portion Control for Weight Loss: A No-Counting Guide',
       metaDescription:
-        'You can lose weight without logging every meal. Learn how portion control creates a calorie deficit by default, what portions to start with, and the mistakes that quietly undo it.',
+        'You can lose weight without logging every meal. How portion control creates a calorie deficit by default, and the mistakes that quietly undo it.',
       excerpt: 'How right-sized portions create a deficit by default — and the four mistakes that quietly undo it.',
       intro: [
         'Every diet that works does the same thing underneath: it reduces how much you eat. Calorie counting is one way to get there, and it is a good one for people who enjoy data. For everyone else it collapses within a few weeks, because logging every meal is a part-time job.',

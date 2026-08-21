@@ -26,9 +26,9 @@ export const airfryer: AppContent = {
     'Cook with what is already in your kitchen',
     'Scale servings — ingredient amounts update automatically',
   ],
-  metaTitle: 'AirFryer Chef – Air Fryer Recipes App with Times & Temperatures',
+  metaTitle: 'AirFryer Chef – Recipes with Times & Temperatures',
   metaDescription:
-    'Air fryer recipes with exact times, temperatures and step-by-step guidance. Filter by time, diet or calories, cook with what you have, and build a shopping list. Free on iPhone.',
+    'Air fryer recipes with exact times and temperatures. Filter by time, diet or calories, cook with what you have, and build a shopping list. Free on iPhone.',
   metaKeywords:
     'air fryer recipes, air fryer cookbook app, air fryer cooking times, air fryer temperature chart, air fryer chicken recipes, healthy air fryer meals, what to cook in air fryer, air fryer app',
   screenshots: [
@@ -192,7 +192,7 @@ export const airfryer: AppContent = {
       title: 'What to Cook in the Air Fryer With What You Already Have',
       metaTitle: 'What to Cook in an Air Fryer With Ingredients You Have',
       metaDescription:
-        'Nothing planned for dinner? Here is how to cook from your fridge and cupboard with an air fryer — reliable combinations, timing rules and how pantry matching works.',
+        'Nothing planned for dinner? How to cook from your fridge and cupboard with an air fryer — reliable combinations, timing rules and pantry matching.',
       excerpt: 'Cooking from the fridge: reliable combinations, timing rules, and how pantry matching shortcuts the decision.',
       intro: [
         'The hardest part of weeknight cooking is not technique, it is the decision. You have chicken thighs, half a bag of potatoes, something green that needs using, and no idea what that adds up to.',
@@ -243,9 +243,9 @@ export const airfryer: AppContent = {
       slug: 'air-fryer-for-beginners',
       keyword: 'air fryer for beginners',
       title: 'Air Fryer for Beginners: The First Two Weeks',
-      metaTitle: 'Air Fryer for Beginners: What to Cook First and What to Avoid',
+      metaTitle: 'Air Fryer for Beginners: What to Cook First',
       metaDescription:
-        'Just unboxed an air fryer? Here is what to cook in the first week, the mistakes everyone makes, how to clean it properly, and what genuinely does not work in one.',
+        'Just unboxed an air fryer? What to cook in the first week, the mistakes everyone makes, how to clean it, and what genuinely does not work in one.',
       excerpt: 'What to cook first, the mistakes everyone makes, and the foods that genuinely do not work.',
       intro: [
         'The air fryer sitting on your counter is a convection oven with a fan strong enough to crisp food using a fraction of the oil. It is very good at a specific set of things and quite bad at a few others, and knowing which is which is most of the learning curve.',

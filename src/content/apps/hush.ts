@@ -28,7 +28,7 @@ export const hush: AppContent = {
   ],
   metaTitle: 'Hush – Silent Mode Reminder App for iPhone (Location Based)',
   metaDescription:
-    'Stop your phone ringing in meetings, lectures or church. Hush sends a location-based reminder to switch to silent mode when you arrive at your quiet places. Free on iPhone.',
+    'Stop your phone ringing in meetings or lectures. Hush sends a location-based reminder to switch to silent when you arrive. Free on iPhone.',
   metaKeywords:
     'silent mode reminder, mute phone reminder, location based reminder app, phone rang in meeting, silence phone at work, do not disturb reminder, quiet place reminder, library silent app',
   screenshots: [
@@ -129,7 +129,7 @@ export const hush: AppContent = {
       title: 'How to Remember to Silence Your Phone (Without Missing Calls Later)',
       metaTitle: 'How to Remember to Silence Your Phone: Reminders That Work',
       metaDescription:
-        'Forgetting to mute your phone is a memory problem, not a manners problem. Here is how location cues, Focus modes and place-based reminders fix it — and how to avoid staying silent all day.',
+        'Forgetting to mute your phone is a memory problem, not a manners problem. How location cues, Focus modes and place-based reminders fix it.',
       excerpt: 'Why muting is a memory problem, and the location-cue setup that fixes it without leaving you silent all day.',
       intro: [
         'Nobody forgets to silence their phone because they do not care. They forget because muting is a small action attached to a change of place, and the brain is unreliable at exactly that: remembering to do something at a moment in the future when your attention is somewhere else.',
@@ -188,7 +188,7 @@ export const hush: AppContent = {
       title: 'Your Phone Rang in a Meeting: What to Do and How to Prevent It',
       metaTitle: 'Phone Rang in a Meeting? How to Recover and Prevent It',
       metaDescription:
-        'A ringing phone in a meeting, lecture or interview happens to everyone. Here is the fastest way to recover gracefully — and the setup that stops it happening again.',
+        'A ringing phone in a meeting or interview happens to everyone. The fastest way to recover gracefully — and the setup that stops it recurring.',
       excerpt: 'The graceful recovery, and the setup that means you never need it again.',
       intro: [
         'It always happens in the quietest second of the meeting. The recovery matters less than people think — what people remember is whether it kept happening.',
@@ -240,7 +240,7 @@ export const hush: AppContent = {
       title: 'Location-Based Reminders: Why Place Beats Time',
       metaTitle: 'Location-Based Reminders vs Time Alarms: Which Works Better?',
       metaDescription:
-        'Time-based alarms fire when you cannot act. Location-based reminders fire where the action is possible. Here is when to use each — and how to set up place reminders that you do not ignore.',
+        'Time-based alarms fire when you cannot act; location reminders fire where the action is possible. When to use each, and how to set them up.',
       excerpt: 'Time alarms fire when you cannot act. Place reminders fire where the action is possible.',
       intro: [
         'A reminder is only useful if it arrives at a moment when you can actually do the thing. That is the structural weakness of time-based alarms for anything tied to a place: 08:45 finds you in traffic, not at the desk where the task lives.',

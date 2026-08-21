@@ -28,7 +28,7 @@ export const littlegenius: AppContent = {
   ],
   metaTitle: 'Little Genius – Preschool Learning Games App for Ages 2–7',
   metaDescription:
-    'Letters, phonics, tracing, numbers, words, memory and drawing in one preschool app. Little Genius builds early reading, writing and counting confidence for ages 2–7. Free on iPhone and iPad.',
+    'Letters, phonics, tracing, numbers, words and drawing in one preschool app. Little Genius builds early reading and counting confidence, ages 2–7.',
   metaKeywords:
     'preschool app, learning games for kids, abc app for toddlers, phonics app, letter tracing app, counting app for preschoolers, kindergarten readiness, educational games ages 3-5, toddler learning app',
   screenshots: [
@@ -129,7 +129,7 @@ export const littlegenius: AppContent = {
       title: 'How to Teach a Preschooler Letters and Phonics (In the Right Order)',
       metaTitle: 'Teaching Preschoolers Letters & Phonics: The Right Order',
       metaDescription:
-        'Letter names or letter sounds first? Here is the order early reading actually develops, which letters to start with, and how much practice a 3–5 year old needs.',
+        'Letter names or letter sounds first? The order early reading actually develops, which letters to start with, and how much practice a 3–5 year old needs.',
       excerpt: 'Sounds before names, common letters before the alphabet song — the order early reading actually develops in.',
       intro: [
         'Most parents start with the alphabet song and uppercase letters, because that is how we remember learning it. Reading research points somewhere slightly different: children get further, faster, when they learn letter sounds before letter names, and start with the letters that appear most in simple words.',
@@ -239,9 +239,9 @@ export const littlegenius: AppContent = {
       slug: 'kindergarten-readiness-checklist',
       keyword: 'kindergarten readiness checklist',
       title: 'Kindergarten Readiness: What Actually Matters Before School',
-      metaTitle: 'Kindergarten Readiness Checklist: Skills That Actually Matter',
+      metaTitle: 'Kindergarten Readiness Checklist: Skills to Build',
       metaDescription:
-        'Not reading and counting to 100 — the skills that predict a good start at school are simpler than parents fear. Here is the honest checklist and how to practise it.',
+        'The skills that predict a good start at school are simpler than parents fear. The honest readiness checklist, and how to practise it at home.',
       excerpt: 'The honest checklist: independence and language matter more than reading before school.',
       intro: [
         'Ask a reception or kindergarten teacher what they want children to arrive with and the answer is rarely academic. Reading and arithmetic are what school is for. What helps most is a child who can manage themselves for a few hours in a room full of other children.',
