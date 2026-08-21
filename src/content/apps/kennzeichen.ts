@@ -26,9 +26,9 @@ export const kennzeichen: AppContent = {
     'Punkte & Achievements für seltene Kennzeichen',
     'Funktioniert offline — ideal für unterwegs',
   ],
-  metaTitle: 'Kennzeichen App mit AI-Scanner – Nummernschilder sammeln & erkennen',
+  metaTitle: 'Kennzeichen App mit AI-Scanner – Nummernschilder erkennen',
   metaDescription:
-    'Kennzeichen scannen statt tippen: Die KennzeichenSammler-App erkennt Nummernschilder per KI, zeigt Herkunft auf der Weltkarte und macht jede Autofahrt zum Spiel. Gratis für iPhone.',
+    'Kennzeichen scannen statt tippen: Die App erkennt Nummernschilder per KI, zeigt die Herkunft auf der Weltkarte und macht jede Fahrt zum Spiel.',
   metaKeywords:
     'kennzeichen app, autokennzeichen scanner, kennzeichen erkennen, nummernschilder sammeln, kennzeichen spiel, autokennzeichen deutschland, ortskennzeichen, kennzeichen quiz, roadtrip spiel kinder',
   screenshots: [
@@ -116,9 +116,9 @@ export const kennzeichen: AppContent = {
       slug: 'autokennzeichen-spiel-fuer-kinder',
       keyword: 'autokennzeichen spiel für kinder',
       title: 'Das Autokennzeichen-Spiel für Kinder: Regeln, Varianten & App',
-      metaTitle: 'Autokennzeichen-Spiel für Kinder: Regeln & moderne App-Variante',
+      metaTitle: 'Autokennzeichen-Spiel für Kinder: Regeln & App',
       metaDescription:
-        'Das Kennzeichen-Spiel ist der Klassiker gegen Langeweile auf langen Autofahrten. Hier sind die besten Regeln und Varianten für Kinder — plus die moderne Version mit AI-Scanner.',
+        'Das Kennzeichen-Spiel ist der Klassiker gegen Langeweile auf langen Autofahrten. Die besten Regeln und Varianten für Kinder — plus AI-Scanner.',
       excerpt: 'Der Klassiker gegen „Wann sind wir daaa?" — Spielregeln, Varianten nach Alter und die moderne Scanner-Version.',
       intro: [
         '„Wann sind wir daaa?" — jede Familie kennt die Frage, meistens 20 Minuten nach der Abfahrt. Das Autokennzeichen-Spiel ist seit Generationen die beste Antwort: Es kostet nichts, braucht kein Zubehör und verwandelt jede Autobahnfahrt in eine Schatzsuche.',
@@ -173,7 +173,7 @@ export const kennzeichen: AppContent = {
       title: 'Wo kommt das Kennzeichen her? Deutsche Ortskürzel verstehen',
       metaTitle: 'Kennzeichen-Herkunft erkennen: Deutsche Ortskürzel erklärt',
       metaDescription:
-        'Was bedeutet GAP, HRO oder WOB? So funktioniert das deutsche Kennzeichen-System mit über 700 Ortskürzeln — und so erkennst du jede Herkunft sofort per Scan.',
+        'Was bedeutet GAP, HRO oder WOB? So funktioniert das deutsche Kennzeichen-System mit über 700 Ortskürzeln — und so erkennst du jede Herkunft.',
       excerpt: 'Über 700 deutsche Ortskürzel — wie das System funktioniert, welche Kürzel Geschichten erzählen und wie der Scan sofort auflöst.',
       intro: [
         'B wie Berlin und M wie München kennt jeder — aber wer tippt bei GAP, HRO oder WOB richtig? Deutschland hat über 700 Unterscheidungszeichen, und hinter vielen steckt mehr Geschichte, als man denkt.',
@@ -225,9 +225,9 @@ export const kennzeichen: AppContent = {
       slug: 'kennzeichen-sammeln-roadtrip',
       keyword: 'kennzeichen sammeln roadtrip',
       title: 'Kennzeichen sammeln auf dem Roadtrip: So wird die Fahrt zum Spiel',
-      metaTitle: 'Kennzeichen sammeln auf Roadtrips: Anleitung & Sammel-Strategie',
+      metaTitle: 'Kennzeichen sammeln auf Roadtrips: Anleitung',
       metaDescription:
-        'Aus Kilometern werden Trophäen: So baust du auf Roadtrips eine Kennzeichen-Sammlung auf — mit AI-Scanner, Weltkarte, Punktesystem und Strategie für seltene Funde.',
+        'Aus Kilometern werden Trophäen: So baust du auf Roadtrips eine Kennzeichen-Sammlung auf — mit AI-Scanner, Weltkarte und Punktesystem.',
       excerpt: 'Vom Beifahrersitz zur Trophäensammlung: die Sammel-Strategie für Urlaubsfahrten, Grenzregionen und seltene Funde.',
       intro: [
         'Jeder Roadtrip produziert hunderte Begegnungen mit Autos aus ganz Europa — und normalerweise verpuffen sie ungenutzt. Kennzeichen-Sammler sehen das anders: Jede Raststätte ist ein Jagdrevier, jeder Grenzübertritt erweitert die Karte, und ein bulgarisches Kennzeichen auf einem norwegischen Parkplatz ist ein Jackpot.',

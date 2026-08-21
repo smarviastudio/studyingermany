@@ -2,7 +2,7 @@ import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata = buildPageMetadata({
   title: 'Motivation Letter Writer - German University Applications',
-  description: 'Write compelling motivation letters for German university admissions with AI. Perfect for master\'s and bachelor\'s applications, scholarships, and study programs in Germany.',
+  description: 'Write compelling motivation letters for German university admissions with AI — for master\'s and bachelor\'s applications and scholarships.',
   path: '/motivation-letter/landing',
   keywords: [
     'motivation letter Germany',

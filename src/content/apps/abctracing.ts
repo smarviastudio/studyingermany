@@ -29,7 +29,7 @@ export const abctracing: AppContent = {
   ],
   metaTitle: 'ABC Tracing – Letter Tracing App for Toddlers & Preschoolers',
   metaDescription:
-    'Teach your child to write letters, numbers and shapes with guided tracing and phonics audio. Ad-free, no data collected, 5 languages. Free on iPhone and iPad.',
+    'Teach your child to write letters, numbers and shapes with guided tracing and phonics audio. Ad-free, no data collected. Free on iPhone and iPad.',
   metaKeywords:
     'letter tracing app, abc tracing app, learn to write letters app, alphabet app for toddlers, preschool writing app, phonics app for kids, number tracing, handwriting practice kids, kindergarten readiness app',
   screenshots: [
@@ -120,9 +120,9 @@ export const abctracing: AppContent = {
       slug: 'teach-toddler-to-write-letters',
       keyword: 'how to teach a toddler to write letters',
       title: 'How to Teach a Toddler to Write Letters (Ages 2–5, Step by Step)',
-      metaTitle: 'How to Teach a Toddler to Write Letters: Step-by-Step (Ages 2–5)',
+      metaTitle: 'How to Teach a Toddler to Write Letters (Ages 2–5)',
       metaDescription:
-        'Teaching a toddler to write starts with fine motor play, moves through finger tracing, and ends with pencil grip. The full developmental sequence, plus how tracing apps accelerate it.',
+        'Teaching a toddler to write starts with fine motor play, moves to finger tracing, then pencil grip. The full sequence, and how tracing apps help.',
       excerpt: 'The developmental sequence from scribbles to letters — and where finger tracing fits before pencil grip.',
       intro: [
         'Children learn to write in a predictable sequence: scribbling, then lines and circles, then shapes, then letters — usually the ones in their own name first. Trying to skip stages (handing a 2-year-old a pencil and an alphabet worksheet) produces frustration, not progress.',
@@ -177,9 +177,9 @@ export const abctracing: AppContent = {
       slug: 'handwriting-practice-before-kindergarten',
       keyword: 'handwriting practice before kindergarten',
       title: 'Handwriting Readiness Before Kindergarten: What Kids Actually Need',
-      metaTitle: 'Handwriting Practice Before Kindergarten: The Readiness Checklist',
+      metaTitle: 'Handwriting Practice Before Kindergarten: Checklist',
       metaDescription:
-        'Kindergarten teachers wish every child arrived with these pre-writing skills: pencil-free letter knowledge, stroke control, and letter-sound links. Here is the readiness checklist.',
+        'The pre-writing skills kindergarten teachers wish every child had: pencil-free letter knowledge, stroke control and letter-sound links.',
       excerpt: 'What kindergarten teachers actually hope kids arrive with — a readiness checklist and daily 10-minute routine.',
       intro: [
         'Kindergarten readiness is not about writing perfect letters — teachers will handle that. What makes the first school year dramatically easier is arriving with the precursors: knowing letter shapes, controlling basic strokes, and connecting letters to sounds.',
@@ -236,9 +236,9 @@ export const abctracing: AppContent = {
       slug: 'phonics-apps-for-preschoolers',
       keyword: 'phonics apps for preschoolers',
       title: 'Phonics for Preschoolers: How Letter Sounds Unlock Reading',
-      metaTitle: 'Phonics Apps for Preschoolers: How Letter Sounds Unlock Reading',
+      metaTitle: 'Phonics Apps for Preschoolers: Letter Sounds Guide',
       metaDescription:
-        'Phonics — connecting letters to sounds — is the strongest predictor of early reading success. What preschool phonics should look like, and how tracing + audio builds it naturally.',
+        'Phonics is the strongest predictor of early reading. What preschool phonics should look like, and how tracing plus audio builds it naturally.',
       excerpt: 'Why letter-sound knowledge predicts reading success — and how tracing with audio builds phonics without flashcard drills.',
       intro: [
         'Decades of reading research agree on one thing: children who know their letter sounds learn to read faster and more confidently. Phonics — the link between written letters and spoken sounds — is the single strongest predictor of early reading success.',

@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
 import type { Metadata } from 'next';
+import { buildCanonicalUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Impressum (Legal Notice)',
   description: 'Legal notice and imprint for GermanPath / StudyGermany as required by German law (§5 DDG).',
+  alternates: { canonical: buildCanonicalUrl('/impressum') },
   robots: { index: false, follow: false },
 };
 

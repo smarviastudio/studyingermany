@@ -26,9 +26,9 @@ export const dosebuddy: AppContent = {
     'Pill counter with refill warnings before you run out',
     'Share your medicine list with your doctor as a PDF',
   ],
-  metaTitle: 'DoseBuddy – Pill Reminder & Medication Tracker App for iPhone',
+  metaTitle: 'DoseBuddy – Pill Reminder & Med Tracker for iPhone',
   metaDescription:
-    'Never miss a dose again. DoseBuddy is a simple pill reminder and medication tracker with alarms, refill warnings, dose history and a senior-friendly design. Free on iPhone.',
+    'Never miss a dose again. DoseBuddy is a simple pill reminder and medication tracker with alarms, refill warnings and dose history. Free on iPhone.',
   metaKeywords:
     'pill reminder app, medication tracker app, medicine reminder, medication reminder app for seniors, pill tracker iPhone, dose tracker, refill reminder, medication schedule app, tablet reminder',
   screenshots: [
@@ -125,9 +125,9 @@ export const dosebuddy: AppContent = {
       slug: 'how-to-remember-to-take-medication',
       keyword: 'how to remember to take medication',
       title: 'How to Remember to Take Your Medication: 6 Habits That Work',
-      metaTitle: 'How to Remember to Take Medication: 6 Habits That Actually Work',
+      metaTitle: 'How to Remember to Take Medication: 6 Habits',
       metaDescription:
-        'Forgetting doses is the #1 reason medications fail. These 6 evidence-based habits — anchoring, visual cues, smart reminders and dose logging — make taking medication automatic.',
+        'Forgetting doses is the top reason medications fail. These 6 evidence-based habits — anchoring, visual cues, smart reminders — make it automatic.',
       excerpt: 'Six evidence-based habits — from habit anchoring to dose logging — that make taking medication automatic.',
       intro: [
         'Roughly half of all long-term medications are not taken as prescribed, and the most common reason is simple forgetting. That is not a discipline problem — it is a systems problem. Human memory is bad at "invisible" repeated tasks, especially ones with no immediate consequence when skipped.',
@@ -175,9 +175,9 @@ export const dosebuddy: AppContent = {
       slug: 'pill-reminder-app-for-seniors',
       keyword: 'pill reminder app for seniors',
       title: 'The Best Pill Reminder Setup for Seniors (Simple & Readable)',
-      metaTitle: 'Pill Reminder App for Seniors: Simple, Large-Text Setup Guide',
+      metaTitle: 'Pill Reminder App for Seniors: Large-Text Setup',
       metaDescription:
-        'What makes a pill reminder app senior-friendly? Large text, big buttons, no clutter and loud reminders. Here is a checklist and the exact setup that works for older adults.',
+        'What makes a pill reminder app senior-friendly? Large text, big buttons, no clutter, loud reminders. The checklist and setup for older adults.',
       excerpt: 'What actually makes a medication app usable for older adults — and a 10-minute setup a family member can do.',
       intro: [
         'Most medication apps fail older users for boring reasons: text too small, buttons too close together, features buried in menus, and notifications that are easy to dismiss by accident. For a senior managing five or more daily medicines, the app must be simpler than the paper list it replaces.',
@@ -228,9 +228,9 @@ export const dosebuddy: AppContent = {
       slug: 'medication-list-for-caregivers',
       keyword: 'medication list for caregiver doctor visits',
       title: 'Keeping a Medication List as a Caregiver (and Sharing It With Doctors)',
-      metaTitle: 'Caregiver Medication List: How to Track & Share Meds With Doctors',
+      metaTitle: 'Caregiver Medication List: Track & Share With Doctors',
       metaDescription:
-        'Caring for a parent or relative? Learn how to keep an always-current medication list, track taken/skipped doses, and hand doctors a complete PDF at every appointment.',
+        'Caring for a parent? How to keep an always-current medication list, track taken and skipped doses, and hand doctors a complete PDF.',
       excerpt: 'How caregivers keep an always-current medication list — and hand doctors the full picture at every appointment.',
       intro: [
         'Every doctor visit starts with the same question: "What medications are they currently taking?" For caregivers juggling a parent\'s prescriptions across multiple doctors, answering from memory is risky — outdated lists cause prescribing errors, duplicate therapies and dangerous interactions.',

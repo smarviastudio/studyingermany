@@ -2,7 +2,7 @@ import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata = buildPageMetadata({
   title: 'Cover Letter Generator - German Anschreiben',
-  description: 'Generate professional German cover letters (Anschreiben) with AI. Tailored for German employers and university applications. Free, instant, and optimized for German business standards.',
+  description: 'Generate professional German cover letters (Anschreiben) with AI — tailored for German employers and university applications. Free and instant.',
   path: '/cover-letter/landing',
   keywords: [
     'German cover letter',

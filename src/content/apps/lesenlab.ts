@@ -26,9 +26,9 @@ export const lesenlab: AppContent = {
     'Spaced-repetition flashcards and quizzes after each text',
     'Built for Goethe, telc and TestDaF exam preparation',
   ],
-  metaTitle: 'Lesen Lab – German Reading App: Learn German With Stories (A1–B2)',
+  metaTitle: 'Lesen Lab – German Reading App: Stories A1–B2',
   metaDescription:
-    'Learn German with 1000+ graded stories (A1–B2), native audio, instant translations and flashcards. Lesen Lab is the German reading app for Goethe, telc & TestDaF prep on iPhone and iPad.',
+    'Learn German with 1000+ graded stories (A1–B2), native audio, instant translations and flashcards. The German reading app for Goethe and telc prep.',
   metaKeywords:
     'German reading app, learn German with stories, German stories for beginners, German stories A1 A2 B1 B2, German reading practice, Goethe reading practice, telc reading practice, TestDaF preparation app, German graded readers, learn German vocabulary',
   screenshots: [
@@ -128,9 +128,9 @@ export const lesenlab: AppContent = {
       slug: 'learn-german-with-stories',
       keyword: 'learn german with stories',
       title: 'How to Learn German With Stories (and Why It Works)',
-      metaTitle: 'Learn German With Stories: The Method That Actually Sticks (A1–B2)',
+      metaTitle: 'Learn German With Stories: The Method That Sticks',
       metaDescription:
-        'Learning German with stories builds vocabulary, grammar and listening skills in context. Here is why story-based learning works and how to do it step by step with graded A1–B2 stories.',
+        'Learning German with stories builds vocabulary, grammar and listening in context. Why it works, and how to do it with graded A1–B2 stories.',
       excerpt: 'Why story-based learning beats sentence drills — and a step-by-step routine for learning German through graded stories.',
       intro: [
         'Learning German with stories is one of the most effective methods in language research — and one of the most enjoyable. Instead of memorizing isolated words, you meet vocabulary and grammar inside a context your brain actually wants to remember: characters, problems, and what happens next.',
@@ -184,9 +184,9 @@ export const lesenlab: AppContent = {
       slug: 'german-short-stories-for-beginners',
       keyword: 'german short stories for beginners',
       title: 'German Short Stories for Beginners (A1/A2) — With Audio & Translations',
-      metaTitle: 'German Short Stories for Beginners (A1/A2) With Audio | Lesen Lab',
+      metaTitle: 'German Short Stories for Beginners (A1/A2) With Audio',
       metaDescription:
-        'Looking for German short stories for beginners? Get 1000+ graded A1/A2 stories with native audio, instant English translations and flashcards — free to start on iPhone and iPad.',
+        'Looking for German short stories for beginners? Get 1000+ graded A1/A2 stories with native audio, translations and flashcards. Free to start.',
       excerpt: 'Where to find genuinely beginner-friendly German stories — and what a good A1/A2 story needs to teach you fast.',
       intro: [
         'The best German short stories for beginners share three traits: they are genuinely written for A1/A2 level (not just "simplified"), they come with audio so you learn pronunciation from day one, and they let you check any word instantly so frustration never wins.',
@@ -238,9 +238,9 @@ export const lesenlab: AppContent = {
       slug: 'improve-german-reading-comprehension',
       keyword: 'how to improve german reading comprehension',
       title: 'How to Improve Your German Reading Comprehension: 7 Techniques',
-      metaTitle: 'How to Improve German Reading Comprehension: 7 Proven Techniques',
+      metaTitle: 'How to Improve German Reading Comprehension',
       metaDescription:
-        'Struggling to understand German texts? These 7 techniques — graded reading, re-reading with audio, chunking, active recall and more — measurably improve German reading comprehension.',
+        'Struggling with German texts? These 7 techniques — graded reading, re-reading with audio, chunking and active recall — improve comprehension.',
       excerpt: 'Seven concrete techniques to understand German texts faster — from graded input to re-reading with audio.',
       intro: [
         'If German texts still feel like decoding instead of reading, the problem is usually not vocabulary — it is method. Reading texts far above your level, translating word by word, and never re-reading are the three habits that keep comprehension stuck.',
@@ -290,9 +290,9 @@ export const lesenlab: AppContent = {
       slug: 'goethe-telc-testdaf-reading-practice',
       keyword: 'goethe telc testdaf reading practice',
       title: 'Goethe, telc & TestDaF Reading Practice: How to Prepare (A1–B2)',
-      metaTitle: 'Goethe, telc & TestDaF Reading Practice App (A1–B2) | Lesen Lab',
+      metaTitle: 'Goethe, telc & TestDaF Reading Practice App (A1–B2)',
       metaDescription:
-        'The reading sections of Goethe, telc and TestDaF reward daily graded reading practice. Learn what each exam tests and how to build reading speed and comprehension with 1000+ A1–B2 stories.',
+        'Goethe, telc and TestDaF reading sections reward daily graded practice. What each exam tests, and how to build speed with 1000+ A1–B2 stories.',
       excerpt: 'What the Goethe, telc and TestDaF reading sections actually test — and the daily practice that raises your score.',
       intro: [
         'Every major German exam — Goethe-Zertifikat, telc Deutsch and TestDaF — has a dedicated reading section, and it is the section where daily habits matter most. You cannot cram reading speed; you build it, story by story, in the weeks before the exam.',
@@ -347,9 +347,9 @@ export const lesenlab: AppContent = {
       slug: 'german-listening-practice',
       keyword: 'german listening practice for beginners',
       title: 'German Listening Practice for Beginners: Read-Along Audio Stories',
-      metaTitle: 'German Listening Practice for Beginners – Audio Stories (A1–B2)',
+      metaTitle: 'German Listening Practice: Audio Stories (A1–B2)',
       metaDescription:
-        'The fastest German listening practice for beginners is read-along audio: native narration you follow with the text. Here is the method, plus 1000+ graded audio stories to practice with.',
+        'The fastest German listening practice is read-along audio: native narration you follow with the text. The method, plus 1000+ graded stories.',
       excerpt: 'Why read-along audio stories are the fastest listening practice — and how to use slow mode and replay properly.',
       intro: [
         'Most beginners find spoken German overwhelming: native speed, unfamiliar sounds, words melting together. The fix is not more podcasts — it is read-along listening, where you hear native audio while following the exact text with your eyes.',
@@ -400,9 +400,9 @@ export const lesenlab: AppContent = {
       slug: 'learn-german-vocabulary-flashcards',
       keyword: 'best way to learn german vocabulary',
       title: 'The Best Way to Learn German Vocabulary: Stories + Spaced Repetition',
-      metaTitle: 'Best Way to Learn German Vocabulary: Stories + Spaced Repetition',
+      metaTitle: 'Best Way to Learn German Vocabulary: Spaced Repetition',
       metaDescription:
-        'The best way to learn German vocabulary combines context (stories) with spaced-repetition flashcards. Here is the science and a daily routine that makes 1000+ words stick for good.',
+        'The best way to learn German vocabulary combines stories with spaced-repetition flashcards. The science, and a daily routine that makes words stick.',
       excerpt: 'Context plus spaced repetition is the vocabulary formula — here\'s the routine that makes German words stick permanently.',
       intro: [
         'There are two proven pillars of vocabulary learning: context (meeting words inside real sentences) and spaced repetition (reviewing them at growing intervals just before you forget). Most learners use one or the other. The learners who progress fastest use both, connected.',

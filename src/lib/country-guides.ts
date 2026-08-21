@@ -38,7 +38,7 @@ export const COUNTRY_GUIDES: Record<string, CountryGuide> = {
     seo: {
       title: 'Study in Germany from Nigeria - 2026 Complete Guide',
       description:
-        'Complete guide for Nigerian students to study in Germany. Learn about WAEC/NECO recognition, blocked account, IELTS requirements, visa process, and tuition-free universities.',
+        'Complete guide for Nigerian students: WAEC/NECO recognition, blocked account, IELTS requirements, visa process and tuition-free universities.',
       path: '/study-in-germany-from-nigeria',
       keywords: [
         'study in Germany from Nigeria',
@@ -110,7 +110,7 @@ export const COUNTRY_GUIDES: Record<string, CountryGuide> = {
     seo: {
       title: 'Study in Germany from Bangladesh - 2026 Complete Guide',
       description:
-        'Complete guide for Bangladeshi students to study in Germany. Learn about certificate attestation, blocked account, IELTS requirements, visa appointments, and tuition-free universities.',
+        'Complete guide for Bangladeshi students: certificate attestation, blocked account, IELTS requirements, visa appointments and tuition-free unis.',
       path: '/study-in-germany-from-bangladesh',
       keywords: [
         'study in Germany from Bangladesh',
@@ -175,7 +175,7 @@ export const COUNTRY_GUIDES: Record<string, CountryGuide> = {
     seo: {
       title: 'Study in Germany from Turkey - 2026 Complete Guide',
       description:
-        'Complete guide for Turkish students to study in Germany. Learn about diploma recognition, blocked account, language requirements, visa process, and tuition-free universities.',
+        'Complete guide for Turkish students: diploma recognition, blocked account, language requirements, visa process and tuition-free universities.',
       path: '/study-in-germany-from-turkey',
       keywords: [
         'study in Germany from Turkey',
@@ -239,7 +239,7 @@ export const COUNTRY_GUIDES: Record<string, CountryGuide> = {
     seo: {
       title: 'Study in Germany from Nepal - 2026 Complete Guide',
       description:
-        'Complete guide for Nepali students to study in Germany. Learn about document requirements, blocked account, IELTS scores, visa process, and tuition-free universities.',
+        'Complete guide for Nepali students: document requirements, blocked account, IELTS scores, visa process and tuition-free universities.',
       path: '/study-in-germany-from-nepal',
       keywords: [
         'study in Germany from Nepal',

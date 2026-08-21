@@ -5,7 +5,7 @@ import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata = buildPageMetadata({
   title: 'Study in Germany from Pakistan - 2026 Complete Guide',
-  description: 'Complete guide for Pakistani students to study in Germany. Learn about visa requirements, blocked account, HEC attestation, IELTS scores, tuition-free universities, and step-by-step application process.',
+  description: 'Complete guide for Pakistani students: visa requirements, blocked account, HEC attestation, IELTS scores and tuition-free German universities.',
   path: '/study-in-germany-from-pakistan',
   keywords: [
     'study in Germany from Pakistan',

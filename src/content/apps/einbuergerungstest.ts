@@ -26,9 +26,9 @@ export const einbuergerungstest: AppContent = {
     'Translations in English, Russian, Turkish, Arabic, Ukrainian & more',
     'Works 100% offline — practice anywhere, no account, no ads',
   ],
-  metaTitle: 'Einbürgerungstest 2026 App – Alle 310 BAMF Fragen üben (offline)',
+  metaTitle: 'Einbürgerungstest 2026 App – Alle 310 Fragen (offline)',
   metaDescription:
-    'Alle 310 offiziellen BAMF-Fragen für den Einbürgerungstest 2026 üben – mit Prüfungssimulation, Leben in Deutschland Test, Bundesland-Fragen und Übersetzungen in 10 Sprachen. Offline, werbefrei, ohne Konto. Für iPhone & iPad.',
+    'Alle 310 offiziellen BAMF-Fragen für den Einbürgerungstest 2026 üben – mit Prüfungssimulation, Bundesland-Fragen und Übersetzungen. Offline und werbefrei.',
   metaKeywords:
     'Einbürgerungstest 2026 App, Einbürgerungstest üben, BAMF test app, German citizenship test app, Leben in Deutschland Test, 310 Fragen, Einbürgerungstest Fragen, German naturalization test, Einbürgerungstest simulation',
   screenshots: [
@@ -118,9 +118,9 @@ export const einbuergerungstest: AppContent = {
       slug: 'einbuergerungstest-310-fragen-ueben',
       keyword: 'einbürgerungstest 310 fragen üben',
       title: 'Einbürgerungstest: Alle 310 Fragen üben – so bestehst du 2026',
-      metaTitle: 'Einbürgerungstest 2026: Alle 310 Fragen üben (mit App, offline)',
+      metaTitle: 'Einbürgerungstest 2026: Alle 310 Fragen üben (offline)',
       metaDescription:
-        'Alle 310 offiziellen BAMF-Fragen für den Einbürgerungstest 2026 üben: 300 allgemeine Fragen + 10 Bundesland-Fragen, mit Erklärungen, Übersetzungen und Prüfungssimulation.',
+        'Alle 310 offiziellen BAMF-Fragen für den Einbürgerungstest 2026 üben: 300 allgemeine plus 10 Bundesland-Fragen, mit Erklärungen und Übersetzungen.',
       excerpt: 'Der komplette Fragenkatalog erklärt: wie die 310 Fragen aufgebaut sind und mit welchem Lernplan du sie in 3–4 Wochen sicher beherrschst.',
       intro: [
         'Der Einbürgerungstest besteht aus einem offiziellen Katalog von 310 Fragen: 300 allgemeine Fragen zu Politik, Geschichte, Gesellschaft und Recht plus 10 Fragen zu deinem Bundesland. In der Prüfung bekommst du 33 dieser Fragen — 17 richtige Antworten reichen zum Bestehen.',
@@ -179,9 +179,9 @@ export const einbuergerungstest: AppContent = {
       slug: 'leben-in-deutschland-test-simulation',
       keyword: 'leben in deutschland test simulation',
       title: 'Leben in Deutschland Test: Simulation, Ablauf und Bestehen-Grenze',
-      metaTitle: 'Leben in Deutschland Test Simulation – 33 Fragen wie in der Prüfung',
+      metaTitle: 'Leben in Deutschland Test: Simulation mit 33 Fragen',
       metaDescription:
-        'So läuft der Leben in Deutschland Test ab: 33 Fragen, 60 Minuten, 17 richtige zum Bestehen. Mit realistischer Prüfungssimulation sicher vorbereiten — offline in der App.',
+        'So läuft der Leben in Deutschland Test ab: 33 Fragen, 60 Minuten, 17 richtige zum Bestehen. Mit realistischer Prüfungssimulation vorbereiten.',
       excerpt: 'Ablauf, Zeitlimit und Bestehen-Grenze des LiD-Tests — und warum Prüfungssimulationen der Schlüssel zum sicheren Bestehen sind.',
       intro: [
         'Der "Leben in Deutschland" Test (LiD) ist die Abschlussprüfung des Orientierungskurses — und nutzt denselben offiziellen Katalog von 310 Fragen wie der Einbürgerungstest. In der Prüfung beantwortest du 33 Multiple-Choice-Fragen in maximal 60 Minuten; 17 richtige Antworten reichen zum Bestehen.',
@@ -233,9 +233,9 @@ export const einbuergerungstest: AppContent = {
       slug: 'german-citizenship-test-english',
       keyword: 'german citizenship test in english',
       title: 'German Citizenship Test in English: Questions, Rules & How to Prepare',
-      metaTitle: 'German Citizenship Test in English – Questions & Preparation Guide',
+      metaTitle: 'German Citizenship Test in English: Questions & Prep',
       metaDescription:
-        'The German citizenship test is taken in German, but you can prepare in English: all 310 BAMF questions with English translations, explanations and exam simulation in one offline app.',
+        'The German citizenship test is taken in German, but you can prepare in English: all 310 BAMF questions with translations and exam simulation.',
       excerpt: 'The exam itself is in German — but here\'s how to prepare in English, with translated questions and what the test actually covers.',
       intro: [
         'A common question from internationals applying for German citizenship: can I take the Einbürgerungstest in English? The exam itself is only offered in German — but you can absolutely prepare in English, and doing so makes the German questions far easier to memorize because you actually understand what they mean.',
@@ -296,7 +296,7 @@ export const einbuergerungstest: AppContent = {
       title: 'Einbürgerungstest Bundesland-Fragen: Was dein Land wissen will',
       metaTitle: 'Einbürgerungstest Bundesland-Fragen üben (alle 16 Länder)',
       metaDescription:
-        'Drei der 33 Prüfungsfragen kommen aus deinem Bundesland: Landtag, Wappen, Ministerpräsident. So übst du die 10 Bundesland-Fragen für alle 16 Länder gezielt in der App.',
+        'Drei der 33 Prüfungsfragen kommen aus deinem Bundesland: Landtag, Wappen, Ministerpräsident. So übst du die 10 Fragen für alle 16 Länder.',
       excerpt: 'Drei Prüfungsfragen kommen garantiert aus deinem Bundesland — welche Themen das sind und wie du sie gezielt übst.',
       intro: [
         'Von den 33 Fragen deiner Einbürgerungstest-Prüfung stammen genau 3 aus dem Katalog deines Bundeslandes — aus nur 10 möglichen Fragen. Das sind die einfachsten Punkte der ganzen Prüfung, wenn du sie vorher gesehen hast, und die überraschendsten, wenn nicht.',

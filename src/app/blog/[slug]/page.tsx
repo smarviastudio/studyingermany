@@ -2,10 +2,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Clock, ChevronRight, ArrowLeft, Calendar } from 'lucide-react';
 import { BLOG_POSTS, CATEGORIES, getPostBySlug, type BlogPost } from '@/content/blog';
+import { getWpSeoDescriptionOverride, getWpSeoTitleOverride } from '@/content/blogSeoMeta';
 import type { Metadata } from 'next';
 import { SiteNav } from '@/components/SiteNav';
 import { BlogPostCta } from '@/components/BlogPostCta';
-import { buildBreadcrumbSchema, buildPageMetadata, SITE_URL } from '@/lib/seo';
+import { buildBreadcrumbSchema, buildMetaDescription, buildPageMetadata, SITE_URL } from '@/lib/seo';
 import { EmailCapture } from '@/components/EmailCapture';
 
 type WpPost = {
@@ -269,6 +270,12 @@ async function fetchRelatedWpPosts(excludeSlug: string, limit: number = 3): Prom
 
 type Props = { params: Promise<{ slug: string }> };
 
+// Only the static posts are prerendered; every WordPress post is rendered on demand
+// and then cached. Without a revalidate window a notFound() for a post that had not
+// been published yet gets cached indefinitely, so the URL keeps 404ing long after the
+// post goes live in WordPress.
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   return BLOG_POSTS.map(post => ({ slug: post.slug }));
 }
@@ -278,8 +285,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const staticPost = getPostBySlug(slug);
   if (staticPost) {
     return buildPageMetadata({
-      title: staticPost.title,
-      description: staticPost.excerpt,
+      title: staticPost.seoTitle ?? staticPost.title,
+      description: buildMetaDescription(staticPost.seoDescription ?? staticPost.excerpt),
       path: `/blog/${staticPost.slug}`,
       type: 'article',
       publishedTime: staticPost.publishedAt,
@@ -290,8 +297,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!wpPost) return { title: 'Not Found' };
   const title = stripHtml(wpPost.title.rendered);
   const excerpt = stripHtml(wpPost.excerpt.rendered);
-  const seoTitle = wpPost.seo.title ?? title;
-  const seoDescription = wpPost.seo.description ?? excerpt;
+  // A local override wins over both the SEO plugin field and the post headline: the
+  // WordPress titles read well as an H1 but are too long for the SERP. This changes
+  // the <title> only — the page still renders the original headline as its H1.
+  const seoTitle = getWpSeoTitleOverride(slug) ?? wpPost.seo.title ?? title;
+  // Without an override or an SEO-plugin value this falls back to the WordPress
+  // auto-excerpt, which runs ~55 words and starts with the post's "Intro:" label.
+  // buildMetaDescription strips that and trims to a sentence or word boundary.
+  const seoDescription = buildMetaDescription(
+    getWpSeoDescriptionOverride(slug) ?? wpPost.seo.description ?? excerpt
+  );
   return buildPageMetadata({
     title: seoTitle,
     description: seoDescription,
@@ -378,6 +393,11 @@ function renderWordPressHtml(html: string): string {
 
     return `<section class="my-12 rounded-[28px] border border-[#f1e3a6] bg-gradient-to-br from-[#fffdf5] via-white to-[#fff8e8] p-6 md:p-8 shadow-[0_18px_50px_rgba(17,24,39,0.08)]"><div class="mb-6 flex items-start gap-4"><div class="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ffce00]/20 text-xl">?</div><div><span class="inline-flex rounded-full bg-[#fff3c4] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9a3412]">FAQ</span><h2 class="mt-3 text-[28px] font-bold leading-tight text-gray-900" style="font-family: 'Space Grotesk', sans-serif;">${heading}</h2><p class="mt-2 text-sm text-gray-600">Quick answers to the most common questions readers ask.</p></div></div><div class="space-y-3">${itemsHtml}</div></section>`;
   });
+
+  // The page already renders the post title as the H1, so any H1 authored inside the
+  // WordPress body would be a second one. Demote it to H2 before the heading styles run
+  // below, so it picks up the normal H2 treatment.
+  out = out.replace(/<h1([^>]*)>/gi, '<h2$1>').replace(/<\/h1>/gi, '</h2>');
 
   // Light theme styles matching original WordPress theme
   out = out.replace(/<h2([^>]*)>/gi, '<h2$1 class="text-2xl font-bold text-gray-900 mt-10 mb-3 pb-2 border-b-2 border-[#ffce00]" style="font-family: \'Space Grotesk\', sans-serif;">');

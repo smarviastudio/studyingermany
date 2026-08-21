@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
 import type { Metadata } from 'next';
+import { buildCanonicalUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'How GermanPath / StudyGermany collects, uses and protects your personal data under GDPR.',
+  alternates: { canonical: buildCanonicalUrl('/privacy-policy') },
   robots: { index: true, follow: true },
 };
 

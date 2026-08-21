@@ -7,9 +7,9 @@ import { PROGRAM_HUBS, getHubPrograms } from '@/lib/programHubs';
 export const dynamic = 'force-static';
 
 export const metadata = buildPageMetadata({
-  title: 'Degree Programs in Germany by Subject (2026) – Browse All Fields',
+  title: 'Degree Programs in Germany by Subject (2026)',
   description:
-    'Browse master\'s and bachelor\'s programs at German universities by subject: computer science, data science, engineering, business, medicine and more. Real program lists with tuition-free and English-taught filters.',
+    'Browse master\'s and bachelor\'s programs at German universities by subject, with tuition-free and English-taught filters. Real program lists.',
   path: '/programs',
   keywords: [
     'degree programs in germany',

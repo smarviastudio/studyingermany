@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
 import type { Metadata } from 'next';
+import { buildCanonicalUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'Terms and conditions governing your use of GermanPath / StudyGermany, including subscriptions, cancellation, and consumer rights.',
+  alternates: { canonical: buildCanonicalUrl('/terms') },
   robots: { index: true, follow: true },
 };
 

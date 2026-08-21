@@ -9,10 +9,12 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, buildOrganizationSchema, buildWe
 
 export const metadata: Metadata = {
   title: {
-    default: 'German Path – Study in Germany: 20,000+ Programs, AI Tools & Free Guides',
+    // `default` bypasses the template below, so the brand is spelled out here. The
+    // homepage is the one page where it earns the characters.
+    default: 'Study in Germany: 20,000+ Programs | German Path',
     template: '%s | German Path',
   },
-  description: 'Study in Germany with German Path. Search 20,000+ English-taught bachelor and master programs, build your German CV with AI, and get step-by-step guidance for international students from Pakistan, India, and worldwide.',
+  description: 'Search 20,000+ English-taught bachelor and master programs in Germany, build your German CV with AI, and get step-by-step guidance to apply.',
   metadataBase: new URL(SITE_URL),
   keywords: [
     'study in Germany',

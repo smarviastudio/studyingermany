@@ -1,15 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { buildCanonicalUrl } from '@/lib/seo';
+import { buildCanonicalUrl, buildTitle } from '@/lib/seo';
 import { ALL_APPS } from '@/content/apps';
 import { AppleGlyph, hexToRgba } from '@/components/apps/AppLandingPage';
 import { ArrowUpRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Our iOS Apps – Learn German, Track Health, Plan & More',
+  title: buildTitle('Our iOS Apps: Learn German, Track Health & More'),
   description:
-    'Explore our iOS apps: Lesen Lab (learn German with stories), Einbürgerungstest 2026, DoseBuddy pill reminder, MacroMora AI calorie tracker, BabyName for couples and more.',
+    'Our iOS apps: Lesen Lab for German stories, Einbürgerungstest 2026, DoseBuddy pill reminder, MacroMora calorie tracker and BabyName.',
   alternates: { canonical: buildCanonicalUrl('/apps') },
   openGraph: {
     title: 'Our iOS Apps',

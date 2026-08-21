@@ -28,7 +28,7 @@ export const babyname: AppContent = {
   ],
   metaTitle: 'BabyName – Baby Name App for Couples: Swipe & Match Together',
   metaDescription:
-    'The baby name app for couples: swipe names Tinder-style, match with your partner in real time, and filter by style, origin and meaning. One purchase covers both partners. Free on iPhone.',
+    'The baby name app for couples: swipe names Tinder-style, match with your partner in real time, and filter by style, origin and meaning.',
   metaKeywords:
     'baby name app for couples, baby name swipe app, baby name matcher, baby name app like tinder, baby names finder, unique baby names, baby name generator, boy names, girl names, baby name meanings',
   screenshots: [
@@ -129,9 +129,9 @@ export const babyname: AppContent = {
       slug: 'baby-name-app-like-tinder',
       keyword: 'baby name app like tinder',
       title: 'The Baby Name App That Works Like Tinder (Swipe, Match, Done)',
-      metaTitle: 'Baby Name App Like Tinder: Swipe & Match Names With Your Partner',
+      metaTitle: 'Baby Name App Like Tinder: Swipe & Match With Partner',
       metaDescription:
-        'Yes, there\'s a Tinder for baby names: both partners swipe through names, and mutual likes become instant matches. Here is how swipe-to-match naming works and why couples love it.',
+        'Yes, there\'s a Tinder for baby names: both partners swipe, and mutual likes become instant matches. How swipe-to-match naming works.',
       excerpt: 'How Tinder-style swiping turns the name search into a game — and why matches beat lists every time.',
       intro: [
         'If you have ever thought "choosing a baby name should work like Tinder" — you are exactly right, and the app exists. You and your partner each swipe through a deck of names: right on the ones you love, left on the rest. When you both swipe right on the same name, it is a match, saved instantly to a shared list.',
@@ -177,9 +177,9 @@ export const babyname: AppContent = {
       slug: 'how-to-agree-on-a-baby-name',
       keyword: 'how to agree on a baby name with partner',
       title: 'How to Agree on a Baby Name When You and Your Partner Can\'t',
-      metaTitle: 'Can\'t Agree on a Baby Name? 5 Ways Couples Break the Deadlock',
+      metaTitle: 'Can\'t Agree on a Baby Name? 5 Ways to Break the Tie',
       metaDescription:
-        'Disagreeing on baby names is normal — most couples do. These 5 techniques (independent shortlists, style mapping, the veto-free method) break the deadlock without resentment.',
+        'Disagreeing on baby names is normal. These 5 techniques — independent shortlists, style mapping, the veto-free method — break the deadlock.',
       excerpt: 'Most couples disagree on names at first. Five techniques that surface hidden agreement — without the arguments.',
       intro: [
         'Disagreeing about baby names is not a bad sign — it is the default. Names carry family history, exes, playground memories and identity, so two people rarely start in the same place. The couples who resolve it quickly are not luckier; they use a better process.',
@@ -230,7 +230,7 @@ export const babyname: AppContent = {
       title: 'How to Find a Unique Baby Name (That\'s Not Too Unique)',
       metaTitle: 'Unique Baby Names: How to Find One That Ages Well',
       metaDescription:
-        'Want a baby name that stands out without burdening your child? Here is how to explore names from world cultures, check meanings, and test uniqueness against usability.',
+        'Want a baby name that stands out without burdening your child? How to explore names from world cultures and test uniqueness against usability.',
       excerpt: 'Standing out without the burden: where to find genuinely distinctive names and the tests they must pass.',
       intro: [
         'Every expecting parent walks the same tightrope: a name distinctive enough to feel special, but not so unusual that your child spends life spelling it out. The good news — the space between "Emma" and "Xylophone" is enormous, and most of it is unexplored.',

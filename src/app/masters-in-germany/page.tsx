@@ -15,8 +15,8 @@ const FAQS = [
 const faqSchema = buildFaqSchema(FAQS);
 
 export const metadata = buildPageMetadata({
-  title: 'Master\'s Programs in Germany - Guide for International Students',
-  description: 'Find English-taught master\'s programs in Germany. Learn about admission requirements, tuition fees, application deadlines, and how to apply as an international student.',
+  title: 'Master\'s Programs in Germany for Internationals',
+  description: 'Find English-taught master\'s programs in Germany: admission requirements, tuition fees, deadlines and how to apply as an international student.',
   path: '/masters-in-germany',
   keywords: [
     'masters in Germany',

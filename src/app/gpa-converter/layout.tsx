@@ -2,9 +2,9 @@ import { buildBreadcrumbSchema, buildCanonicalUrl, buildFaqSchema, buildPageMeta
 import { GPA_CONVERTER_FAQS } from './faqs';
 
 export const metadata = buildPageMetadata({
-  title: 'German GPA Calculator – Convert Your Grades to the German Scale',
+  title: 'German GPA Calculator: Convert Your Grades Free',
   description:
-    'Free German grade calculator using the Modified Bavarian Formula (the same one uni-assist uses). Convert your GPA, CGPA or percentage to the German 1.0–5.0 scale instantly — US, India, Pakistan, Nigeria, China, UK and more.',
+    'Free German grade calculator using the Modified Bavarian Formula. Convert your GPA, CGPA or percentage to the German 1.0–5.0 scale instantly.',
   path: '/gpa-converter',
   keywords: [
     'german gpa calculator',

@@ -15,8 +15,8 @@ const FAQS = [
 const faqSchema = buildFaqSchema(FAQS);
 
 export const metadata = buildPageMetadata({
-  title: 'Bachelor\'s Programs in Germany - Guide for International Students',
-  description: 'Find English-taught bachelor\'s programs in Germany. Learn about admission requirements, Studienkolleg, tuition fees, and how to apply as an international student.',
+  title: 'Bachelor\'s Programs in Germany for Internationals',
+  description: 'Find English-taught bachelor\'s programs in Germany: admission requirements, Studienkolleg, tuition fees and how to apply from abroad.',
   path: '/bachelor-in-germany',
   keywords: [
     'bachelor in Germany',

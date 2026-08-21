@@ -26,9 +26,9 @@ export const cvmaker: AppContent = {
     'Edit anytime, tailor a version for every application',
     'Clean PDF export, ready to send from your phone',
   ],
-  metaTitle: 'CV Maker – Resume Builder App for iPhone: AI Writing + PDF Export',
+  metaTitle: 'CV Maker – Resume Builder App for iPhone (AI + PDF)',
   metaDescription:
-    'Create a professional resume on your iPhone in minutes. AI-assisted writing, professional templates, ATS-friendly layouts and instant PDF export. Free to download.',
+    'Create a professional resume on your iPhone in minutes. AI-assisted writing, ATS-friendly templates and instant PDF export. Free to download.',
   metaKeywords:
     'resume builder app, cv maker app, resume app iphone, first resume, resume for teens, ats friendly resume, cv template app, job application, cover letter, pdf resume maker',
   screenshots: [
@@ -116,9 +116,9 @@ export const cvmaker: AppContent = {
       slug: 'resume-for-first-job-no-experience',
       keyword: 'resume for first job no experience',
       title: 'How to Write a Resume for Your First Job (With No Experience)',
-      metaTitle: 'Resume for First Job With No Experience: What to Put (+ Template)',
+      metaTitle: 'Resume for First Job With No Experience: What to Put',
       metaDescription:
-        'No work experience yet? Your first resume runs on school, projects, volunteering and skills. Here is exactly what to include, section by section, and how to phrase it.',
+        'No work experience yet? Your first resume runs on school, projects, volunteering and skills. What to include, section by section.',
       excerpt: 'What goes on a resume when you have never had a job — section by section, with phrasing that works.',
       intro: [
         'Everyone\'s first resume faces the same paradox: you need experience to get a job, and a job to get experience. Here is the secret hiring managers already know — for entry-level roles, they are not expecting work history. They are looking for signals: reliability, initiative, and basic skills.',
@@ -175,9 +175,9 @@ export const cvmaker: AppContent = {
       slug: 'ats-friendly-resume-on-iphone',
       keyword: 'ats friendly resume',
       title: 'ATS-Friendly Resumes: How to Get Past the Software (From Your Phone)',
-      metaTitle: 'ATS-Friendly Resume: Formatting Rules That Get Past the Software',
+      metaTitle: 'ATS-Friendly Resume: Formatting Rules That Work',
       metaDescription:
-        'Most companies screen resumes with software before humans see them. These formatting rules — standard headings, real text, keyword mirroring — get your resume through the ATS.',
+        'Most companies screen resumes with software first. These formatting rules — standard headings, real text, keyword mirroring — get you through the ATS.',
       excerpt: 'The formatting rules that stop tracking software from silently rejecting you — and how to apply them in minutes.',
       intro: [
         'At most mid-size and large companies, your resume\'s first reader is software: an Applicant Tracking System (ATS) that parses your file into a database and often scores it against the job description. Resumes the parser cannot read cleanly get ranked low or lost — no matter how qualified the candidate.',
@@ -233,9 +233,9 @@ export const cvmaker: AppContent = {
       slug: 'german-cv-lebenslauf-format',
       keyword: 'german cv lebenslauf format',
       title: 'The German CV (Lebenslauf): Format, Rules & Differences That Matter',
-      metaTitle: 'German CV Format (Lebenslauf): Rules, Photo, Structure & Examples',
+      metaTitle: 'German CV Format (Lebenslauf): Rules, Photo, Structure',
       metaDescription:
-        'Applying for jobs or study places in Germany? The German Lebenslauf has its own rules: tabular format, photo conventions, signature and date. Complete format guide.',
+        'The German Lebenslauf has its own rules: tabular format, photo conventions, signature and date. The complete format guide with examples.',
       excerpt: 'Applying in Germany? The Lebenslauf follows different rules — tabular format, photo customs, signature — explained.',
       intro: [
         'If you are applying for a job, apprenticeship or university place in Germany, your resume needs to become a Lebenslauf — and the differences are more than translation. German recruiters expect a specific tabular format, different personal details, and conventions (like signing your CV) that surprise international applicants.',

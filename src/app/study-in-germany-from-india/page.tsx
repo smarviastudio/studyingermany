@@ -5,7 +5,7 @@ import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata = buildPageMetadata({
   title: 'Study in Germany from India - 2026 Complete Guide',
-  description: 'Complete guide for Indian students to study in Germany. Learn about APS certificate, blocked account, IELTS requirements, tuition-free universities, and step-by-step visa process.',
+  description: 'Complete guide for Indian students: APS certificate, blocked account, IELTS requirements, tuition-free universities and the visa process.',
   path: '/study-in-germany-from-india',
   keywords: [
     'study in Germany from India',

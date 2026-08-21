@@ -28,7 +28,7 @@ export const macromora: AppContent = {
   ],
   metaTitle: 'MacroMora – AI Calorie Tracker: Count Calories by Photo',
   metaDescription:
-    'Track calories by taking a photo. MacroMora\'s AI recognizes your meal and logs calories, protein, carbs and fat in seconds — plus barcode scanner and macro targets. Free on iPhone.',
+    'Track calories by taking a photo. MacroMora\'s AI logs calories, protein, carbs and fat in seconds — plus barcode scanner and macro targets.',
   metaKeywords:
     'ai calorie tracker, photo calorie counter, calorie counter app, macro tracker app, food scanner app, count calories by photo, protein tracker, calorie deficit app, nutrition tracker iPhone',
   screenshots: [
@@ -119,7 +119,7 @@ export const macromora: AppContent = {
       title: 'How to Count Calories by Taking a Photo (AI Food Logging Explained)',
       metaTitle: 'Count Calories by Taking a Photo: How AI Food Logging Works',
       metaDescription:
-        'AI can now estimate calories and macros from a single photo of your meal. Here is how photo calorie counting works, how accurate it is, and how to log your first meal in 5 seconds.',
+        'AI can estimate calories and macros from one photo of your meal. How photo calorie counting works, how accurate it is, and how to log a meal.',
       excerpt: 'How AI estimates calories from a single photo, how accurate it really is, and when to use barcode or search instead.',
       intro: [
         'Photo-based calorie counting works exactly the way it sounds: you photograph your plate, and an AI model identifies the foods, estimates portion sizes and returns calories, protein, carbs and fat. What took two minutes of database searching per meal now takes five seconds.',
@@ -177,7 +177,7 @@ export const macromora: AppContent = {
       title: 'How to Track Macros for Beginners (Without Losing Your Mind)',
       metaTitle: 'How to Track Macros for Beginners: Simple 4-Step System',
       metaDescription:
-        'Macro tracking sounds complicated but comes down to four steps: set targets, log meals, check the daily overview, adjust weekly. A beginner-friendly guide with realistic targets.',
+        'Macro tracking comes down to four steps: set targets, log meals, check the daily overview, adjust weekly. A beginner guide with realistic targets.',
       excerpt: 'Macros in plain English: what protein, carbs and fat targets to set, and the simplest system to actually hit them.',
       intro: [
         'Macro tracking means watching not just total calories, but where they come from: protein, carbohydrates and fat. It is the difference between "I ate 1800 calories" and "I ate 1800 calories with enough protein to keep muscle while losing fat".',
@@ -233,7 +233,7 @@ export const macromora: AppContent = {
       title: 'Calorie Deficit for Weight Loss: How to Calculate & Actually Maintain It',
       metaTitle: 'Calorie Deficit for Weight Loss: Calculate It & Stay In It',
       metaDescription:
-        'A calorie deficit is the one non-negotiable of weight loss. Learn how to calculate yours, why 300–500 kcal is the sweet spot, and how effortless tracking keeps you in it.',
+        'A calorie deficit is the one non-negotiable of weight loss. How to calculate yours, why 300–500 kcal is the sweet spot, and how to stay in it.',
       excerpt: 'The one non-negotiable of weight loss: how to calculate your deficit, and the tracking habit that keeps you in it.',
       intro: [
         'Every diet that works — keto, fasting, low-fat, all of them — works through the same mechanism: a calorie deficit, meaning you consume less energy than you burn. The method is negotiable; the deficit is not.',

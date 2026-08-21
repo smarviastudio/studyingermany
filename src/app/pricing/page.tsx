@@ -4,7 +4,7 @@ import PricingClient from './PricingClient';
 export const metadata = buildPageMetadata({
   title: 'German Path Pricing - AI Tools for Studying in Germany',
   description:
-    'Compare German Path plans for international students. Start free, unlock AI CV templates, cover letters, motivation letters, saved programs, and credits for your Germany application journey.',
+    'Compare German Path plans for international students. Start free, then unlock AI CV templates, cover letters and credits when you need them.',
   path: '/pricing',
   keywords: [
     'German Path pricing',

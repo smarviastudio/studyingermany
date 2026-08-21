@@ -17,7 +17,7 @@ const faqSchema = buildFaqSchema(FAQS);
 
 export const metadata = buildPageMetadata({
   title: 'Study in Germany - Complete Guide for International Students',
-  description: 'Complete guide to studying in Germany for international students. Learn about tuition-free universities, English-taught programs, student visa requirements, blocked accounts, and more.',
+  description: 'Complete guide to studying in Germany: tuition-free universities, English-taught programs, student visa requirements and blocked accounts.',
   path: '/study-in-germany',
   keywords: [
     'study in Germany',

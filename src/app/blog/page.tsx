@@ -5,8 +5,8 @@ import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
 import { EmailCapture } from '@/components/EmailCapture';
 
 export const metadata = buildPageMetadata({
-  title: 'Study in Germany Blog — Visa, Costs, Scholarships & Student Life',
-  description: 'Free guides for international students planning to study in Germany. Step-by-step articles on student visa, blocked account, DAAD scholarships, costs, and student life.',
+  title: 'Study in Germany Blog: Visa, Costs & Scholarships',
+  description: 'Free guides for international students planning to study in Germany: student visa, blocked account, DAAD scholarships, costs and student life.',
   path: '/blog',
   keywords: [
     'study in Germany guide',
@@ -37,16 +37,38 @@ function stripHtml(html: string) {
   return html.replace(/<[^>]*>/g, '').replace(/&[#A-Za-z0-9]+;/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+// WordPress caps per_page at 100, so walk every page rather than taking the first
+// slice. Anything missed here becomes an orphan: it stays in the sitemap but has no
+// internal link pointing at it.
+const WP_MAX_PER_PAGE = 100;
+const WP_MAX_PAGES = 20;
+
 async function fetchWpPosts(): Promise<WpPostCard[]> {
   const wpUrl =
     process.env.WP_URL ||
     (process.env.NODE_ENV === 'production' ? 'https://cms.germanpath.com' : 'http://localhost:8000');
   try {
-    const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts?per_page=20&_embed=1&status=publish`, {
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) return [];
-    const posts = await res.json();
+    const posts: Record<string, unknown>[] = [];
+
+    for (let page = 1; page <= WP_MAX_PAGES; page += 1) {
+      const res = await fetch(
+        `${wpUrl}/wp-json/wp/v2/posts?per_page=${WP_MAX_PER_PAGE}&page=${page}&_embed=1&status=publish`,
+        { next: { revalidate: 300 } }
+      );
+      // A page past the last one returns 400, which is the normal way this loop ends.
+      if (!res.ok) break;
+
+      const batch = await res.json();
+      if (!Array.isArray(batch) || batch.length === 0) break;
+
+      posts.push(...batch);
+
+      const totalPages = Number(res.headers.get('x-wp-totalpages') || '0');
+      if (batch.length < WP_MAX_PER_PAGE) break;
+      if (totalPages && page >= totalPages) break;
+    }
+
+    if (posts.length === 0) return [];
 
     return posts.map((post: Record<string, unknown>) => {
       const embedded = post._embedded as Record<string, unknown> | undefined;

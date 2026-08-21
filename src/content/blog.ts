@@ -1,7 +1,19 @@
 export type BlogPost = {
   slug: string;
   title: string;
+  /**
+   * Shorter title for the <title> tag, set when `title` would be truncated in search
+   * results (Google renders roughly 60 characters). The page still renders `title` as
+   * its H1, so headlines stay descriptive without costing keywords in the SERP.
+   */
+  seoTitle?: string;
   excerpt: string;
+  /**
+   * Shorter description for the <meta name="description"> tag, when `excerpt`
+   * exceeds the ~155 characters Google renders. `excerpt` still drives the blog
+   * card teaser, so the two are kept separate.
+   */
+  seoDescription?: string;
   category: 'guide' | 'visa' | 'finance' | 'life' | 'tips';
   readTime: number;
   publishedAt: string;
@@ -22,6 +34,660 @@ export const CATEGORIES: Record<BlogPost['category'], { label: string; color: st
 };
 
 export const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: 'opening-german-bank-account-student',
+    title: 'Opening a German Bank Account as a Student: Sperrkonto, Girokonto and the Order to Do Them In',
+    seoTitle: 'German Bank Account for Students: A 2026 Guide',
+    excerpt: 'You need two different accounts at two different times, and confusing them is why students land in Germany with €11,904 they cannot spend. Blocked account, current account, and how to get a working IBAN before your Anmeldung comes through.',
+    seoDescription: 'Sperrkonto vs Girokonto, how to get a German IBAN before your Anmeldung, and whether you need a traditional bank at all.',
+    category: 'finance',
+    readTime: 7,
+    publishedAt: '2026-08-21',
+    coverEmoji: '🏦',
+    tags: ['finance', 'documents', 'planning'],
+    body: `Most guides tell you to "open a German bank account" as if it were one task. It is actually two different accounts, opened at different times, for different reasons — and confusing them is why people arrive in Germany with €11,904 they cannot spend.
+
+Here is what you actually need, and in what order.
+
+## The two accounts, and why you need both
+
+| | Blocked account (Sperrkonto) | Current account (Girokonto) |
+|---|---|---|
+| Purpose | Proves you can fund your studies | Day-to-day money |
+| Opened | **Before** your visa appointment | **After** you arrive |
+| Holds | €11,904 for the year | Whatever you transfer in |
+| Access | €992 released per month | Unrestricted |
+| Required for | Student visa | Rent, salary, insurance, phone |
+
+The blocked account is a visa instrument, not a bank account in any useful daily sense. It exists to satisfy the embassy that you can support yourself, and it releases your own money back to you in fixed monthly instalments. Our [blocked account guide](/blog/blocked-account-germany-guide) covers providers and timing.
+
+The **Girokonto** is the account you actually live on. Your monthly €992 gets transferred into it; your rent leaves from it; your employer pays into it. You cannot pay German rent from a blocked account, and most landlords will not accept a foreign account for a SEPA direct debit.
+
+So: blocked account before you fly, current account soon after you land.
+
+## The chicken-and-egg problem
+
+Traditional German banks want an **Anmeldung** — your registered address — before opening an account. But Bürgeramt appointments in big cities run four to twelve weeks out, as our [Anmeldung guide](/blog/anmeldung-germany-address-registration) explains.
+
+That leaves you potentially without a working account for over a month, while rent is due.
+
+The way through is to treat it as two stages.
+
+### Stage 1: a digital account on arrival
+
+Digital banks such as **N26** can typically be opened without an Anmeldung and without a Steuer-ID. Verification is done by video call and takes minutes rather than weeks, and you get a German IBAN immediately.
+
+One caveat worth checking before you rely on it: eligibility depends on your nationality and current country of residence, and the rules change. Confirm you qualify *before* you build your plan around it.
+
+This gets you a German IBAN in days, which is enough to receive your blocked-account transfer, pay rent and sign a phone contract.
+
+### Stage 2: a traditional account once registered
+
+Once you have your Meldebescheinigung and, ideally, your Steuer-ID, you can open an account at a traditional bank if you want one.
+
+## Do you actually need a traditional bank?
+
+Often not. But there are real reasons people end up with one:
+
+- **Cash.** Digital banks make depositing cash awkward or expensive. If you work in hospitality or retail and receive tips, this matters.
+- **Institutional friction.** A small number of landlords, insurers and public offices are still uneasy with app-only banks. It is rarer than it used to be, but it happens.
+- **Branch support in person.** If your German is limited and something goes wrong, a counter you can walk up to has value.
+- **Student conditions.** Many **Sparkasse** branches offer free accounts to students, commonly under 26.
+
+One thing to understand about Sparkasse: it is not a single national bank but a network of independent regional institutions. Conditions, fees and age limits differ from city to city. The Sparkasse terms your friend got in Leipzig may not be the terms you are offered in Stuttgart — check your local one.
+
+## Comparing your options
+
+| | Digital banks (N26, and similar) | Direct banks (DKB, ING) | Sparkasse / Commerzbank |
+|---|---|---|---|
+| Anmeldung needed | Often not | Yes | Yes |
+| Steuer-ID needed | Usually not | Usually yes | Usually yes |
+| Time to open | Minutes to days | Days to weeks | Days, plus a branch visit |
+| Monthly fee | Free tier available | Often free | Often free for students |
+| Cash deposits | Limited / fee-based | Limited | Easy at branches |
+| English support | Strong | Mixed | Usually German only |
+| Branch access | None | None | Yes |
+
+There is no single right answer. A very common and sensible setup is a digital account opened on arrival, kept permanently, with a Sparkasse account added later only if a specific need appears.
+
+## What you will need
+
+For a digital account:
+- Passport
+- A German address for card delivery — a temporary one is usually acceptable
+- A smartphone for video verification
+
+For a traditional account, add:
+- **Meldebescheinigung** (from your Anmeldung)
+- **Steuer-ID**, which arrives by post two to six weeks after registering
+- Enrolment certificate (Immatrikulationsbescheinigung) for student conditions
+- Residence permit or visa
+
+## Vocabulary worth knowing
+
+German banking has its own language, and these terms appear on every form:
+
+- **Girokonto** — current account
+- **IBAN** — your account number; you will type it constantly
+- **SEPA-Lastschrift** — direct debit, how rent, insurance and phone bills are collected
+- **Dauerauftrag** — standing order, which *you* control, unlike a direct debit
+- **EC-Karte / Girocard** — German debit card, accepted in many places that still refuse Visa and Mastercard
+- **Dispokredit** — overdraft, usually at a punishing interest rate
+- **Kontoauszug** — bank statement, often required as proof of income
+
+The **Girocard** point is a genuine practical trap. Plenty of German shops, bakeries and even doctors accept Girocard but not Visa or Mastercard. Some digital banks issue only a Mastercard, which means occasional situations where you cannot pay. Carrying cash remains normal in Germany for exactly this reason.
+
+## Getting paid
+
+If you take a working-student or part-time job, your employer needs your IBAN, your **Steuer-ID** and your health insurance details. No Steuer-ID means emergency tax deductions at the highest rate until you supply it — recoverable later, but painful at the time.
+
+To see what a given gross wage leaves you after tax and social contributions, run it through our [salary calculator](/netto-brutto-calculator). Working-student contracts are taxed differently from mini-jobs, and the difference is significant. Our guide to [part-time jobs for students](/blog/part-time-jobs-students-germany) covers the rules on how much you may work.
+
+## Frequently asked questions
+
+**Can I use my home-country account in Germany?**
+For a short period, yes, but not sustainably. Foreign-currency conversion costs add up, most landlords will not set up direct debits from a non-German account, and German employers generally expect a German IBAN.
+
+**Can I open a German account before I arrive?**
+The blocked account, yes — that is the point of it. A regular Girokonto usually requires a German address, though some digital banks are more flexible. Do not count on it.
+
+**Is N26 a real bank?**
+Yes. It holds a German banking licence and deposits are covered by the German deposit guarantee scheme, like any other German bank.
+
+**How long until I get my card?**
+Usually one to two weeks by post to your German address. Most digital banks give you a virtual card immediately so you can pay online in the meantime.
+
+**Do I need to close my account when I leave Germany?**
+Yes, and do it deliberately alongside your Abmeldung. An open account with fees accruing and no one monitoring it can turn into debt collection.
+
+**Can I have more than one account?**
+Yes, and many students do — a digital account for daily use and a traditional one for cash and institutional comfort. There is no legal limit.
+
+## Next steps
+
+Sequence it like this: blocked account before your visa appointment, digital account within days of landing, [Anmeldung](/blog/anmeldung-germany-address-registration) as soon as you have an appointment, then a traditional account later only if you find you need one. If you are budgeting the year, our [cost of studying guide](/blog/cost-of-studying-in-germany) sets out what actually leaves your account each month.`,
+  },
+  {
+    slug: 'anmeldung-germany-address-registration',
+    title: 'Anmeldung in Germany: How to Register Your Address (and Why Everything Waits For It)',
+    seoTitle: 'Anmeldung in Germany: Register Your Address',
+    excerpt: 'Your bank account, residence permit and tax ID all wait behind Anmeldung — and in most cities the appointment queue is longer than the 14-day legal deadline. What to bring, how to handle the delay, and the order to do everything in.',
+    seoDescription: 'The 14-day rule, the Wohnungsgeberbestätigung that blocks most people, what to bring to the Bürgeramt, and how to handle appointment waits.',
+    category: 'life',
+    readTime: 7,
+    publishedAt: '2026-08-21',
+    coverEmoji: '📋',
+    tags: ['housing', 'documents', 'planning'],
+    body: `Anmeldung is the first piece of German bureaucracy you will meet, and almost everything else waits behind it. Your bank account, your residence permit, your tax ID, your phone contract, sometimes your university enrolment — all of it assumes you have registered your address.
+
+It is also the step most new arrivals get wrong, usually by underestimating how early they need to start.
+
+## What Anmeldung actually is
+
+**Anmeldung** is the legal registration of your address with your local authority. You do it at the **Bürgeramt** (also called Einwohnermeldeamt or Bürgerbüro depending on the city). Germany maintains a population register, and everyone living here — German or not — is required by law to be on it.
+
+When it is done you receive a **Meldebescheinigung**, the registration certificate. That single sheet of paper is what unlocks the rest of your setup.
+
+Registering is free. What it costs you is time and planning.
+
+## The 14-day rule, and why it is misleading
+
+By law you must register **within 14 days of moving in**. The clock starts on your **move-in date (Einzugsdatum)** — not the day you signed the lease, and not the day you landed in Germany.
+
+Here is the problem: in most cities, the wait for a Bürgeramt appointment is longer than the deadline itself. In Berlin, popular offices are commonly booked **four to twelve weeks** ahead. The legal requirement and the practical reality simply do not line up.
+
+This is not a reason to panic, but it is a reason to act on day one. What protects you is evidence that you *tried* within the window:
+
+- Book an appointment the moment you have a move-in date — before you fly, if you can
+- Screenshot the booking page whenever it shows no availability, with the date visible
+- Keep the confirmation email of whatever appointment you do secure
+
+Late registration is an administrative offence under the federal registration act (§54 BMG) and can carry a fine of up to €1,000. In practice, fines are rarely imposed on people who can show the appointment system was the bottleneck. Turning up months late with no evidence is a different matter.
+
+## What to bring
+
+Missing one document means rebooking, and rebooking can mean another month. Take all of this:
+
+| Document | Notes |
+|---|---|
+| **Passport** | Original. Bring your visa or residence permit too. |
+| **Wohnungsgeberbestätigung** | Landlord's confirmation of move-in. Original signature — photocopies and scans are rejected. |
+| **Anmeldeformular** | The registration form. Download from your city's site and fill it in beforehand. |
+| **Rental contract** | Not always required, but bring it. |
+| **Marriage/birth certificates** | Only if registering family members. |
+
+### The Wohnungsgeberbestätigung is the one that blocks people
+
+This is a short form your **landlord** signs confirming you have moved in. Without it, there is no Anmeldung — full stop.
+
+Your landlord is legally obliged to provide it within 14 days of your move-in (§19 BMG), and failing to do so is itself an offence carrying a fine of up to €1,000. Many landlords, especially private ones renting to international students for the first time, simply do not know this. If yours hesitates, mentioning the legal obligation politely usually resolves it.
+
+Two practical warnings. If you are subletting, the confirmation must come from whoever is legally entitled to give it — often the main tenant, sometimes the actual owner; ask before you move in. And if you are in temporary accommodation, a hostel or an Airbnb, you generally **cannot** register there, which is exactly why short-term-only arrivals get stuck. Our [student accommodation guide](/blog/student-accommodation-germany) covers finding a registrable address, and [temporary accommodation options](/blog/temporary-accommodation-in-germany-hostels-short-stays) covers the gap before you have one.
+
+## What happens at the appointment
+
+It is short — usually ten to fifteen minutes. You hand over your documents, the clerk enters your details, and you leave with your **Meldebescheinigung**.
+
+Two things follow by post:
+
+1. Your **Steuer-ID** (tax identification number), sent automatically by the Federal Central Tax Office, typically within **two to six weeks**. You need it for any job and for most traditional bank accounts. It is permanent — it never changes, even if you move.
+2. Possibly a **Rundfunkbeitrag** letter. This is the compulsory broadcasting fee, currently around €18.36 per month per *household* — not per person. If you share a flat, only one contribution is owed for the whole household, so coordinate with flatmates rather than each paying separately.
+
+Do not lose the Meldebescheinigung. Ask for two copies if the office allows it; several institutions want an original.
+
+## Language at the Bürgeramt
+
+Be realistic: appointments are usually conducted **in German**. Some offices in Berlin, Munich and Hamburg have English-speaking staff, but you cannot count on it.
+
+Your options are to bring a German-speaking friend, prepare the handful of phrases you need, or fill in the form completely in advance so the appointment is mostly document-checking. The form is the same every time and the vocabulary is small — this is a very learnable twenty minutes. If you are starting from zero, our guide on [German levels and how long each takes](/blog/german-levels-a1-c2-what-you-need-for-germany) sets expectations.
+
+## Ummeldung and Abmeldung
+
+Two related processes you will meet later:
+
+- **Ummeldung** — re-registering when you move within Germany. Same 14-day rule, same documents, new Wohnungsgeberbestätigung from the new landlord.
+- **Abmeldung** — de-registering when you leave Germany for good. Do not skip this. Staying registered can leave you liable for the broadcasting fee and can complicate your tax position. It can usually be done by post.
+
+## A realistic first-month sequence
+
+Order matters here, because each step gates the next:
+
+1. **Before arrival** — check your city's Bürgeramt booking system and grab any appointment you can
+2. **Week 1** — move in, get the Wohnungsgeberbestätigung signed
+3. **Week 1–2** — attend the Anmeldung appointment, collect the Meldebescheinigung
+4. **Week 2** — open a regular [German bank account](/blog/opening-german-bank-account-student), which most traditional banks will not do without registration
+5. **Week 2–4** — activate [health insurance](/blog/health-insurance-students-germany) and complete university enrolment
+6. **Week 3–6** — Steuer-ID arrives by post
+7. **Before your visa expires** — apply at the Ausländerbehörde for your residence permit, which requires the Meldebescheinigung
+
+The dependency to internalise: **Anmeldung gates the residence permit.** Your entry visa is temporary, and converting it requires a registered address. Leaving Anmeldung until month three compresses everything that follows.
+
+## Frequently asked questions
+
+**Can I register before I have a permanent flat?**
+Generally no. You need an address where you actually live and a landlord willing to sign. Some student dormitories provide the confirmation automatically — ask your Studentenwerk.
+
+**What if my landlord refuses to sign?**
+Point out §19 BMG, which obliges them and carries a fine of up to €1,000 for non-compliance. If they still refuse, the Bürgeramt can advise, and it is worth asking your university's international office to intervene.
+
+**Do I need Anmeldung to enrol at university?**
+Some universities require it for enrolment; others accept it later. Check your specific university, but assume you will need it early.
+
+**Can I register at a friend's address if I do not live there?**
+No. Registering an address you do not live at is a false declaration and a criminal matter, not a paperwork shortcut. It also creates real problems for the person whose address you use.
+
+**I registered late. What now?**
+Register as soon as you can and bring your evidence of trying — appointment screenshots, emails. Most offices are pragmatic when the delay was theirs.
+
+**Is Anmeldung the same as the residence permit?**
+No. Anmeldung is address registration at the Bürgeramt. The residence permit is immigration status, handled by the Ausländerbehörde. You need the first to get the second.
+
+## Next steps
+
+Do the booking before anything else — appointment availability, not paperwork, is the real constraint. Once you have your Meldebescheinigung, the next two steps are a [German bank account](/blog/opening-german-bank-account-student) and health insurance. If you will be working alongside your studies, our [salary calculator](/netto-brutto-calculator) shows what a working-student contract actually pays after tax and social contributions.`,
+  },
+  {
+    slug: 'winter-vs-summer-intake-germany',
+    title: 'Winter vs Summer Intake in Germany: Which Semester Should You Apply For?',
+    seoTitle: 'Winter vs Summer Intake in Germany: How to Choose',
+    excerpt: 'The two German intakes are not equivalent. Winter offers nearly every programme; summer offers less competition, easier housing and a far shorter visa queue. How to choose, and how to plan backwards from the deadline.',
+    seoDescription: 'Wintersemester or Sommersemester? Programme availability, competition, housing and visa timing compared — plus a backwards plan from each deadline.',
+    category: 'guide',
+    readTime: 7,
+    publishedAt: '2026-08-21',
+    coverEmoji: '📅',
+    tags: ['application', 'planning', 'visa'],
+    body: `Almost every guide to studying in Germany tells you there are two intakes and lists two deadlines. Almost none of them tells you what actually matters: the two intakes are not equivalent, the choice affects your odds of admission, your housing, your job prospects and your visa timing — and for many programmes the choice does not exist at all.
+
+Here is how the German academic year really works, and how to pick.
+
+## The two semesters
+
+German universities run on two semesters, and the naming trips people up because it does not describe the weather.
+
+| | Wintersemester (WS) | Sommersemester (SS) |
+|---|---|---|
+| Teaching starts | Early-to-mid October | Early-to-mid April |
+| Semester officially runs | 1 October – 31 March | 1 April – 30 September |
+| Typical application deadline | **15 July** | **15 January** |
+| Programme availability | Nearly all programmes | A limited subset |
+| Intake size | Large — the main intake | Smaller |
+| Also called | Winter intake, October intake | Summer intake, April intake |
+
+The single most important line in that table is programme availability. **The winter semester is the main intake.** Most master's programmes admit once a year, and that once is October. Summer intake exists, but it is a subset — and for many subjects, especially at the more selective universities, it does not exist at all.
+
+So the first question is not "which should I choose?" It is "does my programme even offer a choice?" Check the individual programme page before you plan anything around April.
+
+## Why winter is the default
+
+**Programme availability.** If your target programme runs one intake, it is almost certainly October. Restricting yourself to summer can cut your realistic shortlist by more than half.
+
+**Cohort and community.** Most students start in October. Orientation weeks, buddy programmes, language courses for beginners and student-society recruitment are all built around the winter intake. Starting in April can mean joining a cohort that already formed friendships and study groups six months earlier.
+
+**Course sequencing.** Modules often assume a winter start. A summer starter sometimes has to take second-semester modules first, or wait a full year for a prerequisite to come round again — which can quietly add a semester to the degree.
+
+**Internships and thesis timing.** German companies recruit interns and working students on a rhythm that assumes the winter cycle, and many thesis projects are scoped to it.
+
+## When summer intake is genuinely the better call
+
+Summer is not a consolation prize. It is the right answer in several situations.
+
+**You would otherwise wait eight months.** If you finish your bachelor's in spring and your programme offers April entry, starting then beats sitting idle until October.
+
+**You missed the winter deadline.** A January application for April is far better than losing a year. Deadlines in Germany are hard — universities do not negotiate them.
+
+**Competition is lower.** Fewer applicants apply for summer intake. For a *numerus clausus* programme where your grade sits near the cut-off, a smaller applicant pool can work in your favour. This is a real and underrated advantage.
+
+**Housing is easier.** This one is significant. Every October, tens of thousands of students hit the same rental markets at once, and cities like Munich, Frankfurt and Cologne become genuinely difficult. Arriving in April means searching in a much calmer market. Our [student accommodation guide](/blog/student-accommodation-germany) covers how to search either way.
+
+**Visa appointments are easier.** Embassy slots for German student visas are heavily contested between roughly May and August, when the entire winter cohort applies simultaneously. Applying for April entry means competing for appointments in a quieter window — and appointment scarcity causes more deferred admissions than rejections do. See our guide on [finding a visa appointment slot](/blog/german-student-visa-appointment-slots).
+
+That last pair — housing and visa slots — is why summer intake deserves more consideration than it gets. Both are logistical bottlenecks that sink otherwise successful applications.
+
+## Working backwards from the deadline
+
+The mistake that costs people a semester is planning forward from today instead of backwards from the deadline. The application date is not the date your work must be finished — it is the date everything must already have arrived.
+
+For a **winter semester (15 July deadline)**:
+
+| When | What |
+|---|---|
+| **September – November** (prior year) | Shortlist programmes, check ECTS requirements per programme |
+| **November – January** | Sit IELTS/TOEFL if needed; begin language certification |
+| **December – February** | Request transcripts and degree certificates; begin any attestation |
+| **January – March** | APS certificate if your country requires it — this alone can take 4–12 weeks |
+| **March – April** | Draft CV and motivation letters; get documents translated and certified |
+| **By 15 May** | Submit to uni-assist — it takes **6–8 weeks** to process |
+| **15 July** | Final university deadline |
+| **July – September** | Admission letters, blocked account, visa appointment |
+| **October** | Semester begins |
+
+For a **summer semester (15 January deadline)**, shift every row back by six months: uni-assist submission by mid-November, documents ready from September.
+
+The row people miss is uni-assist processing. **Submitting on the deadline does not work.** If uni-assist needs six to eight weeks and you submit on 15 July, your application reaches the university in September — after decisions are made. Our [full deadline timeline](/blog/german-university-application-deadlines-timeline) goes deeper on this, and the [uni-assist guide](/blog/uni-assist-application-guide) explains the VPD and fees.
+
+## The deadlines are not universal
+
+"15 July and 15 January" is a pattern, not a rule. In practice:
+
+- Many universities close **earlier** for international applicants than for German ones — 31 May and 30 April are common
+- Selective master's programmes often close in **April** for October entry
+- Some universities operate rolling admission until places fill
+- A few run late deadlines into August or September for less-subscribed programmes
+- *Numerus clausus* programmes may run multiple selection rounds
+
+Treat 15 July as the **latest plausible** date, never the expected one. Check each programme individually and build your plan around your earliest deadline.
+
+## What this means for your visa
+
+Your intake choice cascades into visa timing, and the sequence is unforgiving:
+
+1. Admission letter arrives
+2. You open a [blocked account](/blog/blocked-account-germany-guide) and deposit €11,904
+3. You book an embassy appointment — often the longest wait
+4. Appointment, then processing, typically 6–12 weeks
+
+For October entry, admission letters commonly arrive in August, which leaves a tight window. This is precisely why appointment slots become the bottleneck. For April entry, letters arrive around February, into a much less contested queue.
+
+If you have any flexibility and your programme offers both, the summer intake's easier visa and housing runway is a genuine, concrete advantage — not a fallback.
+
+## Frequently asked questions
+
+**Can I apply for both intakes?**
+Yes, and it is a sensible hedge if your programme offers both. Each is a separate application with a separate fee, and an offer for one does not carry to the other.
+
+**Does starting in summer look worse to employers?**
+No. German employers do not track which intake you entered, and nothing on your degree certificate records it.
+
+**Are scholarships tied to a particular intake?**
+Often, yes. DAAD scholarships in particular tend to align with the winter cycle and have their own deadlines, frequently much earlier than university ones — sometimes a full year ahead. If a scholarship is central to your funding, check its calendar before you fix your intake.
+
+**Which intake do most international students choose?**
+Winter, by a wide margin — largely because most programmes only offer it.
+
+**If I miss 15 July, is the year lost?**
+Not necessarily. Check three things before giving up: whether your programme offers a summer intake with a January deadline, whether any shortlisted university has a later or rolling deadline, and whether a Studienkolleg or preparatory route fits your situation.
+
+## Next steps
+
+Two practical moves. First, open your target programme pages and write down the *actual* deadline for each — not the generic one — then plan backwards from the earliest. Second, check your converted grade with our [GPA converter](/gpa-converter), because for *numerus clausus* programmes the grade threshold and the intake interact: a grade that misses the winter cut-off may well clear the summer one.`,
+  },
+  {
+    slug: 'tu9-universities-germany-explained',
+    title: 'TU9 Universities in Germany: What the Alliance Actually Means for Your Application',
+    seoTitle: 'TU9 Universities in Germany: What It Really Means',
+    excerpt: 'TU9 is not a ranking, and two of the nine will charge you tuition the other seven will not. The full member list, the real admission thresholds, and whether you should target the alliance at all.',
+    seoDescription: 'The nine TU9 members, what the alliance actually is, the grade thresholds it takes to get in — and the two members that charge non-EU tuition.',
+    category: 'guide',
+    readTime: 8,
+    publishedAt: '2026-08-21',
+    coverEmoji: '🏛️',
+    tags: ['master', 'application', 'planning'],
+    body: `If you have spent any time in study-abroad forums, you have seen "TU9" used as shorthand for the best engineering education in Germany. It is a real thing, and the nine universities in it are genuinely excellent. But it is widely misunderstood — TU9 is not a ranking, membership says less about programme quality than people assume, and two of the nine will charge you tuition that the other seven will not.
+
+Here is what TU9 actually is, and how much it should weigh in your decision.
+
+## What TU9 is
+
+TU9 is an **alliance of nine of Germany's oldest and largest technical universities**. It works as a lobbying and cooperation body: the members coordinate on research policy, represent technical education to the German government, and run joint initiatives for international students.
+
+The nine members are:
+
+| University | City | State | Known especially for |
+|---|---|---|---|
+| RWTH Aachen | Aachen | North Rhine-Westphalia | Mechanical, electrical, computer science |
+| TU Berlin | Berlin | Berlin | Engineering, urban tech, CS |
+| TU Braunschweig | Braunschweig | Lower Saxony | Aerospace, automotive |
+| TU Darmstadt | Darmstadt | Hesse | Computer science, mechatronics |
+| TU Dresden | Dresden | Saxony | Microelectronics, transport |
+| Leibniz University Hannover | Hannover | Lower Saxony | Civil, mechanical, optics |
+| Karlsruhe Institute of Technology (KIT) | Karlsruhe | Baden-Württemberg | CS, energy, physics |
+| Technical University of Munich (TUM) | Munich | Bavaria | Broad — engineering, CS, natural sciences |
+| University of Stuttgart | Stuttgart | Baden-Württemberg | Automotive, aerospace, manufacturing |
+
+That is the complete list. It has not changed since the alliance formed, and no university has joined or left. Any site telling you a tenth university is "TU9" is wrong.
+
+## What TU9 is not
+
+**It is not a ranking.** TU9 members were not selected by performance. They are the historic technical universities — most founded in the nineteenth century — that banded together to represent their shared interests. A programme does not become better because its university is in the alliance.
+
+**It is not a guarantee of quality in your specific field.** TU9 status is institutional. If you want to study, say, environmental engineering, a non-TU9 university with a specialised institute may serve you far better than a TU9 university where your subject is a minor department. Judge the department and the programme, not the letterhead.
+
+**It is not the only tier of good German engineering.** Several excellent technical universities sit outside the alliance for historical reasons, and Germany's *Universities of Applied Sciences* (Fachhochschulen / HAW) offer strongly industry-linked engineering degrees that often lead to jobs faster. Our guide to [university versus university of applied sciences](/blog/university-vs-university-of-applied-sciences-in-germany-which-is-right-for-you) explains which suits which goal.
+
+**It is not widely recognised by employers outside Germany.** Inside Germany, RWTH or TUM on a CV carries weight. In Karachi, Lagos or Hyderabad, "TU9" as a label means very little — the individual university name does the work.
+
+## The tuition detail nobody mentions
+
+This is the practical point that changes budgets, and it is buried in most TU9 articles.
+
+Public universities in Germany are tuition-free in most federal states. But **Baden-Württemberg charges non-EU students €1,500 per semester** — and two TU9 members, **KIT and the University of Stuttgart**, are in Baden-Württemberg. Bavaria, home to **TUM**, has also moved toward fees for non-EU students.
+
+So for a non-EU student, the nine members do not cost the same:
+
+| Member | State | Non-EU tuition situation |
+|---|---|---|
+| KIT | Baden-Württemberg | €1,500 per semester (~€6,000 for a 2-year master's) |
+| University of Stuttgart | Baden-Württemberg | €1,500 per semester |
+| TUM | Bavaria | Fees introduced for non-EU students — check the programme page |
+| RWTH Aachen, TU Berlin, TU Braunschweig, TU Darmstadt, TU Dresden, Leibniz Hannover | NRW, Berlin, Lower Saxony, Hesse, Saxony | No tuition — semester contribution only |
+
+Always confirm on the specific programme page, since state policy is the thing that keeps moving here. Our guide on [whether Germany is still tuition-free in 2026](/blog/is-germany-still-tuition-free-2026) tracks the current position state by state.
+
+If your shortlist is purely cost-driven, that table alone may reorder it.
+
+## How hard is admission?
+
+Harder than the German average, and harder than most applicants expect — but not for the reason people assume.
+
+German public universities rarely conduct holistic admissions the way US or Dutch universities do. What usually decides your case is:
+
+1. **Your converted grade.** Most competitive TU9 master's programmes want a German grade around **2.5 or better**, and the most sought-after computer science programmes often want closer to **2.0**. If you do not know where you land, run your transcript through our free [GPA converter](/gpa-converter) before you build a shortlist — it uses the Modified Bavarian Formula, the same method uni-assist applies.
+2. **Subject match.** German programmes check whether your bachelor's actually contains the required credits — for instance, a specified number of ECTS in mathematics for an engineering master's. A strong grade in a mismatched degree gets rejected routinely. This surprises applicants more than anything else.
+3. **Language.** Many TU9 master's programmes are taught in German. English-taught options exist and are growing, but they are a subset, and they attract disproportionate competition precisely because they are the subset international students can access. Browse what is genuinely available in [English-taught programmes](/english-taught-programs).
+
+Notice what is largely absent: your motivation letter and references matter less than they would in the Netherlands, the UK or the US. German admission is closer to a checklist than a conversation.
+
+## Should you target TU9 specifically?
+
+**Reasonable reasons to:**
+- You want a research-heavy technical degree and possibly a PhD afterwards
+- You want a large, well-funded department with strong industry links
+- You plan to stay in Germany, where these names carry real local weight
+- You want a big international cohort — all nine host thousands of international students
+
+**Reasons to look wider:**
+- Your subject is a specialism where a smaller university leads
+- You want faster, more applied, more industry-embedded teaching — that is the Fachhochschule model
+- Your converted grade sits above the general threshold but below TU9 competitiveness
+- Cost is critical and your TU9 options are the Baden-Württemberg ones
+
+The strongest applications we see are not "TU9 or nothing". They are a shortlist of eight to twelve programmes across a range of selectivity, chosen because the curriculum matches the applicant's background, with two or three TU9 programmes among them.
+
+## A realistic shortlist strategy
+
+Build your list in three bands:
+
+- **Two to three reach programmes** — TU9 or comparable, where your grade is at or slightly below the typical cut-off.
+- **Four to five target programmes** — strong technical universities where your grade clears the threshold comfortably and your subject match is exact.
+- **Two to three safe programmes** — including at least one Fachhochschule, and at least one with a later deadline.
+
+Then check every one against the same three filters: language of instruction, required ECTS by subject, and deadline. You can browse German programmes by field on our [programme hubs](/programs) — for example [computer science](/programs/masters-in-computer-science), [mechanical engineering](/programs/masters-in-mechanical-engineering) or [electrical engineering](/programs/masters-in-electrical-engineering).
+
+## Applying
+
+Most TU9 members accept applications through [uni-assist](/blog/uni-assist-application-guide), though some run their own portals — TUM, for instance, handles much of its own admission. Check each university individually rather than assuming.
+
+Deadlines cluster around **15 July** for the winter semester and **15 January** for summer, but TU9 programmes frequently close earlier, and several selective master's programmes have deadlines as early as **31 May or 15 April**. Our [application deadline timeline](/blog/german-university-application-deadlines-timeline) works backwards from the deadline so you can see when documents actually need to be ready.
+
+## Frequently asked questions
+
+**Is TU9 equivalent to the Ivy League or the Russell Group?**
+No, and the comparison misleads. The Ivy League and Russell Group correlate with selectivity and prestige tiers. TU9 is a historic interest group of technical universities, and German higher education is much flatter in prestige than the US or UK systems. A degree from a non-TU9 public university is not a lesser degree.
+
+**Are TU9 degrees recognised worldwide?**
+Yes — they are accredited German degrees, recognised across the EU and generally worldwide. Recognition follows the accreditation and the university, not the alliance.
+
+**Can I study at a TU9 university in English?**
+At master's level, yes, at all nine — but only in specific programmes. Bachelor's programmes are far more likely to be taught in German. Always check the language of instruction on the individual programme page.
+
+**Do TU9 universities require the GRE?**
+Usually not. German universities rarely require the GRE, unlike US programmes. A handful of competitive master's programmes request it, and some request TestAS instead. Check per programme rather than assuming either way.
+
+**Is TUM the best of the nine?**
+TUM ranks highest internationally among the group, but "best" depends entirely on your field. For automotive engineering, Stuttgart or Braunschweig may serve you better; for microelectronics, Dresden. Choose the department.
+
+## Next steps
+
+Before you shortlist, do the two things that actually filter your options: convert your grade with the [GPA converter](/gpa-converter) so you know which thresholds you clear, and check the required ECTS by subject on each programme page. Once your list is set, give yourself real time on documents — a German [Lebenslauf](/blog/german-cv-lebenslauf-format-guide) and a programme-specific motivation letter are not things to write the week of the deadline.`,
+  },
+  {
+    slug: 'study-in-germany-vs-netherlands-masters',
+    title: 'Germany vs the Netherlands for a Master\'s: The 2026 Cost and Visa Comparison',
+    seoTitle: 'Germany vs Netherlands for a Master\'s (2026)',
+    excerpt: 'Both teach master\'s in English and both let you stay after graduating — but a non-EU student pays €0 tuition in Germany and up to €22,000 a year in the Netherlands. The full 2026 comparison on cost, proof of funds, work rights and post-study permits.',
+    seoDescription: 'Tuition, proof of funds, work rules and post-study permits compared for 2026 — and the cost gap that decides it for most non-EU students.',
+    category: 'guide',
+    readTime: 9,
+    publishedAt: '2026-08-21',
+    coverEmoji: '⚖️',
+    tags: ['master', 'planning', 'finance', 'application'],
+    body: `Germany and the Netherlands end up on the same shortlist for a reason. Both teach hundreds of master's programmes entirely in English, both sit in the middle of Europe, and both let you stay and work after you graduate. The difference that decides it for most people is money — and it is much larger than it first looks.
+
+Here is the honest comparison, with the 2026 numbers.
+
+## The short answer
+
+**Choose Germany if cost is your binding constraint.** A public German university charges no tuition. Over a two-year master's, that difference against a Dutch institutional fee is usually somewhere between €26,000 and €44,000 — often more than the entire cost of living for those two years.
+
+**Choose the Netherlands if you want a shorter, more structured, more international-by-default experience** and you can absorb the fee. One-year master's programmes are the norm, English is used everywhere including in daily life, and the university system is set up around international students rather than adapted for them.
+
+Everything below is the detail behind those two sentences.
+
+## Tuition: the decisive difference
+
+This is where the two countries genuinely diverge.
+
+Public universities in Germany charge **no tuition fees** for master's programmes in almost every federal state, regardless of nationality. You still pay a **semester contribution** of roughly €150–€400, which usually includes a public transport ticket and student services. Baden-Württemberg is the long-standing exception, charging non-EU students €1,500 per semester, and Bavaria has moved toward fees for non-EU students — our guide on [whether Germany is still tuition-free in 2026](/blog/is-germany-still-tuition-free-2026) covers exactly what has changed and what has not.
+
+The Netherlands runs a two-tier system. The **statutory fee** for 2026-27 is €2,694 — but you only qualify for it if you hold EEA, Swiss or Surinamese nationality (or meet specific Dutch residence-permit conditions). Everyone else pays the **institutional fee**, set by each university per programme.
+
+| | Germany (public university) | Netherlands (non-EU student) |
+|---|---|---|
+| Tuition, master's | €0 | Typically €13,000–€22,000 per year |
+| Semester / admin fee | €150–€400 per semester | Included in tuition |
+| Typical master's length | 2 years (4 semesters) | 1 year (some 2) |
+| **Total tuition, full degree** | **€600–€3,200** | **€13,000–€44,000** |
+
+Two things worth noticing in that table.
+
+First, the Dutch one-year master's genuinely narrows the gap. A single year at €18,000 is a very different proposition from two years at €18,000, and it also means one year of living costs instead of two, plus an earlier start on a salary. If you are comparing a one-year Dutch programme against a two-year German one, the true gap is smaller than the per-year figures suggest.
+
+Second, institutional fees vary enormously by programme, not just by university. Business and economics sit at the top of the range; humanities and some social sciences sit well below it. Check the fee on the specific programme page, never the university's general page.
+
+## Proof of funds: what you must show before you arrive
+
+Both countries require you to prove you can support yourself before they issue a visa, and both amounts are set nationally.
+
+Germany requires a **blocked account (Sperrkonto)** holding **€11,904**, released to you at €992 per month across twelve months. Our [blocked account guide](/blog/blocked-account-germany-guide) walks through the providers, fees and timing.
+
+The Netherlands uses the **IND study norm**, which for 2026 is **€1,130.77 per month** — about €13,569 for a full year. The critical detail that catches people out: **the Dutch study norm covers living costs only. Tuition is separate and additional.** So a non-EU student at a €18,000 programme needs to demonstrate roughly €31,500 in total, against Germany's €11,904.
+
+| | Germany | Netherlands |
+|---|---|---|
+| Living-cost proof | €11,904 (blocked account) | ~€13,569 (€1,130.77/month) |
+| Tuition included in that figure? | Not applicable — no tuition | No, additional |
+| Realistic total to show | ~€11,900 | ~€26,500–€35,500 |
+
+If your family is financing your studies from savings, this single row is often what makes the decision.
+
+## Working while you study
+
+Both countries let you work, but the rules have completely different shapes, and one is far more flexible than the other.
+
+**Germany** gives you an annual allowance: **140 full days or 280 half days** per calendar year (raised from 120/240, effective from the 2026 summer semester). A full day is more than four hours; a half day is four hours or fewer. Because it is an annual budget rather than a weekly cap, you can work almost nothing during exam periods and then full-time through the semester break. The count resets every 1 January.
+
+**The Netherlands** applies a strict weekly cap: **16 hours per week** during the academic year, or full-time during July, August and September. It is measured per week, not averaged — 32 hours one week and zero the next is not allowed. Non-EU students also need a **TWV work permit**, which the *employer* applies for. That last point matters practically: some Dutch employers simply will not hire non-EU students because of the paperwork.
+
+The German model suits anyone who wants to earn in concentrated blocks. The Dutch model suits steady, low-hour term-time work — if you can find an employer willing to do the permit.
+
+## After graduation
+
+Both countries want to keep graduates, and both offer a dedicated permit.
+
+Germany gives you an **18-month residence permit** to look for qualified work, and you may work without restriction during it. From there, most graduates move onto an EU Blue Card and then permanent residence.
+
+The Netherlands offers the **orientation year (zoekjaar)** — **12 months** with free access to the labour market, meaning no employer work permit is required. It is also unusually generous in two ways: you can apply within **three years** of graduating rather than immediately, and it is open to graduates of top-200-ranked universities worldwide, not only Dutch ones.
+
+So Germany gives you six more months; the Netherlands gives you more flexibility about *when* you use your year. If you might want to go home first and return later, the Dutch rule is genuinely valuable.
+
+## Language: the part people underestimate
+
+You can complete an English-taught master's in either country without speaking the local language. Daily life is a different question.
+
+Dutch proficiency in English is among the highest in the world, and in cities like Amsterdam, Rotterdam and Eindhoven you can live comfortably in English more or less indefinitely.
+
+Germany is not the same. English works fine inside the university and in international workplaces, but German is what you will meet at the Ausländerbehörde, the tax office, most rental listings, most doctors' practices and a large share of the job market. This is not a reason to avoid Germany — it is a reason to start learning early. Our guide to [German proficiency levels and how long each takes](/blog/german-proficiency-how-long-to-b1-b2-c1-for-uni-work) sets realistic expectations.
+
+The blunt version: in the Netherlands, the local language is optional. In Germany, it is optional for the degree and close to mandatory for the career.
+
+## Admission and applications
+
+**Germany** mostly runs through [uni-assist](/blog/uni-assist-application-guide), a central service that verifies international credentials for many universities, though some accept direct applications. Deadlines cluster around **15 July** for the winter intake and **15 January** for summer, with plenty of variation — see our [full application timeline](/blog/german-university-application-deadlines-timeline). Grade conversion matters a great deal, since many programmes set a hard cut-off on the German 1.0–5.0 scale. You can check where you land with our free [GPA converter](/gpa-converter).
+
+**The Netherlands** uses Studielink for enrolment, with each university handling assessment itself. Deadlines are typically earlier — many non-EU deadlines fall between **January and April** for a September start — and popular programmes use *numerus fixus* selection rounds with fixed, unmovable dates.
+
+If you are reading this in, say, June and hoping to start in September, Germany's July deadline may still be open to you while Dutch deadlines have long closed.
+
+## A quick decision guide
+
+**Germany is probably right if:**
+- Tuition cost is the deciding factor
+- You want two years to settle, learn German and build work experience
+- You want the longest post-study job-search window
+- You want the flexibility of an annual work-day budget
+- You are open to learning German for the long term
+
+**The Netherlands is probably right if:**
+- You can absorb €13,000–€22,000 per year and want to finish in one year
+- You want to start earning a year sooner
+- You want to live and work fully in English
+- You value being able to claim your post-study year up to three years later
+- You prefer a system built around international students from the ground up
+
+## Cost over a full degree, side by side
+
+A rough two-year comparison for a non-EU student, using a two-year German master's against a one-year Dutch one plus a year of work:
+
+| | Germany (2-year MSc) | Netherlands (1-year MSc) |
+|---|---|---|
+| Tuition, total | €0–€1,600 | €18,000 |
+| Semester fees | ~€1,200 | — |
+| Living costs | ~€2,000/month × 24 | ~€1,200/month × 12 |
+| **Approximate total outlay** | **~€26,000–€28,000** | **~€32,400** |
+
+These are illustrative, not quotes — living costs swing widely by city, and Munich is not Leipzig any more than Amsterdam is Groningen. Our [cost of studying in Germany guide](/blog/cost-of-studying-in-germany) breaks the German side down properly.
+
+The honest conclusion from that table: the gap narrows considerably once you account for the Dutch one-year structure, but Germany still comes out ahead on cash out the door, and much further ahead if you compare like-for-like two-year programmes.
+
+## Frequently asked questions
+
+**Can I apply to both and decide later?**
+Yes, and many students do. The deadlines rarely collide — Dutch deadlines land months earlier — so you can often hold a Dutch offer while German decisions arrive. Just be careful with any non-refundable Dutch deposit.
+
+**Is a German degree or a Dutch degree better regarded?**
+Both are strong and recognised across the EU. Employers care far more about the specific university and programme than the country. Reputation is not a useful tiebreaker here; cost, length and language are.
+
+**Which is easier to get into?**
+Neither is easy, but they filter differently. Germany leans heavily on your converted grade meeting a threshold. The Netherlands weighs your whole file — motivation letter, background fit, sometimes an interview — so a strong story can offset an average transcript more often than in Germany.
+
+**Can I switch countries after starting?**
+Transferring mid-degree is difficult in both, since credits and structures rarely line up. Choose as if you are staying.
+
+## Next steps
+
+If Germany is looking like the answer, three things are worth doing now: check whether your grade clears the typical thresholds with the [GPA converter](/gpa-converter), browse what is actually on offer in [English-taught programmes](/english-taught-programs), and start your documents early — a German motivation letter and a proper [Lebenslauf](/blog/german-cv-lebenslauf-format-guide) take longer than people expect.`,
+  },
   {
     slug: 'complete-guide-study-in-germany',
     title: 'The Complete Guide to Studying in Germany (2026)',
@@ -649,6 +1315,7 @@ One of the best perks of being a student in Germany:
   {
     slug: 'blocked-account-germany-guide',
     title: 'Blocked Account (Sperrkonto) for Germany: Everything You Need to Know',
+    seoTitle: 'Blocked Account (Sperrkonto) for Germany Explained',
     excerpt: 'Complete guide to opening a blocked account for your German student visa — providers compared, step-by-step process, and common mistakes to avoid.',
     category: 'finance',
     readTime: 5,
@@ -758,6 +1425,7 @@ A: For visa renewal, you may need to show proof of funds again. Some students to
   {
     slug: 'top-scholarships-international-students-germany',
     title: 'Top Scholarships for International Students in Germany (2026)',
+    seoTitle: 'Top Scholarships in Germany for Internationals 2026',
     excerpt: 'Comprehensive list of scholarships available for international students — DAAD, Deutschlandstipendium, foundation scholarships, and how to apply.',
     category: 'finance',
     readTime: 7,
@@ -897,8 +1565,10 @@ Many universities offer their own scholarships:
   {
     slug: 'claude-fable-5-blocked-germany-students-what-it-means',
     title: 'Claude Fable 5 Blocked Worldwide: What It Means for Students in Germany',
+    seoTitle: 'Claude Fable 5 Blocked: What It Means for Students',
     excerpt:
       'Anthropic disabled Claude Fable 5 and Mythos 5 after a US export-control order. Here is what international students in Germany should know — and reliable AI tools for your university application.',
+    seoDescription: 'Anthropic disabled Claude Fable 5 after a US export-control order. What students in Germany should know, plus reliable AI tools for your application.',
     category: 'tips',
     readTime: 7,
     publishedAt: '2026-06-15',
@@ -1036,7 +1706,9 @@ Need to keep your application moving this week? Start with our **[Tools](/tools)
   {
     slug: 'aps-certificate-germany-guide',
     title: 'APS Certificate for Germany: Complete Guide for India, China & Vietnam (2026)',
+    seoTitle: 'APS Certificate for Germany: India, China & Vietnam',
     excerpt: 'Everything about the APS certificate — who needs it, documents, fees, processing time, and how to avoid the mistakes that delay thousands of applications every year.',
+    seoDescription: 'The APS certificate explained: who needs it, documents, fees, processing time, and the mistakes that delay thousands of applications.',
     category: 'visa',
     readTime: 9,
     publishedAt: '2026-05-12',
@@ -1132,6 +1804,7 @@ Pure research PhD positions are generally exempt; taught programs still require 
     slug: 'uni-assist-application-guide',
     title: 'How to Apply via uni-assist: Step-by-Step Guide (2026)',
     excerpt: 'uni-assist explained simply — VPD, fees, document upload, processing times, and how to avoid the rejection reasons that hit thousands of international applicants.',
+    seoDescription: 'uni-assist explained simply: VPD, fees, document upload, processing times, and how to avoid the most common rejection reasons.',
     category: 'guide',
     readTime: 8,
     publishedAt: '2026-05-26',
@@ -1211,6 +1884,7 @@ Usually one year — reusable for multiple universities within that time.`,
   {
     slug: 'part-time-jobs-students-germany',
     title: 'Part-Time Jobs for International Students in Germany (2026): Rules, Pay & Where to Find Them',
+    seoTitle: 'Part-Time Jobs for Students in Germany (2026 Rules)',
     excerpt: 'How many hours you can legally work, what a Werkstudent job pays, minijob rules, taxes — and how much lands in your bank account.',
     category: 'finance',
     readTime: 9,
@@ -1299,6 +1973,7 @@ Only with permission from the immigration office (Ausländerbehörde) — freela
   {
     slug: 'health-insurance-students-germany',
     title: 'Health Insurance for International Students in Germany (2026): Public vs Private',
+    seoTitle: 'Student Health Insurance in Germany: Public vs Private',
     excerpt: 'Health insurance is mandatory for your visa and enrollment. Which providers to choose, what it costs, the over-30 trap, and how to enroll in 15 minutes.',
     category: 'finance',
     readTime: 7,
@@ -1376,7 +2051,9 @@ Public insurance offers **free family coverage** for dependents without income �
   {
     slug: 'student-accommodation-germany',
     title: 'Student Accommodation in Germany: How to Find Housing in 2026 (Dorms, WG, Private)',
+    seoTitle: 'Student Accommodation in Germany: Dorms, WG & Flats',
     excerpt: 'Housing is the hardest part of moving to Germany. Where to search, what rent costs per city, how to spot scams, and a proven timeline for finding a room from abroad.',
+    seoDescription: 'Where to search for German student housing, what rent costs per city, how to spot scams, and a proven timeline for finding a room from abroad.',
     category: 'life',
     readTime: 9,
     publishedAt: '2026-06-25',
@@ -1457,7 +2134,9 @@ Up to 3 months' Kaltmiete, paid after signing — legally protected in a separat
   {
     slug: 'work-in-germany-after-graduation',
     title: 'Working in Germany After Graduation (2026): 18-Month Visa, Blue Card & Salaries',
+    seoTitle: 'Working in Germany After Graduation (2026 Guide)',
     excerpt: 'Your options after finishing your degree — the 18-month job seeker permit, EU Blue Card thresholds, permanent residency timeline, and realistic starting salaries.',
+    seoDescription: 'Your options after graduating: the 18-month job seeker permit, EU Blue Card thresholds, the residency timeline and realistic salaries.',
     category: 'visa',
     readTime: 8,
     publishedAt: '2026-07-01',
@@ -1542,7 +2221,9 @@ Yes, graduates can get a residence permit for self-employment with a viable busi
   {
     slug: 'german-cv-lebenslauf-format-guide',
     title: 'German CV (Lebenslauf) Format: What Admissions Offices Actually Expect',
+    seoTitle: 'German CV (Lebenslauf) Format: What to Include',
     excerpt: 'A German Lebenslauf is not an international resume with different fonts. Here is the exact structure, what to cut, and the mistakes that get applications rejected.',
+    seoDescription: 'A German Lebenslauf is not a reformatted resume. The exact structure, what to cut, and the mistakes that get applications rejected.',
     category: 'tips',
     readTime: 9,
     publishedAt: '2026-08-03',
@@ -1643,7 +2324,9 @@ Keep two versions rather than trying to make one document do both jobs.
   {
     slug: 'anschreiben-cover-letter-germany-jobs',
     title: 'The German Anschreiben: Cover Letters for Werkstudent Jobs and Internships',
+    seoTitle: 'German Anschreiben: Cover Letters for Student Jobs',
     excerpt: 'German employers still read cover letters, and they expect a specific format. Here is the structure, the tone, and how to write one when your German is not fluent yet.',
+    seoDescription: 'German employers expect a specific cover letter format. The structure, the tone, and how to write one when your German is not fluent yet.',
     category: 'tips',
     readTime: 8,
     publishedAt: '2026-08-03',
@@ -1738,7 +2421,9 @@ If your degree requires a mandatory internship, say so explicitly and name the r
   {
     slug: 'german-university-application-deadlines-timeline',
     title: 'German University Application Deadlines: The Full Timeline, Working Backwards',
+    seoTitle: 'German University Application Deadlines & Timeline',
     excerpt: 'Most students miss German deadlines because they plan forward from today instead of backwards from the deadline. Here is the real timeline, including the steps that take months.',
+    seoDescription: 'Most students miss German deadlines by planning forward instead of backwards. The real timeline, including the steps that take months.',
     category: 'guide',
     readTime: 10,
     publishedAt: '2026-08-03',
@@ -1820,6 +2505,7 @@ If you are starting from zero — no language certificate, no verified documents
   {
     slug: 'rejected-by-german-university-what-to-do',
     title: 'Rejected by a German University? Here Is Exactly What to Do Next',
+    seoTitle: 'Rejected by a German University? What to Do Next',
     excerpt: 'A rejection is usually about fit, ranking or a fixable document problem — not your ability. Here is how to work out which one it was, and what to do this month.',
     category: 'tips',
     readTime: 8,
@@ -1887,6 +2573,7 @@ The students who eventually get in are usually not the ones with the best first 
     slug: 'is-germany-still-tuition-free-2026',
     title: 'Is Germany Still Tuition-Free in 2026? What Actually Changed',
     excerpt: 'Bavaria opened the door to fees for non-EU students and the headlines got loud. Here is what has genuinely changed, what has not, and how to check before you apply.',
+    seoDescription: 'Bavaria opened the door to fees for non-EU students. What has genuinely changed in 2026, what has not, and how to check before you apply.',
     category: 'finance',
     readTime: 9,
     publishedAt: '2026-08-03',
@@ -1963,7 +2650,9 @@ And at the great majority of German public universities, tuition remains zero. Y
   {
     slug: 'ai-motivation-letter-rejection-germany',
     title: 'Will an AI-Written Motivation Letter Get You Rejected in Germany?',
+    seoTitle: 'Will an AI Motivation Letter Get You Rejected?',
     excerpt: 'Universities and embassies are now screening for AI-generated text, and fully generated letters are being discarded. Here is how to use AI without it costing you a place.',
+    seoDescription: 'Universities and embassies now screen for AI-generated text. How to use AI on your motivation letter without it costing you a place.',
     category: 'tips',
     readTime: 9,
     publishedAt: '2026-08-03',
@@ -2041,7 +2730,9 @@ A letter that is 70% your specifics and 30% AI scaffolding will read as human an
   {
     slug: 'german-student-visa-appointment-slots',
     title: 'Getting a German Student Visa Appointment: How to Actually Find a Slot',
+    seoTitle: 'German Student Visa Appointment: How to Find a Slot',
     excerpt: 'Every year students get an offer and then lose the semester to a visa queue. Here is when slots open, how the booking systems behave, and what to do when there are none.',
+    seoDescription: 'When German visa slots open, how the booking systems behave, and what to do when there are none — before a queue costs you the semester.',
     category: 'visa',
     readTime: 8,
     publishedAt: '2026-08-03',

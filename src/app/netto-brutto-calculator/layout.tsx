@@ -4,7 +4,7 @@ import { TAX_CALCULATOR_FAQS } from './faqs';
 export const metadata = buildPageMetadata({
   title: 'German Tax Calculator 2026 – Brutto Netto Salary Calculator',
   description:
-    'Free German tax calculator for 2026. Enter your gross (Brutto) salary and instantly see your net (Netto) take-home pay after income tax, health insurance and all social contributions — all 6 tax classes, every federal state.',
+    'Free German tax calculator for 2026. Enter your gross salary and see your net take-home pay after tax and social contributions — all 6 tax classes.',
   path: '/netto-brutto-calculator',
   keywords: [
     'german tax calculator',

@@ -4,17 +4,23 @@ import { ALL_APPS } from '@/content/apps';
 import { PROGRAM_HUBS } from '@/lib/programHubs';
 import { buildCanonicalUrl, getWpBlogSitemapEntries, SITE_URL } from '@/lib/seo';
 
+// Bump this whenever the copy on the static pages, app hubs or program hubs changes.
+// It is the `lastmod` those entries report, so it must reflect content edits rather
+// than deploy time.
+const CONTENT_LAST_UPDATED = '2026-08-21';
+
 const STATIC_PAGES: MetadataRoute.Sitemap = [
   { url: SITE_URL, changeFrequency: 'weekly', priority: 1.0 },
   { url: buildCanonicalUrl('/blog'), changeFrequency: 'daily', priority: 0.9 },
   { url: buildCanonicalUrl('/pricing'), changeFrequency: 'monthly', priority: 0.8 },
   { url: buildCanonicalUrl('/tools'), changeFrequency: 'monthly', priority: 0.9 },
+  // Only the /landing pages belong in the sitemap. The bare /cv-maker, /cover-letter
+  // and /motivation-letter routes are signed-in app workspaces that already send
+  // `robots: noindex, nofollow`, so listing them here asked Google to crawl URLs it is
+  // then told not to index.
   { url: buildCanonicalUrl('/cv-maker/landing'), changeFrequency: 'monthly', priority: 0.9 },
-  { url: buildCanonicalUrl('/cv-maker'), changeFrequency: 'monthly', priority: 0.85 },
   { url: buildCanonicalUrl('/cover-letter/landing'), changeFrequency: 'monthly', priority: 0.8 },
-  { url: buildCanonicalUrl('/cover-letter'), changeFrequency: 'monthly', priority: 0.75 },
   { url: buildCanonicalUrl('/motivation-letter/landing'), changeFrequency: 'monthly', priority: 0.8 },
-  { url: buildCanonicalUrl('/motivation-letter'), changeFrequency: 'monthly', priority: 0.75 },
   { url: buildCanonicalUrl('/gpa-converter'), changeFrequency: 'monthly', priority: 0.85 },
   { url: buildCanonicalUrl('/netto-brutto-calculator'), changeFrequency: 'monthly', priority: 0.9 },
   { url: buildCanonicalUrl('/programs'), changeFrequency: 'weekly', priority: 0.9 },
@@ -53,11 +59,15 @@ function dedupeSitemap(entries: MetadataRoute.Sitemap): MetadataRoute.Sitemap {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
+  // Deliberately not `new Date()`. Stamping build time on every static page told
+  // search engines that ~90 pages changed on every deploy, including deploys that
+  // touched none of them — which is how a sitemap teaches Google to ignore its own
+  // lastmod values. Bump this when the static page copy actually changes.
+  const contentLastUpdated = new Date(CONTENT_LAST_UPDATED);
 
   const staticPages = STATIC_PAGES.map((page) => ({
     ...page,
-    lastModified: now,
+    lastModified: contentLastUpdated,
   }));
 
   const staticBlogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
@@ -70,13 +80,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const appPages: MetadataRoute.Sitemap = ALL_APPS.flatMap((app) => [
     {
       url: buildCanonicalUrl(`/${app.slug}`),
-      lastModified: now,
+      lastModified: contentLastUpdated,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     ...app.guides.map((guide) => ({
       url: buildCanonicalUrl(`/${app.slug}/guides/${guide.slug}`),
-      lastModified: now,
+      lastModified: contentLastUpdated,
       changeFrequency: 'monthly' as const,
       priority: 0.75,
     })),
@@ -84,7 +94,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const programHubPages: MetadataRoute.Sitemap = PROGRAM_HUBS.map((hub) => ({
     url: buildCanonicalUrl(`/programs/${hub.slug}`),
-    lastModified: now,
+    lastModified: contentLastUpdated,
     changeFrequency: 'weekly' as const,
     priority: 0.85,
   }));

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { GraduationCap, Globe, Euro, MapPin, CalendarDays, Sparkles, ArrowRight, Search } from 'lucide-react';
 import { HubBreadcrumbs } from '@/components/HubBreadcrumbs';
-import { buildCanonicalUrl, buildFaqSchema, buildPageMetadata } from '@/lib/seo';
+import { buildFaqSchema, buildMetaDescription, buildPageMetadata, MAX_TITLE_LENGTH } from '@/lib/seo';
 import { PROGRAM_HUBS, getHubBySlug, getHubPrograms, isEnglishTaught, type ProgramHub, type HubStats } from '@/lib/programHubs';
 import type { Program } from '@/lib/types';
 
@@ -14,7 +14,25 @@ export function generateStaticParams() {
 }
 
 function hubTitle(hub: ProgramHub, stats: HubStats): string {
-  return `${hub.degreeLabel} in ${hub.subjectLabel} in Germany 2026 — ${stats.total} Programs`;
+  // Subject labels vary a lot in length ("Law" vs "Environmental Science &
+  // Sustainability"), so one fixed template overflows the ~60 char SERP limit on the
+  // long ones. Try the richest variant first and fall back until one fits, keeping
+  // "<degree> in <subject> in Germany" — the part carrying the keyword — in every case.
+  const stem = `${hub.degreeLabel} in ${hub.subjectLabel} in Germany`;
+  // A couple of subjects are compound ("Environmental Science & Sustainability") and
+  // overflow even on their own, so the last resort keeps only the leading subject.
+  const shortSubject = hub.subjectLabel.split(/\s+&\s+/)[0];
+  const shortStem = `${hub.degreeLabel} in ${shortSubject} in Germany`;
+  const variants = [
+    `${stem} 2026 — ${stats.total} Programs`,
+    `${stem} — ${stats.total} Programs`,
+    `${stem} 2026`,
+    stem,
+    `${shortStem} 2026 — ${stats.total} Programs`,
+    `${shortStem} 2026`,
+    shortStem,
+  ];
+  return variants.find((variant) => variant.length <= MAX_TITLE_LENGTH) ?? shortStem;
 }
 
 function buildHubFaqs(hub: ProgramHub, stats: HubStats) {
@@ -47,7 +65,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { stats } = await getHubPrograms(hub);
   return buildPageMetadata({
     title: hubTitle(hub, stats),
-    description: `Compare ${stats.total} ${hub.degreeLabel.toLowerCase()} programs in ${hub.subjectLabel} at German universities: ${stats.tuitionFree} tuition-free, ${stats.englishTaught} taught in English. Universities, cities, intakes and languages — updated for 2026/27.`,
+    // The old template ran past 200 characters on every hub. buildMetaDescription is
+    // the backstop for the longest subject labels.
+    description: buildMetaDescription(
+      `Compare ${stats.total} ${hub.degreeLabel.toLowerCase()} programs in ${hub.subjectLabel} at German universities: ${stats.tuitionFree} tuition-free, ${stats.englishTaught} in English. Updated for 2026/27.`
+    ),
     path: `/programs/${hub.slug}`,
     keywords: [
       `${hub.degreeLabel.toLowerCase()} in ${hub.subjectLabel.toLowerCase()} in germany`,

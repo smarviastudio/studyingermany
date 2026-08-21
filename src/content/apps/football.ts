@@ -28,7 +28,7 @@ export const football: AppContent = {
   ],
   metaTitle: 'World Cup 2026 Schedule App – Fixtures, Reminders & Widgets',
   metaDescription:
-    'Plan every World Cup 2026 match: full schedule in your time zone, kickoff reminders, countdown widgets, calendar sync and AI predictions. Free on iPhone and iPad.',
+    'Plan every World Cup 2026 match: full schedule in your time zone, kickoff reminders, countdown widgets and calendar sync. Free on iPhone.',
   metaKeywords:
     'world cup 2026 schedule app, world cup 2026 fixtures, football schedule app, match reminder app, world cup countdown widget, soccer schedule 2026, world cup calendar sync, football planner',
   screenshots: [
@@ -118,7 +118,7 @@ export const football: AppContent = {
       title: 'World Cup 2026 Schedule in Your Time Zone: How to Never Miscalculate',
       metaTitle: 'World Cup 2026 Schedule in Your Time Zone (Auto-Converted)',
       metaDescription:
-        'World Cup 2026 spans 3 countries and multiple time zones — from Vancouver to Mexico City to New Jersey. Here is how to see all 104 matches auto-converted to your local time.',
+        'World Cup 2026 spans three countries and multiple time zones. How to see all 104 matches auto-converted to your local kickoff time.',
       excerpt: '104 matches across 3 host countries and multiple time zones — how to see every kickoff in your local time automatically.',
       intro: [
         'The 2026 World Cup is the biggest ever: 48 teams, 104 matches, 16 host cities spread across the USA, Canada and Mexico — and at least four different kickoff time zones on any given matchday. A 7 PM kickoff in Vancouver is 4 AM the next morning in Berlin and 10 PM in New York.',
@@ -167,7 +167,7 @@ export const football: AppContent = {
       slug: 'world-cup-2026-countdown-widget',
       keyword: 'world cup 2026 countdown widget iphone',
       title: 'World Cup 2026 Countdown Widget for iPhone: Setup in 2 Minutes',
-      metaTitle: 'World Cup 2026 Countdown Widget for iPhone (Home & Lock Screen)',
+      metaTitle: 'World Cup 2026 Countdown Widget for iPhone',
       metaDescription:
         'Put a live countdown to the next World Cup 2026 kickoff on your iPhone Home Screen and Lock Screen. Two-minute setup guide with widget options and tips.',
       excerpt: 'A live kickoff countdown on your Home Screen and Lock Screen — the two-minute setup, step by step.',
@@ -224,7 +224,7 @@ export const football: AppContent = {
       title: 'Match Reminders That Actually Work: Watch Football Without Living in Apps',
       metaTitle: 'Football Match Reminder App: Never Miss Kickoff Again',
       metaDescription:
-        'Live-score apps bury you in notifications; calendars forget football exists. Here is the reminder setup that gets you to the couch before kickoff — for exactly the matches you chose.',
+        'Live-score apps bury you in notifications and calendars forget football exists. The reminder setup that gets you to the couch before kickoff.',
       excerpt: 'The reminder setup that beats both noisy live-score apps and silent calendars — tuned to the matches you chose.',
       intro: [
         'There are two failure modes for football fans: the live-score app that pings you forty times a day about leagues you don\'t follow, and the calendar that stays silent because you never entered the fixtures. Both end the same way — you look up from your day and the match you cared about is in the 60th minute.',

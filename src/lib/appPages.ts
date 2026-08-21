@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
-import { buildCanonicalUrl } from '@/lib/seo';
+import { buildCanonicalUrl, buildMetaDescription, buildTitle } from '@/lib/seo';
 import type { AppContent, AppGuide } from '@/content/apps/types';
 
 export function buildAppMetadata(app: AppContent): Metadata {
   const canonical = buildCanonicalUrl(`/${app.slug}`);
   return {
-    title: app.metaTitle,
-    description: app.metaDescription,
+    title: buildTitle(app.metaTitle),
+    description: buildMetaDescription(app.metaDescription),
     keywords: app.metaKeywords,
     openGraph: {
       title: app.metaTitle,
@@ -27,8 +27,8 @@ export function buildAppMetadata(app: AppContent): Metadata {
 export function buildGuideMetadata(app: AppContent, guide: AppGuide): Metadata {
   const canonical = buildCanonicalUrl(`/${app.slug}/guides/${guide.slug}`);
   return {
-    title: guide.metaTitle,
-    description: guide.metaDescription,
+    title: buildTitle(guide.metaTitle),
+    description: buildMetaDescription(guide.metaDescription),
     keywords: `${guide.keyword}, ${app.name}, ${app.metaKeywords}`,
     openGraph: {
       title: guide.metaTitle,

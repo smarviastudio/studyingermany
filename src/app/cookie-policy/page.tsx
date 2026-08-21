@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { SiteNav } from '@/components/SiteNav';
 import type { Metadata } from 'next';
+import { buildCanonicalUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Cookie Policy',
   description: 'Detailed information about the cookies and similar technologies used on germanpath.com under GDPR and the German TTDSG.',
+  alternates: { canonical: buildCanonicalUrl('/cookie-policy') },
   robots: { index: true, follow: true },
 };
 

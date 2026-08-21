@@ -4,7 +4,7 @@ import { HubBreadcrumbs } from '@/components/HubBreadcrumbs';
 export const metadata = buildPageMetadata({
   title: 'AI Tools for German University Applications',
   description:
-    'AI-powered tools for studying in Germany: CV Maker, Cover Letter Generator, Motivation Letter Writer, GPA Converter, and Salary Calculator. Free tier available; Pro unlocks premium templates and more AI credits.',
+    'Free AI tools for studying in Germany: CV Maker, cover letter and motivation letter writers, GPA converter and salary calculator.',
   path: '/tools',
   keywords: [
     'AI CV maker Germany',
