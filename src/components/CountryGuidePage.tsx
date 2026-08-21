@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { CheckCircle, FileText, Search } from 'lucide-react';
 import { HubBreadcrumbs } from '@/components/HubBreadcrumbs';
+import { buildFaqSchema } from '@/lib/seo';
 import type { CountryGuide } from '@/lib/country-guides';
 
 type CountryGuidePageProps = {
@@ -10,6 +11,12 @@ type CountryGuidePageProps = {
 export function CountryGuidePage({ guide }: CountryGuidePageProps) {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
+      {guide.faqs && guide.faqs.length > 0 ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema(guide.faqs)) }}
+        />
+      ) : null}
       <HubBreadcrumbs
         items={[
           { name: 'Home', path: '/' },
@@ -129,6 +136,57 @@ export function CountryGuidePage({ guide }: CountryGuidePageProps) {
                   <li key={university}>{university}</li>
                 ))}
               </ul>
+            </>
+          ) : null}
+
+          {guide.sections?.map((section) => (
+            <div key={section.heading}>
+              <h2 style={{ fontSize: 28, fontWeight: 700, color: '#171717', margin: '48px 0 20px' }}>
+                {section.heading}
+              </h2>
+              {section.body.map((paragraph, i) => (
+                <p key={i} style={{ fontSize: 16, color: '#525252', lineHeight: 1.8, margin: '0 0 16px' }}>
+                  {paragraph}
+                </p>
+              ))}
+              {section.table ? (
+                <div style={{ overflowX: 'auto', margin: '20px 0' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15 }}>
+                    <thead>
+                      <tr>
+                        {section.table.headers.map((h) => (
+                          <th key={h} style={{ textAlign: 'left', padding: '10px 12px', borderBottom: '2px solid #e5e5e5', color: '#171717', fontWeight: 700, whiteSpace: 'nowrap' }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {section.table.rows.map((row, ri) => (
+                        <tr key={ri}>
+                          {row.map((cell, ci) => (
+                            <td key={ci} style={{ padding: '10px 12px', borderBottom: '1px solid #f0f0f0', color: '#525252', verticalAlign: 'top' }}>{cell}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
+            </div>
+          ))}
+
+          {guide.faqs && guide.faqs.length > 0 ? (
+            <>
+              <h2 style={{ fontSize: 28, fontWeight: 700, color: '#171717', margin: '48px 0 20px' }}>
+                Frequently Asked Questions
+              </h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {guide.faqs.map((faq) => (
+                  <details key={faq.q} style={{ border: '1px solid #e5e5e5', borderRadius: 12, padding: '14px 18px' }}>
+                    <summary style={{ cursor: 'pointer', fontWeight: 700, color: '#171717', fontSize: 16 }}>{faq.q}</summary>
+                    <p style={{ fontSize: 15, color: '#525252', lineHeight: 1.8, margin: '12px 0 0' }}>{faq.a}</p>
+                  </details>
+                ))}
+              </div>
             </>
           ) : null}
 
