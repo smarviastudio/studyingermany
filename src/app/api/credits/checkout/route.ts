@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { stripe, getCreditBundles, CreditBundleKey } from '@/lib/stripe';
+import { getStripe, getStripeBaseUrl, getCreditBundles, CreditBundleKey } from '@/lib/stripe';
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid bundle' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://germanpath.com';
+    const stripe = getStripe();
+    const baseUrl = getStripeBaseUrl();
 
     const checkoutSession = await stripe.checkout.sessions.create({
       customer_email: session.user.email!,

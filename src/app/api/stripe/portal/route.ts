@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { stripe } from '@/lib/stripe';
+import { getStripe, getStripeBaseUrl } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No subscription found' }, { status: 404 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://germanpath.com';
+    const stripe = getStripe();
+    const baseUrl = getStripeBaseUrl();
 
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: subscription.stripeCustomerId,

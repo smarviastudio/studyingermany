@@ -4,17 +4,15 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { track } from '@/lib/track';
+import { track, trackEcommerce } from '@/lib/track';
 import { Check, Shield, RefreshCw, Globe, MessageCircle, ChevronDown, Loader2, AlertCircle, Sparkles, Zap } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { CREDIT_PACKS, CREDIT_PACK_PRICE_IDS } from '@/lib/creditPacks';
 
 const RED = '#dd0000';
 
-// The live Stripe price IDs for the Pro subscription (STRIPE_PRICE_PRO_MONTHLY/
-// YEARLY) don't exist on the current live account, so checkout fails. Hide the
-// tier until real live prices are created and the Vercel env vars are updated.
-const SHOW_PRO_SUBSCRIPTION = false;
+// Pro prices are active in both the connected Stripe sandbox and live account.
+const SHOW_PRO_SUBSCRIPTION = true;
 
 // Subscription checkout sends planKey ('pro_monthly' | 'pro_yearly'); the
 // create-checkout API resolves the Stripe price ID per environment.
@@ -36,6 +34,11 @@ export default function PricingClient() {
 
   // Check if we're in test mode
   useEffect(() => {
+    track('view_pricing');
+    trackEcommerce('view_item_list', {
+      item_list_name: 'pricing',
+      currency: 'EUR',
+    });
     fetch('/api/stripe/mode')
       .then(res => res.json())
       .then(data => setIsTestMode(data.testMode))
@@ -60,6 +63,7 @@ export default function PricingClient() {
 
   const handleCheckout = async (planKeyOrPriceId: string, mode: 'subscription' | 'payment') => {
     track('checkout_click', { plan: planKeyOrPriceId, mode, authed: status === 'authenticated' });
+    track('begin_checkout', { plan: planKeyOrPriceId, mode, authed: status === 'authenticated' });
     // Check if user is logged in
     if (status === 'unauthenticated') {
       // Store the intended purchase in sessionStorage
@@ -72,6 +76,7 @@ export default function PricingClient() {
         )
       );
       // Redirect to login with callback to pricing page
+      track('auth_required_for_checkout', { plan: planKeyOrPriceId, mode });
       router.push('/auth/signin?callbackUrl=/pricing');
       return;
     }
@@ -95,12 +100,15 @@ export default function PricingClient() {
       const data = await res.json();
 
       if (data.url) {
+        track('checkout_session_created', { plan: planKeyOrPriceId, mode });
         window.location.href = data.url;
       } else {
+        track('checkout_error', { plan: planKeyOrPriceId, mode, reason: data.error || 'unknown' });
         alert('Error: ' + (data.error || 'Unknown error'));
       }
     } catch (error) {
       console.error('Checkout error:', error);
+      track('checkout_error', { plan: planKeyOrPriceId, mode, reason: 'request_failed' });
       alert('Failed to start checkout. Please try again.');
     } finally {
       setLoading(null);

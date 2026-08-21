@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Providers } from "./providers";
 import { ClientProviders } from "@/components/ClientProviders";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, buildOrganizationSchema, buildWebSiteSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -95,24 +95,7 @@ export default function RootLayout({
         </Providers>
         <Analytics />
         <SpeedInsights />
-        {gaId ? (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga-init" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${gaId}', {
-                  page_path: window.location.pathname,
-                });
-              `}
-            </Script>
-          </>
-        ) : null}
+        {gaId ? <GoogleAnalytics measurementId={gaId} /> : null}
       </body>
     </html>
   );

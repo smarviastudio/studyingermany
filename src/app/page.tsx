@@ -996,16 +996,15 @@ export default function HomePage() {
           <div className="gp-hero-copy">
             <div className="gp-badge animate-fade-up-1">
               <span className="gp-badge-flag"><i /><i /><i /></span>
-              <span>AI-powered · Built for international students</span>
+              <span>Your Germany application workspace</span>
             </div>
             <h1 className="gp-h1 animate-fade-up-2">
-              Get into a German university —{' '}
-              <span className="gp-h1-accent">without paying a consultant&nbsp;€3,000</span>
+              Find the right German university —{' '}
+              <span className="gp-h1-accent">then build an application that stands out.</span>
             </h1>
             <p className="gp-sub animate-fade-up-3">
-              Search all <strong>20,000+ degree programs</strong> with AI, check your grades against German requirements,
-              and draft your CV and motivation letter in the exact format universities expect — then make them yours.
-              Free to start — documents from <strong>€2.99</strong>, not €2,999.
+              Search <strong>20,000+ real programs</strong>, compare tuition, language and deadlines, then create your German CV
+              and motivation letter when you are ready. Start free — no account needed.
             </p>
 
             <form onSubmit={handleSearch} className="gp-search animate-fade-up-4">
@@ -1016,7 +1015,7 @@ export default function HomePage() {
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runSearch(query); } }}
                   rows={1}
-                  placeholder="e.g. tuition-free data science master in English"
+                  placeholder="Try: tuition-free data science master in English"
                   className="gp-search-input"
                 />
                 <button type="button" onClick={() => setShowAdvancedSearch(true)} className="gp-search-adv" title="Advanced Search">
@@ -1028,6 +1027,12 @@ export default function HomePage() {
               </div>
             </form>
 
+            <div className="gp-hero-offer animate-fade-up-4">
+              <span><Check className="w-3.5 h-3.5" /> Search free</span>
+              <span><Check className="w-3.5 h-3.5" /> 2 free AI previews</span>
+              <span><Check className="w-3.5 h-3.5" /> Documents from €2.99</span>
+            </div>
+
             <div className="gp-chips animate-fade-up-4">
               {HERO_SUGGESTIONS.map((s) => (
                 <button key={s} type="button" onClick={() => runSearch(s)} className="gp-chip">{s}</button>
@@ -1035,11 +1040,11 @@ export default function HomePage() {
             </div>
 
             <div className="gp-trust animate-fade-up-4">
-              <span><Shield className="w-4 h-4" /> Free AI search</span>
+              <span><Shield className="w-4 h-4" /> No consultant required</span>
               <i />
-              <span><Users className="w-4 h-4" /> 2,500+ students helped</span>
+              <span><Users className="w-4 h-4" /> Built for international students</span>
               <i />
-              <span><Globe className="w-4 h-4" /> Every German university</span>
+              <span><Globe className="w-4 h-4" /> Updated program data</span>
             </div>
           </div>
 

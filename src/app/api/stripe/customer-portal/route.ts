@@ -3,8 +3,7 @@ export const runtime = 'nodejs';
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import Stripe from 'stripe';
-import { getStripeSecretKey } from '@/lib/stripe';
+import { getStripe, getStripeBaseUrl } from '@/lib/stripe';
 
 export async function POST() {
   try {
@@ -23,11 +22,8 @@ export async function POST() {
       return NextResponse.json({ error: 'No customer ID found' }, { status: 400 });
     }
 
-    const stripe = new Stripe(getStripeSecretKey(), {
-      apiVersion: '2026-02-25.clover',
-    });
-
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.germanpath.com';
+    const stripe = getStripe();
+    const baseUrl = getStripeBaseUrl();
 
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: user.subscription.stripeCustomerId,

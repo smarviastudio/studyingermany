@@ -73,6 +73,15 @@ export function getStripeWebhookSecret(): string {
   return webhookSecret;
 }
 
+export function getStripeBaseUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    process.env.NEXT_PUBLIC_URL ||
+    process.env.NEXTAUTH_URL ||
+    'https://www.germanpath.com'
+  ).replace(/\/$/, '');
+}
+
 export function getStripe(): Stripe {
   if (!_stripe) {
     _stripe = new Stripe(getStripeSecretKey(), {
@@ -92,8 +101,10 @@ export type PlanKey = 'pro_monthly' | 'pro_yearly';
 
 function getPaidPlanPriceIds() {
   if (isStripeTestMode()) {
-    const monthly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY || 'price_1THN89BhIRngoSRXlgKJkghi'; // Fallback to new test price
-    const yearly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY || 'price_1THN89BhIRngoSRXlgKJkghi'; // Using monthly for now
+    // These are the active Essential prices in the connected Stripe sandbox.
+    // Environment variables may override them per deployment.
+    const monthly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY || 'price_1THMhjBhIRngoSRXvbQyNKcE';
+    const yearly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY || 'price_1THMhjBhIRngoSRXNhX1dcad';
 
     if (!monthly || !yearly) {
       throw new Error('STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY and STRIPE_TEST_PRICE_ESSENTIAL_YEARLY are required in test mode');
@@ -102,8 +113,8 @@ function getPaidPlanPriceIds() {
     return { monthly, yearly };
   }
 
-  const monthly = process.env.STRIPE_PRICE_PRO_MONTHLY;
-  const yearly = process.env.STRIPE_PRICE_PRO_YEARLY;
+  const monthly = process.env.STRIPE_PRICE_PRO_MONTHLY || 'price_1THMj0BhIRngoSRXUxFgCUdS';
+  const yearly = process.env.STRIPE_PRICE_PRO_YEARLY || 'price_1THMj0BhIRngoSRXLxEVsAmJ';
 
   if (!monthly || !yearly) {
     throw new Error('STRIPE_PRICE_PRO_MONTHLY and STRIPE_PRICE_PRO_YEARLY are required in live mode');
@@ -140,6 +151,8 @@ export function getPlanTypeFromPriceId(priceId: string): 'pro' | 'free' {
     'price_1THMhjBhIRngoSRXvbQyNKcE': 'pro', // Essential monthly used as paid plan
     'price_1THMhjBhIRngoSRXNhX1dcad': 'pro', // Essential yearly used as paid plan
     'price_1THN89BhIRngoSRXlgKJkghi': 'pro', // New test price created by user
+    'price_1THMj0BhIRngoSRXUxFgCUdS': 'pro', // Live Pro monthly
+    'price_1THMj0BhIRngoSRXLxEVsAmJ': 'pro', // Live Pro yearly
   };
   
   if (priceIdMap[priceId]) {

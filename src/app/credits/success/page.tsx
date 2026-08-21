@@ -12,6 +12,7 @@ function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const [balance, setBalance] = useState<number | null>(null);
+  const [granted, setGranted] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,23 +36,33 @@ function SuccessContent() {
     };
     reportPurchase();
 
-    const loadBalance = async () => {
-      try {
-        const res = await fetch('/api/credits/balance');
-        if (res.ok) {
-          const data = await res.json();
-          setBalance(data.credits);
+    let cancelled = false;
+    const confirmPurchase = async () => {
+      for (let attempt = 0; attempt < 10 && !cancelled; attempt += 1) {
+        try {
+          const statusRes = await fetch(
+            `/api/credits/checkout-status?session_id=${encodeURIComponent(sessionId)}`
+          );
+          const status = statusRes.ok ? await statusRes.json() : null;
+          if (status?.granted) {
+            const balanceRes = await fetch('/api/credits/balance');
+            if (!cancelled && balanceRes.ok) {
+              const data = await balanceRes.json();
+              setBalance(data.credits);
+              setGranted(true);
+            }
+            break;
+          }
+        } catch (err) {
+          console.error('Failed to confirm purchase:', err);
         }
-      } catch (err) {
-        console.error('Failed to load balance:', err);
-      } finally {
-        setLoading(false);
+        await new Promise((resolve) => setTimeout(resolve, 1500));
       }
+      if (!cancelled) setLoading(false);
     };
 
-    // Wait a bit for webhook to process
-    const timer = setTimeout(loadBalance, 2000);
-    return () => clearTimeout(timer);
+    confirmPurchase();
+    return () => { cancelled = true; };
   }, [sessionId, router]);
 
   return (
@@ -62,7 +73,7 @@ function SuccessContent() {
           <h1 style={{ fontSize: 28, fontWeight: 800, color: '#0a0a0a', margin: '0 0 12px' }}>Processing your purchase...</h1>
           <p style={{ fontSize: 16, color: '#737373' }}>Please wait while we add credits to your account.</p>
         </>
-      ) : (
+      ) : granted ? (
         <>
           <CheckCircle size={64} color="#10b981" style={{ margin: '0 auto 24px' }} />
           <h1 style={{ fontSize: 32, fontWeight: 800, color: '#0a0a0a', margin: '0 0 16px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
@@ -123,6 +134,12 @@ function SuccessContent() {
               Go to Dashboard
             </Link>
           </div>
+        </>
+      ) : (
+        <>
+          <Loader2 className="w-16 h-16 animate-spin" style={{ color: '#dd0000', margin: '0 auto 24px' }} />
+          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#0a0a0a', margin: '0 0 12px' }}>Confirming your purchase...</h1>
+          <p style={{ fontSize: 16, color: '#737373' }}>Your payment was received. Credits will appear shortly.</p>
         </>
       )}
     </main>

@@ -17,38 +17,18 @@ export async function upsertStripeSubscription(
   const priceId = stripeSubscription.items.data[0]?.price?.id ?? '';
   const planType = getPlanTypeFromPriceId(priceId);
   
-  // Calculate period dates from billing_cycle_anchor and interval
-  const subscriptionData = stripeSubscription as any;
-  const startTimestamp = subscriptionData.start_date || subscriptionData.billing_cycle_anchor || subscriptionData.created;
-  
-  // Get interval from plan (month, year, etc.)
-  const interval = subscriptionData.plan?.interval || 'month';
-  const intervalCount = subscriptionData.plan?.interval_count || 1;
-  
-  // Calculate end date based on interval
-  const startDate = new Date(startTimestamp * 1000);
-  const endDate = new Date(startDate);
-  
-  if (interval === 'month') {
-    endDate.setMonth(endDate.getMonth() + intervalCount);
-  } else if (interval === 'year') {
-    endDate.setFullYear(endDate.getFullYear() + intervalCount);
-  } else if (interval === 'week') {
-    endDate.setDate(endDate.getDate() + (7 * intervalCount));
-  } else if (interval === 'day') {
-    endDate.setDate(endDate.getDate() + intervalCount);
-  }
-  
-  const currentPeriodStart = startDate;
-  const currentPeriodEnd = endDate;
+  const firstItem = stripeSubscription.items.data[0];
+  const currentPeriodStart = firstItem?.current_period_start
+    ? new Date(firstItem.current_period_start * 1000)
+    : null;
+  const currentPeriodEnd = firstItem?.current_period_end
+    ? new Date(firstItem.current_period_end * 1000)
+    : null;
   
   console.log('[Stripe Sync] Calculated periods:', {
     id: stripeSubscription.id,
-    startTimestamp,
-    interval,
-    intervalCount,
-    currentPeriodStart: currentPeriodStart.toISOString(),
-    currentPeriodEnd: currentPeriodEnd.toISOString(),
+    currentPeriodStart: currentPeriodStart?.toISOString(),
+    currentPeriodEnd: currentPeriodEnd?.toISOString(),
   });
 
   await prisma.subscription.upsert({

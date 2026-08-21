@@ -5,28 +5,64 @@ import { useRouter } from 'next/navigation';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Loader2, Mail, Lock, User } from 'lucide-react';
+import { track } from '@/lib/track';
 
 export default function SignUpPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [callbackUrl, setCallbackUrl] = useState('/dashboard');
 
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const handleGoogleSignUp = async () => {
     if (googleLoading) return;
     setGoogleLoading(true);
     setError('');
     try {
-      await signIn('google', { callbackUrl: '/dashboard' });
+      track('sign_up_start', { method: 'google' });
+      await signIn('google', { callbackUrl });
     } catch {
       setError('Google sign-up could not be started. Please try again.');
       setGoogleLoading(false);
     }
   };
 
+  const handleEmailSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    setError('');
+    track('sign_up_start', { method: 'email' });
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Unable to create account');
+      const result = await signIn('credentials', { email, password, redirect: false });
+      if (result?.error) throw new Error('Account created, but sign-in failed. Please sign in.');
+      track('sign_up_success', { method: 'email' });
+      track('sign_up', { method: 'email' });
+      router.push(callbackUrl);
+    } catch (signupError) {
+      track('sign_up_error', { method: 'email' });
+      setError(signupError instanceof Error ? signupError.message : 'Unable to create account');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   // Redirect if already authenticated
   useEffect(() => {
+    const queryCallback = new URLSearchParams(window.location.search).get('callbackUrl');
+    if (queryCallback) setCallbackUrl(queryCallback);
     if (status === 'authenticated' && session) {
       router.push('/dashboard');
     }
@@ -114,43 +150,33 @@ export default function SignUpPage() {
             <div className="flex-1 h-px bg-[#ebebeb]" />
           </div>
 
-          {/* Email/Password Sign-up Form — temporarily disabled */}
-          <div className="relative" aria-hidden="true">
-            <div className="space-y-4 pointer-events-none select-none blur-[6px] opacity-60">
+          {/* Email/Password Sign-up Form */}
+          <form onSubmit={handleEmailSignUp} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">Full name</label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#c5c5c5]" />
-                  <input type="text" disabled placeholder="John Doe" className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#e0e0e0] bg-white text-sm" />
+                  <input required value={name} onChange={(event) => setName(event.target.value)} type="text" placeholder="John Doe" className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#e0e0e0] bg-white text-sm" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#c5c5c5]" />
-                  <input type="email" disabled placeholder="you@example.com" className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#e0e0e0] bg-white text-sm" />
+                  <input required value={email} onChange={(event) => setEmail(event.target.value)} type="email" placeholder="you@example.com" className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#e0e0e0] bg-white text-sm" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em]">Password</label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#c5c5c5]" />
-                  <input type="password" disabled placeholder="••••••••" className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#e0e0e0] bg-white text-sm" />
+                  <input required minLength={6} value={password} onChange={(event) => setPassword(event.target.value)} type="password" placeholder="At least 6 characters" className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#e0e0e0] bg-white text-sm" />
                 </div>
               </div>
-              <button type="button" disabled className="w-full bg-[#dd0000] text-white font-semibold py-3 rounded-2xl">
-                Create Account
+              <button type="submit" disabled={submitting} className="w-full bg-[#dd0000] text-white font-semibold py-3 rounded-2xl disabled:opacity-60">
+                {submitting ? 'Creating account…' : 'Create Account'}
               </button>
-            </div>
-
-            {/* Coming soon overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="bg-white/90 backdrop-blur-sm border border-[#e5e5e5] rounded-2xl px-5 py-3 shadow-sm flex items-center gap-2">
-                <span className="inline-block w-2 h-2 rounded-full bg-[#dd0000] animate-pulse" />
-                <span className="text-xs font-bold tracking-[0.18em] uppercase text-[#111]">Email sign-up — coming soon</span>
-              </div>
-            </div>
-          </div>
+          </form>
 
           <div className="mt-6 text-sm text-[#6b6b6b] text-center">
             Already have an account?{' '}

@@ -32,8 +32,14 @@ export async function POST(req: NextRequest) {
 
   try {
     switch (event.type) {
-      case 'checkout.session.completed': {
+      case 'checkout.session.completed':
+      case 'checkout.session.async_payment_succeeded': {
         const session = event.data.object as Stripe.Checkout.Session;
+
+        if (session.mode === 'payment' && session.payment_status !== 'paid') {
+          console.log(`[Webhook] Payment ${session.id} is not paid yet`);
+          break;
+        }
         
         // Get userId from metadata or find by email
         let userId = session.metadata?.userId;

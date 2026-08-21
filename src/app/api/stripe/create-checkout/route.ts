@@ -3,7 +3,7 @@ export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import Stripe from 'stripe';
-import { getPlans, getStripeSecretKey, isStripeTestMode } from '@/lib/stripe';
+import { getPlans, getStripe, getStripeBaseUrl, isStripeTestMode } from '@/lib/stripe';
 import { PRICE_ID_TO_CREDITS } from '@/lib/creditPacks';
 
 export async function POST(request: NextRequest) {
@@ -23,12 +23,16 @@ export async function POST(request: NextRequest) {
     
     const { priceId, planKey, mode = 'subscription' } = body;
 
-    const plans = getPlans();
+    if (mode !== 'subscription' && mode !== 'payment') {
+      return NextResponse.json({ error: 'Invalid checkout mode' }, { status: 400 });
+    }
+
+    const plans = mode === 'subscription' ? getPlans() : null;
     const resolvedPlan =
-      planKey && plans[planKey as keyof typeof plans]
+      mode === 'subscription' && planKey && plans?.[planKey as keyof typeof plans]
         ? plans[planKey as keyof typeof plans]
         : null;
-    const resolvedPriceId = resolvedPlan?.priceId || priceId;
+    const resolvedPriceId = mode === 'subscription' ? resolvedPlan?.priceId : priceId;
 
     if (!resolvedPriceId) {
       return NextResponse.json(
@@ -37,11 +41,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const stripe = new Stripe(getStripeSecretKey(), {
-      apiVersion: '2026-02-25.clover',
-    });
-
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.germanpath.com';
+    const stripe = getStripe();
+    const baseUrl = getStripeBaseUrl();
 
     const currentMode = isStripeTestMode() ? 'test' : 'live';
     
@@ -56,6 +57,18 @@ export async function POST(request: NextRequest) {
     // First, verify the price exists
     try {
       const price = await stripe.prices.retrieve(resolvedPriceId);
+      const credits = PRICE_ID_TO_CREDITS[resolvedPriceId];
+
+      if (!price.active) {
+        throw new Error('This Stripe price is inactive');
+      }
+      if (mode === 'payment' && !credits) {
+        throw new Error('This Stripe price is not an approved AI credit pack');
+      }
+      if (mode === 'subscription' && !price.recurring) {
+        throw new Error('This Stripe price is not a recurring subscription price');
+      }
+
       console.log('Price retrieved successfully:', { id: price.id, type: price.type, active: price.active });
     } catch (priceError) {
       console.error('Failed to retrieve price:', priceError);
@@ -85,12 +98,25 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${baseUrl}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      success_url:
+        mode === 'payment'
+          ? `${baseUrl}/credits/success?session_id={CHECKOUT_SESSION_ID}`
+          : `${baseUrl}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/pricing?canceled=true`,
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
+      client_reference_id: userId,
       metadata: { userId },
     };
+
+    if (mode === 'subscription') {
+      sessionConfig.subscription_data = {
+        metadata: {
+          userId,
+          planType: resolvedPlan?.planType || 'pro',
+        },
+      };
+    }
 
     // Add credits metadata for one-time purchases. PRICE_ID_TO_CREDITS covers
     // BOTH live and test price IDs — the webhook only grants credits when this

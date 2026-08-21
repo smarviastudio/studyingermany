@@ -18,15 +18,28 @@ export function track(name: string, props?: EventProps) {
   }
 }
 
+export function trackEcommerce(
+  name: string,
+  payload: {
+    currency?: string;
+    value?: number;
+    transaction_id?: string;
+    item_list_name?: string;
+    items?: Array<Record<string, string | number>>;
+  },
+) {
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag('event', name, payload);
+  }
+}
+
 // GA4 standard ecommerce purchase event. GA4 dedupes by transaction_id, so
 // firing this on every visit to the success page is safe.
 export function trackPurchase(sessionId: string, value?: number) {
   track('credits_purchase', { session_id: sessionId });
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('event', 'purchase', {
-      transaction_id: sessionId,
-      currency: 'EUR',
-      ...(value ? { value } : {}),
-    });
-  }
+  trackEcommerce('purchase', {
+    transaction_id: sessionId,
+    currency: 'EUR',
+    ...(typeof value === 'number' ? { value } : {}),
+  });
 }

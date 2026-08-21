@@ -5,6 +5,7 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2, Mail, Lock } from 'lucide-react';
+import { track } from '@/lib/track';
 
 export default function SignInPage() {
   return (
@@ -26,6 +27,9 @@ function SignInPageContent() {
 
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailLoading, setEmailLoading] = useState(false);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -57,11 +61,30 @@ function SignInPageContent() {
     setGoogleLoading(true);
     setError('');
     try {
+      track('login_start', { method: 'google' });
       await signIn('google', { callbackUrl });
     } catch {
       setError('Google sign-in could not be started. Please try again.');
       setGoogleLoading(false);
     }
+  };
+
+  const handleEmailSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (emailLoading) return;
+    setEmailLoading(true);
+    setError('');
+    track('login_start', { method: 'email' });
+    const result = await signIn('credentials', { email, password, redirect: false });
+    if (result?.error) {
+      track('login_error', { method: 'email' });
+      setError('Invalid email or password. Please try again.');
+      setEmailLoading(false);
+      return;
+    }
+    track('login_success', { method: 'email' });
+    track('login', { method: 'email' });
+    router.push(callbackUrl);
   };
 
   return (
@@ -128,9 +151,8 @@ function SignInPageContent() {
             <div className="flex-1 h-px bg-[#ebebeb]" />
           </div>
 
-          {/* Email/Password Sign-in Form — temporarily disabled */}
-          <div className="relative" aria-hidden="true">
-            <div className="space-y-4 pointer-events-none select-none blur-[6px] opacity-60">
+          {/* Email/Password Sign-in Form */}
+          <form onSubmit={handleEmailSignIn} className="space-y-4">
               <div>
                 <label className="text-xs font-semibold text-[#6b6b6b] mb-1 uppercase tracking-[0.2em] block">
                   Email address
@@ -139,7 +161,9 @@ function SignInPageContent() {
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
                   <input
                     type="email"
-                    disabled
+                    required
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
                     placeholder="your@email.com"
                     className="w-full h-11 rounded-xl border border-[#e0e0e0] bg-white pl-11 pr-4 text-sm"
                   />
@@ -153,32 +177,25 @@ function SignInPageContent() {
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
                   <input
                     type="password"
-                    disabled
+                    required
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
                     placeholder="••••••••"
                     className="w-full h-11 rounded-xl border border-[#e0e0e0] bg-white pl-11 pr-4 text-sm"
                   />
                 </div>
               </div>
               <button
-                type="button"
-                disabled
+                type="submit"
+                disabled={emailLoading}
                 className="w-full bg-[#dd0000] text-white font-semibold py-3 rounded-2xl"
               >
-                Sign in with Email
+                {emailLoading ? 'Signing in…' : 'Sign in with Email'}
               </button>
-            </div>
-
-            {/* Coming soon overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="bg-white/90 backdrop-blur-sm border border-[#e5e5e5] rounded-2xl px-5 py-3 shadow-sm flex items-center gap-2">
-                <span className="inline-block w-2 h-2 rounded-full bg-[#dd0000] animate-pulse" />
-                <span className="text-xs font-bold tracking-[0.18em] uppercase text-[#111]">Email sign-in — coming soon</span>
-              </div>
-            </div>
-          </div>
+          </form>
 
           <div className="mt-6 text-sm text-[#6b6b6b] text-center">
-            For now, please continue with Google above.
+            New here? <Link href={`/auth/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="text-[#dd0000] font-semibold">Create an account</Link>
           </div>
         </div>
       </div>
