@@ -9,15 +9,37 @@ import { abctracing } from './abctracing';
 import { cvmaker } from './cvmaker';
 import { football } from './football';
 import { kennzeichen } from './kennzeichen';
+import { schreibcoach } from './schreibcoach';
+import { amtsbrief } from './amtsbrief';
+import { vorfahrt } from './vorfahrt';
+import { hundefuehrerschein } from './hundefuehrerschein';
+import { muenzcheck } from './muenzcheck';
+import { parkspot } from './parkspot';
+import { hush } from './hush';
+import { portionpal } from './portionpal';
+import { littlegenius } from './littlegenius';
+import { airfryer } from './airfryer';
+import { couplegoals } from './couplegoals';
 
 export const ALL_APPS: AppContent[] = [
   lesenlab,
   einbuergerungstest,
+  schreibcoach,
+  amtsbrief,
+  vorfahrt,
+  hundefuehrerschein,
+  muenzcheck,
   dosebuddy,
   macromora,
+  portionpal,
+  airfryer,
   babyname,
+  couplegoals,
   abctracing,
+  littlegenius,
   cvmaker,
+  parkspot,
+  hush,
   football,
   kennzeichen,
 ];
@@ -33,4 +55,25 @@ export function getAppBySlug(slug: string): AppContent | undefined {
   return ALL_APPS.find((app) => app.slug === slug);
 }
 
-export { lesenlab, einbuergerungstest, dosebuddy, macromora, babyname, abctracing, cvmaker, football, kennzeichen };
+export {
+  lesenlab,
+  einbuergerungstest,
+  dosebuddy,
+  macromora,
+  babyname,
+  abctracing,
+  cvmaker,
+  football,
+  kennzeichen,
+  schreibcoach,
+  amtsbrief,
+  vorfahrt,
+  hundefuehrerschein,
+  muenzcheck,
+  parkspot,
+  hush,
+  portionpal,
+  littlegenius,
+  airfryer,
+  couplegoals,
+};

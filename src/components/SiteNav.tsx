@@ -19,6 +19,17 @@ const NAV_APPS = [
   { slug: 'abc-letter-tracing-app', title: 'ABC Tracing', desc: 'Letters, Numbers & Phonics', icon: '/apps/abctracing/icon.webp' },
   { slug: 'world-cup-2026-schedule-app', title: 'Football Planner 2026', desc: 'World Cup Schedule & Widgets', icon: '/apps/football/icon.webp' },
   { slug: 'kennzeichen-scanner-app', title: 'KennzeichenSammler', desc: 'Nummernschilder Spiel & Karte', icon: '/apps/kennzeichen/icon.webp' },
+  { slug: 'deutsch-b1-schreiben-app', title: 'SchreibCoach', desc: 'Deutsch B1 Schreiben mit KI', icon: '/apps/schreibcoach/icon.webp' },
+  { slug: 'amtsbrief-uebersetzer-app', title: 'Amtsbrief AI', desc: 'Behördenpost verstehen', icon: '/apps/amtsbrief/icon.webp' },
+  { slug: 'vorfahrt-ueben-app', title: 'Vorfahrt üben 3D', desc: 'Kreuzungen für die Theorieprüfung', icon: '/apps/vorfahrt/icon.webp' },
+  { slug: 'hundefuehrerschein-app', title: 'Hundeführerschein', desc: 'Sachkundeprüfung üben', icon: '/apps/hundefuehrerschein/icon.webp' },
+  { slug: 'muenzen-wert-scanner-app', title: 'MünzCheck', desc: 'Münzwert prüfen & sammeln', icon: '/apps/muenzcheck/icon.webp' },
+  { slug: 'parkspot-find-my-car-app', title: 'ParkSpot', desc: 'Find My Car & Parking Timer', icon: '/apps/parkspot/icon.webp' },
+  { slug: 'hush-silent-mode-reminder-app', title: 'Hush', desc: 'Silent Mode Reminder', icon: '/apps/hush/icon.webp' },
+  { slug: 'portion-control-app', title: 'PortionPal', desc: 'Portion Control & Balanced Plates', icon: '/apps/portionpal/icon.webp' },
+  { slug: 'preschool-learning-games-app', title: 'Little Genius', desc: 'Preschool Learning Games', icon: '/apps/littlegenius/icon.webp' },
+  { slug: 'air-fryer-recipes-app', title: 'AirFryer Chef', desc: 'Air Fryer Recipes & Times', icon: '/apps/airfryer/icon.webp' },
+  { slug: 'couples-app-love-notes', title: 'CoupleGoals', desc: 'Love Notes, Games & Calendar', icon: '/apps/couplegoals/icon.webp' },
 ];
 
 const HTML_ENTITY_MAP: Record<string, string> = {

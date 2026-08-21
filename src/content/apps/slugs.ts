@@ -19,6 +19,17 @@ export const APP_PAGE_PREFIXES = [
   '/cv-maker-resume-builder-app',
   '/world-cup-2026-schedule-app',
   '/kennzeichen-scanner-app',
+  '/deutsch-b1-schreiben-app',
+  '/amtsbrief-uebersetzer-app',
+  '/vorfahrt-ueben-app',
+  '/hundefuehrerschein-app',
+  '/muenzen-wert-scanner-app',
+  '/parkspot-find-my-car-app',
+  '/hush-silent-mode-reminder-app',
+  '/portion-control-app',
+  '/preschool-learning-games-app',
+  '/air-fryer-recipes-app',
+  '/couples-app-love-notes',
 ] as const;
 
 export function isAppPage(pathname: string): boolean {
