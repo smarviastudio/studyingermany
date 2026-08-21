@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Clock, ChevronRight, ArrowLeft, Calendar } from 'lucide-react';
 import { BLOG_POSTS, CATEGORIES, getPostBySlug, type BlogPost } from '@/content/blog';
 import { getWpSeoDescriptionOverride, getWpSeoTitleOverride } from '@/content/blogSeoMeta';
+import { getRelatedStaticPosts, getRelatedStaticForTitle, rankWpCandidates } from '@/lib/relatedPosts';
 import type { Metadata } from 'next';
 import { SiteNav } from '@/components/SiteNav';
 import { BlogPostCta } from '@/components/BlogPostCta';
@@ -212,16 +213,32 @@ type WpPostSummary = {
   readTime: number;
 };
 
-async function fetchRelatedWpPosts(excludeSlug: string, limit: number = 3): Promise<WpPostSummary[]> {
+async function fetchRelatedWpPosts(
+  excludeSlug: string,
+  limit: number = 3,
+  currentTitle: string = '',
+  currentCategories: number[] = []
+): Promise<WpPostSummary[]> {
   const wpUrl = process.env.WP_URL || (process.env.NODE_ENV === 'production' ? 'https://cms.germanpath.com' : 'http://localhost:8000');
   try {
-    const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts?per_page=${limit + 1}&_embed=1`, { next: { revalidate: 60 } });
+    // Fetch a real pool to rank against. This previously requested limit+1 posts,
+    // so every WordPress post recommended the same few most-recent posts.
+    const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts?per_page=100&_embed=1&status=publish`, { next: { revalidate: 300 } });
     if (!res.ok) return [];
     const posts = await res.json();
     
-    return posts
-      .filter((post: Record<string, unknown>) => post.slug !== excludeSlug)
-      .slice(0, limit)
+    const ranked = rankWpCandidates(
+      { slug: excludeSlug, title: currentTitle, categories: currentCategories },
+      (posts as Record<string, unknown>[]).map((post) => ({
+        slug: post.slug as string,
+        title: stripHtml(((post.title as Record<string, unknown>)?.rendered as string) || ''),
+        categories: (post.categories as number[]) || [],
+        raw: post,
+      })),
+      limit
+    ).map((entry) => entry.raw);
+
+    return ranked
       .map((post: Record<string, unknown>) => {
         const embedded = post._embedded as Record<string, unknown> | undefined;
         const featuredMediaCandidates = Array.isArray(embedded?.['wp:featuredmedia'])
@@ -431,7 +448,9 @@ export default async function BlogPostPage({ params }: Props) {
   
   if (staticPost) {
     const cat = CATEGORIES[staticPost.category];
-    const related = BLOG_POSTS.filter(p => p.slug !== slug).slice(0, 3);
+    // Scored by shared tags, category and title terms. Taking the first three of
+    // the array meant every static post linked to the same three targets.
+    const related = getRelatedStaticPosts(slug, 3);
     const bodyHtml = renderMarkdown(staticPost.body);
     const post = staticPost;
 
@@ -567,8 +586,16 @@ export default async function BlogPostPage({ params }: Props) {
   const wpPost = await fetchWpPost(slug);
   if (!wpPost) notFound();
 
-  // Fetch related posts from WordPress
-  const relatedPosts = await fetchRelatedWpPosts(slug, 3);
+  // Pass the current post's title and categories so related posts are ranked
+  // against it rather than being whichever posts happen to be newest.
+  const relatedPosts = await fetchRelatedWpPosts(
+    slug,
+    3,
+    stripHtml(wpPost.title.rendered),
+    wpPost.categories || []
+  );
+  // Cross-link into the static library, which no WordPress post reached before.
+  const relatedStatic = getRelatedStaticForTitle(stripHtml(wpPost.title.rendered), 2);
 
   const title = wpPost.title.rendered;
   const content = renderWordPressHtml(wpPost.content.rendered);
@@ -854,6 +881,33 @@ export default async function BlogPostPage({ params }: Props) {
                 <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
+          </section>
+        )}
+
+        {relatedStatic.length > 0 && (
+          <section className="mt-12 pt-10 border-t border-gray-200">
+            <h2
+              className="text-xl font-bold text-gray-900 mb-4"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              Related guides
+            </h2>
+            <ul className="grid sm:grid-cols-2 gap-3">
+              {relatedStatic.map(post => (
+                <li key={post.slug}>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="flex items-start gap-3 p-4 rounded-xl border border-gray-200 hover:border-[#ffce00] hover:shadow-sm transition-all"
+                  >
+                    <span className="text-2xl leading-none">{post.coverEmoji}</span>
+                    <span>
+                      <span className="block font-semibold text-gray-900 text-sm leading-snug">{post.title}</span>
+                      <span className="block text-gray-600 text-xs mt-1">{post.readTime} min read</span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
 
