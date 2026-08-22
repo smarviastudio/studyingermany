@@ -80,7 +80,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   });
 }
 
-const MAX_LISTED = 100;
+// Trimmed from 100. The rows past the first few dozen add page weight without
+// adding search value, and the full catalogue is reachable through the search.
+const MAX_LISTED = 30;
 const MAX_ITEMLIST = 50;
 
 export default async function ProgramHubPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -247,22 +249,23 @@ function ProgramRow({ program }: { program: Program }) {
   const intake = winter && summer ? 'Winter + Summer' : winter ? 'Winter intake' : summer ? 'Summer intake' : null;
   const city = (program.city || '').split(',')[0].trim();
 
+  // Class names rather than inline style objects: every style object on a server
+  // component is serialised into the RSC payload for each row, which is what made
+  // these pages 400KB+. Strings cost a fraction of that.
   return (
-    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '16px 20px' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 8, marginBottom: 6 }}>
-        <h3 style={{ fontSize: 15.5, fontWeight: 700, color: '#0f172a', margin: 0 }}>{program.program_name}</h3>
-      </div>
-      <p style={{ fontSize: 13.5, color: '#475569', margin: '0 0 10px' }}>
+    <div className="ph-row">
+      <h3 className="ph-row__name">{program.program_name}</h3>
+      <p className="ph-row__uni">
         {program.university}
         {city ? ` · ${city}` : ''}
       </p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-        {program.is_free && <span style={badgeStyle('#f0fdf4', '#15803d')}>Tuition-free</span>}
-        {english && <span style={badgeStyle('#eff6ff', '#1d4ed8')}>English</span>}
-        {duration && <span style={badgeStyle('#f8fafc', '#475569')}>{duration}</span>}
-        {intake && <span style={badgeStyle('#faf5ff', '#7e22ce')}>{intake}</span>}
+      <div className="ph-row__tags">
+        {program.is_free && <span className="ph-badge ph-badge--free">Tuition-free</span>}
+        {english && <span className="ph-badge ph-badge--en">English</span>}
+        {duration && <span className="ph-badge ph-badge--neutral">{duration}</span>}
+        {intake && <span className="ph-badge ph-badge--intake">{intake}</span>}
         {program.detail_url && (
-          <a href={program.detail_url} target="_blank" rel="nofollow noopener" style={{ fontSize: 12.5, fontWeight: 600, color: '#dc2626', textDecoration: 'none', marginLeft: 'auto' }}>
+          <a href={program.detail_url} target="_blank" rel="nofollow noopener" className="ph-row__link">
             Official page ↗
           </a>
         )}
@@ -275,6 +278,3 @@ function chipStyle(bg: string, color: string): React.CSSProperties {
   return { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, fontWeight: 700, color, background: bg, padding: '8px 14px', borderRadius: 999 };
 }
 
-function badgeStyle(bg: string, color: string): React.CSSProperties {
-  return { fontSize: 12, fontWeight: 700, color, background: bg, padding: '4px 10px', borderRadius: 999, border: '1px solid rgba(0,0,0,0.05)' };
-}

@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { CREDIT_PACKS, CREDIT_PACK_PRICE_IDS, type CreditPackKey } from './creditPacks';
+import { PLAN_AMOUNTS, type PlanKey } from './subscriptionPlans';
 
 let _stripe: Stripe | null = null;
 
@@ -97,74 +98,77 @@ export const stripe = new Proxy({} as Stripe, {
   },
 });
 
-export type PlanKey = 'pro_monthly' | 'pro_yearly';
+export type { PlanKey };
 
-function getPaidPlanPriceIds() {
-  if (isStripeTestMode()) {
-    // These are the active Essential prices in the connected Stripe sandbox.
-    // Environment variables may override them per deployment.
-    const monthly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY || 'price_1THMhjBhIRngoSRXvbQyNKcE';
-    const yearly = process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY || 'price_1THMhjBhIRngoSRXNhX1dcad';
+// Live subscription price IDs are pinned here, not read from environment
+// variables. A stale STRIPE_PRICE_PRO_MONTHLY in Vercel used to point checkout
+// at a CHF price while the pricing page advertised EUR, so visitors were quoted
+// euros and charged francs. Pinning them keeps this file and Stripe in step,
+// the same way @/lib/creditPacks pins the credit-pack IDs.
+//
+// Test-mode IDs still come from the environment because every sandbox has its
+// own; there is deliberately no fallback, so a missing value fails loudly
+// instead of quietly borrowing a live ID.
+export const PLAN_PRICE_IDS: Record<'live' | 'test', Record<PlanKey, string>> = {
+  live: {
+    pro_monthly: 'price_1U7AXZBhIRngoSRXrD7zZrUr', // EUR 9.99 / month
+    pro_yearly: 'price_1U7AXqBhIRngoSRXHKE1l7iq', // EUR 79.99 / year
+  },
+  test: {
+    pro_monthly: process.env.STRIPE_TEST_PRICE_PRO_MONTHLY || '',
+    pro_yearly: process.env.STRIPE_TEST_PRICE_PRO_YEARLY || '',
+  },
+};
 
-    if (!monthly || !yearly) {
-      throw new Error('STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY and STRIPE_TEST_PRICE_ESSENTIAL_YEARLY are required in test mode');
-    }
+// Subscriptions sold before the EUR/CHF price cleanup still reference retired
+// price IDs. They stay on Pro for the life of the subscription.
+const LEGACY_PRO_PRICE_IDS = new Set([
+  'price_1THMhjBhIRngoSRXvbQyNKcE', // Essential monthly, EUR 0.05 (mispriced)
+  'price_1THMhjBhIRngoSRXNhX1dcad', // Essential yearly, EUR 79.99
+  'price_1TKPLjBhIRngoSRX4JOzywq4', // Pro monthly, CHF 9.99
+  'price_1THMj0BhIRngoSRXUxFgCUdS', // Pro monthly, EUR 19.99
+  'price_1THMj0BhIRngoSRXLxEVsAmJ', // Pro yearly, EUR 149.99
+]);
 
-    return { monthly, yearly };
+function getPaidPlanPriceIds(): Record<PlanKey, string> {
+  const ids = PLAN_PRICE_IDS[isStripeTestMode() ? 'test' : 'live'];
+
+  if (!ids.pro_monthly || !ids.pro_yearly) {
+    throw new Error(
+      'STRIPE_TEST_PRICE_PRO_MONTHLY and STRIPE_TEST_PRICE_PRO_YEARLY are required in test mode'
+    );
   }
 
-  const monthly = process.env.STRIPE_PRICE_PRO_MONTHLY || 'price_1THMj0BhIRngoSRXUxFgCUdS';
-  const yearly = process.env.STRIPE_PRICE_PRO_YEARLY || 'price_1THMj0BhIRngoSRXLxEVsAmJ';
-
-  if (!monthly || !yearly) {
-    throw new Error('STRIPE_PRICE_PRO_MONTHLY and STRIPE_PRICE_PRO_YEARLY are required in live mode');
-  }
-
-  return { monthly, yearly };
+  return ids;
 }
 
 export function getPlans() {
-  const paidPlanPriceIds = getPaidPlanPriceIds();
+  const priceIds = getPaidPlanPriceIds();
 
   return {
     pro_monthly: {
-      priceId: paidPlanPriceIds.monthly,
+      priceId: priceIds.pro_monthly,
       planType: 'pro',
       label: 'Pro Plan',
       interval: 'month',
-      amount: 999,
+      amount: PLAN_AMOUNTS.pro_monthly,
     },
     pro_yearly: {
-      priceId: paidPlanPriceIds.yearly,
+      priceId: priceIds.pro_yearly,
       planType: 'pro',
       label: 'Pro Plan',
       interval: 'year',
-      amount: 7999,
+      amount: PLAN_AMOUNTS.pro_yearly,
     },
   } as const;
 }
 
 export function getPlanTypeFromPriceId(priceId: string): 'pro' | 'free' {
-  const priceIdMap: Record<string, 'pro'> = {
-    'price_1THN5NBhIRngoSRXiAUcKhva': 'pro',
-    'price_1THN5NBhIRngoSRX93yw0Txf': 'pro',
-    'price_1THMhjBhIRngoSRXvbQyNKcE': 'pro', // Essential monthly used as paid plan
-    'price_1THMhjBhIRngoSRXNhX1dcad': 'pro', // Essential yearly used as paid plan
-    'price_1THN89BhIRngoSRXlgKJkghi': 'pro', // New test price created by user
-    'price_1THMj0BhIRngoSRXUxFgCUdS': 'pro', // Live Pro monthly
-    'price_1THMj0BhIRngoSRXLxEVsAmJ': 'pro', // Live Pro yearly
-  };
-  
-  if (priceIdMap[priceId]) {
-    return priceIdMap[priceId];
-  }
-  
-  // Fallback to old logic
-  const plans = getPlans();
-  for (const plan of Object.values(plans)) {
-    if (plan.priceId === priceId) return 'pro';
-  }
-  return 'free';
+  const isCurrentPlanPrice = (['live', 'test'] as const).some((mode) =>
+    Object.values(PLAN_PRICE_IDS[mode]).includes(priceId)
+  );
+
+  return isCurrentPlanPrice || LEGACY_PRO_PRICE_IDS.has(priceId) ? 'pro' : 'free';
 }
 
 export const FREE_LIMITS = {

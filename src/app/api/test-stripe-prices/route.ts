@@ -3,8 +3,13 @@ export const runtime = 'nodejs';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getStripeSecretKey, isStripeTestMode } from '@/lib/stripe';
+import { requireDiagnosticsAccess } from '@/lib/adminGuard';
 
 export async function GET() {
+  if (!(await requireDiagnosticsAccess())) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   const stripe = new Stripe(getStripeSecretKey(), {
     apiVersion: '2026-02-25.clover',
   });

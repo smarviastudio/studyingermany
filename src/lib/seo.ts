@@ -211,6 +211,8 @@ type MetadataInput = {
   publishedTime?: string;
   modifiedTime?: string;
   noIndex?: boolean;
+  /** BCP-47 locale for og:locale, e.g. 'de_DE'. Defaults to English. */
+  locale?: 'en_US' | 'de_DE';
 };
 
 export function buildCanonicalUrl(path: string): string {
@@ -233,6 +235,7 @@ export function buildPageMetadata({
   publishedTime,
   modifiedTime,
   noIndex = false,
+  locale = 'en_US',
 }: MetadataInput): Metadata {
   const url = canonicalUrl ?? buildCanonicalUrl(path);
   const pageOpenGraphTitle = openGraphTitle ?? title;
@@ -263,7 +266,7 @@ export function buildPageMetadata({
     },
     openGraph: {
       siteName: SITE_NAME,
-      locale: 'en_US',
+      locale,
       type,
       title: pageOpenGraphTitle,
       description: pageOpenGraphDescription,

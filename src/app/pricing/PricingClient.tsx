@@ -8,6 +8,7 @@ import { track, trackEcommerce } from '@/lib/track';
 import { Check, Shield, RefreshCw, Globe, MessageCircle, ChevronDown, Loader2, AlertCircle, Sparkles, Zap } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { CREDIT_PACKS, CREDIT_PACK_PRICE_IDS } from '@/lib/creditPacks';
+import { PLAN_AMOUNTS, formatPlanPrice, yearlyPricePerMonth, yearlyDiscountPercent } from '@/lib/subscriptionPlans';
 
 const RED = '#dd0000';
 
@@ -271,16 +272,18 @@ export default function PricingClient() {
                     onClick={() => setBillingPeriod('yearly')}
                     style={{ padding: '5px 12px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, background: billingPeriod === 'yearly' ? '#fff' : 'transparent', color: billingPeriod === 'yearly' ? '#0e0c15' : '#8d8a96', boxShadow: billingPeriod === 'yearly' ? '0 2px 6px rgba(0,0,0,0.08)' : 'none' }}
                   >
-                    Yearly −33%
+                    {`Yearly −${yearlyDiscountPercent()}%`}
                   </button>
                 </div>
               </div>
               <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 40, fontWeight: 800, color: '#0e0c15', margin: '0 0 2px' }}>
-                {billingPeriod === 'monthly' ? '€9.99' : '€6.67'}
+                {billingPeriod === 'monthly' ? formatPlanPrice(PLAN_AMOUNTS.pro_monthly) : yearlyPricePerMonth()}
                 <span style={{ fontSize: 15, fontWeight: 600, color: '#8d8a96' }}>/month</span>
               </p>
               <p style={{ fontSize: 12.5, color: '#8d8a96', margin: '0 0 16px', fontWeight: 600 }}>
-                {billingPeriod === 'monthly' ? 'Billed monthly, cancel anytime' : '€79.99 billed yearly · cancel anytime'}
+                {billingPeriod === 'monthly'
+                  ? 'Billed monthly, cancel anytime'
+                  : `${formatPlanPrice(PLAN_AMOUNTS.pro_yearly)} billed yearly · cancel anytime`}
               </p>
               <div style={{ flex: 1, marginBottom: 22 }}>
                 {[

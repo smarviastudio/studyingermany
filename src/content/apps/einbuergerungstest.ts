@@ -116,6 +116,7 @@ export const einbuergerungstest: AppContent = {
   guides: [
     {
       slug: 'einbuergerungstest-310-fragen-ueben',
+      lang: 'de',
       keyword: 'einbürgerungstest 310 fragen üben',
       title: 'Einbürgerungstest: Alle 310 Fragen üben – so bestehst du 2026',
       metaTitle: 'Einbürgerungstest 2026: Alle 310 Fragen üben (offline)',
@@ -177,6 +178,7 @@ export const einbuergerungstest: AppContent = {
     },
     {
       slug: 'leben-in-deutschland-test-simulation',
+      lang: 'de',
       keyword: 'leben in deutschland test simulation',
       title: 'Leben in Deutschland Test: Simulation, Ablauf und Bestehen-Grenze',
       metaTitle: 'Leben in Deutschland Test: Simulation mit 33 Fragen',
@@ -292,6 +294,7 @@ export const einbuergerungstest: AppContent = {
     },
     {
       slug: 'einbuergerungstest-bundesland-fragen',
+      lang: 'de',
       keyword: 'einbürgerungstest bundesland fragen',
       title: 'Einbürgerungstest Bundesland-Fragen: Was dein Land wissen will',
       metaTitle: 'Einbürgerungstest Bundesland-Fragen üben (alle 16 Länder)',

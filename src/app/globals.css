@@ -2841,3 +2841,16 @@ details[open] summary .chevron { transform: rotate(180deg); }
   .gp-demo-line { transition: none; }
   .gp-tool::after { display: none; }
 }
+
+/* Program hub rows. Kept as classes so the server-rendered list does not
+   serialise a style object per element into the RSC payload. */
+.ph-row { background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; }
+.ph-row__name { font-size:15.5px; font-weight:700; color:#0f172a; margin:0 0 6px; }
+.ph-row__uni { font-size:13.5px; color:#475569; margin:0 0 10px; }
+.ph-row__tags { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.ph-row__link { font-size:12.5px; font-weight:600; color:#dc2626; text-decoration:none; margin-left:auto; }
+.ph-badge { font-size:12px; font-weight:700; padding:4px 10px; border-radius:999px; border:1px solid rgba(0,0,0,0.05); }
+.ph-badge--free { background:#f0fdf4; color:#15803d; }
+.ph-badge--en { background:#eff6ff; color:#1d4ed8; }
+.ph-badge--neutral { background:#f8fafc; color:#475569; }
+.ph-badge--intake { background:#faf5ff; color:#7e22ce; }

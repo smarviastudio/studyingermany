@@ -45,6 +45,12 @@ export interface GuideHowToStep {
 
 export interface AppGuide {
   slug: string;
+  /**
+   * Overrides the app's language for this guide. Most guides match their app,
+   * but a few apps carry guides in both languages — an English landing page can
+   * have German guides beneath it.
+   */
+  lang?: 'en' | 'de';
   /** The search query this guide targets */
   keyword: string;
   title: string;
