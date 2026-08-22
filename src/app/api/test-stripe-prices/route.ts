@@ -2,7 +2,9 @@ export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getStripeSecretKey, isStripeTestMode } from '@/lib/stripe';
+import { getStripeSecretKey, isStripeTestMode, PLAN_PRICE_IDS } from '@/lib/stripe';
+import { CREDIT_PACK_PRICE_IDS } from '@/lib/creditPacks';
+import { PLAN_AMOUNTS, PLAN_CURRENCY } from '@/lib/subscriptionPlans';
 import { requireDiagnosticsAccess } from '@/lib/adminGuard';
 
 export async function GET() {
@@ -14,17 +16,24 @@ export async function GET() {
     apiVersion: '2026-02-25.clover',
   });
 
-  const priceSources = {
-    liveProMonthly: process.env.STRIPE_PRICE_PRO_MONTHLY,
-    liveProYearly: process.env.STRIPE_PRICE_PRO_YEARLY,
-    testEssentialMonthly: process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY,
-    testEssentialYearly: process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY,
-    liveCredits20: process.env.STRIPE_PRICE_CREDITS_20,
-    liveCredits100: process.env.STRIPE_PRICE_CREDITS_100,
-    liveCredits300: process.env.STRIPE_PRICE_CREDITS_300,
-    testCredits20: process.env.STRIPE_TEST_PRICE_CREDITS_20,
-    testCredits100: process.env.STRIPE_TEST_PRICE_CREDITS_100,
-    testCredits300: process.env.STRIPE_TEST_PRICE_CREDITS_300,
+  // Check the price IDs the app actually resolves in the current mode, not the
+  // environment variables it used to read. Subscription prices are additionally
+  // checked against PLAN_AMOUNTS, which is what the pricing page advertises —
+  // that comparison is what catches a price drifting into the wrong amount or
+  // currency, as the CHF 9.99 "€9.99" monthly price once did.
+  const mode = isStripeTestMode() ? 'test' : 'live';
+
+  const priceSources: Record<string, string | undefined> = {
+    proMonthly: PLAN_PRICE_IDS[mode].pro_monthly,
+    proYearly: PLAN_PRICE_IDS[mode].pro_yearly,
+    credits20: CREDIT_PACK_PRICE_IDS[mode].credits_20,
+    credits100: CREDIT_PACK_PRICE_IDS[mode].credits_100,
+    credits300: CREDIT_PACK_PRICE_IDS[mode].credits_300,
+  };
+
+  const advertisedAmounts: Record<string, number> = {
+    proMonthly: PLAN_AMOUNTS.pro_monthly,
+    proYearly: PLAN_AMOUNTS.pro_yearly,
   };
 
   const priceIds = Object.entries(priceSources)
@@ -51,13 +60,25 @@ export async function GET() {
   results.forEach((result) => {
     if (result.status === 'fulfilled') {
       if (result.value.valid && result.value.price) {
-        validPrices.push({
-          label: result.value.label,
-          priceId: result.value.priceId,
-          amount: result.value.price.unit_amount,
-          currency: result.value.price.currency,
-          type: result.value.price.type,
-          nickname: result.value.price.nickname,
+        const { label, priceId, price } = result.value;
+        const expectedAmount = advertisedAmounts[label];
+        const mismatch =
+          expectedAmount !== undefined &&
+          (price.unit_amount !== expectedAmount ||
+            price.currency !== PLAN_CURRENCY.toLowerCase());
+
+        (mismatch ? invalidPrices : validPrices).push({
+          label,
+          priceId,
+          amount: price.unit_amount,
+          currency: price.currency,
+          type: price.type,
+          nickname: price.nickname,
+          ...(mismatch
+            ? {
+                error: `Stripe charges ${price.unit_amount} ${price.currency.toUpperCase()} but the pricing page advertises ${expectedAmount} ${PLAN_CURRENCY}`,
+              }
+            : {}),
         });
       } else {
         invalidPrices.push({
@@ -71,7 +92,7 @@ export async function GET() {
 
   return NextResponse.json({
     stripeMode: isStripeTestMode() ? 'test' : 'live',
-    expectedPriceEnvVars: Object.keys(priceSources),
+    checkedPrices: Object.keys(priceSources),
     missingPrices,
     validPrices,
     invalidPrices,

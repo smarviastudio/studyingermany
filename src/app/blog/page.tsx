@@ -198,6 +198,10 @@ export default async function BlogPage() {
   // Deduplicate WP posts against static slugs
   const staticSlugs = new Set(BLOG_POSTS.map(p => p.slug));
   const uniqueWpPosts = wpPosts.filter(p => !staticSlugs.has(p.slug));
+  // Only the newest get image cards; the rest are text links in the archive below.
+  const WP_CARD_COUNT = 12;
+  const featuredWpPosts = uniqueWpPosts.slice(0, WP_CARD_COUNT);
+  const archiveWpPosts = uniqueWpPosts.slice(WP_CARD_COUNT);
 
   const categories = Object.entries(CATEGORIES);
 
@@ -281,17 +285,44 @@ export default async function BlogPage() {
           </section>
         )}
 
-        {/* WordPress posts */}
-        {uniqueWpPosts.length > 0 && (
+        {/* WordPress posts — the most recent as full cards */}
+        {featuredWpPosts.length > 0 && (
           <section className="mb-10">
             <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-4">
-              More Guides {uniqueWpPosts.length > 0 && <span className="text-white/20 ml-1">({uniqueWpPosts.length})</span>}
+              More Guides <span className="text-white/20 ml-1">({uniqueWpPosts.length})</span>
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {uniqueWpPosts.map(post => (
+              {featuredWpPosts.map(post => (
                 <WpCard key={post.id} post={post} />
               ))}
             </div>
+          </section>
+        )}
+
+        {/*
+          Every remaining post as a plain text link. Rendering all 100+ posts as
+          image cards put this page at 468KB, two thirds of it RSC payload, because
+          each card serialises a whole component subtree. Text links cost a fraction
+          of that and keep every post one click from the index, which is what stops
+          them becoming orphans.
+        */}
+        {archiveWpPosts.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-4">
+              Full Archive <span className="text-white/20 ml-1">({archiveWpPosts.length})</span>
+            </h2>
+            <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
+              {archiveWpPosts.map(post => (
+                <li key={post.id}>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="block text-white/50 hover:text-blue-300 text-sm leading-snug py-1 transition-colors"
+                  >
+                    {post.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
 

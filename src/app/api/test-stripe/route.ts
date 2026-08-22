@@ -13,17 +13,16 @@ export async function GET() {
     stripeMode: isStripeTestMode() ? 'test' : 'live',
     stripeSecret: process.env.STRIPE_SECRET_KEY ? 'SET' : 'NOT SET',
     stripeTestSecret: process.env.STRIPE_TEST_SECRET_KEY ? 'SET' : 'NOT SET',
-    liveProMonthly: process.env.STRIPE_PRICE_PRO_MONTHLY,
-    liveProYearly: process.env.STRIPE_PRICE_PRO_YEARLY,
-    testEssentialMonthly: process.env.STRIPE_TEST_PRICE_ESSENTIAL_MONTHLY,
-    testEssentialYearly: process.env.STRIPE_TEST_PRICE_ESSENTIAL_YEARLY,
-    testCredit20: process.env.STRIPE_TEST_PRICE_CREDITS_20,
-    testCredit100: process.env.STRIPE_TEST_PRICE_CREDITS_100,
-    testCredit300: process.env.STRIPE_TEST_PRICE_CREDITS_300,
+    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET ? 'SET' : 'NOT SET',
+    stripeTestWebhookSecret: process.env.STRIPE_TEST_WEBHOOK_SECRET ? 'SET' : 'NOT SET',
+    // Live price IDs are pinned in @/lib/stripe and @/lib/creditPacks; only the
+    // sandbox subscription prices still come from the environment.
+    testProMonthly: process.env.STRIPE_TEST_PRICE_PRO_MONTHLY,
+    testProYearly: process.env.STRIPE_TEST_PRICE_PRO_YEARLY,
   };
 
   const missingVars = Object.entries(envVars)
-    .filter(([key, value]) => !value && key !== 'stripeSecret')
+    .filter(([key, value]) => !value && !key.toLowerCase().includes('secret'))
     .map(([key]) => key);
 
   return NextResponse.json({
