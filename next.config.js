@@ -1,3 +1,5 @@
+const consolidatedPosts = require('./src/lib/consolidated-posts.json');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
@@ -24,6 +26,15 @@ const nextConfig = {
         destination: '/gpa-converter',
         permanent: true,
       },
+      // Near-duplicate blog posts folded into the page that should own each
+      // query. The destination is always the one with more Search Console
+      // impressions, so no redirect sends traffic to a weaker page.
+      // Source of truth: src/lib/consolidated-posts.json
+      ...consolidatedPosts.map((entry) => ({
+        source: `/blog/${entry.from}`,
+        destination: `/blog/${entry.to}`,
+        permanent: true,
+      })),
     ];
   },
   images: {

@@ -1,4 +1,5 @@
 import type { Metadata, MetadataRoute } from 'next';
+import { CONSOLIDATED_SLUGS } from '@/lib/consolidatedPosts';
 
 export const SITE_NAME = 'German Path';
 export const SITE_URL = 'https://germanpath.com';
@@ -184,7 +185,11 @@ export async function getWpBlogSitemapEntries(): Promise<MetadataRoute.Sitemap> 
       if (totalPages && page >= totalPages) break;
     }
 
-    return posts.map((post) => ({
+    return posts
+      // A consolidated post now redirects, so listing it would advertise a URL
+      // that only 301s.
+      .filter((post) => !CONSOLIDATED_SLUGS.has(post.slug))
+      .map((post) => ({
       url: buildCanonicalUrl(`/blog/${post.slug}`),
       lastModified: new Date(post.modified),
       changeFrequency: 'monthly' as const,

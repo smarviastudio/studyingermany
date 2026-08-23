@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { GraduationCap, Clock, ArrowRight, ChevronRight } from 'lucide-react';
 import { BLOG_POSTS, CATEGORIES, type BlogPost } from '@/content/blog';
 import { buildBreadcrumbSchema, buildPageMetadata } from '@/lib/seo';
+import { CONSOLIDATED_SLUGS } from '@/lib/consolidatedPosts';
 import { EmailCapture } from '@/components/EmailCapture';
 
 export const metadata = buildPageMetadata({
@@ -197,7 +198,9 @@ export default async function BlogPage() {
 
   // Deduplicate WP posts against static slugs
   const staticSlugs = new Set(BLOG_POSTS.map(p => p.slug));
-  const uniqueWpPosts = wpPosts.filter(p => !staticSlugs.has(p.slug));
+  const uniqueWpPosts = wpPosts.filter(
+    p => !staticSlugs.has(p.slug) && !CONSOLIDATED_SLUGS.has(p.slug)
+  );
   // Only the newest get image cards; the rest are text links in the archive below.
   const WP_CARD_COUNT = 12;
   const featuredWpPosts = uniqueWpPosts.slice(0, WP_CARD_COUNT);
