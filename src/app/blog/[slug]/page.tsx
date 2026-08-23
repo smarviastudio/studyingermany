@@ -7,7 +7,7 @@ import { getRelatedStaticPosts, getRelatedStaticForTitle, rankWpCandidates } fro
 import type { Metadata } from 'next';
 import { SiteNav } from '@/components/SiteNav';
 import { BlogPostCta } from '@/components/BlogPostCta';
-import { buildBreadcrumbSchema, buildMetaDescription, buildPageMetadata, SITE_URL } from '@/lib/seo';
+import { buildBreadcrumbSchema, buildFaqSchema, buildMetaDescription, buildPageMetadata, SITE_URL } from '@/lib/seo';
 import { EmailCapture } from '@/components/EmailCapture';
 
 type WpPost = {
@@ -213,76 +213,103 @@ type WpPostSummary = {
   readTime: number;
 };
 
+function mapWpPostSummary(post: Record<string, unknown>): WpPostSummary {
+  const embedded = post._embedded as Record<string, unknown> | undefined;
+  const featuredMediaCandidates = Array.isArray(embedded?.['wp:featuredmedia'])
+    ? (embedded['wp:featuredmedia'] as Record<string, unknown>[])
+    : [];
+  const featuredMedia = featuredMediaCandidates.find((media) => {
+    const sourceUrl = media?.source_url;
+    return typeof sourceUrl === 'string' && sourceUrl.length > 0;
+  }) || null;
+
+  const featuredMediaDetails = featuredMedia?.media_details as Record<string, unknown> | undefined;
+  const featuredSizes = featuredMediaDetails?.sizes as Record<string, Record<string, unknown>> | undefined;
+  const featuredImage =
+    (typeof featuredSizes?.medium?.source_url === 'string' && featuredSizes.medium.source_url) ||
+    (typeof featuredSizes?.thumbnail?.source_url === 'string' && featuredSizes.thumbnail.source_url) ||
+    (featuredMedia && typeof featuredMedia.source_url === 'string' ? featuredMedia.source_url : null);
+
+  const wpTerms = Array.isArray(embedded?.['wp:term']) ? embedded['wp:term'] : [];
+  const categoryTerms = Array.isArray(wpTerms[0]) ? wpTerms[0] : [];
+  const categories = categoryTerms.map((cat: Record<string, unknown>) => ({
+    id: cat.id as number,
+    name: cat.name as string,
+    slug: cat.slug as string,
+  }));
+
+  const titleObj = post.title as { rendered: string };
+  const excerptObj = post.excerpt as { rendered: string };
+  const contentObj = post.content as { rendered: string };
+  const wordCount = contentObj?.rendered ? contentObj.rendered.replace(/<[^>]*>/g, '').split(/\s+/).length : 0;
+
+  return {
+    id: post.id as number,
+    title: stripHtml(titleObj?.rendered || ''),
+    excerpt: stripHtml(excerptObj?.rendered || '').slice(0, 120) + '...',
+    slug: post.slug as string,
+    date: post.date as string,
+    featuredImage,
+    categories,
+    readTime: Math.max(1, Math.ceil(wordCount / 200)),
+  };
+}
+
+async function fetchWpPostPool(): Promise<WpPostSummary[]> {
+  const wpUrl = process.env.WP_URL || (process.env.NODE_ENV === 'production' ? 'https://cms.germanpath.com' : 'http://localhost:8000');
+  try {
+    const posts: Record<string, unknown>[] = [];
+    for (let page = 1; page <= 20; page += 1) {
+      const res = await fetch(
+        `${wpUrl}/wp-json/wp/v2/posts?per_page=100&page=${page}&_embed=1&status=publish`,
+        { next: { revalidate: 300 } }
+      );
+      if (!res.ok) break;
+
+      const batch = await res.json();
+      if (!Array.isArray(batch) || batch.length === 0) break;
+      posts.push(...(batch as Record<string, unknown>[]));
+
+      const totalPages = Number(res.headers.get('x-wp-totalpages') || '0');
+      if (batch.length < 100 || (totalPages > 0 && page >= totalPages)) break;
+    }
+
+    return posts.map(mapWpPostSummary);
+  } catch {
+    return [];
+  }
+}
+
+function rankWpSummaryCandidates(
+  current: { slug: string; title: string; categories: number[] },
+  pool: WpPostSummary[],
+  limit: number
+): WpPostSummary[] {
+  return rankWpCandidates(
+    current,
+    pool.map((post) => ({
+      post,
+      slug: post.slug,
+      title: post.title,
+      categories: post.categories.map((category) => category.id),
+    })),
+    limit
+  ).map((entry) => entry.post);
+}
+
 async function fetchRelatedWpPosts(
   excludeSlug: string,
   limit: number = 3,
   currentTitle: string = '',
-  currentCategories: number[] = []
+  currentCategories: number[] = [],
+  pool?: WpPostSummary[]
 ): Promise<WpPostSummary[]> {
-  const wpUrl = process.env.WP_URL || (process.env.NODE_ENV === 'production' ? 'https://cms.germanpath.com' : 'http://localhost:8000');
-  try {
-    // Fetch a real pool to rank against. This previously requested limit+1 posts,
-    // so every WordPress post recommended the same few most-recent posts.
-    const res = await fetch(`${wpUrl}/wp-json/wp/v2/posts?per_page=100&_embed=1&status=publish`, { next: { revalidate: 300 } });
-    if (!res.ok) return [];
-    const posts = await res.json();
-    
-    const ranked = rankWpCandidates(
-      { slug: excludeSlug, title: currentTitle, categories: currentCategories },
-      (posts as Record<string, unknown>[]).map((post) => ({
-        slug: post.slug as string,
-        title: stripHtml(((post.title as Record<string, unknown>)?.rendered as string) || ''),
-        categories: (post.categories as number[]) || [],
-        raw: post,
-      })),
-      limit
-    ).map((entry) => entry.raw);
-
-    return ranked
-      .map((post: Record<string, unknown>) => {
-        const embedded = post._embedded as Record<string, unknown> | undefined;
-        const featuredMediaCandidates = Array.isArray(embedded?.['wp:featuredmedia'])
-          ? (embedded['wp:featuredmedia'] as Record<string, unknown>[])
-          : [];
-        const featuredMedia = featuredMediaCandidates.find((media) => {
-          const sourceUrl = media?.source_url;
-          return typeof sourceUrl === 'string' && sourceUrl.length > 0;
-        }) || null;
-        
-        const featuredMediaDetails = featuredMedia?.media_details as Record<string, unknown> | undefined;
-        const featuredSizes = featuredMediaDetails?.sizes as Record<string, Record<string, unknown>> | undefined;
-        const featuredImage =
-          (typeof featuredSizes?.medium?.source_url === 'string' && featuredSizes.medium.source_url) ||
-          (typeof featuredSizes?.thumbnail?.source_url === 'string' && featuredSizes.thumbnail.source_url) ||
-          (featuredMedia && typeof featuredMedia.source_url === 'string' ? featuredMedia.source_url : null);
-        
-        const wpTerms = Array.isArray(embedded?.['wp:term']) ? embedded['wp:term'] : [];
-        const categoryTerms = Array.isArray(wpTerms[0]) ? wpTerms[0] : [];
-        const categories = categoryTerms.map((cat: Record<string, unknown>) => ({
-          id: cat.id as number,
-          name: cat.name as string,
-          slug: cat.slug as string,
-        }));
-
-        const titleObj = post.title as { rendered: string };
-        const excerptObj = post.excerpt as { rendered: string };
-        const contentObj = post.content as { rendered: string };
-        const wordCount = contentObj?.rendered ? contentObj.rendered.replace(/<[^>]*>/g, '').split(/\s+/).length : 0;
-        
-        return {
-          id: post.id as number,
-          title: stripHtml(titleObj.rendered),
-          excerpt: stripHtml(excerptObj.rendered).slice(0, 120) + '...',
-          slug: post.slug as string,
-          date: post.date as string,
-          featuredImage,
-          categories,
-          readTime: Math.max(1, Math.ceil(wordCount / 200)),
-        };
-      });
-  } catch {
-    return [];
-  }
+  const posts = pool ?? await fetchWpPostPool();
+  return rankWpSummaryCandidates(
+    { slug: excludeSlug, title: currentTitle, categories: currentCategories },
+    posts,
+    limit
+  );
 }
 
 type Props = { params: Promise<{ slug: string }> };
@@ -384,6 +411,161 @@ function renderMarkdown(md: string): string {
   return html;
 }
 
+const INTERNAL_LINK_STOP_WORDS = new Set([
+  'a', 'an', 'and', 'after', 'at', 'for', 'from', 'how', 'in', 'is', 'of',
+  'on', 'or', 'the', 'to', 'vs', 'what', 'which', 'with', 'your', 'germany',
+  'german', 'guide', 'complete', 'explained', 'international', 'students',
+]);
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function titlePhrases(title: string): string[] {
+  const words = title
+    .toLowerCase()
+    .replace(/[^a-z0-9äöüß\s-]/g, ' ')
+    .split(/[\s-]+/)
+    .filter((word) => word.length > 2 && !INTERNAL_LINK_STOP_WORDS.has(word));
+
+  const phrases: string[] = [];
+  for (let size = Math.min(4, words.length); size >= 2; size -= 1) {
+    for (let start = 0; start <= words.length - size; start += 1) {
+      phrases.push(words.slice(start, start + size).join(' '));
+    }
+  }
+  return phrases;
+}
+
+/**
+ * Scans the complete WordPress article body against every published post.
+ * Only genuine title-phrase matches are linked, and it only touches plain text
+ * nodes, skips headings and existing anchors, and links to the Vercel article
+ * route rather than the CMS URL.
+ */
+function addContextualInternalLinks(
+  html: string,
+  currentSlug: string,
+  pool: WpPostSummary[]
+): string {
+  const plainText = stripHtml(html);
+  const candidates = pool
+    .filter((post) => post.slug !== currentSlug)
+    .map((post) => ({ post, phrases: titlePhrases(post.title) }))
+    .map((candidate) => {
+      const phrase = candidate.phrases.find((value) => {
+        const pattern = new RegExp(
+          `(^|[^\\p{L}\\p{N}])${value.split(' ').map(escapeRegExp).join('[\\s-]+')}(?=$|[^\\p{L}\\p{N}])`,
+          'iu'
+        );
+        return pattern.test(plainText);
+      });
+      return { ...candidate, matchedPhrase: phrase };
+    })
+    .filter((candidate): candidate is { post: WpPostSummary; phrases: string[]; matchedPhrase: string } => Boolean(candidate.matchedPhrase))
+    // Prefer the most specific phrase matches. This avoids linking a generic
+    // two-word phrase when the same article has a more precise three- or
+    // four-word phrase in the body.
+    .sort((a, b) => {
+      const phraseLength = b.matchedPhrase.split(' ').length - a.matchedPhrase.split(' ').length;
+      return phraseLength || b.post.title.length - a.post.title.length;
+    })
+    .slice(0, 5);
+
+  if (!candidates.length) return html;
+
+  const linkedSlugs = new Set<string>();
+  let linkCount = 0;
+  let insideAnchor = false;
+  let insideHeading = false;
+  const parts = html.split(/(<[^>]+>)/g);
+
+  return parts.map((part) => {
+    if (part.startsWith('<')) {
+      if (/^<a\b/i.test(part)) insideAnchor = true;
+      if (/^<\/a>/i.test(part)) insideAnchor = false;
+      if (/^<h[1-6]\b/i.test(part)) insideHeading = true;
+      if (/^<\/h[1-6]>/i.test(part)) insideHeading = false;
+      return part;
+    }
+
+    if (!part || insideAnchor || insideHeading || linkCount >= 3) return part;
+
+    let text = part;
+    for (const candidate of candidates) {
+      if (linkedSlugs.has(candidate.post.slug) || linkCount >= 3) continue;
+
+      for (const phrase of [candidate.matchedPhrase]) {
+        const pattern = new RegExp(`(^|[^\\p{L}\\p{N}])(${phrase.split(' ').map(escapeRegExp).join('[\\s-]+')})(?=$|[^\\p{L}\\p{N}])`, 'iu');
+        if (!pattern.test(text)) continue;
+
+        text = text.replace(pattern, (_match, prefix: string, matchedPhrase: string) => {
+          linkedSlugs.add(candidate.post.slug);
+          linkCount += 1;
+          return `${prefix}<a href="/blog/${candidate.post.slug}" class="text-[#dd0000] underline underline-offset-2 hover:text-[#bb0000] transition-colors">${matchedPhrase}</a>`;
+        });
+        break;
+      }
+    }
+    return text;
+  }).join('');
+}
+
+
+/**
+ * Pull FAQ pairs out of WordPress content so they can be emitted as FAQPage
+ * structured data.
+ *
+ * 70 of the 76 WordPress posts already carry a written FAQ section, but none of
+ * them shipped FAQ markup — so none was eligible for the rich result. The posts
+ * use two different shapes depending on when they were generated: a
+ * `<section class="sig-faqs">` block, or a "Frequently Asked Questions" heading
+ * followed by h3 questions.
+ */
+function extractWpFaqs(rawHtml: string): { q: string; a: string }[] {
+  const clean = (value: string) =>
+    value
+      .replace(/<[^>]+>/g, '')
+      .replace(/&[#A-Za-z0-9]+;/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+  const faqs: { q: string; a: string }[] = [];
+
+  const section = rawHtml.match(/<section class="sig-faqs">([\s\S]*?)<\/section>/);
+  if (section) {
+    const items = section[1].matchAll(
+      /<article class="sig-faq(?: open)?">[\s\S]*?<h3>([\s\S]*?)<\/h3>[\s\S]*?<div class="sig-faq__answer">\s*<p>([\s\S]*?)<\/p>\s*<\/div>\s*<\/article>/g
+    );
+    for (const item of items) {
+      const q = clean(item[1]);
+      const a = clean(item[2]);
+      if (q && a.length > 25) faqs.push({ q, a: a.slice(0, 600) });
+    }
+    if (faqs.length) return faqs;
+  }
+
+  const heading = rawHtml.match(
+    /<h([23])[^>]*>\s*(?:Frequently Asked Questions|FAQs?)[^<]*<\/h\1>/i
+  );
+  if (!heading || heading.index === undefined) return faqs;
+
+  const after = rawHtml.slice(heading.index + heading[0].length);
+  const nextH2 = after.search(/<h2/);
+  const block = nextH2 === -1 ? after : after.slice(0, nextH2);
+
+  for (const match of block.matchAll(/<h[34][^>]*>([\s\S]*?)<\/h[34]>/g)) {
+    const q = clean(match[1]);
+    if (!q.endsWith('?') || match.index === undefined) continue;
+    const rest = block.slice(match.index + match[0].length);
+    const nextQ = rest.search(/<h[34]/);
+    const a = clean(nextQ === -1 ? rest : rest.slice(0, nextQ));
+    if (a.length > 25) faqs.push({ q, a: a.slice(0, 600) });
+  }
+
+  return faqs;
+}
+
 function renderWordPressHtml(html: string): string {
   let out = html;
 
@@ -411,6 +593,11 @@ function renderWordPressHtml(html: string): string {
     return `<section class="my-12 rounded-[28px] border border-[#f1e3a6] bg-gradient-to-br from-[#fffdf5] via-white to-[#fff8e8] p-6 md:p-8 shadow-[0_18px_50px_rgba(17,24,39,0.08)]"><div class="mb-6 flex items-start gap-4"><div class="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ffce00]/20 text-xl">?</div><div><span class="inline-flex rounded-full bg-[#fff3c4] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9a3412]">FAQ</span><h2 class="mt-3 text-[28px] font-bold leading-tight text-gray-900" style="font-family: 'Space Grotesk', sans-serif;">${heading}</h2><p class="mt-2 text-sm text-gray-600">Quick answers to the most common questions readers ask.</p></div></div><div class="space-y-3">${itemsHtml}</div></section>`;
   });
 
+  // Several posts open with a literal "Intro:" heading, which is a generation
+  // artifact rather than a section title. Remove it outright instead of demoting
+  // it into a meaningless H2.
+  out = out.replace(/<h[12][^>]*>\s*intro:?\s*<\/h[12]>/gi, '');
+
   // The page already renders the post title as the H1, so any H1 authored inside the
   // WordPress body would be a second one. Demote it to H2 before the heading styles run
   // below, so it picks up the normal H2 treatment.
@@ -427,7 +614,10 @@ function renderWordPressHtml(html: string): string {
   out = out.replace(/<a([^>]*?)>/gi, (_match, attrs: string) => {
     const hasClass = /class\s*=/.test(attrs);
     const hasTarget = /target\s*=/.test(attrs);
-    const nextAttrs = `${attrs}${hasClass ? '' : ' class="text-[#dd0000] underline underline-offset-2 hover:text-[#bb0000] transition-colors"'}${hasTarget ? '' : ' target="_blank" rel="noopener noreferrer"'}`;
+    const hrefMatch = attrs.match(/href\s*=\s*["']([^"']+)["']/i);
+    const href = hrefMatch?.[1] || '';
+    const isInternal = href.startsWith('/') || href.startsWith(`${SITE_URL}/`) || href.startsWith('https://www.germanpath.com/');
+    const nextAttrs = `${attrs}${hasClass ? '' : ' class="text-[#dd0000] underline underline-offset-2 hover:text-[#bb0000] transition-colors"'}${hasTarget || isInternal ? '' : ' target="_blank" rel="noopener noreferrer"'}`;
     return `<a${nextAttrs}>`;
   });
   out = out.replace(/<strong([^>]*)>/gi, '<strong$1 class="font-semibold text-gray-900">');
@@ -588,17 +778,26 @@ export default async function BlogPostPage({ params }: Props) {
 
   // Pass the current post's title and categories so related posts are ranked
   // against it rather than being whichever posts happen to be newest.
+  const wpPostPool = await fetchWpPostPool();
   const relatedPosts = await fetchRelatedWpPosts(
     slug,
     3,
     stripHtml(wpPost.title.rendered),
-    wpPost.categories || []
+    wpPost.categories || [],
+    wpPostPool
   );
   // Cross-link into the static library, which no WordPress post reached before.
   const relatedStatic = getRelatedStaticForTitle(stripHtml(wpPost.title.rendered), 2);
 
   const title = wpPost.title.rendered;
-  const content = renderWordPressHtml(wpPost.content.rendered);
+  const linkedContent = addContextualInternalLinks(
+    wpPost.content.rendered,
+    slug,
+    wpPostPool
+  );
+  const content = renderWordPressHtml(linkedContent);
+  // Emitted as FAQPage below when the post carries a written FAQ section.
+  const wpFaqs = extractWpFaqs(wpPost.content.rendered);
   const seoDescription = wpPost.seo.description || stripHtml(wpPost.excerpt.rendered);
   const seoImage = wpPost.seo.image || wpPost.featuredImage || `${SITE_URL}/opengraph-image`;
   const publishedAt = new Date(wpPost.date);
@@ -652,6 +851,14 @@ export default async function BlogPostPage({ params }: Props) {
           ),
         }}
       />
+      {wpFaqs.length >= 2 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(buildFaqSchema(wpFaqs)),
+          }}
+        />
+      )}
       <SiteNav />
 
       {/* Header */}
