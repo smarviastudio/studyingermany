@@ -30,6 +30,14 @@ export const APP_PAGE_PREFIXES = [
   '/preschool-learning-games-app',
   '/air-fryer-recipes-app',
   '/couples-app-love-notes',
+  '/kindergeld-termine-rechner-app',
+  '/packliste-app-reisen',
+  '/hochzeitsplaner-app',
+  '/migraene-tagebuch-app',
+  '/reihenzaehler-app-stricken-haekeln',
+  '/subscription-tracker-app',
+  '/mushroom-identification-guide-app',
+  '/measuring-tape-spirit-level-app',
 ] as const;
 
 export function isAppPage(pathname: string): boolean {

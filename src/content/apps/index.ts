@@ -20,6 +20,14 @@ import { portionpal } from './portionpal';
 import { littlegenius } from './littlegenius';
 import { airfryer } from './airfryer';
 import { couplegoals } from './couplegoals';
+import { kindergeld } from './kindergeld';
+import { packliste } from './packliste';
+import { hochzeitsplaner } from './hochzeitsplaner';
+import { migraene } from './migraene';
+import { reihenzaehler } from './reihenzaehler';
+import { renewly } from './renewly';
+import { soppsjekk } from './soppsjekk';
+import { mitta } from './mitta';
 
 export const ALL_APPS: AppContent[] = [
   lesenlab,
@@ -42,6 +50,14 @@ export const ALL_APPS: AppContent[] = [
   hush,
   football,
   kennzeichen,
+  kindergeld,
+  packliste,
+  hochzeitsplaner,
+  migraene,
+  reihenzaehler,
+  renewly,
+  soppsjekk,
+  mitta,
 ];
 
 // Keep slugs.ts (used client-side to suppress site chrome) in sync with the registry.
@@ -76,4 +92,12 @@ export {
   littlegenius,
   airfryer,
   couplegoals,
+  kindergeld,
+  packliste,
+  hochzeitsplaner,
+  migraene,
+  reihenzaehler,
+  renewly,
+  soppsjekk,
+  mitta,
 };
