@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { SiteNav } from '@/components/SiteNav';
 import { GPA_CONVERTER_FAQS } from './faqs';
+import { ValueMomentUpsell } from '@/components/ValueMomentUpsell';
 
 type GradingPreset = {
   id: string;
@@ -378,6 +379,22 @@ export default function GPAConverterPage() {
           </div>
         </div>
       </div>
+
+      <ValueMomentUpsell
+        trigger={result !== null}
+        storageKey="gpa_converted"
+        eyebrow="Your German grade is ready"
+        headline="Now write the application that goes with it"
+        body="Knowing your grade is step one. Admissions offices judge you on a German-format CV and a motivation letter written for the specific programme."
+        bullets={[
+          'CV in the German Lebenslauf format admissions offices expect',
+          'Motivation letter tailored to the programme you name',
+          '2 free previews — no account needed',
+        ]}
+        primary={{ href: '/cv-maker/landing', label: 'Try the AI CV Maker free' }}
+        secondary={{ href: '/study-in-germany', label: 'Find programmes I qualify for' }}
+        footnote="Free to preview · credit packs from €2.99 · no subscription"
+      />
     </div>
   );
 }

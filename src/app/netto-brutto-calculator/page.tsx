@@ -10,6 +10,7 @@ import {
   type TaxClass,
 } from '@/lib/nettoBrutto2026';
 import { TAX_CALCULATOR_FAQS } from './faqs';
+import { ValueMomentUpsell } from '@/components/ValueMomentUpsell';
 
 // Reference table: computed once with the same 2026 engine as the calculator
 // (tax class 1, North Rhine-Westphalia, public insurance, no church tax, no children).
@@ -527,6 +528,22 @@ export default function SalaryCalculatorPage() {
           Based on 2026 German tax rules (BMF). For employees only. Click Calculate after changing any input.
         </p>
       </main>
+
+      <ValueMomentUpsell
+        trigger={hasCalculated}
+        storageKey="salary_calculated"
+        eyebrow="That is the salary — now get the job"
+        headline="German employers read a German-format CV"
+        body="A Lebenslauf and a German-style cover letter are what get you to the interview where that net figure becomes real."
+        bullets={[
+          'CV in the format German employers and universities expect',
+          'Cover letter tailored to the role and company',
+          '2 free previews — no account needed',
+        ]}
+        primary={{ href: '/cv-maker/landing', label: 'Build my German CV free' }}
+        secondary={{ href: '/cover-letter', label: 'Write a cover letter' }}
+        footnote="Free to preview · credit packs from €2.99 · no subscription"
+      />
     </div>
   );
 }
