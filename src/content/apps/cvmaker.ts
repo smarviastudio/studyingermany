@@ -290,6 +290,145 @@ export const cvmaker: AppContent = {
       ],
       screenshotIndex: 1,
     },
+    {
+      slug: 'cv-for-werkstudent-job-germany',
+      keyword: 'werkstudent cv',
+      title: 'CV for a Werkstudent Job in Germany: What Companies Actually Look For',
+      metaTitle: 'Werkstudent CV: Format and Content German Companies Expect',
+      metaDescription:
+        'Working-student roles are how most international students get their first German job. The CV format recruiters expect, what to lead with when you have little experience, and the details that get you filtered out.',
+      excerpt: 'Little experience is expected. Wrong format and missing hours are not — the Werkstudent CV that gets interviews.',
+      intro: [
+        'A Werkstudent position — up to 20 hours a week during the semester, in a real company, on a real project — is the most common first job for international students in Germany and often the path to the job after graduation. Companies hiring Werkstudenten know you are a student with limited experience. What they filter on is whether you understand the German application format and whether you fit the hours they need.',
+        'Your CV has to answer both in the first ten seconds.',
+      ],
+      sections: [
+        {
+          heading: 'Format: the German expectations',
+          bullets: [
+            'One page for a student, two at most. Reverse chronological, dates on the left in month/year format, no gaps unexplained.',
+            'A short header with name, city, phone, email and a link to LinkedIn or GitHub. A photo is optional in Germany and increasingly omitted; if you include one, make it a professional headshot.',
+            'Sections in this order: education, then experience, then skills and languages. For a student the degree comes first because it is the reason you qualify for the role at all.',
+            'Save as PDF, named with your surname and the role. Never a Word file.',
+          ],
+        },
+        {
+          heading: 'What to put when experience is thin',
+          bullets: [
+            'University projects with a concrete result: the tool you built, the dataset you analysed, the grade if it was strong.',
+            'Relevant coursework listed by module name, not just the degree title — a recruiter for a data role wants to see statistics and databases on the page.',
+            'Internships, part-time and volunteer work from home, with the tasks framed in the language of the target role.',
+            'Tools and languages with honest levels: Python (advanced), SQL (working), German (B1, certificate date). Overstating German is the most common and most quickly discovered exaggeration.',
+          ],
+        },
+        {
+          heading: 'The details that get you filtered out',
+          bullets: [
+            'No mention of availability. State your semester dates and the hours you can work — companies plan around the 20-hour rule and the full-time option in semester breaks.',
+            'No enrolment status. Werkstudent status depends on being an enrolled full-time student; say it explicitly.',
+            'A generic CV sent to twenty companies. Reorder skills and projects for each posting; it takes five minutes and is visible immediately.',
+            'Missing residence and work permission. One line — for example, residence permit for study with 140 full days of work permitted — removes a question the recruiter would otherwise have to ask.',
+          ],
+        },
+        {
+          heading: 'Pair it with a short cover letter',
+          paragraphs: [
+            'German companies still read cover letters for Werkstudent roles, and a short one — three paragraphs, why this company, why this role, when you can start — is enough. It is also the place to address anything the CV cannot: a career change, a gap, why a mechanical engineer is applying to a marketing team.',
+            'Keep both documents in the same visual style and the same language as the job posting. A German-language posting gets German documents, even if the interview turns out to be in English.',
+          ],
+        },
+      ],
+      howToHeading: 'Building the Werkstudent CV in the app',
+      howToSteps: [
+        { title: 'Pick a German template', text: 'The Lebenslauf layouts put education first and dates on the left, as German recruiters expect.' },
+        { title: 'Add projects as experience', text: 'Each university project gets a title, date range and two result-focused bullet points.' },
+        { title: 'State availability', text: 'A dedicated line for hours per week and semester dates sits near the top.' },
+        { title: 'Export per application', text: 'Duplicate, reorder the skills for the posting, export a PDF named for that company.' },
+      ],
+      faqs: [
+        {
+          question: 'Do I need a photo on a German CV?',
+          answer: 'No. It was traditional and is now optional; many companies explicitly prefer applications without one. If you include a photo, it should be a proper headshot, not a cropped social-media picture.',
+        },
+        {
+          question: 'Should the CV be in German or English?',
+          answer: 'Match the job posting. A posting written in German expects German documents. If your German is below B2, write it in English and state your German level honestly rather than submitting a machine-translated Lebenslauf.',
+        },
+      ],
+      screenshotIndex: 1,
+    },
+    {
+      slug: 'tabellarischer-lebenslauf-university-application',
+      keyword: 'cv for german university application',
+      title: 'CV for a German University Application: The Tabellarischer Lebenslauf Admissions Offices Want',
+      metaTitle: 'CV for German University Application (Tabellarischer Lebenslauf)',
+      metaDescription:
+        'Many German master\'s programmes require a CV with the application. What the tabular Lebenslauf is, what admissions committees look for in it, and how it differs from a job CV.',
+      excerpt: 'Not a job CV: the academic Lebenslauf that master\'s programmes and uni-assist ask for, and what goes in it.',
+      intro: [
+        'A surprising number of German master\'s programmes, and uni-assist itself for some, require a CV alongside the transcripts and motivation letter. Applicants often submit the job CV they already have. Admissions committees are not hiring; they are checking academic background, continuity and fit, and the document that serves them is different.',
+        'Germany has a name for it: the tabellarischer Lebenslauf — a tabular, chronological, unembellished account of your education and relevant experience.',
+      ],
+      sections: [
+        {
+          heading: 'What admissions committees read it for',
+          bullets: [
+            'Continuity: are there gaps between school, bachelor and now, and are they explained? A gap year is fine; an unexplained gap is a question.',
+            'Academic depth: which modules, thesis topic, research projects, publications or lab work — the substance behind the transcript.',
+            'Relevance: does the bachelor connect to the master you are applying for, and if not, what bridges the two?',
+            'Language and international exposure: certificates with levels and dates, exchange semesters, work in other countries.',
+          ],
+        },
+        {
+          heading: 'Structure of the tabular Lebenslauf',
+          numbered: [
+            'Personal data: name, date and place of birth (still conventional in the academic version), nationality, contact details.',
+            'Education, reverse chronological: degree, institution, dates, final grade or GPA converted to the German scale, thesis title. School-leaving qualification with grade.',
+            'Academic experience: research assistant roles, lab work, tutoring, publications, conference posters.',
+            'Professional experience relevant to the field, briefly.',
+            'Languages with certificates and levels; IT and methods skills relevant to the subject.',
+            'Awards, scholarships, memberships.',
+            'Place, date and signature at the bottom — the one place a German document is still expected to carry a signature.',
+          ],
+        },
+        {
+          heading: 'How it differs from a job CV',
+          bullets: [
+            'No profile summary or career objective. The motivation letter does that work.',
+            'Thesis titles and grades are included; in a job CV they are usually dropped.',
+            'Extracurricular and volunteer work only where it shows something academically relevant — leadership, organisation, the field itself.',
+            'Two pages are acceptable for a master\'s applicant with research experience; one is enough for most.',
+          ],
+        },
+        {
+          heading: 'Details that cost applications',
+          bullets: [
+            'Grades in a foreign scale with no conversion. Add the German equivalent in brackets — the committee will convert it anyway, and doing it for them shows you understand the system.',
+            'Dates that do not match the transcripts. Committees cross-check.',
+            'A CV in a different language from the rest of the application.',
+            'Decorative templates. The academic Lebenslauf is plain by convention; design effort reads as the wrong kind of effort.',
+          ],
+        },
+      ],
+      howToHeading: 'Producing the academic Lebenslauf in the app',
+      howToSteps: [
+        { title: 'Choose the classic layout', text: 'The tabular templates put dates left and content right, with no summary block.' },
+        { title: 'Enter degrees with detail', text: 'Thesis title, grade and key modules each have their own field.' },
+        { title: 'Add converted grades', text: 'Use the GPA converter to state your grade on the German scale alongside the original.' },
+        { title: 'Export and sign', text: 'PDF with a signature line, named for the programme you are sending it to.' },
+      ],
+      faqs: [
+        {
+          question: 'Do I need a photo on an academic CV?',
+          answer: 'No. It is optional and admissions committees do not expect one. Leave it off unless the programme explicitly asks.',
+        },
+        {
+          question: 'Should I convert my grades to the German scale?',
+          answer: 'Yes, in brackets next to the original. Use the Modified Bavarian Formula and state the scale you converted from, so the committee can see your working.',
+        },
+      ],
+      screenshotIndex: 3,
+    },
   ],
   faqs: [
     {

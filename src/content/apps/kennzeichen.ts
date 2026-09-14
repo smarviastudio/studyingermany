@@ -275,6 +275,141 @@ export const kennzeichen: AppContent = {
       ],
       screenshotIndex: 2,
     },
+    {
+      slug: 'kennzeichen-liste-deutschland-staedtekuerzel',
+      lang: 'de',
+      keyword: 'kennzeichen liste deutschland',
+      title: 'Kennzeichen-Liste Deutschland: wie die Städtekürzel entstanden sind und wie man sie liest',
+      metaTitle: 'Kennzeichen Liste Deutschland – Kürzel verstehen und zuordnen',
+      metaDescription:
+        'Über 700 Unterscheidungszeichen, ein bis drei Buchstaben, und ein System mit Logik: Wie die Kürzel vergeben wurden, was die Länge verrät und warum alte Kürzel zurückkommen.',
+      excerpt: 'Ein Buchstabe für die Großstadt, drei für den Landkreis — die Logik hinter 700 Kürzeln.',
+      intro: [
+        'Deutsche Kennzeichen beginnen mit dem Unterscheidungszeichen: ein bis drei Buchstaben für die Zulassungsstelle. Rund 700 davon sind heute gültig, und sie folgen einer Logik, die 1956 festgelegt wurde und bis heute lesbar ist — wer sie kennt, ordnet ein fremdes Kennzeichen oft schon zu, bevor er es nachschlägt.',
+        'Ganz auswendig lernt sie niemand. Aber die Regeln dahinter machen die Liste zu etwas, das man sich erschließen kann.',
+      ],
+      sections: [
+        {
+          heading: 'Was die Länge verrät',
+          bullets: [
+            'Ein Buchstabe: die großen Städte und einige Länder-Sitze — B für Berlin, M für München, K für Köln, F für Frankfurt, S für Stuttgart, H für Hannover, L für Leipzig, D für Düsseldorf.',
+            'Zwei Buchstaben: mittelgroße Städte und viele Kreise — HH Hamburg, HB Bremen, MZ Mainz, KI Kiel, WI Wiesbaden.',
+            'Drei Buchstaben: kleinere Kreise und Städte — BAD Baden-Baden, GAP Garmisch-Partenkirchen, WES Wesel.',
+            'Die Regel hat Ausnahmen, weil bei der Vergabe 1956 politische Rücksicht eine Rolle spielte — Kiel bekam KI, nicht K.',
+          ],
+        },
+        {
+          heading: 'Wie die Buchstaben gewählt wurden',
+          paragraphs: [
+            'Meist stehen die Buchstaben für den Namen des Orts oder Kreises, oft die Anfangsbuchstaben oder markante Konsonanten: GÖ für Göttingen, HD für Heidelberg, RE für Recklinghausen. Bei Kreisen, die nach einer Kreisstadt heißen, ist es deren Kürzel. Bei Zusammenschlüssen entstanden Kunstkürzel wie HSK für den Hochsauerlandkreis.',
+            'Umlaute sind erlaubt und sogar verbreitet: GÖ, LÖ, MÜ, TÜ. Ein Kürzel darf nicht mit einem anderen verwechselbar sein, deshalb gibt es keine doppelte Vergabe.',
+          ],
+        },
+        {
+          heading: 'Warum alte Kürzel wiederkommen',
+          paragraphs: [
+            'Mit den Kreisreformen der 1970er verschwanden Hunderte Kürzel. Seit 2012 dürfen Landkreise die Altkennzeichen ihrer früheren Städte wieder ausgeben — die Kennzeichenliberalisierung. Seitdem sind über 300 alte Kürzel zurück, und ein Kennzeichen sagt nicht mehr sicher, in welchem Kreis das Fahrzeug zugelassen ist, sondern nur noch, wo etwa.',
+            'Für Sammler ist das ein Gewinn: Es gibt mehr Kürzel zu finden als je zuvor.',
+          ],
+        },
+        {
+          heading: 'Kürzel, die immer wieder verwechselt werden',
+          bullets: [
+            'HH ist Hamburg, HB ist Bremen, HL ist Lübeck, HRO ist Rostock — die Hansestädte tragen das H voran.',
+            'MS ist Münster, M ist München, MA ist Mannheim.',
+            'W ist Wuppertal, WI ist Wiesbaden, WÜ ist Würzburg.',
+            'BN ist Bonn, B ist Berlin, BO ist Bochum.',
+          ],
+        },
+      ],
+      howToHeading: 'Kürzel unterwegs erkennen',
+      howToSteps: [
+        { title: 'Kennzeichen scannen', text: 'Die Kamera erkennt das Kürzel und zeigt Stadt oder Kreis, Bundesland und die Entfernung zu deinem Standort.' },
+        { title: 'Sammlung wachsen lassen', text: 'Jedes neue Kürzel wird gespeichert — auf der Karte siehst du, welche Regionen noch fehlen.' },
+        { title: 'Altkennzeichen entdecken', text: 'Liberalisierte Kürzel werden mit ihrem Ursprung angezeigt, damit die Zuordnung stimmt.' },
+        { title: 'Nachschlagen ohne Scan', text: 'Die Liste ist offline durchsuchbar — praktisch, wenn das Auto schon weg ist.' },
+      ],
+      faqs: [
+        {
+          question: 'Wie viele Kennzeichenkürzel gibt es in Deutschland?',
+          answer: 'Rund 700 gültige Unterscheidungszeichen, davon über 300 wieder eingeführte Altkennzeichen seit der Liberalisierung 2012.',
+        },
+        {
+          question: 'Kann ich mir mein Kürzel aussuchen?',
+          answer: 'Innerhalb eines Kreises, der mehrere Kürzel führt, ja. Die Buchstaben-Zahlen-Kombination dahinter lässt sich gegen Gebühr als Wunschkennzeichen reservieren.',
+        },
+      ],
+      screenshotIndex: 0,
+    },
+    {
+      slug: 'sonderkennzeichen-e-h-saison-rot-erklaert',
+      lang: 'de',
+      keyword: 'sonderkennzeichen bedeutung',
+      title: 'E, H, rote Nummern und Saisonkennzeichen: die Sonderformen deutscher Kennzeichen erklärt',
+      metaTitle: 'Sonderkennzeichen erklärt – E, H, Saison, rot, grün, Y, X',
+      metaDescription:
+        'Was ein E am Ende bedeutet, warum ein H ein Auto günstiger macht, wofür rote und grüne Kennzeichen stehen und wie man Bundeswehr, Diplomaten und Behörden erkennt.',
+      excerpt: 'Kennzeichen tragen mehr Informationen als Herkunft — wer die Sonderformen kennt, liest sie mit.',
+      intro: [
+        'Neben dem Kürzel für den Zulassungsort tragen deutsche Kennzeichen Zusatzbuchstaben, Farben und Formate, die jeweils etwas über das Fahrzeug oder seinen Halter sagen. Die meisten sieht man täglich, ohne sie zu deuten.',
+        'Für Sammler sind sie eigene Kategorien; für alle anderen einfach eine Sprache, die sich in fünf Minuten lernen lässt.',
+      ],
+      sections: [
+        {
+          heading: 'Zusatzbuchstaben am Ende',
+          bullets: [
+            'E: Elektrofahrzeug oder Plug-in-Hybrid nach dem Elektromobilitätsgesetz. Freiwillig, bringt in vielen Städten Parkvorteile.',
+            'H: Historisches Fahrzeug, mindestens 30 Jahre alt und weitgehend original. Pauschale Kfz-Steuer und Zufahrt in Umweltzonen ohne Plakette.',
+            'Kombination H nach einer Saisonangabe gibt es auch: Oldtimer, die nur im Sommer laufen.',
+          ],
+        },
+        {
+          heading: 'Farben und Formate',
+          bullets: [
+            'Rote Schrift auf weißem Grund, Kürzel gefolgt von 06: Händler- und Werkstattkennzeichen für Probe- und Überführungsfahrten. Mit 07: Oldtimer-Wechselkennzeichen für mehrere historische Fahrzeuge.',
+            'Grüne Schrift: steuerbefreite Fahrzeuge — Landwirtschaft, gemeinnützige Organisationen, bestimmte Anhänger.',
+            'Saisonkennzeichen: zwei Zahlen übereinander am rechten Rand, etwa 04/10 — das Fahrzeug ist nur von April bis Oktober zugelassen.',
+            'Gelber Streifen am rechten Rand mit Datum: Kurzzeitkennzeichen, fünf Tage gültig, für Probefahrten und Überführungen.',
+            'Ausfuhrkennzeichen: roter Balken rechts mit Ablaufdatum, für Fahrzeuge, die ins Ausland gehen.',
+          ],
+        },
+        {
+          heading: 'Behörden und Institutionen',
+          bullets: [
+            'Y: Bundeswehr. Das Kürzel hat keinen Ort, nur den Buchstaben Y und Zahlen.',
+            'X: NATO-Hauptquartiere in Deutschland.',
+            '0 als Kürzel: Diplomatisches Corps — die Zahl dahinter kodiert das Land der Botschaft.',
+            'THW: Technisches Hilfswerk, BP: Bundespolizei, BD: Bundestag, Bundesrat und Verfassungsorgane, BW: Bundeswasserstraßen.',
+            'Landesbehörden nutzen das Kürzel ihres Sitzes mit Sonderzahlen, meist niedrig und ohne Buchstabengruppe — Polizei etwa NRW 4 in Nordrhein-Westfalen.',
+          ],
+        },
+        {
+          heading: 'Die Buchstabengruppe in der Mitte',
+          paragraphs: [
+            'Die ein oder zwei Buchstaben nach dem Kürzel sind frei wählbar, mit Ausnahmen: Kombinationen mit NS-Bezug wie SS, SA, HJ, KZ oder NS werden nicht vergeben, dazu in einzelnen Ländern weitere. Wer ein Wunschkennzeichen sucht, stößt darauf.',
+            'Für Sammler bedeuten Buchstabengruppen und Zahlenkombinationen eine zweite Ebene: seltene Kombinationen, Spiegelnummern, Geburtstage — die Jagd endet nicht beim Kürzel.',
+          ],
+        },
+      ],
+      howToHeading: 'Sonderkennzeichen mit der App sammeln',
+      howToSteps: [
+        { title: 'Scannen wie gewohnt', text: 'Die App erkennt neben dem Kürzel auch E, H, Saison- und Farbkennzeichen.' },
+        { title: 'Nach Kategorie filtern', text: 'Deine Sammlung lässt sich nach Sonderformen sortieren — wie viele H-Kennzeichen, wie viele Diplomaten.' },
+        { title: 'Seltenheit sehen', text: 'Kategorien wie X oder Ausfuhrkennzeichen sind selten; die App zeigt, was noch fehlt.' },
+        { title: 'Mit Kindern spielen', text: 'Sonderformen sind das nächste Level, wenn die Städtekürzel schon zu leicht geworden sind.' },
+      ],
+      faqs: [
+        {
+          question: 'Muss ein Elektroauto das E-Kennzeichen tragen?',
+          answer: 'Nein, es ist freiwillig. Es lohnt sich dort, wo Kommunen Parkvorteile oder Busspur-Nutzung an das E knüpfen.',
+        },
+        {
+          question: 'Wie lange darf ich mit einem Saisonkennzeichen fahren?',
+          answer: 'Nur innerhalb des angegebenen Zeitraums, mindestens zwei und höchstens elf Monate. Außerhalb darf das Fahrzeug nicht auf öffentlichem Grund stehen.',
+        },
+      ],
+      screenshotIndex: 2,
+    },
   ],
   faqs: [
     {

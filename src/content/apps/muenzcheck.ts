@@ -299,6 +299,145 @@ export const muenzcheck: AppContent = {
       ],
       screenshotIndex: 3,
     },
+    {
+      slug: '2-euro-muenzen-fehlpraegungen-wert',
+      lang: 'de',
+      keyword: '2 euro münzen fehlprägung wert',
+      title: '2-Euro-Münzen mit Fehlprägung: welche wirklich wertvoll sind und welche nur so aussehen',
+      metaTitle: '2 Euro Fehlprägung Wert – echte Fehler vs. Abnutzung',
+      metaDescription:
+        'Verschobene Ringe, fehlende Sterne, doppelte Prägung: Welche Fehlprägungen bei 2-Euro-Münzen Sammlerwert haben, welche nur Beschädigung sind und wie man den Unterschied erkennt.',
+      excerpt: 'Die meisten „Fehlprägungen" aus dem Portemonnaie sind Abnutzung. Woran man die echten erkennt.',
+      intro: [
+        'Kaum eine Suchanfrage rund ums Münzensammeln ist so verbreitet — und so oft von Enttäuschung gefolgt — wie die nach wertvollen 2-Euro-Fehlprägungen. Der Grund: Jede Münze, die jahrelang im Umlauf war, hat Kratzer, Dellen und Kanten, die auf den ersten Blick wie ein Prägefehler wirken.',
+        'Echte Fehlprägungen entstehen in der Prägeanstalt, nicht im Geldbeutel. Sie sind selten, sie haben einen Markt, und sie lassen sich mit ein paar Kriterien von Beschädigungen unterscheiden.',
+      ],
+      sections: [
+        {
+          heading: 'Fehlprägungen, die einen Markt haben',
+          bullets: [
+            'Verschobener oder fehlender Pillenkern: Der innere Teil sitzt nicht mittig oder ist ganz getrennt geprägt worden.',
+            'Doppelprägung oder Stempeldrehung: Das Motiv erscheint doppelt oder Vorder- und Rückseite stehen deutlich verdreht zueinander.',
+            'Prägung auf falschem Rohling — etwa ein 2-Euro-Motiv auf einem 1-Euro-Rohling.',
+            'Fehlende Randschrift oder Randschrift eines anderen Landes.',
+            'Bekannte Varianten wie fehlende Sterne oder Stempelfehler bestimmter Jahrgänge und Prägestätten, die in Katalogen geführt werden.',
+          ],
+        },
+        {
+          heading: 'Was nur nach Fehler aussieht',
+          bullets: [
+            'Kratzer, Riefen und Dellen: Umlaufspuren, kein Sammlerwert.',
+            'Verfärbungen und Flecken: Chemische Reaktionen, meist wertmindernd statt wertsteigernd.',
+            'Leicht unscharfe Details: Abgenutzte Stempel sind normal und bringen nichts.',
+            'Lose Pillen bei stark abgenutzten Münzen: Materialermüdung, keine Fehlprägung.',
+            'Manipulierte Münzen aus Werkstätten — verschobene Kerne lassen sich nachträglich erzeugen und werden als Fehlprägung angeboten.',
+          ],
+        },
+        {
+          heading: 'Vom Verdacht zum Wert',
+          numbered: [
+            'Münze nicht reinigen — Reinigung zerstört die Oberfläche und mindert jeden Wert.',
+            'Fehler dokumentieren: Foto beider Seiten und des Rands bei gutem Licht.',
+            'In Katalogen und Sammlerforen nach der Kombination aus Land, Jahr, Prägestätte und Fehlertyp suchen.',
+            'Bei plausiblem Verdacht eine Prüfung durch ein Münzhandelshaus oder einen Gutachter anfragen — Echtheit ist die Frage, die den Preis macht.',
+            'Verkauf über Fachhandel oder Auktion, nicht über Kleinanzeigen, wo Fehlprägungen regelmäßig weit unter Wert weggehen.',
+          ],
+        },
+        {
+          heading: 'Die Sache mit den Gerüchten',
+          paragraphs: [
+            'Jedes Jahr kursieren Meldungen über 2-Euro-Münzen, die angeblich Tausende wert sind. Fast immer geht es um normale Gedenkmünzen mit hoher Auflage, deren Wert bei zwei bis vier Euro liegt. Echte vierstellige Preise gibt es nur bei nachgewiesenen, seltenen Fehlprägungen oder bei Kleinstauflagen wie den Gedenkmünzen aus Monaco, San Marino oder dem Vatikan.',
+            'Wer eine Münze für wertvoll hält, sollte sie deshalb erst identifizieren und dann bewerten — nicht umgekehrt.',
+          ],
+        },
+      ],
+      howToHeading: 'Münzen mit der App prüfen',
+      howToSteps: [
+        { title: 'Beide Seiten scannen', text: 'Die App erkennt Land, Jahrgang und Motiv und ordnet die Münze dem Katalogeintrag zu.' },
+        { title: 'Auflage ansehen', text: 'Die Auflagenzahl zeigt sofort, ob es sich um eine Massenmünze oder eine Seltenheit handelt.' },
+        { title: 'Prägestätte prüfen', text: 'Bei deutschen Münzen entscheidet der Buchstabe A, D, F, G oder J mit über den Wert.' },
+        { title: 'Verdacht notieren', text: 'Fotos und Notizen zu einer möglichen Fehlprägung bleiben bei der Münze in deiner Sammlung.' },
+      ],
+      faqs: [
+        {
+          question: 'Sind die 2-Euro-Gedenkmünzen aus dem Umlauf etwas wert?',
+          answer: 'Deutsche Bundesländer-Serien und die meisten EU-Gedenkmünzen haben Auflagen in Millionenhöhe und liegen bei zwei bis vier Euro. Wertvoll sind Kleinstauflagen und echte Fehlprägungen.',
+        },
+        {
+          question: 'Erkennt die App Fehlprägungen?',
+          answer: 'Die App identifiziert die Münze und zeigt Auflage und Katalogwert. Ob ein Fehler echt ist, kann nur eine Begutachtung klären — die App hilft, den Verdacht sauber zu dokumentieren.',
+        },
+      ],
+      screenshotIndex: 0,
+    },
+    {
+      slug: 'muenzen-reinigen-oder-nicht',
+      lang: 'de',
+      keyword: 'münzen reinigen',
+      title: 'Münzen reinigen: warum Sammler es nicht tun — und was erlaubt ist',
+      metaTitle: 'Münzen reinigen – warum es den Wert zerstört',
+      metaDescription:
+        'Eine geputzte Münze ist für Sammler eine beschädigte Münze. Was die Patina schützt, welche Hausmittel den Wert vernichten und welche schonende Behandlung ausnahmsweise vertretbar ist.',
+      excerpt: 'Glänzend heißt nicht wertvoll: Warum Reinigung der häufigste Fehler von Erben und Einsteigern ist.',
+      intro: [
+        'Wer eine alte Münzsammlung erbt oder im Nachlass findet, greift oft als Erstes zu Zahnpasta, Essig oder Silberputzmittel. Das Ergebnis glänzt — und ist für jeden Händler sofort als gereinigt erkennbar. Bei Sammlermünzen bedeutet das regelmäßig einen Wertverlust von der Hälfte bis fast zum Metallwert.',
+        'Der Grund liegt in der Oberfläche: Die natürliche Patina und die feinen Prägespuren sind Teil dessen, was bewertet wird. Sie lassen sich entfernen, aber nie wiederherstellen.',
+      ],
+      sections: [
+        {
+          heading: 'Was Reinigung anrichtet',
+          bullets: [
+            'Mikrokratzer durch jedes Reibmittel, auch weiche Tücher — unter der Lupe sofort sichtbar.',
+            'Entfernte Patina: Bei Silber und Kupfer ist die dunkle Schicht Schutz und Echtheitsmerkmal zugleich.',
+            'Unnatürlicher Glanz, der eine Umlaufmünze wie eine schlecht gefälschte Prägefrische aussehen lässt.',
+            'Chemische Angriffe durch Essig, Zitronensäure oder Cola, die Ränder abrunden und Details auflösen.',
+          ],
+        },
+        {
+          heading: 'Wann Reinigung ausnahmsweise vertretbar ist',
+          bullets: [
+            'Bei Umlaufmünzen ohne Sammlerwert, die nur ansehnlich sein sollen.',
+            'Bei Erde und losem Schmutz auf Bodenfunden: nur mit destilliertem Wasser und ohne Reiben.',
+            'Bei Fettspuren und Fingerabdrücken auf modernen Münzen: kurzes Bad in destilliertem Wasser, an der Luft trocknen, nicht abwischen.',
+            'Nie bei Gold-, Silber- oder Kupfermünzen mit Patina, nie bei Münzen, deren Wert man nicht kennt.',
+          ],
+        },
+        {
+          heading: 'Richtig aufbewahren statt reinigen',
+          numbered: [
+            'Nur am Rand anfassen; Hautfett hinterlässt Spuren, die Jahre später sichtbar werden.',
+            'Trocken lagern, fern von PVC-haltigen Hüllen, die Weichmacher abgeben und grüne Beläge erzeugen.',
+            'Kapseln oder säurefreie Münzrähmchen verwenden.',
+            'Sammlung dokumentieren — Herkunft, Zustand und Fotos — bevor irgendjemand auf die Idee kommt, sie zu putzen.',
+          ],
+        },
+        {
+          heading: 'Der Erbfall',
+          paragraphs: [
+            'Die meisten wertvollen Münzen, die gereinigt werden, gehören Menschen, die den Wert nicht kannten. Wer eine Sammlung übernimmt, sollte deshalb zuerst identifizieren und bewerten und erst dann entscheiden, was mit den einzelnen Stücken geschieht.',
+            'Ein einziger Nachmittag mit Lupe, Katalog und Kamera verhindert Fehler, die sich nicht rückgängig machen lassen.',
+          ],
+        },
+      ],
+      howToHeading: 'Geerbte Sammlungen mit der App erfassen',
+      howToSteps: [
+        { title: 'Münze für Münze scannen', text: 'Land, Jahrgang, Motiv und Prägestätte werden erkannt, ohne dass du die Münze berühren musst.' },
+        { title: 'Wert und Auflage sehen', text: 'Du weißt sofort, welche Stücke Umlaufmünzen sind und welche eine Begutachtung verdienen.' },
+        { title: 'Zustand notieren', text: 'Fotos und Notizen zu Patina und Erhaltung bleiben beim Eintrag — vor jeder Entscheidung über Reinigung.' },
+        { title: 'Sammlung ordnen', text: 'Nach Land, Metall oder Wert sortieren, um einen Überblick über den Nachlass zu bekommen.' },
+      ],
+      faqs: [
+        {
+          question: 'Kann ich D-Mark-Münzen reinigen?',
+          answer: 'Umlaufmünzen mit hoher Auflage ja, sie haben ohnehin nur Nennwert. Bei Silber-Gedenkmünzen und seltenen Jahrgängen nicht — dort zählt die Erhaltung.',
+        },
+        {
+          question: 'Woran erkennt ein Händler, dass eine Münze gereinigt wurde?',
+          answer: 'An feinen parallelen Kratzern, an fehlender Patina in Vertiefungen und an einem Glanz, der nicht zum Abnutzungsgrad der Prägung passt.',
+        },
+      ],
+      screenshotIndex: 1,
+    },
   ],
   faqs: [
     {

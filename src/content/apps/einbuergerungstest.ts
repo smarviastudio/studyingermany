@@ -347,6 +347,79 @@ export const einbuergerungstest: AppContent = {
       ],
       screenshotIndex: 3,
     },
+    {
+      slug: 'german-citizenship-requirements-2026',
+      keyword: 'german citizenship requirements 2026',
+      title: 'German Citizenship Requirements in 2026: Residence Years, B1, the Test and What Changed',
+      metaTitle: 'German Citizenship Requirements 2026: Years, B1, Test',
+      metaDescription:
+        'What you need to naturalise in Germany in 2026: five years of residence, B1 German, the Einbürgerungstest, income and the dual-citizenship rule — and the fast-track that was dropped.',
+      excerpt: 'Five years, B1, the test, your own income — and dual citizenship now allowed. The full checklist.',
+      intro: [
+        'The 2024 reform of German citizenship law changed the calculation for most long-term residents: the standard residence requirement fell from eight years to five, and giving up your original nationality is no longer required. The three-year fast track for exceptionally integrated applicants was introduced with the same reform and has since been withdrawn again, so the five-year route is the one that matters in 2026.',
+        'This is the checklist as it stands, with the parts that trip applicants up.',
+      ],
+      sections: [
+        {
+          heading: 'The requirements',
+          bullets: [
+            'Five years of lawful habitual residence in Germany, with a residence title that counts — most work, family and permanent titles do; time on a student visa usually counts in full or in part, time on a tolerated stay does not.',
+            'German at level B1, proven by a recognised certificate (Goethe, telc, the Deutsch-Test für Zuwanderer) or a German school or degree qualification.',
+            'The Einbürgerungstest — 33 questions from a public pool of 310, 17 correct to pass — or an equivalent German school-leaving qualification.',
+            'Secured livelihood: you support yourself and your family without benefits under Book II or XII of the Social Code, with narrow exceptions.',
+            'No serious criminal convictions; minor fines below set thresholds are disregarded.',
+            'Commitment to the free democratic order, including a declaration acknowledging Germany\'s historical responsibility.',
+          ],
+        },
+        {
+          heading: 'What changed and what did not',
+          paragraphs: [
+            'Dual citizenship is now allowed for everyone. You no longer have to renounce your original nationality, which removes the single biggest reason many long-term residents never applied.',
+            'The standard period is five years; the previous eight-year rule is gone. The three-year fast track that briefly existed for applicants with C1 German and outstanding achievements was repealed in 2025 and is no longer available.',
+            'The livelihood requirement was tightened at the same time: benefit receipt is disqualifying in most cases, with exceptions only for specific groups such as former guest workers and people caring for relatives.',
+          ],
+        },
+        {
+          heading: 'Documents the office will ask for',
+          numbered: [
+            'Passport and current residence title.',
+            'Registration history (Meldebescheinigung) covering the five years.',
+            'B1 certificate or equivalent qualification.',
+            'Einbürgerungstest certificate.',
+            'Proof of income: employment contract, recent payslips, tax assessments, or for self-employed applicants, accounts.',
+            'Birth certificate, marriage certificate where relevant, with certified translations.',
+            'Pension insurance record — used to check both residence and income.',
+          ],
+        },
+        {
+          heading: 'Where applications stall',
+          bullets: [
+            'Processing times of a year or more in large cities. Apply as soon as you qualify, not when you feel ready.',
+            'Gaps in residence — a semester abroad, a long stay at home — that the office counts against the five years. Document any absence over six months.',
+            'Income that was fine last year but is now a fixed-term contract ending soon. Offices look forward as well as back.',
+            'The test left to last. It is the easiest requirement to satisfy in advance, and a missing certificate holds up an otherwise complete file.',
+          ],
+        },
+      ],
+      howToHeading: 'Clearing the test requirement with the app',
+      howToSteps: [
+        { title: 'Work through all 310 questions', text: 'The pool is public and finite — the app covers every question, including the ten for your federal state.' },
+        { title: 'Use the translation', text: 'Understand each question in English first, then learn it in the German the exam uses.' },
+        { title: 'Take timed simulations', text: '33 questions, 60 minutes, exam conditions — pass several in a row before booking.' },
+        { title: 'Book early', text: 'Test dates fill up; the certificate is valid indefinitely, so there is no reason to wait.' },
+      ],
+      faqs: [
+        {
+          question: 'Does time as a student count toward the five years?',
+          answer: 'Time on a residence permit for study is generally counted, though some offices count it only in part. Bring the full residence history and ask the office how it will be assessed in your case.',
+        },
+        {
+          question: 'Is the three-year fast track still available?',
+          answer: 'No. It was introduced with the 2024 reform and repealed in 2025. The standard route is five years.',
+        },
+      ],
+      screenshotIndex: 0,
+    },
   ],
   faqs: [
     {

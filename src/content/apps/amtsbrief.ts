@@ -301,6 +301,144 @@ export const amtsbrief: AppContent = {
       ],
       screenshotIndex: 1,
     },
+    {
+      slug: 'brief-von-der-auslaenderbehoerde-verstehen',
+      lang: 'de',
+      keyword: 'brief von der ausländerbehörde',
+      title: 'Brief von der Ausländerbehörde: was Anhörung, Mitwirkung und Fiktionsbescheinigung bedeuten',
+      metaTitle: 'Brief von der Ausländerbehörde verstehen – Anhörung, Frist, Fiktion',
+      metaDescription:
+        'Die Schreiben der Ausländerbehörde sind kurz, formell und folgenreich. Was die häufigsten Betreffzeilen bedeuten, welche Fristen dahinterstehen und wann eine Antwort zwingend ist.',
+      excerpt: 'Die fünf häufigsten Schreiben der Ausländerbehörde, übersetzt in das, was sie von dir wollen.',
+      intro: [
+        'Kaum eine Behörde schreibt so knapp und so folgenreich wie die Ausländerbehörde. Ein Absatz Amtsdeutsch kann bedeuten, dass ein Aufenthaltstitel verlängert wird, dass ein Nachweis fehlt oder dass eine Ablehnung bevorsteht — und der Unterschied steckt in Wörtern, die außerhalb von Behörden niemand benutzt.',
+        'Wer diese Wörter kennt, weiß nach dem ersten Lesen, ob es eilt.',
+      ],
+      sections: [
+        {
+          heading: 'Die häufigsten Schreiben',
+          bullets: [
+            'Anhörung: Die Behörde beabsichtigt eine für dich nachteilige Entscheidung — etwa Ablehnung oder Befristung — und gibt dir vorher Gelegenheit zur Stellungnahme. Das ist kein Bescheid, aber die letzte Chance, ihn abzuwenden. Frist einhalten, schriftlich antworten, Nachweise beilegen.',
+            'Aufforderung zur Mitwirkung: Es fehlen Unterlagen — Passkopie, Krankenversicherung, Finanzierungsnachweis, Mietvertrag. Ohne Antwort kann der Antrag abgelehnt werden.',
+            'Fiktionsbescheinigung: Dein alter Titel ist abgelaufen, der neue noch nicht entschieden. Die Bescheinigung sichert den Aufenthalt und meist die Erwerbstätigkeit bis zur Entscheidung. Sie ist kein Titel, aber ein legaler Status.',
+            'Terminvergabe oder Einladung zur Vorsprache: Fast immer mit Liste der mitzubringenden Dokumente; ein versäumter Termin verschiebt alles um Monate.',
+            'Bescheid: Die Entscheidung — Erteilung, Verlängerung, Ablehnung, Befristung — mit Rechtsbehelfsbelehrung am Ende. Gegen eine Ablehnung läuft ab Zustellung eine Frist von einem Monat.',
+          ],
+        },
+        {
+          heading: 'Wörter, die Fristen auslösen',
+          bullets: [
+            '„bis spätestens": ein hartes Datum, kein Richtwert.',
+            '„andernfalls": danach steht, was passiert, wenn du nicht antwortest — meist Entscheidung nach Aktenlage, also Ablehnung.',
+            '„Zustellung" oder „zugestellt am": Ab diesem Tag laufen Rechtsbehelfsfristen, nicht ab dem Tag, an dem du den Brief liest.',
+            '„nach Aktenlage": Die Behörde entscheidet mit dem, was sie hat. Wenn ihr etwas fehlt, geht es gegen dich.',
+          ],
+        },
+        {
+          heading: 'Richtig reagieren',
+          numbered: [
+            'Datum der Zustellung notieren und die Frist im Kalender eintragen — bei Bescheiden einen Monat, bei Anhörungen und Mitwirkung das genannte Datum.',
+            'Genau die geforderten Unterlagen zusammenstellen, nicht mehr und nicht weniger; jede Seite mit Aktenzeichen versehen.',
+            'Schriftlich antworten, mit Aktenzeichen im Betreff, und einen Nachweis der Absendung aufbewahren — Einschreiben oder Upload-Bestätigung.',
+            'Wenn eine Frist nicht zu halten ist: vor Ablauf schriftlich um Verlängerung bitten, mit Begründung. Das wird meist gewährt; ein stilles Verstreichen nie.',
+            'Bei Anhörungen zu Ablehnungen und bei Bescheiden mit Ablehnung: Beratung suchen — Migrationsberatung, Studierendenwerk, Anwalt — innerhalb der Frist, nicht danach.',
+          ],
+        },
+        {
+          heading: 'Was Studierende besonders betrifft',
+          paragraphs: [
+            'Bei der Verlängerung der Aufenthaltserlaubnis zum Studium prüft die Behörde den Studienfortschritt. Ein Schreiben mit der Bitte um eine Bescheinigung der Hochschule über den Leistungsstand ist Routine, aber die Antwort entscheidet: Wer deutlich hinter der Regelstudienzeit liegt, sollte die Gründe dokumentieren und vor der Antwort mit der Studienberatung sprechen.',
+            'Nach dem Abschluss ist der Wechsel in die Aufenthaltserlaubnis zur Arbeitsplatzsuche fristgebunden — der Antrag muss vor Ablauf des Studententitels gestellt sein, sonst entfällt die Fiktionswirkung.',
+          ],
+        },
+      ],
+      howToHeading: 'Schreiben mit Amtsbrief einordnen',
+      howToSteps: [
+        { title: 'Brief fotografieren', text: 'Die App liest das Schreiben und erklärt in einfachem Deutsch oder deiner Sprache, worum es geht.' },
+        { title: 'Handlungsbedarf sehen', text: 'Anhörung, Mitwirkung, Bescheid — die App ordnet den Typ zu und sagt, ob du antworten musst.' },
+        { title: 'Frist übernehmen', text: 'Das im Brief genannte Datum wird erkannt und lässt sich als Erinnerung setzen.' },
+        { title: 'Antwort vorbereiten', text: 'Die App hilft bei einem sachlichen Antwortschreiben mit Aktenzeichen und Anlagenliste.' },
+      ],
+      faqs: [
+        {
+          question: 'Ist eine Anhörung schon eine Ablehnung?',
+          answer: 'Nein. Sie kündigt eine mögliche nachteilige Entscheidung an und gibt dir Gelegenheit, sie mit Argumenten und Nachweisen abzuwenden. Die Antwort ist entscheidend.',
+        },
+        {
+          question: 'Darf ich mit einer Fiktionsbescheinigung arbeiten und reisen?',
+          answer: 'Arbeiten meist ja, im Umfang des bisherigen Titels — es steht auf der Bescheinigung. Reisen ins Ausland nur, wenn die Bescheinigung nach § 81 Abs. 4 AufenthG ausgestellt ist; vorher bei der Behörde nachfragen.',
+        },
+      ],
+      screenshotIndex: 0,
+    },
+    {
+      slug: 'mahnung-zahlungserinnerung-was-tun',
+      lang: 'de',
+      keyword: 'mahnung erhalten was tun',
+      title: 'Mahnung erhalten: Zahlungserinnerung, Mahnbescheid und Inkasso auseinanderhalten',
+      metaTitle: 'Mahnung erhalten – Zahlungserinnerung, Mahnbescheid, Inkasso erklärt',
+      metaDescription:
+        'Nicht jede Mahnung ist gleich ernst. Was eine Zahlungserinnerung von einem gerichtlichen Mahnbescheid trennt, welche Gebühren erlaubt sind und wann du unbedingt innerhalb von 14 Tagen reagieren musst.',
+      excerpt: 'Vier Stufen von harmlos bis gerichtlich — und die eine, bei der Schweigen richtig teuer wird.',
+      intro: [
+        'Eine Mahnung im Briefkasten löst bei vielen Panik aus, bei anderen Gleichgültigkeit. Beides ist falsch, weil das Wort für sehr unterschiedliche Dinge steht: von der freundlichen Erinnerung eines Onlineshops bis zum gelben Umschlag vom Amtsgericht, der eine Zwei-Wochen-Frist mit ernsten Folgen enthält.',
+        'Wer die Stufen kennt, weiß, was zu tun ist — und was man ignorieren darf.',
+      ],
+      sections: [
+        {
+          heading: 'Die vier Stufen',
+          bullets: [
+            'Zahlungserinnerung: Freundlicher Hinweis, meist ohne Gebühr. Rechtlich noch nichts passiert, aber die Rechnung ist offenbar fällig.',
+            'Mahnung: Setzt dich in Verzug, oft mit Mahngebühr und Verzugszinsen. Erlaubt sind nur tatsächliche Kosten — ein paar Euro für Porto und Bearbeitung, keine Fantasiebeträge.',
+            'Inkasso: Ein Dienstleister übernimmt die Forderung und stellt eigene Gebühren in Rechnung. Diese sind gesetzlich gedeckelt; überhöhte Inkassokosten muss man nicht zahlen, die Hauptforderung schon.',
+            'Gerichtlicher Mahnbescheid: Kommt im gelben Umschlag vom Amtsgericht. Ab Zustellung laufen zwei Wochen für den Widerspruch. Wer nichts tut, bekommt einen Vollstreckungsbescheid — und danach den Gerichtsvollzieher.',
+          ],
+        },
+        {
+          heading: 'Erst prüfen, dann zahlen',
+          numbered: [
+            'Stimmt die Forderung? Absender, Rechnungsnummer, Datum und Betrag mit den eigenen Unterlagen abgleichen.',
+            'Ist sie verjährt? Die meisten Alltagsforderungen verjähren nach drei Jahren zum Jahresende. Verjährte Forderungen darf man verweigern — muss es aber ausdrücklich tun.',
+            'Sind die Nebenkosten erlaubt? Mahngebühren nur in tatsächlicher Höhe, Inkassokosten nur bis zur gesetzlichen Grenze.',
+            'Ist es überhaupt echt? Betrügerische Mahnungen imitieren Inkassobüros und Gerichte. Ein echter Mahnbescheid kommt nur vom Amtsgericht im gelben Umschlag, nie per E-Mail.',
+          ],
+        },
+        {
+          heading: 'Reagieren nach Stufe',
+          bullets: [
+            'Berechtigte Forderung, zahlbar: sofort begleichen, mit Verwendungszweck aus dem Schreiben, und die Zahlung dokumentieren.',
+            'Berechtigt, aber nicht zahlbar: Ratenzahlung schriftlich anbieten — Gläubiger und Inkassobüros akzeptieren das in der Regel, weil es billiger ist als Gericht.',
+            'Unberechtigt oder zweifelhaft: schriftlich widersprechen und begründen. Keine Zahlung „um Ruhe zu haben" — das kann als Anerkenntnis gewertet werden.',
+            'Mahnbescheid: innerhalb von 14 Tagen Widerspruch auf dem beiliegenden Formular, auch wenn du nur Teile bestreitest. Danach entscheidet ein normales Gerichtsverfahren, nicht die Fristversäumnis.',
+          ],
+        },
+        {
+          heading: 'Der teuerste Fehler',
+          paragraphs: [
+            'Nicht die Mahnung selbst ist teuer, sondern das Schweigen. Eine offene Forderung von 60 Euro wird durch Verzugszinsen, Inkasso und Gerichtskosten leicht zu 200 Euro — und ein Vollstreckungsbescheid landet bei der Schufa, was Wohnungssuche und Verträge auf Jahre erschwert.',
+            'Wer ein Schreiben nicht versteht, sollte es deshalb übersetzen lassen, statt es wegzulegen. Das gilt besonders für Zugewanderte, an die Inkassobüros bewusst besonders unverständlich schreiben.',
+          ],
+        },
+      ],
+      howToHeading: 'Mahnungen mit Amtsbrief einordnen',
+      howToSteps: [
+        { title: 'Schreiben fotografieren', text: 'Die App erkennt, ob es sich um Erinnerung, Mahnung, Inkasso oder Mahnbescheid handelt.' },
+        { title: 'Frist und Betrag sehen', text: 'Fälligkeit, Hauptforderung und Nebenkosten werden getrennt ausgewiesen.' },
+        { title: 'Antwort formulieren', text: 'Vorlagen für Widerspruch, Ratenzahlungsangebot und Verjährungseinrede — sachlich und vollständig.' },
+        { title: 'Erinnerung setzen', text: 'Bei Mahnbescheiden zählt jeder Tag; die App erinnert vor Ablauf der zwei Wochen.' },
+      ],
+      faqs: [
+        {
+          question: 'Muss ich Inkassogebühren zahlen?',
+          answer: 'Wenn die Hauptforderung berechtigt ist und du in Verzug warst, ja — aber nur bis zur gesetzlichen Höhe. Überhöhte Beträge kannst du schriftlich zurückweisen und nur den zulässigen Teil zahlen.',
+        },
+        {
+          question: 'Was passiert, wenn ich den Mahnbescheid ignoriere?',
+          answer: 'Nach zwei Wochen kann der Gläubiger einen Vollstreckungsbescheid beantragen. Danach ist die Forderung vollstreckbar, auch wenn sie unberechtigt war.',
+        },
+      ],
+      screenshotIndex: 1,
+    },
   ],
   faqs: [
     {

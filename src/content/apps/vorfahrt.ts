@@ -304,6 +304,146 @@ export const vorfahrt: AppContent = {
       ],
       screenshotIndex: 3,
     },
+    {
+      slug: 'auslaendischen-fuehrerschein-umschreiben',
+      lang: 'de',
+      keyword: 'ausländischen führerschein umschreiben',
+      title: 'Ausländischen Führerschein umschreiben: Fristen, Prüfungen und was du dir sparen kannst',
+      metaTitle: 'Ausländischen Führerschein umschreiben – Frist, Prüfung, Kosten',
+      metaDescription:
+        'Sechs Monate nach der Anmeldung gilt ein Nicht-EU-Führerschein nicht mehr. Welche Länder ohne Prüfung tauschen, wer Theorie und Praxis ablegen muss und warum keine Fahrschulausbildung Pflicht ist.',
+      excerpt: 'Die Sechs-Monats-Frist, die Länderliste der Anlage 11 und der Weg zur Prüfung ohne teure Pflichtstunden.',
+      intro: [
+        'Wer mit einem Führerschein aus einem Nicht-EU-Land nach Deutschland zieht, darf damit sechs Monate lang fahren — gerechnet ab der Anmeldung des Wohnsitzes, nicht ab der Einreise. Danach ist Fahren ohne gültige Fahrerlaubnis eine Straftat, keine Ordnungswidrigkeit.',
+        'Wie aufwendig die Umschreibung wird, hängt allein vom Ausstellungsland ab. Für manche ist es ein Behördengang, für die meisten eine Theorie- und eine praktische Prüfung — aber ohne die Ausbildungspflicht, die den deutschen Führerschein so teuer macht.',
+      ],
+      sections: [
+        {
+          heading: 'Drei Gruppen von Ländern',
+          bullets: [
+            'EU und EWR: Der Führerschein gilt unbegrenzt weiter. Umschreiben ist freiwillig.',
+            'Staaten der Anlage 11 FeV mit voller Befreiung — etwa Schweiz, Japan, Südkorea, Israel, Singapur, Taiwan, große Teile der USA, Kanadas und Australiens: Umtausch ohne Prüfung.',
+            'Staaten mit Teilbefreiung — einige US-Bundesstaaten: entweder Theorie oder Praxis ist abzulegen.',
+            'Alle übrigen Länder — darunter Indien, Pakistan, Nigeria, Türkei, die meisten Staaten Afrikas, Süd- und Südostasiens und Lateinamerikas: Theorie- und praktische Prüfung, aber keine Ausbildungspflicht.',
+          ],
+        },
+        {
+          heading: 'Was bei der Prüfungspflicht wegfällt',
+          paragraphs: [
+            'Wer nach § 31 FeV umschreibt, braucht keine Mindestzahl an Fahrstunden, keine Sonderfahrten, keinen Erste-Hilfe-Kurs und keinen Sehtest. Die Fahrschule ist trotzdem nötig — sie meldet zur Prüfung an und stellt das Prüfungsfahrzeug — aber die Stundenzahl bestimmst du selbst.',
+            'Realistisch liegen die Gesamtkosten einer Umschreibung mit Prüfungen bei 500 bis 900 Euro, wenn beide Prüfungen im ersten Anlauf gelingen. Ein kompletter deutscher Führerschein kostet das Drei- bis Fünffache.',
+          ],
+        },
+        {
+          heading: 'Der Ablauf',
+          numbered: [
+            'Antrag bei der Führerscheinstelle des Wohnorts stellen — vor Ablauf der sechs Monate. Mitbringen: Führerschein, Übersetzung (außer bei englischsprachigen Dokumenten), Pass, Meldebescheinigung, biometrisches Foto.',
+            'Bei Prüfungspflicht: Fahrschule wählen und dort nur für die Prüfungsanmeldung registrieren.',
+            'Theorie lernen — der Fragenkatalog ist öffentlich, die Prüfung gibt es in zwölf Sprachen.',
+            'Wenige Fahrstunden nehmen, um die Erwartungen des Prüfers und die Prüfungsstrecken kennenzulernen.',
+            'Beide Prüfungen ablegen, deutschen Führerschein abholen. Der ausländische wird einbehalten oder entwertet.',
+          ],
+        },
+        {
+          heading: 'Woran Umschreiber scheitern',
+          bullets: [
+            'Vorfahrt. Rechts vor links, Vorfahrtstraßen, Kreisverkehr, Straßenbahn — in vielen Ländern gelten andere Regeln, und Gewohnheiten sind stärker als Wissen.',
+            'Schulterblick und Spiegel. Der Prüfer erwartet sie sichtbar, bei jedem Abbiegen und Spurwechsel.',
+            'Geschwindigkeit. 55 in der 50er-Zone ist ein Prüfungsfehler, kein Detail.',
+            'Die Frist. Wer den Antrag nach sechs Monaten stellt, darf bis zur Prüfung überhaupt nicht mehr fahren — auch nicht zum Üben.',
+          ],
+        },
+      ],
+      howToHeading: 'Vorfahrt mit der App trainieren',
+      howToSteps: [
+        { title: 'Kreuzungen im Simulator', text: 'Die 3D-Situationen sind so gebaut wie die Prüfungsfragen: Du entscheidest, wer zuerst fährt, und siehst sofort, ob es stimmt.' },
+        { title: 'Regel für Regel', text: 'Rechts vor links, Vorfahrtschilder, Kreisverkehr und Straßenbahn getrennt üben, bis jede automatisch sitzt.' },
+        { title: 'Fehler wiederholen', text: 'Die App bringt die Situationen zurück, die du falsch hattest — dort liegen die Prüfungspunkte.' },
+        { title: 'Auf Deutsch üben', text: 'Wer die Prüfung auf Deutsch ablegen will, gewöhnt sich hier an die Begriffe, die dort verwendet werden.' },
+      ],
+      faqs: [
+        {
+          question: 'Ab wann läuft die Sechs-Monats-Frist?',
+          answer: 'Ab Begründung des ordentlichen Wohnsitzes in Deutschland, praktisch ab dem Datum der Anmeldung beim Einwohnermeldeamt.',
+        },
+        {
+          question: 'Muss ich Fahrstunden nehmen?',
+          answer: 'Nein. Bei der Umschreibung gibt es keine Ausbildungspflicht. Ein paar Stunden zur Vorbereitung auf die praktische Prüfung sind trotzdem sinnvoll.',
+        },
+      ],
+      screenshotIndex: 0,
+    },
+    {
+      slug: 'theoriepruefung-fuehrerschein-ablauf-fehlerpunkte',
+      lang: 'de',
+      keyword: 'theorieprüfung führerschein ablauf',
+      title: 'Theorieprüfung Führerschein: Ablauf, Fehlerpunkte und die Fragen, an denen die meisten scheitern',
+      metaTitle: 'Theorieprüfung Führerschein – Ablauf, Fehlerpunkte, Durchfallquote',
+      metaDescription:
+        '30 Fragen, maximal 10 Fehlerpunkte, eine Fünf-Punkte-Frage darf falsch sein. Wie die Prüfung abläuft, welche Themen die Punkte kosten und wie du den Fragenkatalog wirklich lernst.',
+      excerpt: 'Der Prüfungsmodus, die Punkteregel und warum Vorfahrt-Fragen die meisten Fehlerpunkte kosten.',
+      intro: [
+        'Rund ein Drittel aller Theorieprüfungen für die Klasse B wird nicht bestanden — bei einem Fragenkatalog, der vollständig öffentlich ist. Der Grund ist selten Unwissen, sondern eine falsche Vorstellung davon, wie die Prüfung funktioniert und wo die Punkte tatsächlich verloren gehen.',
+        'Wer den Modus kennt und die richtigen Themen übt, besteht im ersten Anlauf.',
+      ],
+      sections: [
+        {
+          heading: 'So läuft die Prüfung ab',
+          bullets: [
+            'Am Computer beim TÜV oder der DEKRA, nach Anmeldung durch die Fahrschule.',
+            'Klasse B: 30 Fragen, davon 20 aus dem Grundstoff und 10 aus dem klassenspezifischen Stoff.',
+            'Jede Frage ist 2, 3, 4 oder 5 Punkte wert; mehrere Antworten können richtig sein.',
+            'Bestanden mit höchstens 10 Fehlerpunkten — und höchstens einer falschen 5-Punkte-Frage.',
+            'Videofragen zeigen eine Verkehrssituation, die du nur begrenzt oft abspielen kannst; Notizen sind erlaubt.',
+            'Zwölf Sprachen zur Auswahl; die Wahl muss bei der Anmeldung feststehen.',
+          ],
+        },
+        {
+          heading: 'Die Regel mit den zwei Fünfern',
+          paragraphs: [
+            'Zwei falsch beantwortete 5-Punkte-Fragen bedeuten Nichtbestehen, auch wenn sonst alles richtig ist. Fünf-Punkte-Fragen betreffen fast immer Vorfahrt und Gefahrensituationen — genau die Themen, bei denen viele nach Gefühl statt nach Regel antworten.',
+            'Das ist der Grund, warum es sich lohnt, Vorfahrt nicht als eines von vielen Themen zu behandeln, sondern als das Thema, das über Bestehen oder Durchfallen entscheidet.',
+          ],
+        },
+        {
+          heading: 'Woran die Punkte verloren gehen',
+          bullets: [
+            'Vorfahrt an unbeschilderten Kreuzungen, in Kombination mit Straßenbahnen oder abknickenden Vorfahrtstraßen.',
+            'Reihenfolge an Kreuzungen mit drei oder vier Fahrzeugen, wo sich mehrere Regeln überlagern.',
+            'Zahlenfragen: Abstände, Geschwindigkeiten, Anhänger, Reifenprofil — reine Auswendiglernerei, aber sichere Punkte.',
+            'Halbwissen bei Verkehrszeichen, die sich ähneln — Vorfahrt gewähren, Stopp, Vorfahrtstraße, Ende der Vorfahrtstraße.',
+          ],
+        },
+        {
+          heading: 'Lernen, das in der Prüfung hält',
+          numbered: [
+            'Den gesamten Katalog mindestens einmal durchgehen, nicht nur die Übungsprüfungen.',
+            'Vorfahrt-Situationen nicht lesen, sondern entscheiden — in Bildern und Simulationen, so oft, bis die Reihenfolge ohne Nachdenken kommt.',
+            'Fehlerlisten führen und nur die Fehler wiederholen; zehn Prüfungen mit 4 Fehlern sind weniger wert als zwei Durchgänge der falsch beantworteten Fragen.',
+            'In der Prüfungssprache lernen, in der du auch antwortest.',
+            'Erst zur Prüfung, wenn drei Übungsprüfungen in Folge mit maximal 4 Fehlerpunkten gelingen.',
+          ],
+        },
+      ],
+      howToHeading: 'Vorfahrt-Fragen mit der App vorbereiten',
+      howToSteps: [
+        { title: 'Situation ansehen', text: 'Die 3D-Kreuzung zeigt dir Fahrzeuge, Schilder und Straßenbahn genauso wie eine Prüfungsfrage.' },
+        { title: 'Reihenfolge festlegen', text: 'Tippe die Fahrzeuge in der Reihenfolge an, in der sie fahren dürfen.' },
+        { title: 'Regel nachlesen', text: 'Bei jedem Fehler erklärt die App, welche Regel gegriffen hat — kurz, ohne Paragrafen.' },
+        { title: 'Streak aufbauen', text: 'Erst wenn zwanzig Situationen in Folge sitzen, ist das Thema prüfungsreif.' },
+      ],
+      faqs: [
+        {
+          question: 'Wie oft darf ich die Theorieprüfung wiederholen?',
+          answer: 'Beliebig oft, mit einer Wartezeit von mindestens zwei Wochen zwischen den Versuchen. Jeder Versuch kostet erneut die Prüfgebühr.',
+        },
+        {
+          question: 'Wie lange ist eine bestandene Theorieprüfung gültig?',
+          answer: 'Zwölf Monate. Wird die praktische Prüfung nicht innerhalb dieser Frist bestanden, muss die Theorie erneut abgelegt werden.',
+        },
+      ],
+      screenshotIndex: 1,
+    },
   ],
   faqs: [
     {

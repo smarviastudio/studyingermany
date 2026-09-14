@@ -301,6 +301,143 @@ export const hundefuehrerschein: AppContent = {
       ],
       screenshotIndex: 2,
     },
+    {
+      slug: 'hund-anmelden-steuer-haftpflicht-chip',
+      lang: 'de',
+      keyword: 'hund anmelden',
+      title: 'Hund anmelden in Deutschland: Steuer, Haftpflicht, Chip und Register in der richtigen Reihenfolge',
+      metaTitle: 'Hund anmelden – Hundesteuer, Haftpflicht, Chip, Registrierung',
+      metaDescription:
+        'Welche Anmeldungen nach dem Einzug eines Hundes Pflicht sind, welche nur sinnvoll, wie viel Hundesteuer kostet und was passiert, wenn man es vergisst.',
+      excerpt: 'Vier Anmeldungen, zwei davon Pflicht überall, zwei je nach Bundesland — und die Reihenfolge, in der sie am wenigsten Arbeit machen.',
+      intro: [
+        'Ein Hund zieht ein, und mit ihm eine Handvoll Behördenpflichten, die niemand beim Züchter oder im Tierheim erklärt. Manche gelten bundesweit, manche nur in bestimmten Ländern, und die Fristen sind kurz — in vielen Gemeinden zwei bis vier Wochen.',
+        'Die Reihenfolge ist nicht egal: Wer Chip und Haftpflicht zuerst erledigt, hat beim Steueramt und beim Register alles zur Hand.',
+      ],
+      sections: [
+        {
+          heading: 'Was überall Pflicht ist',
+          bullets: [
+            'Hundesteuer: Anmeldung bei der Gemeinde, meist innerhalb von zwei bis vier Wochen nach Einzug. Kosten zwischen etwa 50 und 200 Euro im Jahr, für sogenannte Listenhunde deutlich mehr.',
+            'Kennzeichnung: In allen Bundesländern ist der Mikrochip Pflicht oder faktisch Standard; für Reisen ins EU-Ausland ist er ohnehin vorgeschrieben.',
+            'Tollwutimpfung, wenn der Hund reist oder aus dem Ausland kommt — ohne gültige Impfung kein Grenzübertritt.',
+          ],
+        },
+        {
+          heading: 'Was je nach Bundesland Pflicht ist',
+          bullets: [
+            'Hundehaftpflichtversicherung: Pflicht unter anderem in Berlin, Hamburg, Niedersachsen, Sachsen-Anhalt, Schleswig-Holstein und Thüringen, für alle Hunde. In anderen Ländern nur für bestimmte Rassen — und überall dringend zu empfehlen, weil Halter unbegrenzt haften.',
+            'Registrierung in einem Landesregister, etwa in Niedersachsen, Berlin oder Hamburg, mit Chipnummer und Halterdaten.',
+            'Sachkundenachweis oder Hundeführerschein: In Niedersachsen für jeden Ersthundehalter, in anderen Ländern rassen- oder anlassbezogen.',
+          ],
+        },
+        {
+          heading: 'Die sinnvolle Reihenfolge',
+          numbered: [
+            'Chip und Impfpass beim Tierarzt prüfen oder nachholen — die Chipnummer wird überall verlangt.',
+            'Haftpflicht abschließen; die Versicherungsnummer wird bei Register und teils bei der Steuer abgefragt.',
+            'Hundesteuer anmelden — online oder beim Bürgeramt, mit Chipnummer, Rasse, Alter, gegebenenfalls Versicherung.',
+            'Steuermarke am Halsband anbringen, wo vorgeschrieben.',
+            'Zusätzlich beim Haustierregister von TASSO oder Findefix eintragen — kostenlos und der schnellste Weg zurück, wenn der Hund entläuft.',
+          ],
+        },
+        {
+          heading: 'Wenn die Anmeldung vergessen wurde',
+          paragraphs: [
+            'Hundesteuerhinterziehung wird als Ordnungswidrigkeit verfolgt; Gemeinden verlangen die Steuer rückwirkend und setzen ein Bußgeld obendrauf. Wer sich selbst meldet, kommt in der Regel mit der Nachzahlung davon.',
+            'Ein fehlender Haftpflichtschutz ist das teurere Risiko: Für einen Unfall, den der Hund verursacht, haftet der Halter mit dem gesamten Vermögen.',
+          ],
+        },
+      ],
+      howToHeading: 'Sachkunde mit der App vorbereiten',
+      howToSteps: [
+        { title: 'Prüfungsfragen des Bundeslands üben', text: 'Die App ordnet die Fragen nach Bundesland, damit du genau den Stoff lernst, der bei dir abgefragt wird.' },
+        { title: 'Lücken aufdecken', text: 'Nach dem ersten Durchgang zeigt die Statistik, welche Themen — Recht, Haltung, Verhalten — noch unsicher sind.' },
+        { title: 'Prüfungssimulation', text: 'Unter Prüfungsbedingungen durchgehen, bis mehrere Durchläufe in Folge bestanden sind.' },
+        { title: 'Bescheinigung mitnehmen', text: 'Der bestandene Sachkundenachweis wird bei der Anmeldung in einigen Ländern direkt verlangt.' },
+      ],
+      faqs: [
+        {
+          question: 'Wie schnell muss ich den Hund anmelden?',
+          answer: 'Das regelt jede Gemeinde selbst, üblich sind zwei bis vier Wochen nach Einzug oder Zuzug. Bei einem Umzug muss der Hund in der alten Gemeinde ab- und in der neuen angemeldet werden.',
+        },
+        {
+          question: 'Gilt die Steuerbefreiung für Tierheimhunde überall?',
+          answer: 'Nein. Viele Gemeinden befreien Hunde aus dem Tierheim für ein oder zwei Jahre, andere nicht. Nachfragen lohnt sich bei der Anmeldung.',
+        },
+      ],
+      screenshotIndex: 0,
+    },
+    {
+      slug: 'listenhunde-deutschland-bundeslaender',
+      lang: 'de',
+      keyword: 'listenhunde deutschland',
+      title: 'Listenhunde in Deutschland: welche Rassen wo gelten und was Halter nachweisen müssen',
+      metaTitle: 'Listenhunde Deutschland – Rasselisten, Auflagen, Wesenstest',
+      metaDescription:
+        'Jedes Bundesland führt seine eigene Rasseliste — oder gar keine. Welche Hunde wo als gefährlich gelten, welche Auflagen folgen und wie der Wesenstest die Einstufung aufhebt.',
+      excerpt: 'Sechzehn Länder, sechzehn Regeln: warum derselbe Hund in Kiel frei läuft und in München eine Genehmigung braucht.',
+      intro: [
+        'Deutschland hat kein einheitliches Hundegesetz. Ob ein Hund als „Listenhund" gilt, entscheidet das Bundesland — und damit auch, ob der Halter eine Erlaubnis, einen Wesenstest, einen Sachkundenachweis oder gar nichts braucht. Wer umzieht, kann mit demselben Hund in eine völlig andere Rechtslage geraten.',
+        'Die folgende Übersicht ist ein Ausgangspunkt, keine Rechtsauskunft: Rasselisten werden geändert, und Gemeinden setzen zusätzlich eigene Regeln.',
+      ],
+      sections: [
+        {
+          heading: 'Wo es keine Rasseliste gibt',
+          paragraphs: [
+            'Niedersachsen, Schleswig-Holstein und Thüringen haben ihre Rasselisten abgeschafft und beurteilen Hunde nach Verhalten, nicht nach Herkunft. Niedersachsen verlangt stattdessen von allen Ersthundehaltern den Sachkundenachweis — den sogenannten Hundeführerschein.',
+            'Das ist die Entwicklung, in die sich viele Länder bewegen, aber bisher nicht die Mehrheit.',
+          ],
+        },
+        {
+          heading: 'Die häufigsten Listenrassen',
+          bullets: [
+            'In fast allen Ländern mit Liste: Pitbull Terrier, American Staffordshire Terrier, Staffordshire Bullterrier, Bullterrier.',
+            'In vielen Ländern zusätzlich: Rottweiler, Dogo Argentino, Fila Brasileiro, Tosa Inu, Mastiff-Rassen, Kangal, Kaukasischer Owtscharka.',
+            'Bayern unterscheidet Kategorie 1 (Gefährlichkeit unwiderlegbar vermutet) und Kategorie 2 (Wesenstest möglich).',
+            'Mischlinge aus Listenrassen werden meist wie die Rasse selbst behandelt.',
+          ],
+        },
+        {
+          heading: 'Welche Auflagen folgen',
+          bullets: [
+            'Haltererlaubnis der Behörde, oft mit Führungszeugnis und Nachweis eines berechtigten Interesses.',
+            'Wesenstest des Hundes bei einem anerkannten Sachverständigen — bestanden hebt die Einstufung in vielen Ländern auf.',
+            'Sachkundenachweis des Halters.',
+            'Leinen- und Maulkorbpflicht in der Öffentlichkeit, mit Ausnahmen nach bestandenem Test.',
+            'Erhöhte Hundesteuer — in manchen Gemeinden das Fünf- bis Zehnfache des normalen Satzes.',
+            'Haftpflichtversicherung mit hoher Mindestdeckung.',
+          ],
+        },
+        {
+          heading: 'Vor dem Umzug prüfen',
+          numbered: [
+            'Die Rasseliste des Ziel-Bundeslands und die Hundeverordnung der Zielgemeinde lesen.',
+            'Bestehende Bescheinigungen — Wesenstest, Sachkunde — auf Anerkennung prüfen; nicht jedes Land akzeptiert die eines anderen.',
+            'Die Frist zur Anmeldung im neuen Wohnort einhalten, meist zwei bis vier Wochen.',
+            'Bei Einreise aus dem Ausland: Für einige Rassen gilt ein Einfuhrverbot, das unabhängig vom Bundesland greift.',
+          ],
+        },
+      ],
+      howToHeading: 'Sachkunde für Listenhund-Halter mit der App',
+      howToSteps: [
+        { title: 'Bundesland wählen', text: 'Die Fragen unterscheiden sich je nach Land — die App zeigt die für dich relevanten.' },
+        { title: 'Rechtsteil gezielt üben', text: 'Leinenpflicht, Maulkorbpflicht, Erlaubnispflichten: Genau dieser Teil wird bei Listenhund-Haltern besonders geprüft.' },
+        { title: 'Körpersprache lernen', text: 'Die Kapitel zu Beschwichtigungs- und Drohsignalen bereiten auf die praktische Beurteilung vor.' },
+        { title: 'Prüfung simulieren', text: 'Mehrere bestandene Simulationen in Folge, bevor du dich anmeldest.' },
+      ],
+      faqs: [
+        {
+          question: 'Hebt ein bestandener Wesenstest alle Auflagen auf?',
+          answer: 'Je nach Bundesland entfallen Leinen- und Maulkorbpflicht oder die Einstufung als gefährlich ganz. Erhöhte Hundesteuer bleibt in manchen Gemeinden trotzdem bestehen.',
+        },
+        {
+          question: 'Gilt mein Sachkundenachweis auch in einem anderen Bundesland?',
+          answer: 'Nicht automatisch. Einige Länder erkennen Nachweise anderer Länder an, andere verlangen eine eigene Prüfung. Vor dem Umzug bei der Zielbehörde nachfragen.',
+        },
+      ],
+      screenshotIndex: 1,
+    },
   ],
   faqs: [
     {

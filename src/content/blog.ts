@@ -1,3 +1,5 @@
+import { SEPTEMBER_2026_POSTS } from './blog-2026-09';
+
 export type BlogPost = {
   slug: string;
   title: string;
@@ -34,6 +36,7 @@ export const CATEGORIES: Record<BlogPost['category'], { label: string; color: st
 };
 
 export const BLOG_POSTS: BlogPost[] = [
+  ...SEPTEMBER_2026_POSTS,
   {
     slug: 'ielts-toefl-duolingo-german-universities',
     title: 'IELTS vs TOEFL vs Duolingo for German Universities: Which One Actually Works',

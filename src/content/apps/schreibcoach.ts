@@ -306,6 +306,141 @@ export const schreibcoach: AppContent = {
       ],
       screenshotIndex: 2,
     },
+    {
+      slug: 'beschwerdebrief-deutsch-b1-schreiben',
+      lang: 'de',
+      keyword: 'beschwerdebrief b1 schreiben',
+      title: 'Beschwerdebrief auf Deutsch (B1): Aufbau, Redemittel und ein Muster, das in der Prüfung funktioniert',
+      metaTitle: 'Beschwerdebrief B1 schreiben – Aufbau, Redemittel, Muster',
+      metaDescription:
+        'Der Beschwerdebrief ist die häufigste Schreibaufgabe der B1-Prüfung. Die vier Absätze, die Redemittel für Höflichkeit und Forderung und die Fehler, die Punkte kosten.',
+      excerpt: 'Vier Absätze, ein klarer Ton und die Forderung am Ende — so besteht der Beschwerdebrief.',
+      intro: [
+        'In der B1-Prüfung von telc und Goethe taucht der Beschwerdebrief regelmäßig auf: Ein Produkt war defekt, ein Kurs fiel aus, eine Wohnung entsprach nicht der Anzeige. Die Aufgabe prüft nicht, ob du dich ärgern kannst, sondern ob du einen Sachverhalt geordnet darstellst, höflich bleibst und eine konkrete Lösung verlangst.',
+        'Wer die Struktur einmal beherrscht, schreibt jeden Beschwerdebrief nach demselben Schema — in der Prüfung wie im Alltag.',
+      ],
+      sections: [
+        {
+          heading: 'Der Aufbau in vier Absätzen',
+          numbered: [
+            'Anlass: Worum geht es? Datum, Produkt oder Dienstleistung, Bestell- oder Kundennummer. „Am 3. März habe ich bei Ihnen einen Staubsauger bestellt."',
+            'Problem: Was ist passiert, und was ist nicht in Ordnung? Sachlich, in der Vergangenheit, ohne Beleidigung. „Das Gerät funktionierte schon am zweiten Tag nicht mehr."',
+            'Folgen und Erwartung: Was bedeutet das für dich, und was verlangst du? „Ich bitte Sie daher, das Gerät umzutauschen oder mir den Kaufpreis zu erstatten."',
+            'Frist und Schluss: Bis wann, und was passiert sonst? „Bitte melden Sie sich bis zum 20. März. Andernfalls werde ich mich an die Verbraucherzentrale wenden."',
+          ],
+        },
+        {
+          heading: 'Redemittel, die Prüfer erwarten',
+          bullets: [
+            'Einleitung: „Sehr geehrte Damen und Herren," / „ich schreibe Ihnen, weil …" / „hiermit möchte ich mich über … beschweren."',
+            'Problem: „Leider musste ich feststellen, dass …" / „Zu meiner Enttäuschung …" / „Das entspricht nicht dem, was vereinbart war."',
+            'Forderung: „Ich bitte Sie, …" / „Ich erwarte, dass …" / „Ich fordere Sie auf, …" — die Reihenfolge ist von höflich nach bestimmt.',
+            'Schluss: „Ich hoffe auf eine schnelle Lösung." / „Mit freundlichen Grüßen".',
+          ],
+        },
+        {
+          heading: 'Fehler, die Punkte kosten',
+          bullets: [
+            'Emotionaler Ton: „Das ist eine Frechheit!" — sachliche Kritik wird höher bewertet als Empörung.',
+            'Keine konkrete Forderung: Ein Brief, der nur beschreibt, ist keine Beschwerde.',
+            'Fehlende Textteile: Anrede, Grußformel, Absender-Bezug — jede fehlende Konvention wird abgezogen.',
+            'Zu kurz: Die Aufgabe nennt eine Mindestwortzahl und mehrere Inhaltspunkte; jeder ausgelassene Punkt kostet.',
+            'Falsche Zeitform: Der Vorfall steht in der Vergangenheit, die Forderung im Präsens oder mit „würde".',
+          ],
+        },
+        {
+          heading: 'Muster in Kurzform',
+          paragraphs: [
+            'Sehr geehrte Damen und Herren, am 12. Mai habe ich in Ihrem Online-Shop eine Jacke bestellt (Bestellnummer 4471). Leider musste ich beim Auspacken feststellen, dass der Reißverschluss defekt ist und die Jacke außerdem eine andere Farbe hat als bestellt. Da ich die Jacke für eine Reise am 25. Mai brauche, bitte ich Sie, mir schnellstmöglich ein einwandfreies Exemplar in der richtigen Farbe zu schicken. Falls das nicht möglich ist, erwarte ich die Rückerstattung des Kaufpreises. Bitte antworten Sie mir bis zum 20. Mai. Mit freundlichen Grüßen, Amira Haddad.',
+            'Etwa 90 Wörter, vier Absätze, alle Inhaltspunkte — das ist das Format, das die Prüfung verlangt.',
+          ],
+        },
+      ],
+      howToHeading: 'Beschwerdebriefe mit SchreibCoach üben',
+      howToSteps: [
+        { title: 'Aufgabe wählen', text: 'Die App stellt Beschwerde-Aufgaben im Prüfungsformat mit Inhaltspunkten und Wortvorgabe.' },
+        { title: 'Brief schreiben', text: 'Du schreibst frei; die App prüft Aufbau, Register, Zeitformen und ob alle Punkte abgedeckt sind.' },
+        { title: 'Korrektur lesen', text: 'Fehler werden markiert und erklärt — nicht nur verbessert, damit du sie beim nächsten Mal selbst vermeidest.' },
+        { title: 'Redemittel sammeln', text: 'Gelungene Formulierungen wandern in deine persönliche Liste für die Prüfung.' },
+      ],
+      faqs: [
+        {
+          question: 'Darf ich im Beschwerdebrief „du" verwenden?',
+          answer: 'Nein. Beschwerden gehen an Firmen oder Behörden und stehen immer in der Sie-Form — mit förmlicher Anrede und Grußformel.',
+        },
+        {
+          question: 'Wie lang muss der Brief sein?',
+          answer: 'Die Aufgabe gibt eine Wortzahl vor, bei B1 meist 80 bis 120 Wörter. Wichtiger als die Länge ist, dass alle genannten Inhaltspunkte behandelt werden.',
+        },
+      ],
+      screenshotIndex: 2,
+    },
+    {
+      slug: 'telc-b1-vs-goethe-b1-schreiben',
+      lang: 'de',
+      keyword: 'telc b1 oder goethe b1',
+      title: 'telc B1 oder Goethe B1: Unterschiede im Schreibteil und welche Prüfung zu dir passt',
+      metaTitle: 'telc B1 vs Goethe B1 – Unterschiede, Schreibteil, Anerkennung',
+      metaDescription:
+        'Beide Zertifikate gelten für Einbürgerung und Aufenthalt. Wie sich Schreibaufgaben, Bewertung, Zeit und Terminangebot unterscheiden und welche Prüfung für dein Ziel die richtige ist.',
+      excerpt: 'Gleiche Anerkennung, verschiedene Prüfung: Wo sich telc und Goethe beim Schreiben unterscheiden.',
+      intro: [
+        'Für die Einbürgerung, die Niederlassungserlaubnis und die meisten Ausbildungen reicht ein B1-Zertifikat — und in Deutschland kommt es fast immer von telc oder vom Goethe-Institut. Beide sind gleich anerkannt. Trotzdem lohnt sich der Vergleich, weil sich Format und Bewertung unterscheiden und weil das Terminangebot darüber entscheidet, wie schnell du das Zertifikat in der Hand hast.',
+        'Der Schreibteil ist der Teil, in dem sich die beiden Prüfungen am deutlichsten unterscheiden.',
+      ],
+      sections: [
+        {
+          heading: 'Der Schreibteil im Vergleich',
+          bullets: [
+            'Goethe-Zertifikat B1: Drei Aufgaben in 60 Minuten — eine informelle E-Mail oder ein Brief, ein Diskussionsbeitrag zu einer Meinungsfrage und eine kurze formelle Nachricht. Drei Textsorten, drei Register.',
+            'telc Deutsch B1 (Zertifikat Deutsch): Eine Aufgabe in 30 Minuten — ein halbformeller oder formeller Brief zu einer Situation mit vier Leitpunkten, von denen mindestens drei behandelt werden müssen.',
+            'Goethe verlangt mehr Textsorten und Tempo; telc verlangt einen längeren, sorgfältiger ausgearbeiteten Brief.',
+          ],
+        },
+        {
+          heading: 'Bewertung und Bestehen',
+          bullets: [
+            'Goethe: Die vier Module Lesen, Hören, Schreiben, Sprechen werden einzeln bestanden und können einzeln wiederholt werden. Wer nur im Schreiben scheitert, wiederholt nur das Schreiben.',
+            'telc: Schriftliche Prüfung (Lesen, Sprachbausteine, Hören, Schreiben) und mündliche Prüfung werden getrennt bewertet; die schriftliche Prüfung zählt als Ganzes. Wer im Schreiben schwach ist, kann das durch Lesen und Hören ausgleichen — oder umgekehrt daran scheitern.',
+            'Bei beiden liegt die Bestehensgrenze bei 60 Prozent.',
+          ],
+        },
+        {
+          heading: 'Praktische Unterschiede',
+          bullets: [
+            'Termine: telc-Prüfungen bieten Volkshochschulen und Sprachschulen fast überall und oft; Goethe-Termine sind seltener und früher ausgebucht.',
+            'Kosten: In der Regel zwischen 150 und 250 Euro, telc meist etwas günstiger.',
+            'Ergebnis: telc typischerweise nach vier bis sechs Wochen, Goethe oft schneller.',
+            'Integrationskurs: Der Abschlusstest „Deutsch-Test für Zuwanderer" ist eine telc-Prüfung und ersetzt das B1-Zertifikat für Einbürgerung und Aufenthalt.',
+          ],
+        },
+        {
+          heading: 'Welche passt zu dir',
+          paragraphs: [
+            'Wer beim Schreiben unsicher ist, aber Lesen und Hören gut beherrscht, hat bei telc bessere Chancen, weil die schriftliche Prüfung als Ganzes zählt. Wer in einem Bereich klar stark und in einem klar schwach ist, profitiert bei Goethe von der Modulwiederholung.',
+            'Wer schnell einen Termin braucht, landet meist bei telc. Wer das Zertifikat im Ausland oder für ein Studium außerhalb Deutschlands verwenden will, ist mit Goethe oft besser bedient, weil der Name international bekannter ist.',
+          ],
+        },
+      ],
+      howToHeading: 'Für beide Formate mit SchreibCoach vorbereiten',
+      howToSteps: [
+        { title: 'Prüfungsformat wählen', text: 'Die App enthält Aufgaben im telc- und im Goethe-Format, mit den jeweiligen Zeit- und Wortvorgaben.' },
+        { title: 'Textsorten trainieren', text: 'Formeller Brief, informelle E-Mail, Meinungsbeitrag — jede mit eigener Struktur und eigenen Redemitteln.' },
+        { title: 'Unter Zeitdruck schreiben', text: 'Der Timer simuliert die 30 oder 60 Minuten der echten Prüfung.' },
+        { title: 'Bewertung verstehen', text: 'Die Korrektur folgt den Kriterien der Prüfungsanbieter — Inhalt, Aufbau, Wortschatz, Grammatik.' },
+      ],
+      faqs: [
+        {
+          question: 'Akzeptiert die Einbürgerungsbehörde beide Zertifikate?',
+          answer: 'Ja. Für die Einbürgerung gilt ein B1-Zertifikat eines anerkannten Anbieters — telc, Goethe, der Deutsch-Test für Zuwanderer und einige weitere.',
+        },
+        {
+          question: 'Kann ich bei telc nur den Schreibteil wiederholen?',
+          answer: 'Nein. Bei telc wird die schriftliche Prüfung als Ganzes wiederholt; nur die mündliche Prüfung ist getrennt. Modulweise Wiederholung gibt es beim Goethe-Zertifikat.',
+        },
+      ],
+      screenshotIndex: 3,
+    },
   ],
   faqs: [
     {

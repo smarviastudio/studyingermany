@@ -324,6 +324,145 @@ export const kindergeld: AppContent = {
       ],
       screenshotIndex: 3,
     },
+    {
+      slug: 'kindergeld-fuer-auslaender-eu-buerger-studenten',
+      lang: 'de',
+      keyword: 'kindergeld für ausländer',
+      title: 'Kindergeld für Ausländer: wer Anspruch hat — EU-Bürger, Drittstaatler, Studierende und Geflüchtete',
+      metaTitle: 'Kindergeld für Ausländer – Anspruch nach Aufenthaltstitel',
+      metaDescription:
+        'Kindergeld hängt nicht von der Staatsangehörigkeit ab, sondern vom Aufenthaltsstatus. Welche Titel berechtigen, was für Studierende, Fachkräfte und Geflüchtete gilt und welche Nachweise die Familienkasse verlangt.',
+      excerpt: 'Nicht der Pass entscheidet, sondern der Aufenthaltstitel — und ein paar Titel sind ausdrücklich ausgeschlossen.',
+      intro: [
+        'Kindergeld ist keine Leistung nur für Deutsche. Wer in Deutschland wohnt und einen berechtigenden Aufenthaltsstatus hat, bekommt es für Kinder, die im Haushalt leben — unabhängig davon, wo das Kind geboren wurde und welchen Pass die Eltern haben.',
+        'Entscheidend ist der Aufenthaltstitel. Hier unterscheidet das Gesetz sehr genau, und genau hier scheitern Anträge.',
+      ],
+      sections: [
+        {
+          heading: 'Wer ohne Weiteres Anspruch hat',
+          bullets: [
+            'EU-, EWR- und Schweizer Staatsangehörige mit Wohnsitz in Deutschland — mit Freizügigkeitsrecht, also erwerbstätig, arbeitsuchend mit Aussicht oder mit ausreichenden Mitteln.',
+            'Niederlassungserlaubnis und Daueraufenthalt-EU.',
+            'Blaue Karte EU, Aufenthaltserlaubnis zur Erwerbstätigkeit, Fachkräfte nach dem Fachkräfteeinwanderungsgesetz.',
+            'Anerkannte Flüchtlinge und Asylberechtigte ab dem Monat der Anerkennung.',
+            'Familiennachzug zu einer berechtigten Person.',
+          ],
+        },
+        {
+          heading: 'Wo es kompliziert wird',
+          bullets: [
+            'Aufenthaltserlaubnis zum Studium (§ 16b AufenthG): grundsätzlich kein Anspruch — es sei denn, man ist gleichzeitig freizügigkeitsberechtigter EU-Bürger oder das Kind hat selbst einen berechtigenden Status. Viele internationale Studierende mit Kind wissen das nicht und beantragen vergeblich.',
+            'Aufenthaltserlaubnis zur Arbeitsplatzsuche nach dem Studium (§ 20 AufenthG): ebenfalls ausgeschlossen, bis eine Erwerbstätigkeit und der passende Titel vorliegen.',
+            'Duldung und Aufenthaltsgestattung während des Asylverfahrens: kein Anspruch; stattdessen laufen Leistungen über das Asylbewerberleistungsgesetz.',
+            'Humanitäre Aufenthaltserlaubnisse: Anspruch meist erst nach einer Wartezeit oder bei Erwerbstätigkeit — der Einzelfall zählt.',
+          ],
+        },
+        {
+          heading: 'Was die Familienkasse sehen will',
+          numbered: [
+            'Steuer-Identifikationsnummern von Antragsteller und Kind — die des Kindes kommt nach Anmeldung automatisch per Post.',
+            'Kopie des Aufenthaltstitels, bei EU-Bürgern Nachweis der Erwerbstätigkeit oder der Freizügigkeit.',
+            'Geburtsurkunde des Kindes, bei ausländischen Urkunden mit Übersetzung und gegebenenfalls Apostille.',
+            'Meldebescheinigung für Kind und Eltern.',
+            'Bei Kindern über 18: Schul-, Ausbildungs- oder Studiennachweis.',
+          ],
+        },
+        {
+          heading: 'Kinder im Ausland und andere Leistungen',
+          paragraphs: [
+            'Für Kinder, die im EU-Ausland leben, besteht Anspruch, wenn ein Elternteil in Deutschland sozialversicherungspflichtig arbeitet; Leistungen aus dem Wohnsitzland werden angerechnet. Für Kinder außerhalb der EU gibt es in der Regel kein Kindergeld — Ausnahmen regeln einzelne Abkommen.',
+            'Wer Kindergeld bekommt, kann zusätzlich Anspruch auf den Kinderzuschlag haben. Er ist bei Familien mit ausländischem Pass besonders häufig unbeantragt, weil die Prüfung noch komplizierter wirkt als das Kindergeld selbst.',
+          ],
+        },
+      ],
+      howToHeading: 'Antrag mit der App vorbereiten',
+      howToSteps: [
+        { title: 'Anspruchs-Check durchgehen', text: 'Die App fragt Aufenthaltsstatus, Wohnsitz und Kindesalter ab und zeigt, ob ein Antrag aussichtsreich ist.' },
+        { title: 'Antrag-Helfer nutzen', text: 'Welches Formblatt, welche Unterlagen, welche Frist — abgestimmt auf deinen Fall.' },
+        { title: 'Bescheid verstehen', text: 'Kommt eine Ablehnung oder Rückfrage, erklärt der Bescheid-Erklärer in einfachem Deutsch, was gemeint ist.' },
+        { title: 'Termin und Kinderzuschlag', text: 'Nach der Bewilligung zeigt die App den Auszahlungstermin und rechnet den Kinderzuschlag aus.' },
+      ],
+      faqs: [
+        {
+          question: 'Bekomme ich als internationaler Student mit Kind Kindergeld?',
+          answer: 'Mit einer Aufenthaltserlaubnis nur zum Studium in der Regel nicht. Anders, wenn du EU-Bürger bist oder nach dem Studium einen Titel zur Erwerbstätigkeit erhältst.',
+        },
+        {
+          question: 'Gilt der Anspruch rückwirkend?',
+          answer: 'Kindergeld wird rückwirkend nur für sechs Monate vor Antragstellung gezahlt. Wer wartet, verliert Geld — der Antrag sollte im Monat der Berechtigung gestellt werden.',
+        },
+      ],
+      screenshotIndex: 2,
+    },
+    {
+      slug: 'kindergeld-beantragen-unterlagen-formulare',
+      lang: 'de',
+      keyword: 'kindergeld beantragen',
+      title: 'Kindergeld beantragen: Formulare, Unterlagen und die Fehler, die Wochen kosten',
+      metaTitle: 'Kindergeld beantragen – Unterlagen, Formulare, Bearbeitungszeit',
+      metaDescription:
+        'Welche Formblätter die Familienkasse braucht, welche Unterlagen fehlen dürfen und welche nicht, wie lange die Bearbeitung dauert und wie der Antrag online in einer halben Stunde erledigt ist.',
+      excerpt: 'Ein Hauptantrag, eine Anlage pro Kind, drei Nachweise — und die zwei Fehler, die Anträge in die Warteschleife schicken.',
+      intro: [
+        'Kindergeld wird nicht automatisch gezahlt. Es muss beantragt werden, bei der Familienkasse der Bundesagentur für Arbeit, und zwar für jedes Kind einzeln — auch für Neugeborene, auch wenn für ältere Geschwister bereits gezahlt wird.',
+        'Der Antrag selbst ist überschaubar. Die Bearbeitungszeit hängt fast ausschließlich davon ab, ob die Unterlagen vollständig sind.',
+      ],
+      sections: [
+        {
+          heading: 'Die Formulare',
+          bullets: [
+            'Hauptantrag (Formular KG 1): Angaben zu dir, zum anderen Elternteil und zur Bankverbindung.',
+            'Anlage Kind (KG 1 Anlage): eine pro Kind, mit Geburtsdatum, Steuer-ID und Wohnsituation.',
+            'Bei Kindern über 18: Anlage Kind plus Nachweis über Schule, Ausbildung, Studium oder Übergangszeit.',
+            'Bei Ausländern: Angaben zum Aufenthaltstitel im Hauptantrag, Kopie des Titels als Anlage.',
+          ],
+        },
+        {
+          heading: 'Die Unterlagen',
+          bullets: [
+            'Steuer-Identifikationsnummern von dir und vom Kind. Ohne die des Kindes wird der Antrag nicht bearbeitet — sie kommt einige Wochen nach der Geburt automatisch per Post.',
+            'Geburtsurkunde oder Geburtsbescheinigung für Kindergeld, die das Standesamt bei der Beurkundung ausstellt.',
+            'Bei Zuzug aus dem Ausland: Meldebescheinigung, gegebenenfalls übersetzte Urkunden.',
+            'Bei getrennt lebenden Eltern: Angabe, in wessen Haushalt das Kind lebt — nur dieser Elternteil erhält das Kindergeld.',
+          ],
+        },
+        {
+          heading: 'Online oder auf Papier',
+          numbered: [
+            'Online über das Portal der Familienkasse mit BundID oder Online-Ausweisfunktion — vollständig digital, keine Unterschrift per Post nötig.',
+            'Online ausfüllen und ausgedruckt unterschrieben per Post nachreichen, wenn keine digitale Identifizierung vorliegt.',
+            'Vollständig auf Papier, per Post an die zuständige Familienkasse — der langsamste Weg.',
+            'Neugeborene: In vielen Städten lässt sich der Antrag beim Standesamt mit der Geburtsanzeige kombinieren.',
+          ],
+        },
+        {
+          heading: 'Die zwei Fehler, die Wochen kosten',
+          paragraphs: [
+            'Erstens: der Antrag ohne Steuer-ID des Kindes. Die Familienkasse legt ihn zur Seite, bis die Nummer da ist, und meldet sich oft nicht von selbst. Wer die ID direkt nach Erhalt nachreicht, verkürzt die Wartezeit erheblich.',
+            'Zweitens: fehlende Angaben zum anderen Elternteil. Auch bei getrennten Eltern will die Familienkasse wissen, wer der zweite Elternteil ist und ob er Kindergeld beantragt hat — Doppelzahlungen werden ausgeschlossen. Ein leeres Feld führt zur Rückfrage.',
+            'Mit vollständigen Unterlagen dauert die Bearbeitung typischerweise vier bis acht Wochen. Kindergeld wird rückwirkend gezahlt, aber nur für sechs Monate vor Antragstellung.',
+          ],
+        },
+      ],
+      howToHeading: 'Antrag mit der App vorbereiten',
+      howToSteps: [
+        { title: 'Antrag-Helfer öffnen', text: 'Die App listet auf, welches Formblatt und welche Unterlagen für deinen Fall nötig sind.' },
+        { title: 'Unterlagen abhaken', text: 'Steuer-ID, Urkunde, Nachweis — die Liste zeigt, was noch fehlt, bevor du abschickst.' },
+        { title: 'Bescheid einordnen', text: 'Kommt ein Schreiben mit Rückfrage oder Bewilligung, fotografieren und in einfachem Deutsch lesen, was zu tun ist.' },
+        { title: 'Auszahlungstermin setzen', text: 'Nach der Bewilligung die Endziffer eintragen — ab dann zeigt die App jeden Monat den Zahltag.' },
+      ],
+      faqs: [
+        {
+          question: 'Muss ich für ein zweites Kind einen neuen Antrag stellen?',
+          answer: 'Ja. Für jedes Kind wird eine eigene Anlage Kind eingereicht — bei bestehender Kindergeldnummer als Ergänzungsantrag, nicht als kompletter Neuantrag.',
+        },
+        {
+          question: 'Wer bekommt das Kindergeld, wenn beide Eltern berechtigt sind?',
+          answer: 'Nur ein Elternteil — die Eltern bestimmen gemeinsam, wer. Bei getrennten Haushalten der Elternteil, bei dem das Kind lebt.',
+        },
+      ],
+      screenshotIndex: 4,
+    },
   ],
   faqs: [
     {
