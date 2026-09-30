@@ -1,5 +1,6 @@
 import { Car, Gauge, BookOpen, ClipboardList, Snowflake, TrendingUp } from 'lucide-react';
 import type { AppContent } from './types';
+import { vorfahrtGuides } from './vorfahrtGuides';
 
 export const vorfahrt: AppContent = {
   slug: 'vorfahrt-ueben-app',
@@ -444,6 +445,7 @@ export const vorfahrt: AppContent = {
       ],
       screenshotIndex: 1,
     },
+    ...vorfahrtGuides,
   ],
   faqs: [
     {

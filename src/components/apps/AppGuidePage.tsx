@@ -14,6 +14,8 @@ const UI = {
     relatedGuides: 'Keep reading',
     backToApp: 'Everything about {app}',
     ctaNote: 'Free to download on iPhone & iPad',
+    sources: 'Official sources',
+    reviewed: 'Reviewed',
   },
   de: {
     apps: 'Apps',
@@ -23,16 +25,19 @@ const UI = {
     relatedGuides: 'Weiterlesen',
     backToApp: 'Alles über {app}',
     ctaNote: 'Kostenlos für iPhone & iPad',
+    sources: 'Amtliche Quellen',
+    reviewed: 'Geprüft',
   },
 } as const;
 
 export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide }) {
-  const ui = UI[app.lang];
+  const guideLang = guide.lang ?? app.lang;
+  const ui = UI[guideLang];
   const accent = app.accent;
   const dark = app.accentDark;
   const canonical = buildCanonicalUrl(`/${app.slug}/guides/${guide.slug}`);
   const screenshot = app.screenshots[guide.screenshotIndex ?? 0];
-  const related = app.guides.filter((g) => g.slug !== guide.slug).slice(0, 3);
+  const related = app.guides.filter((g) => g.slug !== guide.slug && (g.lang ?? app.lang) === guideLang).slice(0, 3);
 
   const articleSchema = {
     '@context': 'https://schema.org',
@@ -43,6 +48,9 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
     author: { '@type': 'Organization', name: 'Smarvia Studio' },
     publisher: { '@type': 'Organization', name: 'Smarvia Studio', logo: { '@type': 'ImageObject', url: buildCanonicalUrl(app.icon) } },
     mainEntityOfPage: canonical,
+    inLanguage: guideLang,
+    ...(guide.publishedAt ? { datePublished: guide.publishedAt } : {}),
+    ...(guide.reviewedAt ? { dateModified: guide.reviewedAt } : {}),
   };
 
   const howToSchema = {
@@ -77,7 +85,7 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
   };
 
   return (
-    <div lang={guide.lang ?? app.lang} className="min-h-screen bg-white antialiased" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+    <div lang={guideLang} className="min-h-screen bg-white antialiased" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
@@ -119,6 +127,9 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
               <p className="text-white/45 mt-0.5">{app.subtitle}</p>
             </div>
           </div>
+          {guide.reviewedAt && (
+            <p className="mt-5 text-sm text-white/55">{ui.reviewed}: <time dateTime={guide.reviewedAt}>{new Intl.DateTimeFormat(guideLang === 'de' ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${guide.reviewedAt}T00:00:00Z`))}</time></p>
+          )}
         </div>
       </header>
 
@@ -225,12 +236,23 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
 
               <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-4">
                 <a href={app.appStoreUrl} target="_blank" rel="noopener noreferrer" className="inline-block transition-transform hover:scale-105">
-                  <AppStoreBadge lang={app.lang} height={50} />
+                  <AppStoreBadge lang={guideLang} height={50} />
                 </a>
                 <p className="text-white/35 text-sm">{ui.ctaNote}</p>
               </div>
             </div>
           </section>
+
+          {guide.sources && guide.sources.length > 0 && (
+            <section className="mt-12 border-t border-gray-200 pt-8">
+              <h2 className="text-xl font-bold text-gray-950 mb-4">{ui.sources}</h2>
+              <ul className="space-y-2 text-sm text-gray-600">
+                {guide.sources.map((source) => (
+                  <li key={source.url}><a href={source.url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-gray-950">{source.title}</a></li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {/* =============================== FAQ =============================== */}
           {guide.faqs && guide.faqs.length > 0 && (
@@ -307,11 +329,11 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
         />
         <div className="relative max-w-2xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            {app.ctaHeading}
+            {guide.ctaHeading ?? app.ctaHeading}
           </h2>
-          <p className="text-white/55 mb-8">{app.ctaText}</p>
+          <p className="text-white/55 mb-8">{guide.ctaText ?? app.ctaText}</p>
           <a href={app.appStoreUrl} target="_blank" rel="noopener noreferrer" className="inline-block transition-transform hover:scale-105">
-            <AppStoreBadge lang={app.lang} height={54} />
+            <AppStoreBadge lang={guideLang} height={54} />
           </a>
         </div>
       </section>

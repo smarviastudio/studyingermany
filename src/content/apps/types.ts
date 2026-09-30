@@ -45,6 +45,11 @@ export interface GuideHowToStep {
 
 export interface AppGuide {
   slug: string;
+  publishedAt?: string;
+  reviewedAt?: string;
+  sources?: { title: string; url: string }[];
+  ctaHeading?: string;
+  ctaText?: string;
   /**
    * Overrides the app's language for this guide. Most guides match their app,
    * but a few apps carry guides in both languages — an English landing page can

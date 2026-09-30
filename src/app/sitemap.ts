@@ -80,13 +80,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const appPages: MetadataRoute.Sitemap = ALL_APPS.flatMap((app) => [
     {
       url: buildCanonicalUrl(`/${app.slug}`),
-      lastModified: contentLastUpdated,
+      lastModified: app.guides.reduce((latest, guide) => {
+        const reviewed = guide.reviewedAt ? new Date(guide.reviewedAt) : contentLastUpdated;
+        return reviewed > latest ? reviewed : latest;
+      }, contentLastUpdated),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     ...app.guides.map((guide) => ({
       url: buildCanonicalUrl(`/${app.slug}/guides/${guide.slug}`),
-      lastModified: contentLastUpdated,
+      lastModified: guide.reviewedAt ? new Date(guide.reviewedAt) : contentLastUpdated,
       changeFrequency: 'monthly' as const,
       priority: 0.75,
     })),
