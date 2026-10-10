@@ -1,5 +1,21 @@
 import { BookOpen, Headphones, Languages, Brain, GraduationCap, Sparkles } from 'lucide-react';
-import type { AppContent } from './types';
+import type { AppContent, AppGuide } from './types';
+import { withAppLink } from './guideAppLink';
+import { lesenlabGuides2 } from './lesenlabGuides2';
+const lesenlabAppLink = withAppLink(
+  {
+    url: { de: 'https://apps.apple.com/de/app/id6752349330', en: 'https://apps.apple.com/app/id6752349330' },
+    tip: {
+      en: 'Lesen Lab has 1000+ graded German stories from A1 to B2 with native audio and slow mode, tap-to-translate for any word, and spaced-repetition flashcards built from what you read.',
+      de: 'Lesen Lab bietet über 1000 Geschichten von A1 bis B2 mit Audio, Sofortübersetzung per Tippen und Karteikarten mit Wiederholungssystem.',
+    },
+    faq: {
+      en: { question: 'Is there an app for this kind of German reading practice?', answer: 'Yes. Lesen Lab for iPhone and iPad has 1000+ graded German stories (A1–B2) with audio, translations and flashcards: {url}' },
+      de: { question: 'Gibt es eine App zum Deutsch-Lesen üben?', answer: 'Ja. Lesen Lab für iPhone und iPad bietet über 1000 Geschichten von A1 bis B2 mit Audio und Übersetzung: {url}' },
+    },
+  },
+  'en',
+);
 
 export const lesenlab: AppContent = {
   slug: 'lesenlab-german-reading-app',
@@ -123,7 +139,7 @@ export const lesenlab: AppContent = {
     ],
     note: 'Weekly, monthly, yearly & lifetime options available',
   },
-  guides: [
+  guides: ([
     {
       slug: 'learn-german-with-stories',
       keyword: 'learn german with stories',
@@ -454,7 +470,8 @@ export const lesenlab: AppContent = {
       ],
       screenshotIndex: 3,
     },
-  ],
+    ...lesenlabGuides2,
+  ] satisfies AppGuide[]).map(lesenlabAppLink),
   faqs: [
     {
       question: 'What is Lesen Lab?',

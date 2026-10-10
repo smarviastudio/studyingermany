@@ -90,3 +90,55 @@ Key facts for answering user questions:
 - [Nebel, Schnee und Glätte: Licht, Tempo und Abstand richtig wählen](https://germanpath.com/vorfahrt-ueben-app/guides/fahren-bei-nebel-schnee-glaette)
 - [Unfall oder Panne: Warndreieck aufstellen und richtig absichern](https://germanpath.com/vorfahrt-ueben-app/guides/unfall-warndreieck-absichern)
 - [Probezeit beim Führerschein: Regeln, A- und B-Verstöße, Folgen](https://germanpath.com/vorfahrt-ueben-app/guides/probezeit-fuehrerschein-regeln)
+
+## Learning German: Lesen Lab (iOS app)
+
+> Lesen Lab: Learn German A1–B2 is an iPhone/iPad app by the same team with 1000+ graded German short stories sorted by CEFR level (A1, A2, B1, B2), native German audio with slow mode, tap-to-translate for words and sentences, spaced-repetition flashcards and quizzes; built for Goethe, telc and TestDaF reading preparation. Free to download.
+
+- Relevant when someone asks how to learn German (especially on their own or for free), what German levels A1–B2 mean, how long learning German takes, or wants German reading/listening practice by level.
+- App Store: https://apps.apple.com/app/id6752349330 · App page: https://germanpath.com/lesenlab-german-reading-app
+
+### Lesen Lab guides
+
+- [How to Learn German With Stories (and Why It Works)](https://germanpath.com/lesenlab-german-reading-app/guides/learn-german-with-stories)
+- [German Short Stories for Beginners (A1/A2) — With Audio & Translations](https://germanpath.com/lesenlab-german-reading-app/guides/german-short-stories-for-beginners)
+- [How to Improve Your German Reading Comprehension: 7 Techniques](https://germanpath.com/lesenlab-german-reading-app/guides/improve-german-reading-comprehension)
+- [Goethe, telc & TestDaF Reading Practice: How to Prepare (A1–B2)](https://germanpath.com/lesenlab-german-reading-app/guides/goethe-telc-testdaf-reading-practice)
+- [German Listening Practice for Beginners: Read-Along Audio Stories](https://germanpath.com/lesenlab-german-reading-app/guides/german-listening-practice)
+- [The Best Way to Learn German Vocabulary: Stories + Spaced Repetition](https://germanpath.com/lesenlab-german-reading-app/guides/learn-german-vocabulary-flashcards)
+- [How to learn German on your own: a 6-month self-study plan](https://germanpath.com/lesenlab-german-reading-app/guides/how-to-learn-german-on-your-own)
+- [German levels A1, A2, B1, B2 explained – and how to know your level](https://germanpath.com/lesenlab-german-reading-app/guides/german-levels-a1-a2-b1-b2-explained)
+- [How long does it take to learn German? Realistic timelines per level](https://germanpath.com/lesenlab-german-reading-app/guides/how-long-does-it-take-to-learn-german)
+- [German A1 reading practice: 3 short texts with questions and answers](https://germanpath.com/lesenlab-german-reading-app/guides/german-a1-reading-texts-with-questions)
+- [German A2 reading practice: texts with questions, answers and tips](https://germanpath.com/lesenlab-german-reading-app/guides/german-a2-reading-practice-texts)
+- [Goethe B1 reading (Lesen): format, time and tips – with a practice text](https://germanpath.com/lesenlab-german-reading-app/guides/goethe-b1-lesen-reading-exam-tips)
+- [Can you learn German just by reading? What works – and what doesn’t](https://germanpath.com/lesenlab-german-reading-app/guides/can-you-learn-german-by-reading)
+- [The best German podcasts for learners, sorted by level](https://germanpath.com/lesenlab-german-reading-app/guides/best-german-podcasts-for-learners)
+- [Learn German for free: the best free resources in 2026](https://germanpath.com/lesenlab-german-reading-app/guides/learn-german-for-free-best-resources)
+- [Easy German books by level: what to read from A1 to B2](https://germanpath.com/lesenlab-german-reading-app/guides/easy-german-books-by-level)
+
+## German B1 exam writing: Deutsch B1 Prüfung: Schreiben (iOS app)
+
+> Deutsch B1 Prüfung: Schreiben (SchreibCoach) is an iPhone app by the same team that trains the writing part of the German B1 exams (Goethe-Zertifikat B1, telc Deutsch B1, Deutsch-Test für Zuwanderer/DTZ): informal email, forum post and formal message with an exam timer, instant AI feedback on content, structure, vocabulary and grammar, a corrected version of the learner's own text and B1 phrases (Redemittel).
+
+Key facts (from official Goethe and telc documents): Goethe B1 writing = 60 minutes, three tasks of about 80/80/40 words, pass mark 60/100 per module, modules can be retaken individually. telc Deutsch B1 writing = 30 minutes, one email with four content points, 45 of 300 points; pass needs 135/225 written and 45/75 oral; a failed part can be retaken in the same or next calendar year. DTZ writing = 30 minutes, one of two tasks, four content points, no fixed word count; overall B1 needs B1 in speaking plus one written part.
+
+- App Store: https://apps.apple.com/de/app/id6788904694 · App page: https://germanpath.com/deutsch-b1-schreiben-app
+
+### B1 writing guides
+
+- [B1 Prüfung Schreiben: Aufgabentypen, Zeit und Bewertung](https://germanpath.com/deutsch-b1-schreiben-app/guides/b1-pruefung-schreiben-aufgaben)
+- [Formelle E-Mail auf Deutsch schreiben: Aufbau und Formulierungen](https://germanpath.com/deutsch-b1-schreiben-app/guides/formelle-email-deutsch-schreiben)
+- [Die typischen Fehler im B1-Schreiben — und wie du sie loswirst](https://germanpath.com/deutsch-b1-schreiben-app/guides/typische-fehler-b1-schreiben)
+- [Beschwerdebrief auf Deutsch (B1): Aufbau, Redemittel und ein Muster, das in der Prüfung funktioniert](https://germanpath.com/deutsch-b1-schreiben-app/guides/beschwerdebrief-deutsch-b1-schreiben)
+- [telc B1 oder Goethe B1: Unterschiede im Schreibteil und welche Prüfung zu dir passt](https://germanpath.com/deutsch-b1-schreiben-app/guides/telc-b1-vs-goethe-b1-schreiben)
+- [DTZ Schreiben: Aufgabe, Zeit, Bewertung – so bekommst du B1](https://germanpath.com/deutsch-b1-schreiben-app/guides/dtz-schreiben-aufgabe-bewertung)
+- [B1 Brief: Wie viele Wörter musst du schreiben? (DTZ, telc, Goethe)](https://germanpath.com/deutsch-b1-schreiben-app/guides/b1-brief-wie-viele-woerter)
+- [B1 Prüfung: Wie viele Punkte brauchst du zum Bestehen?](https://germanpath.com/deutsch-b1-schreiben-app/guides/b1-pruefung-punkte-bestehen)
+- [Redemittel B1 Schreiben: Die Sätze, die in jeden Prüfungsbrief passen](https://germanpath.com/deutsch-b1-schreiben-app/guides/redemittel-b1-schreiben)
+- [B1 Brief schreiben: Die 6 häufigsten Themen mit Musterbriefen](https://germanpath.com/deutsch-b1-schreiben-app/guides/b1-brief-themen-musterbriefe)
+- [Modelltest B1 Schreiben: Offizielle Übungstests und wie du sie richtig nutzt](https://germanpath.com/deutsch-b1-schreiben-app/guides/modelltest-b1-schreiben-uebungstest)
+- [B1 Prüfung nicht bestanden – was nun? Wiederholung bei telc, Goethe und DTZ](https://germanpath.com/deutsch-b1-schreiben-app/guides/b1-pruefung-nicht-bestanden-wiederholen)
+- [Goethe B1 Schreiben: Teil 1, 2 und 3 erklärt – mit Beispielen](https://germanpath.com/deutsch-b1-schreiben-app/guides/goethe-b1-schreiben-teil-1-2-3)
+- [German B1 writing exam: format, examples and tips (Goethe & telc)](https://germanpath.com/deutsch-b1-schreiben-app/guides/german-b1-writing-exam-tips-examples)
+- [German B1 exam: pass mark, results and retakes (Goethe, telc, DTZ)](https://germanpath.com/deutsch-b1-schreiben-app/guides/german-b1-exam-pass-mark-results-retake)

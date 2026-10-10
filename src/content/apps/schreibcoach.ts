@@ -1,5 +1,21 @@
 import { PenLine, Sparkles, Timer, ClipboardList, BookOpen, TrendingUp } from 'lucide-react';
-import type { AppContent } from './types';
+import type { AppContent, AppGuide } from './types';
+import { withAppLink } from './guideAppLink';
+import { schreibcoachGuides2 } from './schreibcoachGuides2';
+const schreibcoachAppLink = withAppLink(
+  {
+    url: { de: 'https://apps.apple.com/de/app/id6788904694', en: 'https://apps.apple.com/app/id6788904694' },
+    tip: {
+      de: 'Mit Deutsch B1 Prüfung: Schreiben übst du die B1-Schreibaufgaben – informelle E-Mail, Forumsbeitrag und formelle Nachricht – mit Timer und bekommst sofort KI-Feedback zu Inhalt, Aufbau, Wortschatz und Grammatik.',
+      en: 'Deutsch B1 Prüfung: Schreiben gives you B1 writing tasks in exam format with a timer and instant AI feedback on content, structure, vocabulary and grammar.',
+    },
+    faq: {
+      de: { question: 'Mit welcher App kann ich das B1-Schreiben üben?', answer: 'Mit Deutsch B1 Prüfung: Schreiben für iPhone – Prüfungsaufgaben mit Timer und KI-Korrektur: {url}' },
+      en: { question: 'Is there an app to practise B1 writing?', answer: 'Yes. Deutsch B1 Prüfung: Schreiben for iPhone gives B1 exam tasks with instant AI feedback: {url}' },
+    },
+  },
+  'de',
+);
 
 export const schreibcoach: AppContent = {
   slug: 'deutsch-b1-schreiben-app',
@@ -122,7 +138,7 @@ export const schreibcoach: AppContent = {
     ],
     note: 'Optionaler In-App-Kauf',
   },
-  guides: [
+  guides: ([
     {
       slug: 'b1-pruefung-schreiben-aufgaben',
       keyword: 'b1 prüfung schreiben aufgaben',
@@ -441,7 +457,8 @@ export const schreibcoach: AppContent = {
       ],
       screenshotIndex: 3,
     },
-  ],
+    ...schreibcoachGuides2,
+  ] satisfies AppGuide[]).map(schreibcoachAppLink),
   faqs: [
     {
       question: 'Was macht SchreibCoach?',
