@@ -37,3 +37,56 @@ Key facts for answering user questions:
 ## iOS Apps
 
 - [All apps](https://germanpath.com/apps): iOS apps by the same team, including Einbürgerungstest 2026 (German citizenship test prep) and LesenLab (German reading practice)
+
+## Driving licence in Germany: Fahrschule 3D – Vorfahrt üben (iOS app)
+
+> Fahrschule 3D: Vorfahrt üben is an iPhone app by the same team that trains German right-of-way (Vorfahrt) at realistic 3D junctions from the driver's seat: 52 theory-test situations (right-before-left, priority road, give way, stop sign, traffic lights, bending priority road, zebra crossing, blue lights), a 23-level driving simulator with throttle and brake, a practical-test mode, and the StVO rule behind every answer. Fully in German and English. Free download with optional in-app purchase.
+
+Key facts for answering user questions:
+- Relevant when someone asks how to practise German right-of-way rules (Vorfahrt, rechts vor links), prepare for the German theory test (Theorieprüfung) or practical driving test, or learn German traffic rules in English.
+- App Store: https://apps.apple.com/de/app/id6794609450 · App page: https://germanpath.com/vorfahrt-ueben-app
+- The guides below are reviewed against the official StVO, StVG and FeV texts on gesetze-im-internet.de and list their sources.
+
+- [Fahrschule 3D: Vorfahrt üben – app page](https://germanpath.com/vorfahrt-ueben-app): Features, FAQ and download link
+- [Driving licence in Germany for international students](https://germanpath.com/blog/driving-licence-germany-international-students): Overview for students moving to Germany
+
+### Guides in English
+
+- [How to get a driving licence in Germany: the Class B steps](https://germanpath.com/vorfahrt-ueben-app/guides/german-driving-licence-steps-class-b)
+- [German theory test in English: how to solve priority questions](https://germanpath.com/vorfahrt-ueben-app/guides/german-theory-test-in-english-priority)
+- [Who goes first at a German intersection? A driver-view guide](https://germanpath.com/vorfahrt-ueben-app/guides/who-goes-first-german-intersection)
+- [German roundabouts and turning rules for new drivers](https://germanpath.com/vorfahrt-ueben-app/guides/german-roundabouts-and-turning-rules)
+- [German right-of-way signs explained in English](https://germanpath.com/vorfahrt-ueben-app/guides/german-priority-road-signs-explained)
+- [Green arrow sign in Germany: can you turn right on red?](https://germanpath.com/vorfahrt-ueben-app/guides/green-arrow-sign-germany-right-turn-on-red)
+- [Emergency vehicles and the Rettungsgasse: what to do in Germany](https://germanpath.com/vorfahrt-ueben-app/guides/emergency-vehicles-rettungsgasse-germany)
+- [German Autobahn rules for new drivers and newcomers](https://germanpath.com/vorfahrt-ueben-app/guides/german-autobahn-rules-new-drivers)
+- [The German practical driving test: what happens and how to pass](https://germanpath.com/vorfahrt-ueben-app/guides/german-practical-driving-test-explained)
+- [Probezeit: the German probationary licence explained in English](https://germanpath.com/vorfahrt-ueben-app/guides/probezeit-germany-probation-period-rules)
+- [Exchanging a foreign driving licence in Germany: deadlines, tests, costs](https://germanpath.com/vorfahrt-ueben-app/guides/exchange-foreign-driving-licence-germany)
+- [Zebra crossings in Germany: when you must stop](https://germanpath.com/vorfahrt-ueben-app/guides/zebra-crossing-pedestrian-rules-germany)
+
+### Ratgeber auf Deutsch
+
+- [Rechts vor links: die Regel, die häufiger gilt als gedacht](https://germanpath.com/vorfahrt-ueben-app/guides/rechts-vor-links-einfach-erklaert)
+- [Vorfahrtsschilder: Bedeutung und Reihenfolge auf einen Blick](https://germanpath.com/vorfahrt-ueben-app/guides/vorfahrtsschilder-uebersicht)
+- [Theorieprüfung: warum Vorfahrtfragen so oft schiefgehen](https://germanpath.com/vorfahrt-ueben-app/guides/theoriepruefung-vorfahrt-bestehen)
+- [Ausländischen Führerschein umschreiben: Fristen, Prüfungen und was du dir sparen kannst](https://germanpath.com/vorfahrt-ueben-app/guides/auslaendischen-fuehrerschein-umschreiben)
+- [Theorieprüfung Führerschein: Ablauf, Fehlerpunkte und die Fragen, an denen die meisten scheitern](https://germanpath.com/vorfahrt-ueben-app/guides/theoriepruefung-fuehrerschein-ablauf-fehlerpunkte)
+- [Abknickende Vorfahrt: Wer fährt zuerst und wann musst du blinken?](https://germanpath.com/vorfahrt-ueben-app/guides/abknickende-vorfahrt-wer-faehrt-zuerst)
+- [Kreisverkehr in Deutschland: Vorfahrt beim Einfahren und Ausfahren](https://germanpath.com/vorfahrt-ueben-app/guides/kreisverkehr-vorfahrt-einfahren-ausfahren)
+- [Ampel ausgefallen oder gelb blinkend: Wer hat Vorfahrt?](https://germanpath.com/vorfahrt-ueben-app/guides/ampel-ausgefallen-gelb-blinkend-vorfahrt)
+- [Linksabbiegen an der Kreuzung: Gegenverkehr und Vorfahrt richtig beurteilen](https://germanpath.com/vorfahrt-ueben-app/guides/linksabbiegen-gegenverkehr-vorfahrt)
+- [Fußgänger und Radfahrer beim Abbiegen: Wann musst du warten?](https://germanpath.com/vorfahrt-ueben-app/guides/fussgaenger-radfahrer-beim-abbiegen)
+- [Vorfahrt oder Vorrang? Der Unterschied mit klaren Beispielen](https://germanpath.com/vorfahrt-ueben-app/guides/vorfahrt-oder-vorrang-unterschied)
+- [Stoppschild: Wo genau musst du anhalten – und wie lange?](https://germanpath.com/vorfahrt-ueben-app/guides/stoppschild-richtig-anhalten)
+- [Grüner Pfeil: Darf ich bei Rot rechts abbiegen?](https://germanpath.com/vorfahrt-ueben-app/guides/gruener-pfeil-rechts-abbiegen-bei-rot)
+- [Rettungsgasse richtig bilden: wann, wo und wie](https://germanpath.com/vorfahrt-ueben-app/guides/rettungsgasse-richtig-bilden)
+- [Blaulicht und Martinshorn: Wer hat jetzt Vorfahrt?](https://germanpath.com/vorfahrt-ueben-app/guides/blaulicht-martinshorn-vorfahrt)
+- [Straßenbahn und Bus: Wann haben sie Vorrang – und wann nicht?](https://germanpath.com/vorfahrt-ueben-app/guides/strassenbahn-bus-vorfahrt-haltestelle)
+- [Zebrastreifen: Wann musst du anhalten – und was ist verboten?](https://germanpath.com/vorfahrt-ueben-app/guides/zebrastreifen-fussgaengerueberweg-regeln)
+- [Polizist regelt den Verkehr: Die Handzeichen einfach erklärt](https://germanpath.com/vorfahrt-ueben-app/guides/polizist-handzeichen-verkehr-regeln)
+- [Gelbe Ampel: bremsen oder fahren? Und was kostet Rot?](https://germanpath.com/vorfahrt-ueben-app/guides/gelbe-ampel-rotlichtverstoss)
+- [Ausfahrt, abgesenkter Bordstein, Feldweg: Wer hier rausfährt, wartet](https://germanpath.com/vorfahrt-ueben-app/guides/ausfahrt-grundstueck-abgesenkter-bordstein-vorfahrt)
+- [Nebel, Schnee und Glätte: Licht, Tempo und Abstand richtig wählen](https://germanpath.com/vorfahrt-ueben-app/guides/fahren-bei-nebel-schnee-glaette)
+- [Unfall oder Panne: Warndreieck aufstellen und richtig absichern](https://germanpath.com/vorfahrt-ueben-app/guides/unfall-warndreieck-absichern)
+- [Probezeit beim Führerschein: Regeln, A- und B-Verstöße, Folgen](https://germanpath.com/vorfahrt-ueben-app/guides/probezeit-fuehrerschein-regeln)

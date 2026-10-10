@@ -16,6 +16,10 @@ const UI = {
     ctaNote: 'Free to download on iPhone & iPad',
     sources: 'Official sources',
     reviewed: 'Reviewed',
+    takeaways: 'Short answer',
+    appTipLabel: 'Practise it in the app',
+    appTipLink: 'Download on the App Store',
+    appPage: 'About the app',
   },
   de: {
     apps: 'Apps',
@@ -27,8 +31,30 @@ const UI = {
     ctaNote: 'Kostenlos für iPhone & iPad',
     sources: 'Amtliche Quellen',
     reviewed: 'Geprüft',
+    takeaways: 'Kurz & knapp',
+    appTipLabel: 'In der App üben',
+    appTipLink: 'Im App Store laden',
+    appPage: 'Mehr zur App',
   },
 } as const;
+
+/** Renders plain-text answers with any https:// URL turned into a link. */
+function Linkified({ text }: { text: string }) {
+  const parts = text.split(/(https:\/\/[^\s)]+[^\s).,;:!?])/g);
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.startsWith('https://') ? (
+          <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 break-all hover:text-gray-950">
+            {part}
+          </a>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
+}
 
 export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide }) {
   const guideLang = guide.lang ?? app.lang;
@@ -38,6 +64,18 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
   const canonical = buildCanonicalUrl(`/${app.slug}/guides/${guide.slug}`);
   const screenshot = app.screenshots[guide.screenshotIndex ?? 0];
   const related = app.guides.filter((g) => g.slug !== guide.slug && (g.lang ?? app.lang) === guideLang).slice(0, 3);
+
+  const appSchema = {
+    '@type': 'MobileApplication',
+    name: app.storeName,
+    alternateName: app.name,
+    operatingSystem: 'iOS',
+    applicationCategory: app.category,
+    url: buildCanonicalUrl(`/${app.slug}`),
+    downloadUrl: app.appStoreUrl,
+    sameAs: [app.appStoreUrl],
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  };
 
   const articleSchema = {
     '@context': 'https://schema.org',
@@ -49,6 +87,8 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
     publisher: { '@type': 'Organization', name: 'Smarvia Studio', logo: { '@type': 'ImageObject', url: buildCanonicalUrl(app.icon) } },
     mainEntityOfPage: canonical,
     inLanguage: guideLang,
+    about: guide.keyword,
+    mentions: [appSchema],
     ...(guide.publishedAt ? { datePublished: guide.publishedAt } : {}),
     ...(guide.reviewedAt ? { dateModified: guide.reviewedAt } : {}),
   };
@@ -136,6 +176,23 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
       {/* =============================== ARTICLE ============================== */}
       <article className="py-16">
         <div className="max-w-3xl mx-auto px-6">
+          {guide.keyTakeaways && guide.keyTakeaways.length > 0 && (
+            <aside
+              className="mb-10 rounded-2xl p-6 md:p-7"
+              style={{ background: hexToRgba(accent, 0.07), border: `1px solid ${hexToRgba(accent, 0.22)}` }}
+            >
+              <p className="text-sm font-bold uppercase tracking-wider mb-4" style={{ color: dark }}>{ui.takeaways}</p>
+              <ul className="space-y-2.5">
+                {guide.keyTakeaways.map((t, i) => (
+                  <li key={i} className="flex items-start gap-3 text-gray-800 text-[16px] leading-relaxed">
+                    <Check className="w-4 h-4 mt-1 shrink-0" style={{ color: dark }} />
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          )}
+
           {guide.intro.map((p, i) => (
             <p key={i} className={`leading-relaxed mb-6 ${i === 0 ? 'text-xl md:text-2xl text-gray-800 font-medium tracking-tight' : 'text-lg text-gray-600'}`}>
               {p}
@@ -143,7 +200,8 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
           ))}
 
           {guide.sections.map((section, i) => (
-            <section key={i} className="mt-14">
+            <div key={i}>
+            <section className="mt-14">
               <h2
                 className="text-2xl md:text-3xl font-bold text-gray-950 tracking-tight mb-5 flex items-start gap-3"
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
@@ -185,6 +243,27 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
                 </ol>
               )}
             </section>
+            {guide.appTip && i === Math.min(1, guide.sections.length - 1) && (
+              <aside
+                className="mt-12 rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row gap-5 sm:items-center"
+                style={{ background: `linear-gradient(140deg, ${hexToRgba(accent, 0.1)}, ${hexToRgba(dark, 0.05)})`, border: `1px solid ${hexToRgba(accent, 0.25)}` }}
+              >
+                <Image src={app.icon} alt={`${app.storeName} icon`} width={56} height={56} className="rounded-2xl shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm font-bold uppercase tracking-wider mb-1.5" style={{ color: dark }}>{ui.appTipLabel}: {app.storeName}</p>
+                  <p className="text-gray-700 leading-relaxed mb-3">{guide.appTip}</p>
+                  <div className="flex flex-wrap gap-x-5 gap-y-2 text-[15px] font-semibold">
+                    <a href={app.appStoreUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:underline underline-offset-4" style={{ color: dark }}>
+                      {ui.appTipLink} <ArrowUpRight className="w-4 h-4" />
+                    </a>
+                    <Link href={`/${app.slug}`} className="inline-flex items-center gap-1.5 text-gray-600 hover:underline underline-offset-4">
+                      {ui.appPage} <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+                </div>
+              </aside>
+            )}
+            </div>
           ))}
 
           {/* ============================ HOW-TO CARD =========================== */}
@@ -275,7 +354,7 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
                       </span>
                     </summary>
                     <div className="px-6 pb-6">
-                      <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                      <p className="text-gray-600 leading-relaxed"><Linkified text={faq.answer} /></p>
                     </div>
                   </details>
                 ))}

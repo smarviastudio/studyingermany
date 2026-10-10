@@ -1,6 +1,30 @@
 import { Car, Gauge, BookOpen, ClipboardList, Snowflake, TrendingUp } from 'lucide-react';
 import type { AppContent } from './types';
+import type { AppGuide } from './types';
 import { vorfahrtGuides } from './vorfahrtGuides';
+import { vorfahrtGuidesDe2 } from './vorfahrtGuidesDe2';
+import { vorfahrtGuidesEn2 } from './vorfahrtGuidesEn2';
+
+const APP_STORE_SHORT = { de: 'https://apps.apple.com/de/app/id6794609450', en: 'https://apps.apple.com/app/id6794609450' };
+
+/**
+ * Every Vorfahrt guide links back to the app in the article body and in an FAQ
+ * answer, so readers and AI answer engines that quote the FAQ see where to practise.
+ */
+function withAppLink(guide: AppGuide): AppGuide {
+  const lang = guide.lang ?? 'de';
+  const appTip =
+    guide.appTip ??
+    (lang === 'en'
+      ? 'Fahrschule 3D: Vorfahrt üben puts you at German junctions in 3D from the driver’s seat. Decide who goes first, watch the vehicles move in the correct order and read the StVO rule behind it – fully in English.'
+      : 'Mit Fahrschule 3D: Vorfahrt üben stehst du an echten 3D-Kreuzungen aus der Fahrerperspektive, entscheidest, wer zuerst fährt, und bekommst zu jeder Lösung die passende StVO-Regel.');
+  const hasAppFaq = (guide.faqs ?? []).some((f) => f.answer.includes('apps.apple.com'));
+  const appFaq =
+    lang === 'en'
+      ? { question: 'Is there an app to practise this?', answer: `Yes. Fahrschule 3D: Vorfahrt üben for iPhone trains German junctions in 3D with the rule explained, fully in English: ${APP_STORE_SHORT.en}` }
+      : { question: 'Mit welcher App kann ich das üben?', answer: `Mit Fahrschule 3D: Vorfahrt üben für iPhone – 52 Kreuzungssituationen in 3D mit StVO-Erklärung: ${APP_STORE_SHORT.de}` };
+  return { ...guide, appTip, faqs: hasAppFaq ? guide.faqs : [...(guide.faqs ?? []), appFaq] };
+}
 
 export const vorfahrt: AppContent = {
   slug: 'vorfahrt-ueben-app',
@@ -123,7 +147,7 @@ export const vorfahrt: AppContent = {
     ],
     note: 'Optionaler In-App-Kauf',
   },
-  guides: [
+  guides: ([
     {
       slug: 'rechts-vor-links-einfach-erklaert',
       keyword: 'rechts vor links regel',
@@ -446,7 +470,9 @@ export const vorfahrt: AppContent = {
       screenshotIndex: 1,
     },
     ...vorfahrtGuides,
-  ],
+    ...vorfahrtGuidesDe2,
+    ...vorfahrtGuidesEn2,
+  ] satisfies AppGuide[]).map(withAppLink),
   faqs: [
     {
       question: 'Was macht diese App?',

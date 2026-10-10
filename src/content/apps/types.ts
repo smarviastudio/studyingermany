@@ -65,6 +65,10 @@ export interface AppGuide {
   excerpt: string;
   /** Opening paragraphs that answer the searcher's question directly */
   intro: string[];
+  /** Short, self-contained answer bullets shown above the intro ("Kurz & knapp") */
+  keyTakeaways?: string[];
+  /** In-article callout tying the topic to the app; rendered with an App Store link */
+  appTip?: string;
   sections: GuideSection[];
   howToHeading: string;
   howToSteps: GuideHowToStep[];
