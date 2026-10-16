@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const LAST_UPDATED = '19 April 2026';
+const LAST_UPDATED = '16 October 2026';
 
 export default function TermsPage() {
   return (
@@ -28,7 +28,7 @@ export default function TermsPage() {
           </P>
 
           <Section title="1. About the Service">
-            <P>GermanPath provides AI-powered tools for international students seeking to study in Germany, including program search, CV maker, cover letter and motivation letter generators, application tracking, and related calculators. Some features are available free of charge; others require a paid subscription.</P>
+            <P>GermanPath provides AI-powered tools for international students seeking to study in Germany, including program search, CV maker, cover letter and motivation letter generators, application tracking, and related calculators. Some features are available free of charge; others require a paid subscription or a one-time purchase.</P>
           </Section>
 
           <Section title="2. Eligibility">
@@ -43,6 +43,18 @@ export default function TermsPage() {
               'Subscriptions renew automatically at the end of each billing period unless cancelled beforehand.',
               'You will receive an email reminder before any renewal.',
             ]} />
+          </Section>
+
+          <Section id="vorfahrt-3d-web" title="3a. One-Time Purchase: Vorfahrt 3D Web Version">
+            <P>At <Link href="/vorfahrt-3d/spielen" style={{ color: '#dd0000' }}>germanpath.com/vorfahrt-3d/spielen</Link> we offer the driving-theory trainer “Vorfahrt 3D” as a web version that runs in the browser. Some exercises can be used free of charge without an account. All exercises can be unlocked with a one-time purchase:</P>
+            <UL items={[
+              'Price: EUR 14.99 once, including applicable VAT. There is no subscription and no automatic renewal.',
+              'A free germanpath account is required. The unlock is tied to that account and is available in any browser after signing in; it may not be shared or transferred.',
+              'Payment is processed by Stripe. You receive a confirmation of your purchase by email.',
+              'The web version is a separate product from the “Vorfahrt 3D” app for iPhone and iPad sold through Apple’s App Store. A web purchase does not unlock the app, and an App Store purchase does not unlock the web version. App Store purchases are governed by Apple’s terms.',
+              'Vorfahrt 3D is a learning aid based on the German road traffic regulations (StVO). It does not replace driving lessons or the official test materials, and we do not guarantee that you will pass any exam.',
+            ]} />
+            <P>Access starts immediately after payment. Before checkout you expressly request this and confirm that you know your right of withdrawal ends once the exercises are unlocked (§ 356 (5) BGB, see Section 4). Statutory warranty rights (Section 9) remain unaffected.</P>
           </Section>
 
           <Section title="4. Right of Withdrawal (EU Consumer Right)">
@@ -148,9 +160,9 @@ export default function TermsPage() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ id, title, children }: { id?: string; title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: 32 }}>
+    <div id={id} style={{ marginBottom: 32, scrollMarginTop: 100 }}>
       <h2 style={{ fontSize: 17, fontWeight: 700, color: '#111', margin: '0 0 10px' }}>{title}</h2>
       {children}
     </div>

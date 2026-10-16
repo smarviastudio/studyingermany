@@ -47,13 +47,22 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: VORFAHRT_WEB.currency,
             unit_amount: VORFAHRT_WEB.amountCents,
+            // EUR 14.99 is the final price; any VAT is included, never added on top.
+            tax_behavior: 'inclusive',
             product_data: {
               name: VORFAHRT_WEB.name,
               description: 'Einmalzahlung, kein Abo. Gilt für die Web-Version auf germanpath.com.',
+              tax_code: VORFAHRT_WEB.taxCode,
             },
           },
         },
       ],
+      // Stripe Tax: charges VAT only where the account is registered (none as of
+      // Oct 2026, so nothing is added) and tracks registration thresholds.
+      automatic_tax: { enabled: true },
+      // The purchase confirmation on a durable medium (§ 356 (5) BGB). Sent per
+      // payment, independent of the account-wide receipt setting.
+      payment_intent_data: { receipt_email: session.user.email },
       custom_text: { submit: { message: SUBMIT_TEXT[locale] } },
       success_url: `${origin}${VORFAHRT_WEB.path}?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}${VORFAHRT_WEB.path}?checkout=cancel`,

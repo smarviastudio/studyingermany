@@ -10,6 +10,8 @@ export const VORFAHRT_WEB = {
   transactionType: 'vorfahrt3d_web_unlock',
   amountCents: 1499,
   currency: 'eur',
+  // Stripe Tax category "Electronically Supplied Services".
+  taxCode: 'txcd_10000000',
   name: 'Vorfahrt 3D – Web-Version (alle Übungen)',
   path: '/vorfahrt-3d/spielen',
 } as const;
