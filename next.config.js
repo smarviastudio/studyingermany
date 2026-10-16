@@ -9,7 +9,7 @@ const consolidatedPosts = require('./src/lib/consolidated-posts.json');
 // 'unsafe-inline' is unavoidable in script-src here: the App Router emits inline
 // bootstrap scripts, and the nonce alternative forces every page to render
 // dynamically, which would undo the static generation this site depends on.
-// 'unsafe-eval' is deliberately NOT granted; nothing in the production bundle
+// 'unsafe-eval' is deliberately NOT granted in production; nothing in the production bundle
 // needs it.
 //
 // Stripe is server-side only — checkout is a top-level navigation to Stripe's
@@ -22,7 +22,9 @@ const contentSecurityPolicy = [
   "base-uri 'self'",
   "object-src 'none'",
   "frame-ancestors 'none'",
-  "script-src 'self' 'unsafe-inline' https://*.googletagmanager.com https://va.vercel-scripts.com https://vercel.live",
+  // `next dev` (React Refresh) evaluates strings; without this every client
+  // page, sign-in included, crashes locally. Production builds never get it.
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''} https://*.googletagmanager.com https://va.vercel-scripts.com https://vercel.live`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
