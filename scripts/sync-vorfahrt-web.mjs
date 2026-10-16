@@ -47,12 +47,17 @@ patch('index.html', [
   ],
   [
     '<link rel="stylesheet" href="css/style.css?v=9">',
-    '<link rel="stylesheet" href="css/style.css?v=9">\n<link rel="stylesheet" href="css/web-demo.css?v=4">',
+    '<link rel="stylesheet" href="css/style.css?v=9">\n<link rel="stylesheet" href="css/web-demo.css?v=5">',
   ],
   [
     '<script src="js/iap.js?v=1"></script>',
-    '<script src="js/web-demo.js?v=4"></script>\n<script src="js/iap.js?v=1"></script>',
+    readFileSync(join(demoDir, 'about.html'), 'utf8').trim() +
+      '\n<script src="js/web-demo.js?v=5"></script>\n<script src="js/iap.js?v=1"></script>',
   ],
+  // The debug switch is disabled on the web; keep its elements (main.js looks
+  // them up) but drop the text so crawlers do not read "DEBUG · alles freigeschaltet".
+  ['<span class="lbl">Debug</span>', '<span class="lbl"></span>'],
+  ['<span>🐞 DEBUG · alles freigeschaltet</span>', '<span></span>'],
 ]);
 
 patch('js/main.js', [

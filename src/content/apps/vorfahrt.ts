@@ -10,12 +10,12 @@ const vorfahrtAppLink = withAppLink(
   {
     url: { de: 'https://apps.apple.com/de/app/id6794609450', en: 'https://apps.apple.com/app/id6794609450' },
     tip: {
-      en: 'Fahrschule 3D: Vorfahrt üben puts you at German junctions in 3D from the driver’s seat. Decide who goes first, watch the vehicles move in the correct order and read the StVO rule behind it – fully in English.',
-      de: 'Mit Fahrschule 3D: Vorfahrt üben stehst du an echten 3D-Kreuzungen aus der Fahrerperspektive, entscheidest, wer zuerst fährt, und bekommst zu jeder Lösung die passende StVO-Regel.',
+      en: 'Fahrschule 3D: Vorfahrt üben puts you at German junctions in 3D from the driver’s seat. Decide who goes first, watch the vehicles move in the correct order and read the StVO rule behind it – fully in English. No iPhone? The web version runs in any browser at germanpath.com/vorfahrt-3d/spielen.',
+      de: 'Mit Fahrschule 3D: Vorfahrt üben stehst du an echten 3D-Kreuzungen aus der Fahrerperspektive, entscheidest, wer zuerst fährt, und bekommst zu jeder Lösung die passende StVO-Regel. Kein iPhone? Die Web-Version läuft in jedem Browser: germanpath.com/vorfahrt-3d/spielen.',
     },
     faq: {
-      en: { question: 'Is there an app to practise this?', answer: 'Yes. Fahrschule 3D: Vorfahrt üben for iPhone trains German junctions in 3D with the rule explained, fully in English: {url}' },
-      de: { question: 'Mit welcher App kann ich das üben?', answer: 'Mit Fahrschule 3D: Vorfahrt üben für iPhone – 52 Kreuzungssituationen in 3D mit StVO-Erklärung: {url}' },
+      en: { question: 'Is there an app to practise this?', answer: 'Yes. Fahrschule 3D: Vorfahrt üben for iPhone trains German junctions in 3D with the rule explained, fully in English: {url}. Without an iPhone, the web version runs in any browser on a laptop, PC or Android phone (10 exercises free, all 61 for €14.99 once): https://germanpath.com/vorfahrt-3d/spielen' },
+      de: { question: 'Mit welcher App kann ich das üben?', answer: 'Mit Fahrschule 3D: Vorfahrt üben für iPhone – Kreuzungssituationen in 3D mit StVO-Erklärung: {url}. Ohne iPhone geht es mit der Web-Version im Browser auf Laptop, PC oder Android-Handy (10 Übungen kostenlos, alle 61 einmalig 14,99 €): https://germanpath.com/vorfahrt-3d/spielen' },
     },
   },
   'de',
@@ -29,7 +29,13 @@ export const vorfahrt: AppContent = {
   subtitle: 'Kreuzungen aus der Fahrerperspektive',
   lang: 'de',
   appStoreUrl: 'https://apps.apple.com/de/app/fahrschule-3d-vorfahrt-üben/id6794609450',
-  webDemo: { url: '/vorfahrt-3d/spielen', label: 'Kostenlos im Browser spielen' },
+  webDemo: {
+    url: '/vorfahrt-3d/spielen',
+    label: 'Kostenlos im Browser spielen',
+    name: 'Vorfahrt 3D – Web-Version',
+    description: 'Dieselben 3D-Kreuzungen im Browser für Laptop, PC und Android: 10 Übungen kostenlos, alle 61 einmalig 14,99 €.',
+    price: '14.99',
+  },
   icon: '/apps/vorfahrt/icon.webp',
   accent: '#14b8a6',
   accentDark: '#0f766e',
@@ -495,6 +501,11 @@ export const vorfahrt: AppContent = {
     {
       question: 'Gibt es die App auf Englisch?',
       answer: 'Ja, komplett auf Deutsch und Englisch.',
+    },
+    {
+      question: 'Kann ich Vorfahrt 3D auch ohne iPhone nutzen?',
+      answer:
+        'Ja. Die Web-Version auf germanpath.com/vorfahrt-3d/spielen läuft ohne Download im Browser auf Laptop, PC und Android-Handy. 10 Übungen sind kostenlos, alle 61 schaltest du einmalig für 14,99 € frei. Sie ist ein eigenes Produkt: Käufe in der App und im Browser gelten jeweils nur dort.',
     },
     {
       question: 'Ist die App kostenlos?',

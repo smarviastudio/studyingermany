@@ -25,6 +25,7 @@
       unlockedKicker: 'Freigeschaltet', unlockedTitle: 'Alle Übungen sind frei',
       unlockedAs: 'Angemeldet als', unlockedBtn: 'Zu allen Übungen',
       free: '▶ Kostenlos starten – ohne Download',
+      about: "ℹ️ Was ist das? · Preise · FAQ",
       banner: '<b>Web-Version</b> · Übungen mit 🔒 einmalig für 14,99 € freischalten.',
       bannerBtn: 'Freischalten',
       done: '✓ Freigeschaltet – viel Erfolg beim Üben!',
@@ -47,6 +48,7 @@
       unlockedKicker: 'Unlocked', unlockedTitle: 'All exercises are open',
       unlockedAs: 'Signed in as', unlockedBtn: 'Go to all exercises',
       free: '▶ Start free – no download',
+      about: "ℹ️ What is this? · Prices · FAQ",
       banner: '<b>Web version</b> · Unlock the 🔒 exercises once for €14.99.',
       bannerBtn: 'Unlock',
       done: '✓ Unlocked – enjoy practising!',
@@ -69,6 +71,7 @@
       unlockedKicker: 'Ontgrendeld', unlockedTitle: 'Alle oefeningen zijn open',
       unlockedAs: 'Ingelogd als', unlockedBtn: 'Naar alle oefeningen',
       free: '▶ Gratis starten – zonder download',
+      about: "ℹ️ Wat is dit? · Prijzen · FAQ",
       banner: '<b>Webversie</b> · Ontgrendel de 🔒-oefeningen eenmalig voor € 14,99.',
       bannerBtn: 'Ontgrendelen',
       done: '✓ Ontgrendeld – veel succes met oefenen!',
@@ -91,6 +94,7 @@
       unlockedKicker: 'Sbloccato', unlockedTitle: 'Tutti gli esercizi sono aperti',
       unlockedAs: 'Accesso come', unlockedBtn: 'Vai a tutti gli esercizi',
       free: '▶ Inizia gratis – senza download',
+      about: "ℹ️ Cos'è? · Prezzi · FAQ",
       banner: '<b>Versione web</b> · Sblocca gli esercizi 🔒 una volta per 14,99 €.',
       bannerBtn: 'Sblocca',
       done: '✓ Sbloccato – buon allenamento!',
@@ -113,6 +117,7 @@
       unlockedKicker: 'Desbloqueado', unlockedTitle: 'Todos los ejercicios están abiertos',
       unlockedAs: 'Sesión iniciada como', unlockedBtn: 'Ir a todos los ejercicios',
       free: '▶ Empieza gratis – sin descargas',
+      about: "ℹ️ ¿Qué es? · Precios · FAQ",
       banner: '<b>Versión web</b> · Desbloquea los ejercicios 🔒 una vez por 14,99 €.',
       bannerBtn: 'Desbloquear',
       done: '✓ Desbloqueado – ¡a practicar!',
@@ -135,6 +140,7 @@
       unlockedKicker: 'Odblokowane', unlockedTitle: 'Wszystkie ćwiczenia są otwarte',
       unlockedAs: 'Zalogowano jako', unlockedBtn: 'Do wszystkich ćwiczeń',
       free: '▶ Zacznij za darmo – bez pobierania',
+      about: "ℹ️ Co to jest? · Ceny · FAQ",
       banner: '<b>Wersja web</b> · Odblokuj ćwiczenia 🔒 jednorazowo za 14,99 €.',
       bannerBtn: 'Odblokuj',
       done: '✓ Odblokowane – powodzenia!',
@@ -282,6 +288,7 @@
       ui.pill.innerHTML = APPLE_ICON + '<span class="wd-text"><b>' + t('pill') + '</b><small>' + t('iosOnly') + '</small></span>';
     }
     if (ui.free) ui.free.textContent = t('free');
+    if (ui.aboutLink) ui.aboutLink.textContent = t('about');
     if (ui.card) {
       if (state.unlocked) {
         ui.card.innerHTML =
@@ -311,6 +318,21 @@
         '<p class="wd-muted wd-app-alt">' + t('appAlt') + '</p>';
     }
   }
+
+  // Info panel (#wd-about, plain HTML from about.html): what it is, prices, FAQ.
+  function openAbout() {
+    var about = document.getElementById('wd-about');
+    if (!about) return;
+    about.hidden = false;
+    var close = about.querySelector('[data-wd-about-close]');
+    if (close) close.focus();
+  }
+  function closeAbout() {
+    var about = document.getElementById('wd-about');
+    if (about) about.hidden = true;
+    if (location.hash === '#info') history.replaceState(null, '', PAGE);
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAbout(); });
 
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; });
@@ -345,6 +367,11 @@
         ui.free = document.createElement('p');
         ui.free.className = 'wd-free';
         firstRow.parentNode.insertBefore(ui.free, firstRow.nextSibling);
+        ui.aboutLink = document.createElement('a');
+        ui.aboutLink.href = '#info';
+        ui.aboutLink.className = 'wd-about-link';
+        ui.aboutLink.setAttribute('data-wd-about', '');
+        ui.free.parentNode.insertBefore(ui.aboutLink, ui.free.nextSibling);
       }
     }
 
@@ -372,9 +399,13 @@
     }
 
     document.addEventListener('click', function (e) {
-      var el = e.target.closest && e.target.closest('[data-wd-open],[data-wd-signin],[data-wd-store],[data-wd-levels]');
+      var about = document.getElementById('wd-about');
+      if (about && e.target === about) { closeAbout(); return; }
+      var el = e.target.closest && e.target.closest('[data-wd-open],[data-wd-signin],[data-wd-store],[data-wd-levels],[data-wd-about],[data-wd-about-close]');
       if (!el) return;
       e.preventDefault();
+      if (el.hasAttribute('data-wd-about')) { openAbout(); return; }
+      if (el.hasAttribute('data-wd-about-close')) { closeAbout(); return; }
       if (el.hasAttribute('data-wd-open')) openPaywall();
       else if (el.hasAttribute('data-wd-signin')) signIn(false);
       else if (el.hasAttribute('data-wd-store')) openStore('paywall');
@@ -397,5 +428,6 @@
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
     sync();
     loadState();
+    if (location.hash === '#info') openAbout();
   });
 })();

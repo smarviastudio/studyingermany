@@ -117,6 +117,7 @@ export interface AppContent {
   /** schema.org applicationCategory, e.g. "EducationApplication" */
   category: string;
   downloadNote: string;
-  /** Playable browser demo, shown as a second button next to the App Store badge */
-  webDemo?: { url: string; label: string };
+  /** Playable web version, shown as a second button next to the App Store badge
+   *  and described as its own WebApplication in the page's structured data */
+  webDemo?: { url: string; label: string; name: string; description: string; price: string };
 }

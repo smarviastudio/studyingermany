@@ -184,6 +184,22 @@ export function AppLandingPage({ app }: { app: AppContent }) {
       : {}),
   };
 
+  const webAppSchema = app.webDemo && {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: app.webDemo.name,
+    description: app.webDemo.description,
+    url: buildCanonicalUrl(app.webDemo.url),
+    applicationCategory: app.category,
+    operatingSystem: 'Any (web browser)',
+    image: buildCanonicalUrl(app.icon),
+    isAccessibleForFree: true,
+    offers: [
+      { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+      { '@type': 'Offer', price: app.webDemo.price, priceCurrency: 'EUR' },
+    ],
+  };
+
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -206,6 +222,9 @@ export function AppLandingPage({ app }: { app: AppContent }) {
     <div lang={app.lang} className="min-h-screen bg-white antialiased" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appSchema) }} />
+      {webAppSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
+      )}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <style
         dangerouslySetInnerHTML={{
