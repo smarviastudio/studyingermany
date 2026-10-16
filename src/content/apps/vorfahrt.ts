@@ -29,6 +29,7 @@ export const vorfahrt: AppContent = {
   subtitle: 'Kreuzungen aus der Fahrerperspektive',
   lang: 'de',
   appStoreUrl: 'https://apps.apple.com/de/app/fahrschule-3d-vorfahrt-üben/id6794609450',
+  webDemo: { url: '/vorfahrt-3d/spielen', label: 'Kostenlos im Browser spielen' },
   icon: '/apps/vorfahrt/icon.webp',
   accent: '#14b8a6',
   accentDark: '#0f766e',

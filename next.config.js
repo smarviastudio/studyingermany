@@ -36,8 +36,17 @@ const contentSecurityPolicy = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Vorfahrt 3D web demo: a static game in public/vorfahrt-3d/spielen
+  // (synced by scripts/sync-vorfahrt-web.mjs). Next serves public/ files but
+  // not a folder's index.html, so map the clean URL onto it.
+  async rewrites() {
+    return [
+      { source: '/vorfahrt-3d/spielen', destination: '/vorfahrt-3d/spielen/index.html' },
+    ];
+  },
   async redirects() {
     return [
+      { source: '/vorfahrt-3d', destination: '/vorfahrt-3d/spielen', permanent: false },
       {
         source: '/:path*',
         has: [

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<base href="/vorfahrt-3d/spielen/">
+<title>Vorfahrt üben in 3D – kostenlos im Browser spielen | Vorfahrt 3D</title>
+<meta name="description" content="Rechts vor links, Vorfahrtsstraße und Fahrsimulator: Vorfahrt-Situationen in 3D kostenlos im Browser üben. Alle Kreuzungen in der Vorfahrt 3D App für iPhone und iPad.">
+<link rel="canonical" href="https://germanpath.com/vorfahrt-3d/spielen">
+<meta name="apple-itunes-app" content="app-id=6794609450">
+<meta name="theme-color" content="#0b1220">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vorfahrt üben in 3D – kostenlos im Browser">
+<meta property="og:description" content="Wer darf zuerst fahren? Echte Kreuzungen in 3D – direkt im Browser ausprobieren.">
+<meta property="og:url" content="https://germanpath.com/vorfahrt-3d/spielen">
+<meta property="og:image" content="https://germanpath.com/apps/vorfahrt/screenshot-1.webp">
+<link rel="icon" href="/apps/vorfahrt/icon.webp">
+<link rel="apple-touch-icon" href="/apps/vorfahrt/icon.webp">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Vorfahrt 3D – Web-Demo","url":"https://germanpath.com/vorfahrt-3d/spielen","inLanguage":["de","en","nl","it","es","pl"],"genre":"Educational","applicationCategory":"EducationalApplication","operatingSystem":"Web browser","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"isPartOf":{"@type":"MobileApplication","name":"Vorfahrt 3D","operatingSystem":"iOS","url":"https://apps.apple.com/de/app/id6794609450"}}</script>
+<link rel="stylesheet" href="css/style.css?v=9">
+<link rel="stylesheet" href="css/web-demo.css?v=1">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./js/vendor/three.module.js",
+    "three/addons/": "./js/vendor/addons/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app"></div>
+<div id="weather"></div>
+<div id="vignette"></div>
+
+<div id="ui">
+
+  <!-- Titelbildschirm -->
+  <section id="screen-title" class="screen visible">
+    <div class="title-wrap">
+      <div class="kicker">Führerschein · Theorieprüfung · Klasse B</div>
+      <h1>VORFAHRT<span class="accent">3D</span></h1>
+      <p class="sub">Setz dich an echte Kreuzungen und entscheide: <b>Wer darf zuerst fahren?</b><br>
+      Der 3D‑Trainer für den Teil der Theorieprüfung, an dem die meisten scheitern.</p>
+      <p id="rule-scope" class="rule-scope">Diese Übungen verwenden deutsche Verkehrsregeln (StVO).</p>
+      <div class="cta-row">
+        <button id="btn-start" class="btn primary big">Jetzt üben</button>
+        <button id="btn-sim" class="btn ghost">🎮 Fahrsimulator</button>
+        <button id="btn-levels" class="btn ghost">Alle Übungen</button>
+      </div>
+      <div class="cta-row">
+        <button id="btn-unlock" class="btn unlock">🔓 Alle Übungen freischalten</button>
+      </div>
+      <div class="cta-row lang-row">
+        <select id="btn-lang" class="btn ghost" aria-label="Sprache">
+          <option value="de">Deutsch</option><option value="en">English</option>
+          <option value="nl">Nederlands</option><option value="it">Italiano</option>
+          <option value="es">Español</option><option value="pl">Polski</option>
+        </select>
+        <button id="btn-more-apps" class="btn ghost">📱 Weitere Apps</button>
+      </div>
+      <div class="badges">
+        <span>✓ Rechts vor links</span>
+        <span>✓ Verkehrszeichen</span>
+        <span>✓ Ampeln &amp; Blaulicht</span>
+        <span>✓ Fahrsimulator</span>
+        <span>✓ Wetter &amp; Notfälle</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kategorie- & Levelauswahl -->
+  <section id="screen-menu" class="screen">
+    <div class="menu-card">
+      <div class="menu-head">
+        <button id="btn-menu-back" class="btn icon" title="Zurück">‹</button>
+        <h2 id="menu-title">Übungen</h2>
+        <div id="progress-label"></div>
+      </div>
+      <div id="progress-bar"><i></i></div>
+      <div id="menu-desc"></div>
+      <div id="level-grid"></div>
+    </div>
+  </section>
+
+  <!-- HUD im Spiel -->
+  <div id="hud">
+    <div id="hud-top">
+      <button id="btn-back" class="btn icon" title="Zur Übersicht">‹</button>
+      <div id="hud-title">Rechts vor links</div>
+      <div id="hud-count">1/10</div>
+    </div>
+    <div id="question-panel">
+      <div id="question-text">Wer darf zuerst fahren?</div>
+      <div id="question-hint"></div>
+      <div id="question-signs"></div>
+      <div id="chips"></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <button id="btn-skip" class="btn ghost">Überspringen ›</button>
+
+  <!-- Beobachtungsphase: Situation erst ansehen, dann kommt die Frage -->
+  <div id="observe">
+    <span class="eye">👀</span>
+    <span>Sieh dir die Situation genau an&nbsp;…</span>
+    <b id="observe-count">5</b>
+  </div>
+
+  <!-- Fahrsimulator: Aufgabe, Tempo, Pedale (+ Blinker & Info in Dauerfahrten) -->
+  <div id="sim-hud">
+    <!-- Aufgabe und Status untereinander, damit sich nichts überlappt -->
+    <div id="sim-top">
+      <div id="sim-task"></div>
+      <div id="drive-info"><span id="drive-timer"></span><span id="drive-mist"></span></div>
+    </div>
+    <div id="sim-speed">0 km/h</div>
+    <div id="indicators">
+      <button id="blink-l" class="blinker" title="Blinker links">⬅</button>
+      <button id="blink-r" class="blinker" title="Blinker rechts">➡</button>
+    </div>
+    <div id="sim-pedals">
+      <button id="pedal-brake" class="pedal brake"><span class="ic">🛑</span>BREMSE</button>
+      <button id="pedal-gas" class="pedal gas"><span class="ic">▲</span>GAS</button>
+    </div>
+  </div>
+
+  <!-- Kurzes rotes Aufblitzen bei einem Fehler in Dauerfahrten -->
+  <div id="mistake-flash"></div>
+
+  <!-- Auswertung nach Freiem Fahren / Praktischer Prüfung -->
+  <div id="drive-results" class="modal">
+    <div class="modal-card">
+      <div class="pay-emoji" id="dr-emoji">🏁</div>
+      <h2 id="dr-title">Fahrt beendet</h2>
+      <div id="dr-verdict"></div>
+      <ul id="dr-list"></ul>
+      <div id="dr-promo"></div>
+      <button id="btn-dr-ok" class="btn primary big">Fertig</button>
+    </div>
+  </div>
+
+  <!-- Alarm bei Fahrfehlern im Simulator -->
+  <div id="alarm">
+    <div id="alarm-card">
+      <div class="alarm-emoji">🚨</div>
+      <h2>Fehler!</h2>
+      <p id="alarm-text"></p>
+      <div class="cta-row">
+        <button id="btn-alarm-retry" class="btn primary big">Nochmal versuchen</button>
+        <button id="btn-alarm-menu" class="btn ghost">Zur Übersicht</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kurz-Anleitung Fahrsimulator -->
+  <div id="sim-howto" class="modal">
+    <div class="modal-card">
+      <div class="pay-emoji">🎮</div>
+      <h2>Fahrsimulator</h2>
+      <ol class="howto-steps">
+        <li><b>Gas &amp; Bremse gedrückt halten</b> — so fährst du los und hältst an.</li>
+        <li><b>Fahre über die Kreuzung</b> und beachte Schilder, Ampeln und Vorfahrt.</li>
+        <li><b>Bei einem Fehler ertönt der Alarm</b> — du erfährst sofort, was falsch war.</li>
+      </ol>
+      <button id="btn-sim-howto-ok" class="btn primary big">Los geht&rsquo;s</button>
+    </div>
+  </div>
+
+  <!-- Debug-Schalter: nur für Entwicklung -->
+  <label id="debug-toggle">
+    <input type="checkbox" id="debug-checkbox">
+    <span class="switch"><i></i></span>
+    <span class="lbl">Debug</span>
+  </label>
+  <div id="debug-bar">
+    <span>🐞 DEBUG · alles freigeschaltet</span>
+    <button id="btn-debug-reset" class="btn ghost">Zurücksetzen</button>
+  </div>
+
+  <!-- Wissensfrage (2D-Quiz) -->
+  <div id="quiz">
+    <div id="quiz-card">
+      <div id="quiz-env"></div>
+      <h3 id="quiz-q"></h3>
+      <div id="quiz-options"></div>
+    </div>
+  </div>
+
+  <!-- Kurz-Anleitung beim ersten Start -->
+  <div id="howto" class="modal">
+    <div class="modal-card">
+      <div class="pay-emoji">🚸</div>
+      <h2>So funktioniert&rsquo;s</h2>
+      <ol class="howto-steps">
+        <li><b>Schau dich um:</b> Schilder, Ampeln und Blinker verraten die Regel.</li>
+        <li><b>Tippe an, wer zuerst fahren darf</b> — direkt aufs Fahrzeug oder auf die Antwort unten.</li>
+        <li><b>Sieh dir die Auflösung an:</b> Alle fahren in der richtigen Reihenfolge.</li>
+      </ol>
+      <button id="btn-howto-ok" class="btn primary big">Los geht&rsquo;s</button>
+    </div>
+  </div>
+
+  <!-- Erklärung -->
+  <div id="explain">
+    <div id="explain-card">
+      <div id="explain-verdict">Richtig!</div>
+      <div id="explain-rule" class="rule-chip">§ 8 StVO</div>
+      <div id="explain-signs"></div>
+      <p id="explain-text"></p>
+      <div class="cta-row">
+        <button id="btn-retry" class="btn ghost">Nochmal</button>
+        <button id="btn-next" class="btn primary">Weiter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paywall -->
+  <div id="paywall" class="modal">
+    <div class="modal-card">
+      <button id="btn-pay-close" class="btn icon close" title="Schließen">×</button>
+      <div class="pay-emoji">🚦</div>
+      <h2>Alle Übungen freischalten</h2>
+      <ul>
+        <li>Alle Kreuzungen in 3D — von Stoppschild bis Blaulicht</li>
+        <li>Fahrsimulator: alle Level &amp; Dauerfahrten (Freies Fahren, Prüfung, Autobahn)</li>
+        <li>Radfahrer‑, Zebrastreifen‑ &amp; Ampel‑Szenarien</li>
+        <li>Wissens‑Training: Winter, Nebel, Unfall &amp; Co.</li>
+        <li>Einmal zahlen, für immer üben — <b>kein Abo</b></li>
+      </ul>
+      <div id="pay-loyal-price"></div>
+      <button id="btn-buy" class="btn primary big">Alle Übungen freischalten</button>
+      <button id="pay-loyalty" class="cp-loyalty" type="button"></button>
+      <div class="pay-note">Einmaliger Kauf · <a id="btn-restore" href="#">Käufe wiederherstellen</a></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/web-demo.js?v=1"></script>
+<script src="js/iap.js?v=1"></script>
+<script type="module" src="js/main.js?v=12"></script>
+</body>
+</html>

@@ -35,6 +35,7 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
   { url: buildCanonicalUrl('/study-in-germany-from-turkey'), changeFrequency: 'monthly', priority: 0.8 },
   { url: buildCanonicalUrl('/study-in-germany-from-nepal'), changeFrequency: 'monthly', priority: 0.8 },
   { url: buildCanonicalUrl('/apps'), changeFrequency: 'weekly', priority: 0.85 },
+  { url: buildCanonicalUrl('/vorfahrt-3d/spielen'), changeFrequency: 'monthly', priority: 0.8 },
   { url: buildCanonicalUrl('/impressum'), changeFrequency: 'yearly', priority: 0.3 },
   { url: buildCanonicalUrl('/privacy-policy'), changeFrequency: 'yearly', priority: 0.3 },
   { url: buildCanonicalUrl('/terms'), changeFrequency: 'yearly', priority: 0.3 },

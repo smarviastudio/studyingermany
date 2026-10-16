@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { buildCanonicalUrl } from '@/lib/seo';
 import type { AppContent } from '@/content/apps/types';
-import { ArrowRight, ArrowUpRight, Check, Plus, Star } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, Play, Plus, Star } from 'lucide-react';
 
 /* ---------------------------------- i18n ---------------------------------- */
 
@@ -281,6 +281,15 @@ export function AppLandingPage({ app }: { app: AppContent }) {
             <a href={app.appStoreUrl} target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-105">
               <AppStoreBadge lang={app.lang} height={56} />
             </a>
+            {app.webDemo && (
+              <a
+                href={app.webDemo.url}
+                className="inline-flex items-center gap-2 h-14 px-6 rounded-xl border border-white/25 text-white font-semibold hover:bg-white/10 transition-colors"
+              >
+                <Play className="w-5 h-5" style={{ color: accent, fill: accent }} />
+                {app.webDemo.label}
+              </a>
+            )}
             {app.ratingValue && (
               <div className="flex items-center gap-2.5">
                 <div className="flex gap-0.5">
