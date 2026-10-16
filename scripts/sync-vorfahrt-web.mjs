@@ -47,11 +47,11 @@ patch('index.html', [
   ],
   [
     '<link rel="stylesheet" href="css/style.css?v=9">',
-    '<link rel="stylesheet" href="css/style.css?v=9">\n<link rel="stylesheet" href="css/web-demo.css?v=1">',
+    '<link rel="stylesheet" href="css/style.css?v=9">\n<link rel="stylesheet" href="css/web-demo.css?v=3">',
   ],
   [
     '<script src="js/iap.js?v=1"></script>',
-    '<script src="js/web-demo.js?v=1"></script>\n<script src="js/iap.js?v=1"></script>',
+    '<script src="js/web-demo.js?v=3"></script>\n<script src="js/iap.js?v=1"></script>',
   ],
 ]);
 

@@ -19,7 +19,8 @@
 #web-demo-pill.visible { display: inline-flex; }
 #web-demo-pill .wd-text { display: flex; flex-direction: column; }
 #web-demo-pill small { font-weight: 400; font-size: 11px; opacity: 0.75; }
-#web-demo-pill .wd-apple {
+.wd-apple {
+  flex: none;
   width: 18px;
   height: 22px;
   background: currentColor;
@@ -28,3 +29,107 @@
 }
 /* No loyalty discount or cross-promo list on the web — purchases happen in the App Store. */
 #pay-loyalty, #pay-loyal-price, #btn-more-apps { display: none !important; }
+
+/* Unlock banner at the top of the menu (all sizes). */
+.wd-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: 0 0 16px; padding: 10px 10px 10px 16px; border-radius: 16px;
+  background: rgba(255, 214, 10, 0.08); border: 1px solid rgba(255, 214, 10, 0.28);
+  font-size: 13.5px; line-height: 1.4; color: var(--muted);
+}
+.wd-banner b { color: var(--accent); }
+.wd-store-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  flex: none; padding: 12px 18px; border-radius: 14px;
+  background: #fff; color: #000; text-decoration: none;
+  font-weight: 700; font-size: 15px; line-height: 1;
+  transition: transform .12s ease, background .15s ease;
+  pointer-events: auto;
+}
+.wd-store-btn:hover { transform: translateY(-1px); background: #f1f1f1; }
+.wd-store-btn .wd-apple { width: 16px; height: 19px; }
+.wd-store-btn.small { padding: 9px 14px; font-size: 13.5px; border-radius: 12px; }
+
+@media (max-width: 560px) { .wd-banner { font-size: 12.5px; padding: 8px 8px 8px 12px; } }
+
+/* The app card only appears on wide screens. */
+.wd-app-card { display: none; }
+
+/* ---------- Desktop layout (laptops and monitors) ---------- */
+@media (min-width: 1024px) and (min-height: 600px) {
+  /* Start screen: content on the left, app card on the right. */
+  body.web-demo #screen-title { align-items: center; }
+  body.web-demo #screen-title::before {
+    background:
+      linear-gradient(90deg, rgba(6, 11, 22, 0.92) 0%, rgba(6, 11, 22, 0.78) 45%, rgba(6, 11, 22, 0.45) 75%, rgba(6, 11, 22, 0.25) 100%),
+      linear-gradient(180deg, rgba(6, 11, 22, 0.4) 0%, rgba(6, 11, 22, 0) 30%, rgba(6, 11, 22, 0) 70%, rgba(6, 11, 22, 0.5) 100%);
+  }
+  body.web-demo .title-wrap {
+    max-width: 1180px; width: calc(100vw - 112px); padding: 0;
+    display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 64px; align-items: center;
+    text-align: left;
+  }
+  body.web-demo .wd-title-main .sub { margin-left: 0; font-size: 19px; max-width: 600px; }
+  body.web-demo .wd-title-main .rule-scope { margin-left: 0; }
+  body.web-demo .wd-title-main h1 { font-size: clamp(88px, 8.4vw, 132px); }
+  body.web-demo .wd-title-main .cta-row,
+  body.web-demo .wd-title-main .badges { justify-content: flex-start; }
+  body.web-demo .wd-title-main .btn.big { font-size: 19px; padding: 17px 34px; }
+
+  .wd-app-card {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+    padding: 28px; border-radius: 28px; pointer-events: auto;
+    background: rgba(9, 15, 27, 0.82); border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    animation: rise .7s .1s ease both;
+  }
+  .wd-app-card img { width: 72px; height: 72px; border-radius: 17px; box-shadow: 0 8px 24px rgba(0, 0, 0, .4); margin-bottom: 6px; }
+  .wd-app-card .wd-kicker { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .wd-app-card h3 { font-size: 24px; line-height: 1.2; }
+  .wd-app-card ul { list-style: none; margin: 6px 0 12px; display: grid; gap: 10px; }
+  .wd-app-card li { position: relative; padding-left: 26px; font-size: 15px; line-height: 1.4; color: #dbe4f0; }
+  .wd-app-card li::before { content: '✓'; position: absolute; left: 0; color: var(--good); font-weight: 900; }
+  .wd-app-card .wd-store-btn { width: 100%; padding: 15px 18px; font-size: 16px; }
+
+  /* The card and banner carry the App Store link on desktop. */
+  #web-demo-pill.visible { display: none; }
+
+  /* Menu: a wide dashboard instead of a phone-sized column. */
+  body.web-demo #screen-menu { padding: 32px; }
+  body.web-demo #screen-menu::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: rgba(6, 11, 22, 0.6);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  }
+  body.web-demo .menu-card {
+    position: relative;
+    width: min(1180px, calc(100vw - 64px)); max-height: calc(100vh - 64px);
+    padding: 32px 36px 36px; border-radius: 30px;
+  }
+  body.web-demo .menu-head h2 { font-size: 34px; }
+  body.web-demo .menu-head .btn.icon { width: 48px; height: 48px; font-size: 26px; }
+  body.web-demo #progress-label { font-size: 16px; }
+  body.web-demo #menu-desc { font-size: 15px; margin-bottom: 18px; }
+  .wd-banner { font-size: 15px; padding: 12px 12px 12px 20px; margin-bottom: 22px; }
+
+  body.web-demo #level-grid { gap: 14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  body.web-demo #level-grid.cats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  body.web-demo .sim-levels { gap: 14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  body.web-demo .menu-section { font-size: 13.5px; margin-top: 18px; }
+
+  body.web-demo .menu-hero { padding: 22px 26px; }
+  body.web-demo .menu-hero .emoji { width: 58px; height: 58px; font-size: 32px; border-radius: 16px; }
+  body.web-demo .menu-hero .info b { font-size: 20px; }
+  body.web-demo .menu-hero .info small { font-size: 14.5px; }
+  body.web-demo .menu-hero .go { font-size: 16px; }
+
+  body.web-demo .cat-card { padding: 20px; min-height: 108px; gap: 16px; border-radius: 20px; }
+  body.web-demo .cat-card .emoji { width: 56px; height: 56px; font-size: 30px; border-radius: 16px; }
+  body.web-demo .cat-card .info b { font-size: 17.5px; margin-bottom: 4px; }
+  body.web-demo .cat-card .info small { font-size: 14px; }
+  body.web-demo .cat-card .count { font-size: 15px; }
+
+  body.web-demo .level { padding: 16px 18px; border-radius: 16px; }
+  body.web-demo .level .ttl { font-size: 16px; }
+}
