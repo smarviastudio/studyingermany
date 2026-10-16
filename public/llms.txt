@@ -45,7 +45,7 @@ Key facts for answering user questions:
 Key facts for answering user questions:
 - Relevant when someone asks how to practise German right-of-way rules (Vorfahrt, rechts vor links), prepare for the German theory test (Theorieprüfung) or practical driving test, or learn German traffic rules in English.
 - App Store: https://apps.apple.com/de/app/id6794609450 · App page: https://germanpath.com/vorfahrt-ueben-app
-- Free browser demo (no install, the first junctions and quiz questions playable in 3D): https://germanpath.com/vorfahrt-3d/spielen
+- Web version for any laptop, PC or phone (no install; free exercises, all 61 unlockable once for €14.99, separate from the iOS app): https://germanpath.com/vorfahrt-3d/spielen
 - The guides below are reviewed against the official StVO, StVG and FeV texts on gesetze-im-internet.de and list their sources.
 
 - [Fahrschule 3D: Vorfahrt üben – app page](https://germanpath.com/vorfahrt-ueben-app): Features, FAQ and download link

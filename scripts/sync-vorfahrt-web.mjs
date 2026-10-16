@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Copies the Vorfahrt 3D game (Capacitor web build) into public/vorfahrt-3d/spielen
-// and turns it into a free web demo: the free scenarios stay playable, every paid
-// item opens the App Store instead of the simulated browser unlock, and the
-// ?debug=1 unlock switch is disabled.
+// and turns it into the web version: the free scenarios stay playable, paid items
+// go through the web unlock (Stripe, /api/vorfahrt-web/*) instead of the
+// simulated browser unlock, and the ?debug=1 unlock switch is disabled.
 //
 // Re-run after every app update:
 //   node scripts/sync-vorfahrt-web.mjs [path/to/Vorfahrt3D]
@@ -47,11 +47,11 @@ patch('index.html', [
   ],
   [
     '<link rel="stylesheet" href="css/style.css?v=9">',
-    '<link rel="stylesheet" href="css/style.css?v=9">\n<link rel="stylesheet" href="css/web-demo.css?v=3">',
+    '<link rel="stylesheet" href="css/style.css?v=9">\n<link rel="stylesheet" href="css/web-demo.css?v=4">',
   ],
   [
     '<script src="js/iap.js?v=1"></script>',
-    '<script src="js/web-demo.js?v=3"></script>\n<script src="js/iap.js?v=1"></script>',
+    '<script src="js/web-demo.js?v=4"></script>\n<script src="js/iap.js?v=1"></script>',
   ],
 ]);
 
@@ -64,7 +64,7 @@ patch('js/main.js', [
   ],
   [
     "    // Browser dev fallback (no native StoreKit): simulate the unlock.\n    applyUnlocked();",
-    "    if (window.__WEB_DEMO) { window.__WEB_DEMO.openStore('paywall'); return; }\n" +
+    "    if (window.__WEB_DEMO) { window.__WEB_DEMO.buy(); return; }\n" +
       "    // Browser dev fallback (no native StoreKit): simulate the unlock.\n    applyUnlocked();",
   ],
   [

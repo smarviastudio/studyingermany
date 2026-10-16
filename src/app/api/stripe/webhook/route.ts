@@ -3,6 +3,7 @@ import { stripe, getPlanTypeFromPriceId, getStripeWebhookSecret } from '@/lib/st
 import { prisma } from '@/lib/prisma';
 import Stripe from 'stripe';
 import { getIncludedAiCredits } from '@/lib/plans';
+import { VORFAHRT_WEB, grantVorfahrtWebUnlock } from '@/lib/vorfahrtWeb';
 import {
   syncStripeSubscriptionBenefits,
   upsertStripeSubscription,
@@ -54,6 +55,13 @@ export async function POST(req: NextRequest) {
         
         if (!userId) {
           console.error('[Webhook] No userId found for session:', session.id);
+          break;
+        }
+
+        // Vorfahrt 3D web unlock (one-time payment, see src/lib/vorfahrtWeb.ts)
+        if (session.mode === 'payment' && session.metadata?.product === VORFAHRT_WEB.product) {
+          await grantVorfahrtWebUnlock(userId, session);
+          console.log(`[Webhook] Vorfahrt 3D web unlock for user ${userId}`);
           break;
         }
 

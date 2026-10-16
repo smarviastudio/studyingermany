@@ -1,24 +1,6 @@
-/* Web demo additions (germanpath.com/vorfahrt-3d/spielen) */
-#web-demo-pill {
-  position: fixed;
-  right: max(12px, env(safe-area-inset-right));
-  bottom: max(14px, env(safe-area-inset-bottom));
-  z-index: 60;
-  display: none;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 16px 9px 12px;
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-  text-decoration: none;
-  font: 600 14px/1.15 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-#web-demo-pill.visible { display: inline-flex; }
-#web-demo-pill .wd-text { display: flex; flex-direction: column; }
-#web-demo-pill small { font-weight: 400; font-size: 11px; opacity: 0.75; }
+/* Web version additions (germanpath.com/vorfahrt-3d/spielen).
+   The iOS app never loads this file. */
+
 .wd-apple {
   flex: none;
   width: 18px;
@@ -27,10 +9,51 @@
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z'/%3E%3C/svg%3E") center / contain no-repeat;
           mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z'/%3E%3C/svg%3E") center / contain no-repeat;
 }
-/* No loyalty discount or cross-promo list on the web — purchases happen in the App Store. */
-#pay-loyalty, #pay-loyal-price, #btn-more-apps { display: none !important; }
 
-/* Unlock banner at the top of the menu (all sizes). */
+/* ---------- Small App Store pill (start screen, Apple devices only) ---------- */
+#web-demo-pill {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  z-index: 60;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 11px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-decoration: none;
+  font: 600 13px/1.15 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+#web-demo-pill.visible { display: inline-flex; }
+#web-demo-pill .wd-text { display: flex; flex-direction: column; }
+#web-demo-pill small { font-weight: 400; font-size: 10.5px; opacity: 0.7; }
+#web-demo-pill .wd-apple { width: 15px; height: 18px; }
+
+/* ---------- Shared bits ---------- */
+.wd-buy-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 0; cursor: pointer; font: inherit; font-weight: 800; font-size: 16px;
+  padding: 14px 20px; border-radius: 14px;
+  background: var(--accent); color: var(--accent-ink);
+  box-shadow: 0 8px 24px rgba(255, 214, 10, 0.25);
+  transition: transform .12s ease, filter .15s ease;
+  pointer-events: auto;
+}
+.wd-buy-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.wd-buy-btn.small { padding: 9px 16px; font-size: 14px; border-radius: 12px; box-shadow: none; flex: none; }
+.wd-muted { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.wd-muted a { color: var(--txt); text-decoration: underline; text-underline-offset: 2px; }
+.wd-free { margin: 12px 0 14px; font-size: 13.5px; font-weight: 600; color: var(--muted); }
+#pay-loyalty, #pay-loyal-price, #btn-more-apps { display: none !important; }
+body.wd-unlocked .cta-row:has(#btn-unlock),
+body.wd-unlocked .wd-banner,
+body.wd-unlocked .wd-free { display: none !important; }
+
+/* Unlock banner at the top of the menu. */
 .wd-banner {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   margin: 0 0 16px; padding: 10px 10px 10px 16px; border-radius: 16px;
@@ -38,61 +61,107 @@
   font-size: 13.5px; line-height: 1.4; color: var(--muted);
 }
 .wd-banner b { color: var(--accent); }
-.wd-store-btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  flex: none; padding: 12px 18px; border-radius: 14px;
-  background: #fff; color: #000; text-decoration: none;
-  font-weight: 700; font-size: 15px; line-height: 1;
-  transition: transform .12s ease, background .15s ease;
+
+/* ---------- Paywall additions ---------- */
+#wd-consent {
+  display: flex; gap: 10px; align-items: flex-start; text-align: left;
+  margin: 4px 0 14px; padding: 12px 14px; border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 12.5px; line-height: 1.45; color: var(--muted); cursor: pointer;
   pointer-events: auto;
 }
-.wd-store-btn:hover { transform: translateY(-1px); background: #f1f1f1; }
-.wd-store-btn .wd-apple { width: 16px; height: 19px; }
-.wd-store-btn.small { padding: 9px 14px; font-size: 13.5px; border-radius: 12px; }
+#wd-consent input { flex: none; width: 18px; height: 18px; margin-top: 1px; accent-color: var(--accent); cursor: pointer; }
+#wd-consent a { color: var(--txt); }
+#wd-consent.wd-missing { border-color: rgba(248, 113, 113, 0.7); background: rgba(248, 113, 113, 0.08); }
+#wd-consent.wd-shake { animation: wd-shake .35s ease; }
+@keyframes wd-shake { 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-3px); } }
+#btn-buy.wd-loading { opacity: .6; pointer-events: none; }
+.wd-pay-extra { margin-top: 10px; display: grid; gap: 8px; text-align: center; }
+.wd-pay-extra .wd-muted { font-size: 12.5px; }
+#wd-pay-error { color: var(--bad); font-size: 13px; font-weight: 600; min-height: 0; }
+#wd-pay-error:empty { display: none; }
+.wd-app-alt { padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
 
-@media (max-width: 560px) { .wd-banner { font-size: 12.5px; padding: 8px 8px 8px 12px; } }
+#wd-toast {
+  position: fixed; left: 50%; top: 18px; z-index: 80;
+  transform: translate(-50%, -140%); transition: transform .3s ease;
+  padding: 12px 20px; border-radius: 14px; font-weight: 700; font-size: 15px;
+  background: #0f2a1f; color: #d1fae5; border: 1px solid rgba(52, 211, 153, 0.5);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+#wd-toast.visible { transform: translate(-50%, 0); }
 
-/* The app card only appears on wide screens. */
+/* Paywall: compact enough for short laptop screens. */
+body.web-demo #paywall .modal-card { max-height: calc(100vh - 24px); overflow-y: auto; }
+@media (max-height: 820px) {
+  body.web-demo #paywall .pay-emoji { display: none; }
+  body.web-demo #paywall h2 { margin-bottom: 10px; }
+  body.web-demo #paywall ul { margin-bottom: 12px; }
+  body.web-demo #paywall li { font-size: 13.5px; margin-bottom: 6px; }
+}
+
+/* The unlock card only appears on wide screens. */
 .wd-app-card { display: none; }
+
+@media (max-width: 560px) {
+  .wd-banner { font-size: 12.5px; padding: 8px 8px 8px 12px; }
+}
 
 /* ---------- Desktop layout (laptops and monitors) ---------- */
 @media (min-width: 1024px) and (min-height: 600px) {
-  /* Start screen: content on the left, app card on the right. */
+  /* Start screen: calm left column + unlock card on the right. */
   body.web-demo #screen-title { align-items: center; }
   body.web-demo #screen-title::before {
     background:
-      linear-gradient(90deg, rgba(6, 11, 22, 0.92) 0%, rgba(6, 11, 22, 0.78) 45%, rgba(6, 11, 22, 0.45) 75%, rgba(6, 11, 22, 0.25) 100%),
-      linear-gradient(180deg, rgba(6, 11, 22, 0.4) 0%, rgba(6, 11, 22, 0) 30%, rgba(6, 11, 22, 0) 70%, rgba(6, 11, 22, 0.5) 100%);
+      linear-gradient(90deg, rgba(6, 11, 22, 0.94) 0%, rgba(6, 11, 22, 0.82) 40%, rgba(6, 11, 22, 0.5) 72%, rgba(6, 11, 22, 0.3) 100%),
+      linear-gradient(180deg, rgba(6, 11, 22, 0.35) 0%, rgba(6, 11, 22, 0) 30%, rgba(6, 11, 22, 0) 70%, rgba(6, 11, 22, 0.55) 100%);
   }
   body.web-demo .title-wrap {
-    max-width: 1180px; width: calc(100vw - 112px); padding: 0;
-    display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 64px; align-items: center;
+    max-width: 1180px; width: calc(100vw - 96px); padding: 0;
+    display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 56px; align-items: center;
     text-align: left;
   }
-  body.web-demo .wd-title-main .sub { margin-left: 0; font-size: 19px; max-width: 600px; }
-  body.web-demo .wd-title-main .rule-scope { margin-left: 0; }
-  body.web-demo .wd-title-main h1 { font-size: clamp(88px, 8.4vw, 132px); }
-  body.web-demo .wd-title-main .cta-row,
-  body.web-demo .wd-title-main .badges { justify-content: flex-start; }
-  body.web-demo .wd-title-main .btn.big { font-size: 19px; padding: 17px 34px; }
+  body.web-demo .wd-title-main .kicker { margin-bottom: 20px; }
+  body.web-demo .wd-title-main h1 { font-size: clamp(56px, 6.2vw, 100px); }
+  body.web-demo .wd-title-main .sub { margin: 20px 0 10px; font-size: 18px; max-width: 560px; }
+  body.web-demo .wd-title-main .rule-scope { margin: 0 0 28px; }
+  body.web-demo .wd-title-main .cta-row { justify-content: flex-start; }
+  body.web-demo .wd-title-main .cta-row:not(.lang-row) .btn {
+    height: 54px; padding: 0 24px; font-size: 16px;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  body.web-demo .wd-title-main .btn.big { padding: 0 32px; font-size: 17px; }
+  body.web-demo .wd-title-main .badges,
+  body.web-demo .wd-title-main .cta-row:has(#btn-unlock) { display: none; }
+  body.web-demo .wd-title-main .lang-row { margin-top: 18px; }
 
   .wd-app-card {
-    display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
-    padding: 28px; border-radius: 28px; pointer-events: auto;
-    background: rgba(9, 15, 27, 0.82); border: 1px solid rgba(255, 255, 255, 0.16);
+    display: flex; flex-direction: column; align-items: stretch; gap: 12px;
+    padding: 28px; border-radius: 24px; pointer-events: auto;
+    background: rgba(9, 15, 27, 0.86); border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
     backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
     animation: rise .7s .1s ease both;
   }
-  .wd-app-card img { width: 72px; height: 72px; border-radius: 17px; box-shadow: 0 8px 24px rgba(0, 0, 0, .4); margin-bottom: 6px; }
   .wd-app-card .wd-kicker { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .wd-app-card .wd-kicker.ok { color: var(--good); }
   .wd-app-card h3 { font-size: 24px; line-height: 1.2; }
-  .wd-app-card ul { list-style: none; margin: 6px 0 12px; display: grid; gap: 10px; }
-  .wd-app-card li { position: relative; padding-left: 26px; font-size: 15px; line-height: 1.4; color: #dbe4f0; }
+  .wd-price { display: flex; align-items: baseline; gap: 10px; }
+  .wd-price b { font-size: 34px; font-weight: 900; letter-spacing: -0.02em; }
+  .wd-price span { color: var(--muted); font-size: 13px; white-space: nowrap; }
+  .wd-app-card ul { list-style: none; display: grid; gap: 9px; margin: 2px 0 6px; }
+  .wd-app-card li { position: relative; padding-left: 24px; font-size: 14.5px; line-height: 1.4; color: #dbe4f0; }
   .wd-app-card li::before { content: '✓'; position: absolute; left: 0; color: var(--good); font-weight: 900; }
-  .wd-app-card .wd-store-btn { width: 100%; padding: 15px 18px; font-size: 16px; }
+  .wd-app-card .wd-buy-btn { width: 100%; padding: 15px 18px; }
+  .wd-signin-line { text-align: center; }
+  .wd-app-link {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    margin-top: 4px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--muted); font-size: 13px; font-weight: 600; text-decoration: none;
+  }
+  .wd-app-link:hover { color: var(--txt); }
+  .wd-app-link .wd-apple { width: 13px; height: 16px; }
 
-  /* The card and banner carry the App Store link on desktop. */
   #web-demo-pill.visible { display: none; }
 
   /* Menu: a wide dashboard instead of a phone-sized column. */
@@ -132,4 +201,12 @@
 
   body.web-demo .level { padding: 16px 18px; border-radius: 16px; }
   body.web-demo .level .ttl { font-size: 16px; }
+
+  /* Paywall a little roomier. */
+  body.web-demo #paywall .modal-card { max-width: 460px; }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) and (min-height: 600px) {
+  body.web-demo .title-wrap { grid-template-columns: minmax(0, 1fr) 316px; gap: 40px; width: calc(100vw - 72px); }
+  body.web-demo .wd-title-main .cta-row:not(.lang-row) .btn { padding: 0 18px; font-size: 15px; }
 }

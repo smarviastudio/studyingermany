@@ -1970,7 +1970,7 @@ const ui = initUI({
       });
       return;
     }
-    if (window.__WEB_DEMO) { window.__WEB_DEMO.openStore('paywall'); return; }
+    if (window.__WEB_DEMO) { window.__WEB_DEMO.buy(); return; }
     // Browser dev fallback (no native StoreKit): simulate the unlock.
     applyUnlocked();
   },
