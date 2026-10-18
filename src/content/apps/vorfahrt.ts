@@ -8,7 +8,7 @@ import { vorfahrtGuidesEn2 } from './vorfahrtGuidesEn2';
 
 const vorfahrtAppLink = withAppLink(
   {
-    url: { de: 'https://apps.apple.com/de/app/id6794609450', en: 'https://apps.apple.com/app/id6794609450' },
+    url: { de: 'https://apps.apple.com/de/app/id6794609450?ppid=960b9159-f6f0-45d6-be31-c8035e782ee1', en: 'https://apps.apple.com/app/id6794609450?ppid=960b9159-f6f0-45d6-be31-c8035e782ee1' },
     tip: {
       en: 'Fahrschule 3D: Vorfahrt üben puts you at German junctions in 3D from the driver’s seat. Decide who goes first, watch the vehicles move in the correct order and read the StVO rule behind it – fully in English. No iPhone? The web version runs in any browser at germanpath.com/vorfahrt-3d/spielen.',
       de: 'Mit Fahrschule 3D: Vorfahrt üben stehst du an echten 3D-Kreuzungen aus der Fahrerperspektive, entscheidest, wer zuerst fährt, und bekommst zu jeder Lösung die passende StVO-Regel. Kein iPhone? Die Web-Version läuft in jedem Browser: germanpath.com/vorfahrt-3d/spielen.',
@@ -28,7 +28,7 @@ export const vorfahrt: AppContent = {
   storeName: 'Fahrschule 3D: Vorfahrt üben',
   subtitle: 'Kreuzungen aus der Fahrerperspektive',
   lang: 'de',
-  appStoreUrl: 'https://apps.apple.com/de/app/fahrschule-3d-vorfahrt-üben/id6794609450',
+  appStoreUrl: 'https://apps.apple.com/de/app/fahrschule-3d-vorfahrt-%C3%BCben/id6794609450?ppid=960b9159-f6f0-45d6-be31-c8035e782ee1',
   webDemo: {
     url: '/vorfahrt-3d/spielen',
     label: 'Kostenlos im Browser spielen',

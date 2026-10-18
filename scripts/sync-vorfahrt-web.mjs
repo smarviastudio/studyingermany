@@ -52,7 +52,7 @@ patch('index.html', [
   [
     '<script src="js/iap.js?v=1"></script>',
     readFileSync(join(demoDir, 'about.html'), 'utf8').trim() +
-      '\n<script src="js/web-demo.js?v=5"></script>\n<script src="js/iap.js?v=1"></script>',
+      '\n<script src="js/web-demo.js?v=6"></script>\n<script src="js/iap.js?v=1"></script>',
   ],
   // The debug switch is disabled on the web; keep its elements (main.js looks
   // them up) but drop the text so crawlers do not read "DEBUG · alles freigeschaltet".

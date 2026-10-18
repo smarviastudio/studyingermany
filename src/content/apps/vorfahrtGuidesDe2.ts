@@ -1,6 +1,6 @@
 import type { AppGuide } from './types';
 
-const APP_URL = 'https://apps.apple.com/de/app/id6794609450';
+const APP_URL = 'https://apps.apple.com/de/app/id6794609450?ppid=960b9159-f6f0-45d6-be31-c8035e782ee1';
 const APP = 'Fahrschule 3D: Vorfahrt üben';
 
 const law = (para: string, title: string, book = 'stvo_2013') => ({

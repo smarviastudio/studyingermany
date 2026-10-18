@@ -163,7 +163,7 @@
 
   // ct= shows up as a campaign in App Store Connect → App Analytics.
   function storeUrl(source) {
-    return 'https://apps.apple.com/de/app/id' + APP_ID + '?pt=127944070&ct=germanpath-web-' + source + '&mt=8';
+    return 'https://apps.apple.com/de/app/id' + APP_ID + '?ppid=960b9159-f6f0-45d6-be31-c8035e782ee1&pt=127944070&ct=germanpath-web-' + source + '&mt=8';
   }
   function openStore(source) { window.open(storeUrl(source), '_blank', 'noopener'); }
 
