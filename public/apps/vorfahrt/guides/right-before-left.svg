@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="title desc">
+  <title id="title">A approaches from the south; B approaches from the east</title>
+  <desc id="desc">Top-down schematic of an ordinary unsigned four-way junction. A travels north and B travels west. B is on A's right. Only these two vehicles are present.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#2563eb"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#a16207"/></marker></defs>
+  <rect width="640" height="520" rx="24" fill="#ecf2eb"/>
+  <path d="M210 0H410V160H640V360H410V520H210V360H0V160H210Z" fill="#fff" stroke="#b3bdb9" stroke-width="3"/>
+  <g stroke="#c6ceca" stroke-width="3" stroke-dasharray="12 12"><path d="M310 0V155M310 365V520M0 260H205M415 260H640"/></g>
+  <path d="M360 420V65" fill="none" stroke="#2563eb" stroke-width="6" stroke-dasharray="10 8" marker-end="url(#a)"/>
+  <path d="M520 210H90" fill="none" stroke="#a16207" stroke-width="6" stroke-dasharray="10 8" marker-end="url(#b)"/>
+  <rect x="336" y="411" width="48" height="76" rx="12" fill="#2563eb" stroke="#fff" stroke-width="3"/>
+  <path d="M344 425H376" stroke="#bfdbfe" stroke-width="6"/>
+  <text x="360" y="464" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#fff">A</text>
+  <rect x="519" y="186" width="76" height="48" rx="12" fill="#a16207" stroke="#fff" stroke-width="3"/>
+  <path d="M533 194V226" stroke="#fef3c7" stroke-width="6"/>
+  <text x="562" y="219" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#fff">B</text>
+</svg>

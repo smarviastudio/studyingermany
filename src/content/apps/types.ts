@@ -55,7 +55,9 @@ export interface AppGuide {
    * but a few apps carry guides in both languages — an English landing page can
    * have German guides beneath it.
    */
-  lang?: 'en' | 'de';
+  lang?: 'en' | 'de' | 'pl' | 'nl';
+  /** Optional authored Markdown body for long-form guides. */
+  bodyMarkdown?: string;
   /** The search query this guide targets */
   keyword: string;
   title: string;

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import { buildCanonicalUrl } from '@/lib/seo';
 import type { AppContent, AppGuide } from '@/content/apps/types';
@@ -35,6 +36,20 @@ const UI = {
     appTipLabel: 'In der App üben',
     appTipLink: 'Im App Store laden',
     appPage: 'Mehr zur App',
+  },
+  pl: {
+    apps: 'Aplikacje', guides: 'Poradniki', guide: 'Poradnik',
+    faqHeading: 'Najczęstsze pytania', relatedGuides: 'Czytaj dalej',
+    backToApp: 'Więcej o {app}', ctaNote: 'Bezpłatne pobranie na iPhone’a i iPada',
+    sources: 'Źródła przepisów', reviewed: 'Sprawdzenie źródeł', takeaways: 'W skrócie',
+    appTipLabel: 'Przećwicz w aplikacji', appTipLink: 'Pobierz z App Store', appPage: 'O aplikacji',
+  },
+  nl: {
+    apps: 'Apps', guides: 'Gidsen', guide: 'Gids',
+    faqHeading: 'Veelgestelde vragen', relatedGuides: 'Lees verder',
+    backToApp: 'Alles over {app}', ctaNote: 'Gratis te downloaden voor iPhone en iPad',
+    sources: 'Officiële bronnen', reviewed: 'Bronnen gecontroleerd', takeaways: 'Kort uitgelegd',
+    appTipLabel: 'Oefen in de app', appTipLink: 'Download in de App Store', appPage: 'Over de app',
   },
 } as const;
 
@@ -127,14 +142,14 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
   return (
     <div lang={guideLang} className="min-h-screen bg-white antialiased" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+      {guide.howToSteps.length > 0 && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />}
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-      <AppTopBar app={app} />
+      <div className="print:hidden"><AppTopBar app={app} /></div>
 
       {/* ============================== HEADER ============================== */}
-      <header className="relative overflow-hidden bg-[#07070d] pt-36 pb-16">
+      <header className="relative overflow-hidden bg-[#07070d] pt-36 pb-16 print:bg-white print:pt-8 print:pb-4">
         <div className="absolute inset-0 pointer-events-none" aria-hidden>
           <div
             className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[450px] rounded-full blur-[130px] opacity-30"
@@ -143,7 +158,7 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
         </div>
 
         <div className="relative max-w-3xl mx-auto px-6">
-          <nav className="flex items-center flex-wrap gap-1.5 text-sm text-white/40 mb-8" aria-label="Breadcrumb">
+          <nav className="flex items-center flex-wrap gap-1.5 text-sm text-white/40 mb-8 print:hidden" aria-label="Breadcrumb">
             <Link href="/apps" className="hover:text-white/80 transition-colors">{ui.apps}</Link>
             <ChevronRight className="w-3.5 h-3.5" />
             <Link href={`/${app.slug}`} className="hover:text-white/80 transition-colors">{app.name}</Link>
@@ -152,13 +167,13 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
           </nav>
 
           <h1
-            className="text-3xl sm:text-4xl md:text-[3.25rem] font-bold text-white tracking-tight leading-[1.1] mb-8"
+            className="text-3xl sm:text-4xl md:text-[3.25rem] font-bold text-white tracking-tight leading-[1.1] mb-8 print:text-black"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             {guide.title}
           </h1>
 
-          <div className="flex items-center gap-3.5">
+          <div className="flex items-center gap-3.5 print:hidden">
             <Image src={app.icon} alt={`${app.storeName} icon`} width={44} height={44} className="rounded-xl ring-1 ring-white/15" />
             <div className="text-sm leading-tight">
               <Link href={`/${app.slug}`} className="font-semibold text-white hover:underline underline-offset-4" style={{ textDecorationColor: accent }}>
@@ -168,7 +183,7 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
             </div>
           </div>
           {guide.reviewedAt && (
-            <p className="mt-5 text-sm text-white/55">{ui.reviewed}: <time dateTime={guide.reviewedAt}>{new Intl.DateTimeFormat(guideLang === 'de' ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${guide.reviewedAt}T00:00:00Z`))}</time></p>
+            <p className="mt-5 text-sm text-white/55 print:text-gray-700">{ui.reviewed}: <time dateTime={guide.reviewedAt}>{new Intl.DateTimeFormat(guideLang === 'en' ? 'en-GB' : guideLang, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${guide.reviewedAt}T00:00:00Z`))}</time></p>
           )}
         </div>
       </header>
@@ -191,6 +206,24 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
                 ))}
               </ul>
             </aside>
+          )}
+
+          {guide.bodyMarkdown && (
+            <div className="guide-markdown text-gray-700">
+              <ReactMarkdown
+                components={{
+                  h2: ({ children }) => <h2 className="mt-12 mb-5 text-2xl md:text-3xl font-bold tracking-tight text-gray-950">{children}</h2>,
+                  h3: ({ children }) => <h3 className="mt-8 mb-3 text-xl font-bold text-gray-950">{children}</h3>,
+                  p: ({ children }) => <p className="mb-5 text-[17px] leading-[1.8]">{children}</p>,
+                  a: ({ href, children }) => <a href={href} className="underline underline-offset-4 break-words" style={{ color: dark }}>{children}</a>,
+                  ul: ({ children }) => <ul className="mb-6 list-disc pl-6 space-y-3 text-[17px] leading-relaxed">{children}</ul>,
+                  ol: ({ children }) => <ol className="mb-6 list-decimal pl-6 space-y-3 text-[17px] leading-relaxed">{children}</ol>,
+                  img: ({ src, alt }) => <Image src={typeof src === 'string' ? src : ''} alt={alt ?? ''} width={640} height={520} unoptimized className="my-8 mx-auto h-auto w-full max-w-xl rounded-2xl" />,
+                }}
+              >
+                {guide.bodyMarkdown}
+              </ReactMarkdown>
+            </div>
           )}
 
           {guide.intro.map((p, i) => (
@@ -267,6 +300,7 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
           ))}
 
           {/* ============================ HOW-TO CARD =========================== */}
+          {guide.howToSteps.length > 0 && (
           <section className="relative mt-16 rounded-[2rem] overflow-hidden bg-[#07070d]">
             <div
               className="absolute -top-24 -right-24 w-[400px] h-[400px] rounded-full blur-[110px] opacity-30 pointer-events-none"
@@ -315,12 +349,13 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
 
               <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-4">
                 <a href={app.appStoreUrl} target="_blank" rel="noopener noreferrer" className="inline-block transition-transform hover:scale-105">
-                  <AppStoreBadge lang={guideLang} height={50} />
+                  <AppStoreBadge lang={guideLang === 'de' ? 'de' : 'en'} height={50} />
                 </a>
                 <p className="text-white/35 text-sm">{ui.ctaNote}</p>
               </div>
             </div>
           </section>
+          )}
 
           {guide.sources && guide.sources.length > 0 && (
             <section className="mt-12 border-t border-gray-200 pt-8">
@@ -400,7 +435,7 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
       </article>
 
       {/* ============================== FINAL CTA ============================= */}
-      <section className="relative bg-[#07070d] py-20 overflow-hidden">
+      <section className="relative bg-[#07070d] py-20 overflow-hidden print:hidden">
         <div
           className="absolute bottom-[-180px] left-1/2 -translate-x-1/2 w-[900px] h-[450px] rounded-full blur-[120px] opacity-30 pointer-events-none"
           style={{ background: `radial-gradient(ellipse at center, ${accent}, transparent 70%)` }}
@@ -412,12 +447,12 @@ export function AppGuidePage({ app, guide }: { app: AppContent; guide: AppGuide 
           </h2>
           <p className="text-white/55 mb-8">{guide.ctaText ?? app.ctaText}</p>
           <a href={app.appStoreUrl} target="_blank" rel="noopener noreferrer" className="inline-block transition-transform hover:scale-105">
-            <AppStoreBadge lang={guideLang} height={54} />
+            <AppStoreBadge lang={guideLang === 'de' ? 'de' : 'en'} height={54} />
           </a>
         </div>
       </section>
 
-      <AppFooter app={app} />
+      <div className="print:hidden"><AppFooter app={app} /></div>
     </div>
   );
 }

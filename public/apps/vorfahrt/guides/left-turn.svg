@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="title desc">
+  <title id="title">A turns left across oncoming B's path</title>
+  <desc id="desc">Top-down schematic of two opposing vehicles. A approaches from the south and plans to turn west. B approaches from the north and continues south. The signal conditions are specified in the surrounding article, not depicted here.</desc>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#2563eb"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#a16207"/></marker></defs>
+  <rect width="640" height="520" rx="24" fill="#ecf2eb"/>
+  <path d="M210 0H410V160H640V360H410V520H210V360H0V160H210Z" fill="#fff" stroke="#b3bdb9" stroke-width="3"/>
+  <g stroke="#c6ceca" stroke-width="3" stroke-dasharray="12 12"><path d="M310 0V155M310 365V520M0 260H205M415 260H640"/></g>
+  <path d="M360 420V260Q360 210 300 210H80" fill="none" stroke="#2563eb" stroke-width="6" stroke-dasharray="10 8" marker-end="url(#a)"/>
+  <path d="M260 110V450" fill="none" stroke="#a16207" stroke-width="6" stroke-dasharray="10 8" marker-end="url(#b)"/>
+  <rect x="336" y="411" width="48" height="76" rx="12" fill="#2563eb" stroke="#fff" stroke-width="3"/>
+  <path d="M344 425H376" stroke="#bfdbfe" stroke-width="6"/>
+  <text x="360" y="464" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#fff">A</text>
+  <rect x="236" y="35" width="48" height="76" rx="12" fill="#a16207" stroke="#fff" stroke-width="3"/>
+  <path d="M244 97H276" stroke="#fef3c7" stroke-width="6"/>
+  <text x="260" y="79" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#fff">B</text>
+</svg>

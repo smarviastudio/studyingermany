@@ -36,7 +36,7 @@ export function buildGuideMetadata(app: AppContent, guide: AppGuide): Metadata {
       description: guide.metaDescription,
       url: canonical,
       type: 'article',
-      locale: (guide.lang ?? app.lang) === 'de' ? 'de_DE' : 'en_US',
+      locale: ({ de: 'de_DE', en: 'en_US', pl: 'pl_PL', nl: 'nl_NL' } as const)[guide.lang ?? app.lang],
       images: [{ url: buildCanonicalUrl(app.icon), width: 512, height: 512, alt: `${app.storeName} app icon` }],
     },
     twitter: {

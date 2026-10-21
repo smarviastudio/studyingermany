@@ -16,7 +16,7 @@ interface AppLinkCopy {
  */
 export function withAppLink(copy: AppLinkCopy, fallbackLang: 'de' | 'en') {
   return (guide: AppGuide): AppGuide => {
-    const lang = guide.lang ?? fallbackLang;
+    const lang = (guide.lang ?? fallbackLang) === 'de' ? 'de' : 'en';
     const hasAppFaq = (guide.faqs ?? []).some((f) => f.answer.includes('apps.apple.com'));
     const faq = { ...copy.faq[lang], answer: copy.faq[lang].answer.replace('{url}', copy.url[lang]) };
     return {

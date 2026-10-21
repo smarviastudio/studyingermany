@@ -5,6 +5,7 @@ import { withAppLink } from './guideAppLink';
 import { vorfahrtGuides } from './vorfahrtGuides';
 import { vorfahrtGuidesDe2 } from './vorfahrtGuidesDe2';
 import { vorfahrtGuidesEn2 } from './vorfahrtGuidesEn2';
+import { vorfahrtGuidesIntl } from './vorfahrtGuidesIntl';
 
 const vorfahrtAppLink = withAppLink(
   {
@@ -474,7 +475,7 @@ export const vorfahrt: AppContent = {
     ...vorfahrtGuides,
     ...vorfahrtGuidesDe2,
     ...vorfahrtGuidesEn2,
-  ] satisfies AppGuide[]).map(vorfahrtAppLink),
+  ] satisfies AppGuide[]).map(vorfahrtAppLink).concat(vorfahrtGuidesIntl),
   faqs: [
     {
       question: 'Was macht diese App?',
